@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.19)
 set(ProjectName  nany-cpp)
 project(${ProjectName})
 
+set_property(GLOBAL PROPERTY USE_FOLDERS On)
+
 # 设置编译选项
 # set(CMAKE_CXX_FLAGS   "-no-pie")  
 # set(CMAKE_C_FLAGS   "-no-pie")
