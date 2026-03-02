@@ -1,0 +1,50 @@
+cmake_minimum_required(VERSION 3.19)
+set(ProjectName  nany-cpp)
+project(${ProjectName})
+
+# 设置编译选项
+set(CMAKE_CXX_FLAGS   "-no-pie")  
+set(CMAKE_C_FLAGS   "-no-pie")  
+
+# 设置变量
+set(THIRD_PARTY_PATH ${CMAKE_SOURCE_DIR}/3rd-src)
+
+#include 路径
+include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${THIRD_PARTY_PATH}/lua/inc)
+
+# 设置PATH
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin)
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin)
+
+# 区分release和debug设置链接lib库路径
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/Release) # 可执行文件输出路径
+    set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/Release) # 动态库输出路径
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/Release) # 静态库输出路径
+
+    # link_directories(${CMAKE_SOURCE_DIR}/libs/Release) # 链接静态库路径
+    # link_directories(${CMAKE_SOURCE_DIR}/bin/Release) # 链接动态库路径
+else(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/Debug) # 可执行文件输出路径
+    set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/Debug) # 动态库输出路径
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/Debug) # 静态库输出路径
+
+    # link_directories(${CMAKE_SOURCE_DIR}/libs/Debug) # 链接静态库路径
+    # link_directories(${CMAKE_SOURCE_DIR}/bin/Debug) # 链接动态库路径
+endif(CMAKE_BUILD_TYPE STREQUAL "Release")
+
+# 源码版3rd目录
+add_subdirectory(3rd-src/lua)
+
+# 递归枚举目录下所有文件
+add_subdirectory(source/GammaCommon)
+add_subdirectory(source/GammaDatabase)
+add_subdirectory(source/GammaMTDbs)
+add_subdirectory(source/GammaNetwork)
+add_subdirectory(source/GammaConnects)
+
+
+add_subdirectory(sample/main)
+
+

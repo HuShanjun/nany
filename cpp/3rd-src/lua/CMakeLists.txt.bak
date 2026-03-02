@@ -1,0 +1,92 @@
+﻿cmake_minimum_required (VERSION 3.0)
+project (lua C)  # project here actually means solution in premake
+
+
+add_definitions(-DLUA_BUILD_AS_DLL)
+add_definitions(-D_CRT_STDIO_INLINE=__declspec\(dllexport\)__inline)
+if(MSVC)
+	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+endif()
+
+set(TARGET_NAME lua)
+
+set(LUA_CORE_FILES
+	src/lapi.c
+	src/lcode.c
+	src/ldebug.c
+	src/ldo.c
+	src/ldump.c
+	src/lfunc.c
+	src/lgc.c
+	src/llex.c
+	src/lmem.c
+	src/lobject.c
+	src/lopcodes.c
+	src/lparser.c
+	src/lstate.c
+	src/lstring.c
+	src/ltable.c
+	src/ltm.c
+	src/lundump.c
+	src/lvm.c
+	src/lzio.c
+	src/pb.c
+)
+
+set(LUA_LIB_FILES
+	src/lauxlib.c
+	src/lbaselib.c
+	src/ldblib.c
+	src/liolib.c
+	src/lmathlib.c
+	src/loslib.c
+	src/ltablib.c
+	src/lstrlib.c
+	src/loadlib.c
+	src/linit.c
+)
+
+set(LUA_H_FILES
+	inc/lapi.h
+	inc/lauxlib.h
+	inc/lcode.h
+	inc/ldebug.h
+	inc/ldo.h
+	inc/lfunc.h
+	inc/lgc.h
+	inc/llex.h
+	inc/llimits.h
+	inc/lmem.h
+	inc/lobject.h
+	inc/lopcodes.h
+	inc/lparser.h
+	inc/lstate.h
+	inc/lstring.h
+	inc/ltable.h
+	inc/ltm.h
+	inc/lua.h
+	inc/luaconf.h
+	inc/lualib.h
+	inc/lundump.h
+	inc/lvm.h
+	inc/lzio.h
+	inc/pb.h
+)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
+
+add_library(${TARGET_NAME} SHARED
+	${LUA_H_FILES}
+	${LUA_CORE_FILES}
+	${LUA_LIB_FILES}
+)
+
+#install
+install ( TARGETS ${TARGET_NAME}
+	RUNTIME DESTINATION bin COMPONENT Runtime
+	LIBRARY DESTINATION lib COMPONENT Runtime 
+	ARCHIVE DESTINATION lib COMPONENT Library )
+
+install (FILES src/lua.h src/lualib.h src/lauxlib.h src/luaconf.h etc/lua.hpp
+	DESTINATION include
+	COMPONENT Header )
+

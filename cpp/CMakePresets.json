@@ -1,0 +1,25 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "binaryDir": "${sourceDir}/build/msvc",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_INSTALLED_DIR" : "${sourceDir}/3rd-libs/msvc",
+                "VCPKG_TARGET_TRIPLET": "x64-windows-static-md"
+            },
+            "generator": "Visual Studio 17 2022",
+            "name": "vcpkg-static"
+        },
+        {
+            "binaryDir": "${sourceDir}/build/linux",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_INSTALLED_DIR" : "${sourceDir}/3rd-libs/linux",
+                "VCPKG_TARGET_TRIPLET": "x64-linux"
+            },
+            "generator": "Unix Makefiles",
+            "name": "linux-vcpkg-static"
+        }
+    ]
+}
