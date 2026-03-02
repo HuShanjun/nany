@@ -87,7 +87,7 @@ namespace Gamma
 		}
 
 		// for handwork grab;
-		uint32 GetRef() 
+		uint32_t GetRef() 
 		{
 			if( !m_pObject )
 				return 0;

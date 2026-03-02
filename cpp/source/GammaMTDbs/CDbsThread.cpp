@@ -10,8 +10,8 @@ using namespace std;
 
 namespace Gamma
 {
-	CDbsThread::CDbsThread( uint32 nConnClassID,
-		const SDbsCreateParam* aryParam, uint8 nDbsCount, uint32 nThreadIndex, bool bIsRecord)
+	CDbsThread::CDbsThread( uint32_t nConnClassID,
+		const SDbsCreateParam* aryParam, uint8_t nDbsCount, uint32_t nThreadIndex, bool bIsRecord)
 		: m_bQuit(false)
 		, m_bCreated( false )
 		, m_vecDbsConnect( nDbsCount )
@@ -25,12 +25,12 @@ namespace Gamma
 		, m_nPopNum(0)
 		, m_bIsRecord(bIsRecord)
 	{
-		static int32 nThreadLogIndex = 0;
+		static int32_t nThreadLogIndex = 0;
 		CDynamicObject* pObject = CDynamicObject::CreateInstance( nConnClassID );
 		m_pHandler = static_cast<CBaseDbsConn*>( pObject );
 
 		m_listParam.resize( nDbsCount );
-		for( uint8 i = 0 ; i < nDbsCount; i++ )
+		for( uint8_t i = 0 ; i < nDbsCount; i++ )
 		{
 			m_listParam[i].m_szDbsHost = aryParam[i].szDbsHost;
 			m_listParam[i].m_nDbsPort = aryParam[i].nDbsPort;
@@ -59,10 +59,10 @@ namespace Gamma
 		GammaPutSemaphore( m_hReadSemaphore );
 		GammaJoinThread( m_hThread );
 
-		m_pHandler->OnDisConnect( &m_vecDbsConnect[0], (uint8)m_vecDbsConnect.size() );
+		m_pHandler->OnDisConnect( &m_vecDbsConnect[0], (uint8_t)m_vecDbsConnect.size() );
 		CDynamicObject::DestroyInstance( m_pHandler );
 
-		for( uint32 i = 0; i < m_vecDbsConnect.size(); i++ )
+		for( uint32_t i = 0; i < m_vecDbsConnect.size(); i++ )
 			SAFE_RELEASE( m_vecDbsConnect[i] );
 		SAFE_RELEASE( m_pThreadLog );
 		GammaDestroySemaphore( m_hReadSemaphore );
@@ -70,12 +70,12 @@ namespace Gamma
 
 	bool CDbsThread::ConnectDbs()
 	{
-		for( uint32 i = 0; i < m_vecDbsConnect.size(); i++ )
+		for( uint32_t i = 0; i < m_vecDbsConnect.size(); i++ )
 			SAFE_RELEASE( m_vecDbsConnect[i] );
 
 		try
 		{
-			for( uint32 i = 0; i < m_vecDbsConnect.size(); i++ )
+			for( uint32_t i = 0; i < m_vecDbsConnect.size(); i++ )
 			{
 				m_vecDbsConnect[i] = GetDatabase()->CreateConnection(
 					m_listParam[i].m_szDbsHost.c_str(),
@@ -88,25 +88,25 @@ namespace Gamma
 					false, false );
 
 			}
-			m_pHandler->OnConnected( m_nThreadIndex, &m_vecDbsConnect[0], (uint8)m_vecDbsConnect.size(), m_bIsRecord );
+			m_pHandler->OnConnected( m_nThreadIndex, &m_vecDbsConnect[0], (uint8_t)m_vecDbsConnect.size(), m_bIsRecord );
 		}
 		catch( string szError )
 		{
-			for( uint32 i = 0; i < m_vecDbsConnect.size(); i++ )
+			for( uint32_t i = 0; i < m_vecDbsConnect.size(); i++ )
 				SAFE_RELEASE( m_vecDbsConnect[i] );
 			GammaLog << "CDbsThread ConnectDbs " << szError.c_str() << endl;
 			return false;
 		}
 		catch( const char* szError )
 		{
-			for( uint32 i = 0; i < m_vecDbsConnect.size(); i++ )
+			for( uint32_t i = 0; i < m_vecDbsConnect.size(); i++ )
 				SAFE_RELEASE( m_vecDbsConnect[i] );
 			GammaLog << "CDbsThread ConnectDbs " << szError << endl;
 			return false;
 		}
 		catch( ... )
 		{
-			for( uint32 i = 0; i < m_vecDbsConnect.size(); i++ )
+			for( uint32_t i = 0; i < m_vecDbsConnect.size(); i++ )
 				SAFE_RELEASE( m_vecDbsConnect[i] );
 			GammaLog << "CDbsThread ConnectDbs " << "Unknow Error" << endl;
 			return false;
@@ -115,13 +115,13 @@ namespace Gamma
 		return true;
 	}
 
-	uint32 CDbsThread::RunThread( void* pParam )
+	uint32_t CDbsThread::RunThread( void* pParam )
 	{
 		GammaSetThreadName( "CDbsThread" );
 		return reinterpret_cast<CDbsThread*>( pParam )->Run();
 	}
 
-	uint32 CDbsThread::Run()
+	uint32_t CDbsThread::Run()
 	{
 		if( !ConnectDbs() )
 			GammaThrow( "Can not connect dbs server!!!!" );
@@ -145,7 +145,7 @@ namespace Gamma
 		while( true )
 		{
 			bool bAllValid = true;
-			for( uint32 i = 0; i < m_vecDbsConnect.size() && bAllValid; i++ )
+			for( uint32_t i = 0; i < m_vecDbsConnect.size() && bAllValid; i++ )
 				if( !m_vecDbsConnect[i] || !m_vecDbsConnect[i]->Ping() )
 					bAllValid = false;
 			if( bAllValid )
@@ -155,8 +155,8 @@ namespace Gamma
 			m_pThreadLog->Write(strLog.c_str(), strLog.size());
 
 			if( m_vecDbsConnect[0] )
-				m_pHandler->OnDisConnect( &m_vecDbsConnect[0], (uint8)m_vecDbsConnect.size() );
-			for( uint32 i = 0; i < m_vecDbsConnect.size(); i++ )
+				m_pHandler->OnDisConnect( &m_vecDbsConnect[0], (uint8_t)m_vecDbsConnect.size() );
+			for( uint32_t i = 0; i < m_vecDbsConnect.size(); i++ )
 				SAFE_RELEASE( m_vecDbsConnect[i] );
 
 
@@ -171,7 +171,7 @@ namespace Gamma
 		// 执行数据库查询
 		for( ;; )
 		{
-			uint32 nCount = ELEM_COUNT( arySendBuf );
+			uint32_t nCount = ELEM_COUNT( arySendBuf );
 			SQueryContext context;
 			if (!m_CmdBuffer.PopBuffer(context, arySendBuf, nCount))
 				return;
@@ -183,7 +183,7 @@ namespace Gamma
 				{
 					// 使用DB_LOG指定的数据库 写业务日志
 					m_pHandler->OnShellMsg(&m_vecDbsConnect[0],
-						(uint8)m_vecDbsConnect.size(), nullptr,
+						(uint8_t)m_vecDbsConnect.size(), nullptr,
 						arySendBuf[0].first, arySendBuf[0].second);
 				}
 				else
@@ -192,14 +192,14 @@ namespace Gamma
 					m_nResultIndex = 0;
 					m_aryResultBuffer[0].clear();
 					m_pHandler->OnShellMsg(&m_vecDbsConnect[0],
-						(uint8)m_vecDbsConnect.size(), this,
+						(uint8_t)m_vecDbsConnect.size(), this,
 						arySendBuf[0].first, arySendBuf[0].second);
 					if (!m_aryResultBuffer[m_nResultIndex].empty())
 						m_nResultIndex++;
-					for (uint32 i = 0; i < m_nResultIndex; i++)
+					for (uint32_t i = 0; i < m_nResultIndex; i++)
 					{
 						arySendBuf[i].first = m_aryResultBuffer[i].c_str();
-						arySendBuf[i].second = (uint32)m_aryResultBuffer[i].size();
+						arySendBuf[i].second = (uint32_t)m_aryResultBuffer[i].size();
 					}
 					context.nOutDBTime = GetProcessTime();
 					m_ResultBuffer.PushBuffer(context, arySendBuf, m_nResultIndex, false);
@@ -210,7 +210,7 @@ namespace Gamma
 				vector<char> vecBuf( arySendBuf[0].second*2, 0 );
 				for( size_t i = 0; i < arySendBuf[0].second; i++ )
 				{
-					uint8 nValue = ((const uint8*)arySendBuf[0].first)[i];
+					uint8_t nValue = ((const uint8_t*)arySendBuf[0].first)[i];
 					vecBuf[i*2] = (char)ValueToHexNumber( nValue >> 4 );
 					vecBuf[i*2 + 1] = (char)ValueToHexNumber( nValue&0xf );
 				}
@@ -239,7 +239,7 @@ namespace Gamma
 		m_aryResultBuffer[m_nResultIndex].clear();
 	}
 
-	void CDbsThread::Querry( uint32 nQueryID, const SSendBuf aryBuffer[], uint32 nBufferCount )
+	void CDbsThread::Querry( uint32_t nQueryID, const SSendBuf aryBuffer[], uint32_t nBufferCount )
 	{
 		SQueryContext context;
 		context.bIsRecord = false;
@@ -256,7 +256,7 @@ namespace Gamma
 	}
 
 
-	void CDbsThread::Record(const SSendBuf aryBuffer[], uint32 nBufferCount)
+	void CDbsThread::Record(const SSendBuf aryBuffer[], uint32_t nBufferCount)
 	{
 		SQueryContext context;
 		context.bIsRecord = true;
@@ -271,17 +271,17 @@ namespace Gamma
 		GammaPutSemaphore(m_hReadSemaphore);
 	}
 
-	bool CDbsThread::GetResult(SQueryContext& context, SSendBuf aryBuffer[], uint32& nBufferCount)
+	bool CDbsThread::GetResult(SQueryContext& context, SSendBuf aryBuffer[], uint32_t& nBufferCount)
 	{
 		return m_ResultBuffer.PopBuffer(context, aryBuffer, nBufferCount );
 	}
 
-	uint32 CDbsThread::GetWaitingCmdCount() const
+	uint32_t CDbsThread::GetWaitingCmdCount() const
 	{
 		return m_CmdBuffer.GetWaitingBufferCount();
 	}
 
-	uint32 CDbsThread::GetWaitingResultCount() const
+	uint32_t CDbsThread::GetWaitingResultCount() const
 	{
 		return m_ResultBuffer.GetWaitingBufferCount();
 	}

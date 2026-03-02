@@ -7,7 +7,7 @@ namespace Gamma
 {
 #pragma pack(push,1)
 
-	typedef TBasePrtlMsg<uint8> CPrtGammaConnects;
+	typedef TBasePrtlMsg<uint8_t> CPrtGammaConnects;
 
 #undef Cmd_Begin
 #undef Cmd_End
@@ -17,7 +17,7 @@ namespace Gamma
 	{\
 	public:\
 	CommandName() : CPrtGammaConnects( CommandId ){}\
-	static uint8 GetIdByType()		{ return (uint8)CommandId; }\
+	static uint8_t GetIdByType()		{ return (uint8_t)CommandId; }\
 	static size_t GetHeaderSize()	{ return sizeof(CommandName); }\
 	static const char* GetName()	{ return #CommandName; }
 
@@ -43,13 +43,13 @@ namespace Gamma
 	Cmd_End
 
 	Cmd_Begin( CGC_ShellMsg8, eGC_ShellMsg8 )
-		CGC_ShellMsg8( uint8 nId ) : CPrtGammaConnects( nId ){}
-		uint8 nMsgLen;
+		CGC_ShellMsg8( uint8_t nId ) : CPrtGammaConnects( nId ){}
+		uint8_t nMsgLen;
 		size_t GetExtraSize( size_t nSize ) const { return GetId()*256 + nMsgLen; }
 	Cmd_End
 
 	Cmd_Begin( CGC_ShellMsg32, eGC_ShellMsg32 )
-		uint32 nMsgLen;
+		uint32_t nMsgLen;
 		size_t GetExtraSize( size_t nSize ) const { return nMsgLen; }
 	Cmd_End
 

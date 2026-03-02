@@ -9,7 +9,7 @@ namespace Gamma
 {
 	typedef TGammaRBTree<CAddrResolution> CResolutionMap;
 	typedef TTinyList<CAddrResolutionDelegate> CAddrResolutionList;
-	struct SAddressInfoArray { UAddressInfo aryInfo[1024]; uint32 nCount; };
+	struct SAddressInfoArray { UAddressInfo aryInfo[1024]; uint32_t nCount; };
 
 	//===================================================================
 	// CAddrResolution
@@ -21,8 +21,8 @@ namespace Gamma
 	{
 		HTHREAD					m_hThread;
 		HLOCK					m_hAddrResolutionLock;
-		uint32					m_nValidSeconds;
-		int64					m_nPreResolutionTime;
+		uint32_t					m_nValidSeconds;
+		int64_t					m_nPreResolutionTime;
 		CAddressInfoList		m_listAddressBuff[2];
 		ELoadState				m_eResolutionState;
 
@@ -34,7 +34,7 @@ namespace Gamma
 		Gamma::ELoadState		GetResolutionState() const { return m_eResolutionState; }
 		void					AddDelegate( CAddrResolutionDelegate* pDelegate );
 		void					RemoveDelegate( CAddrResolutionDelegate* pDelegate );
-		void					SetIPValidTime( uint32 nValidSeconds );
+		void					SetIPValidTime( uint32_t nValidSeconds );
 		bool					IsTimeOut() const;
 		void					Resolve();
 	};
@@ -46,7 +46,7 @@ namespace Gamma
 		, m_nPreResolutionTime( 0 )
 		, m_hThread( NULL )
 	{
-		uint32 nLen = (uint32)strlen(szAddress);
+		uint32_t nLen = (uint32_t)strlen(szAddress);
 		char* szStrBuffer = new char[nLen + 1];
 		memcpy( szStrBuffer, szAddress, nLen + 1 );
 		gammacstring::assign( szStrBuffer, true );
@@ -102,8 +102,8 @@ namespace Gamma
 
 		SAddressInfoArray aryResult[2];
 		aryResult[0].nCount = aryResult[1].nCount = 0;
-		int32 arySocketType[2] = { SOCK_STREAM, SOCK_DGRAM };
-		for( uint32 i = 0; i < ELEM_COUNT(arySocketType); i++ )
+		int32_t arySocketType[2] = { SOCK_STREAM, SOCK_DGRAM };
+		for( uint32_t i = 0; i < ELEM_COUNT(arySocketType); i++ )
 		{
 			addrinfo Info;
 			memset( &Info, 0, sizeof(Info) );
@@ -120,7 +120,7 @@ namespace Gamma
 					if( pResult->ai_family == AF_INET || 
 						pResult->ai_family == AF_INET6 )
 					{
-						uint32 nIndex = aryResult[i].nCount++;
+						uint32_t nIndex = aryResult[i].nCount++;
 						UAddressInfo& AddrInfo = aryResult[i].aryInfo[nIndex];
 						memset( &AddrInfo, 0, sizeof(UAddressInfo) );
 						memcpy( &AddrInfo, pResult->ai_addr, pResult->ai_addrlen );
@@ -133,9 +133,9 @@ namespace Gamma
 			struct hostent* hp = gethostbyname( szAddress );
 			if( hp && hp->h_addr_list[0] && hp->h_addrtype == AF_INET )
 			{
-				for( int32 j = 0; hp->h_addr_list[j]; j++ )
+				for( int32_t j = 0; hp->h_addr_list[j]; j++ )
 				{
-					uint32 nIndex = aryResult[i].nCount++;
+					uint32_t nIndex = aryResult[i].nCount++;
 					UAddressInfo& AddrInfo = aryResult[i].aryInfo[nIndex];
 					memset( &AddrInfo, 0, sizeof(UAddressInfo) );
 					AddrInfo.IPv4.sin_addr = *(in_addr*)hp->h_addr_list[j];
@@ -150,7 +150,7 @@ namespace Gamma
 		else 
 			m_eResolutionState = eLoadState_Succeeded;
 
-		for( uint32 i = 0; i < ELEM_COUNT(aryResult); i++ )
+		for( uint32_t i = 0; i < ELEM_COUNT(aryResult); i++ )
 		{
 			UAddressInfo* pFirst = aryResult[i].aryInfo;
 			UAddressInfo* pEnd = pFirst + aryResult[i].nCount;
@@ -170,7 +170,7 @@ namespace Gamma
 		GammaUnlock( m_hAddrResolutionLock );
 	}
 
-	void CAddrResolution::SetIPValidTime( uint32 nValidSeconds )
+	void CAddrResolution::SetIPValidTime( uint32_t nValidSeconds )
 	{
 		m_nValidSeconds = nValidSeconds;
 	}
@@ -224,13 +224,13 @@ namespace Gamma
 			GammaUnlock( m_hNetworkFinishLock );
 			return NULL;
 		}
-		uint32 nIndex = CGammaRand::Rand<uint32>( 0, (uint32)m_listAddressBuff[bUdp].size() );
+		uint32_t nIndex = CGammaRand::Rand<uint32_t>( 0, (uint32_t)m_listAddressBuff[bUdp].size() );
 		const UAddressInfo* pInfo = &m_listAddressBuff[bUdp][nIndex];
 		GammaUnlock( m_hNetworkFinishLock );
 		return pInfo;
 	}
 
-	void CAddrResolutionDelegate::SetIPValidTime( uint32 nValidSeconds )
+	void CAddrResolutionDelegate::SetIPValidTime( uint32_t nValidSeconds )
 	{
 		return m_pResolution->SetIPValidTime( nValidSeconds );
 	}
@@ -272,8 +272,8 @@ namespace Gamma
 	{
 		GammaLock( m_hNetworkFinishLock );
 
-		uint32 nPreSize = (uint32)(m_listAddressBuff[0].size() + m_listAddressBuff[1].size());
-		for( uint32 i = 0; i < ELEM_COUNT(m_listAddressBuff); i++ )
+		uint32_t nPreSize = (uint32_t)(m_listAddressBuff[0].size() + m_listAddressBuff[1].size());
+		for( uint32_t i = 0; i < ELEM_COUNT(m_listAddressBuff); i++ )
 		{
 			if( !aryResult[i].size() )
 				continue;

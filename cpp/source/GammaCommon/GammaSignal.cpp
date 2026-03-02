@@ -13,7 +13,7 @@ namespace Gamma
 
 #ifdef _WIN32
 		LPTOP_LEVEL_EXCEPTION_FILTER	m_pPreFilter;
-		static void						OnSignal( int32 nSignal );
+		static void						OnSignal( int32_t nSignal );
 		void							EnableUnhandledException( bool bEnable );
 		static long WINAPI				ExceptionFilter( _EXCEPTION_POINTERS* pException );
 #else
@@ -28,7 +28,7 @@ namespace Gamma
 #endif
 		}
 
-		SignalHandler GetSignalHandler( int32 nSignal )
+		SignalHandler GetSignalHandler( int32_t nSignal )
 		{
 			GammaAst( nSignal < ELEM_COUNT( m_arySignal ) );
 			if( nSignal >= ELEM_COUNT( m_arySignal ) )
@@ -36,7 +36,7 @@ namespace Gamma
 			return m_arySignal[nSignal];
 		}
 
-		void SetSignalHandler( int32 nSignal, SignalHandler funHandler )
+		void SetSignalHandler( int32_t nSignal, SignalHandler funHandler )
 		{
 			GammaAst( nSignal < ELEM_COUNT( m_arySignal ) );
 			if( nSignal >= ELEM_COUNT( m_arySignal ) )
@@ -48,7 +48,7 @@ namespace Gamma
 	SSignalContext g_SignalContext;
 
 #ifdef _WIN32
-	void SSignalContext::OnSignal( int32 nSignal )
+	void SSignalContext::OnSignal( int32_t nSignal )
 	{
 		SignalHandler funHandler = g_SignalContext.GetSignalHandler( nSignal );
 		if( !funHandler )
@@ -94,7 +94,7 @@ namespace Gamma
 	//=====================================================================
 	// Signal API
 	//=====================================================================
-	GAMMA_COMMON_API void InstallSignalHandler( int32 nSignal, SignalHandler funSigHandler )
+	GAMMA_COMMON_API void InstallSignalHandler( int32_t nSignal, SignalHandler funSigHandler )
 	{
 		g_SignalContext.SetSignalHandler( nSignal, funSigHandler );
 #ifdef _WIN32
@@ -126,7 +126,7 @@ namespace Gamma
 #endif
 	}
 
-	GAMMA_COMMON_API void IgnoreSignal( int32 nSignal )
+	GAMMA_COMMON_API void IgnoreSignal( int32_t nSignal )
 	{
 #ifdef _WIN32
 		g_SignalContext.SetSignalHandler( nSignal, NULL );
@@ -142,7 +142,7 @@ namespace Gamma
 #endif
 	}
 
-	GAMMA_COMMON_API void RaiseSignal( int32 nSignal )
+	GAMMA_COMMON_API void RaiseSignal( int32_t nSignal )
 	{
 #ifdef _WIN32
 		if( nSignal == 9 )

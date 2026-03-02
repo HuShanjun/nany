@@ -30,7 +30,7 @@ namespace Gamma
 
 		void				SetLogPath( const char* szLogPath );
 		const char*			GetLogPath() const;
-		CLog*				GetLog( const char* szPrefix, uint32 nContext, ELogPathType eType );
+		CLog*				GetLog( const char* szPrefix, uint32_t nContext, ELogPathType eType );
 		CConsole&			GetConsole();
 
 		static CLogManager&	Instance();
@@ -45,26 +45,26 @@ namespace Gamma
 		std::string			m_szPrefix;
 		ELogPathType		m_eType;
 		time_t				m_nCreateTime;
-		uint32				m_nSerialNum;
-		uint32				m_nContext;
-		int32				m_nLastDay;
+		uint32_t				m_nSerialNum;
+		uint32_t				m_nContext;
+		int32_t				m_nLastDay;
 
 		void				CheckDate();
 		void				CreateLogFile();
 
-		CLog( const char* szPrefix, uint32 nContext, ELogPathType eType, time_t nCreateTime, uint32 nSerialNum );
+		CLog( const char* szPrefix, uint32_t nContext, ELogPathType eType, time_t nCreateTime, uint32_t nSerialNum );
 		~CLog(void);
 	public:
 		friend class CLogManager;
 		// log file name format : szLogPath/yyyymmdd/szPrefix[yyyymmddformat][serialformat],  
-		uint32				Format( const char*, va_list );
-		uint32				Format( const char*, ... );
+		uint32_t				Format( const char*, va_list );
+		uint32_t				Format( const char*, ... );
 		void				Write( const char*, size_t );	
 
 		size_t				GetLogSize() const { return m_nBytesWrited; };
 		const char*			GetPrefix() const { return m_szPrefix.c_str(); };
 		time_t				GetCreateTime() const { return m_nCreateTime; }
-		uint32				GetSerialNum() const { return m_nSerialNum; }
+		uint32_t				GetSerialNum() const { return m_nSerialNum; }
 
 		void				Reset();
 		void				Save();
@@ -119,12 +119,12 @@ namespace Gamma
 	{
 		Gamma::HLOCK	m_Lock;
 		std::string		m_szLog;
-		uint32			m_nPrintLevel;
-		uint32			m_nConfLevel;
+		uint32_t			m_nPrintLevel;
+		uint32_t			m_nConfLevel;
 
 		void _flush()
 		{
-			uint32 nLogSize = (uint32)m_szLog.size();
+			uint32_t nLogSize = (uint32_t)m_szLog.size();
 			CConsole& console = CLogManager::Instance().GetConsole();
 			console.Write( m_szLog.c_str(), nLogSize, m_nPrintLevel);
 			m_szLog.clear();
@@ -135,7 +135,7 @@ namespace Gamma
 		typedef Parent_t::pos_type pos_type_t;
 		typedef Parent_t::off_type off_type_t;
 
-		void SetLogLevels(uint32 nConf, uint32 nPrint)
+		void SetLogLevels(uint32_t nConf, uint32_t nPrint)
 		{
 			m_nPrintLevel = nPrint;
 			m_nConfLevel = nConf;

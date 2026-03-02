@@ -12,7 +12,7 @@ namespace Gamma
 		, m_pMin( NULL )
 		, m_pMax( NULL )
     {
-        *this = int32();
+        *this = int32_t();
     }
 
     CVarient::~CVarient()
@@ -66,7 +66,7 @@ namespace Gamma
 		return *this;
 	}
 
-    const CVarient& CVarient::operator= ( int32 nValue )
+    const CVarient& CVarient::operator= ( int32_t nValue )
     {
         m_eType = eVT_Integer;
 		if( m_pMin )
@@ -157,39 +157,39 @@ namespace Gamma
     const CVarient& CVarient::operator= ( SComboBoxData comValue )
     {
         m_eType = eVT_ComboBox;
-        _Assign( ( (char*)comValue.m_szComboBoxItems ) - sizeof(uint16), 
-			( wcslen( comValue.m_szComboBoxItems ) + 1 )*sizeof( wchar_t ) + sizeof(uint16) );
+        _Assign( ( (char*)comValue.m_szComboBoxItems ) - sizeof(uint16_t), 
+			( wcslen( comValue.m_szComboBoxItems ) + 1 )*sizeof( wchar_t ) + sizeof(uint16_t) );
 
 		if( m_pMin )
 			comValue.m_nComboBoxIndex = Max( comValue.m_nComboBoxIndex, m_pMin->ComIndex() );
 		if( m_pMax )
 			comValue.m_nComboBoxIndex = Min( comValue.m_nComboBoxIndex, m_pMax->ComIndex() );
 
-        *(uint16*)( _GetBuff() ) = comValue.m_nComboBoxIndex;
+        *(uint16_t*)( _GetBuff() ) = comValue.m_nComboBoxIndex;
         return *this;
 	}
 
 	const CVarient& CVarient::operator= ( SCheckComboBoxData comValue )
 	{
 		m_eType = eVT_CheckComboBox;
-		uint32 nItemCount = 0;
-		uint32 nIndex = 0;
+		uint32_t nItemCount = 0;
+		uint32_t nIndex = 0;
 		while( comValue.m_szComboBoxItems[nIndex] )
 			nItemCount += comValue.m_szComboBoxItems[nIndex++] == ',' ? 1 : 0;
 		if( comValue.m_szComboBoxItems[0] )
 			nItemCount++;
 
 		std::vector<char> vecBuf;
-		vecBuf.resize( ( wcslen( comValue.m_szComboBoxItems ) + 1 )*sizeof( wchar_t ) + nItemCount + sizeof(uint32) );
+		vecBuf.resize( ( wcslen( comValue.m_szComboBoxItems ) + 1 )*sizeof( wchar_t ) + nItemCount + sizeof(uint32_t) );
 		char* buf = &vecBuf[0];
-		*(uint32*)( buf ) = nItemCount;
-		memcpy( buf + sizeof(uint32), comValue.m_aryComboBoxMask, nItemCount );
-		memcpy( buf + ( nItemCount + sizeof(uint32) ), comValue.m_szComboBoxItems, ( wcslen( comValue.m_szComboBoxItems ) + 1 )*sizeof( wchar_t ) );
-		_Assign( buf, ( wcslen( comValue.m_szComboBoxItems ) + 1 )*sizeof( wchar_t ) + nItemCount + sizeof(uint32) );
+		*(uint32_t*)( buf ) = nItemCount;
+		memcpy( buf + sizeof(uint32_t), comValue.m_aryComboBoxMask, nItemCount );
+		memcpy( buf + ( nItemCount + sizeof(uint32_t) ), comValue.m_szComboBoxItems, ( wcslen( comValue.m_szComboBoxItems ) + 1 )*sizeof( wchar_t ) );
+		_Assign( buf, ( wcslen( comValue.m_szComboBoxItems ) + 1 )*sizeof( wchar_t ) + nItemCount + sizeof(uint32_t) );
 		return *this;
 	}
 
-    const CVarient& CVarient::operator= ( uint32 nValue )
+    const CVarient& CVarient::operator= ( uint32_t nValue )
     {
 		m_eType = eVT_UnsignedInteger;
 		if( m_pMin )
@@ -280,7 +280,7 @@ namespace Gamma
 		wchar_t szBuffer[256];
 		wgammasstream ss( szBuffer, ELEM_COUNT(szBuffer) );
 		ss << v;
-		uint32 nLength = (uint32)ss.length();
+		uint32_t nLength = (uint32_t)ss.length();
 
 		if( m_nCurSize + ( nLength + 1 )*sizeof(wchar_t) > m_nMaxSize )
 		{
@@ -317,12 +317,12 @@ namespace Gamma
 
 		if( m_eType == eVT_ComboBox )
 		{
-			uint16 nIndex = ComIndex();
+			uint16_t nIndex = ComIndex();
 			const wchar_t* szItems = ComItems();
-			int32 nPreItem = 0;
-			int32 nEnd = 0;
-			int32 n = 0;
-			for( int32 i = 0; szItems[i]; nEnd = ++i )
+			int32_t nPreItem = 0;
+			int32_t nEnd = 0;
+			int32_t n = 0;
+			for( int32_t i = 0; szItems[i]; nEnd = ++i )
 			{
 				if( szItems[i] != L',' )
 					continue;
@@ -339,11 +339,11 @@ namespace Gamma
 		{
 			const tbyte* aryMask = ComMask();
 			const wchar_t* szItems = ComItems();
-			int32 nPreItem = 0;
-			int32 nEnd = 0;
-			uint64 n = 0;
+			int32_t nPreItem = 0;
+			int32_t nEnd = 0;
+			uint64_t n = 0;
 			std::wstring strValue;
-			for( int32 i = 0; szItems[i]; nEnd = ++i )
+			for( int32_t i = 0; szItems[i]; nEnd = ++i )
 			{
 				if( szItems[i] != L',' )
 					continue;
@@ -361,20 +361,20 @@ namespace Gamma
 		return NULL;
 	}
 
-	int32 CVarient::Int() const
+	int32_t CVarient::Int() const
 	{
 		if( m_eType == eVT_Integer || m_eType == eVT_UnsignedInteger || m_eType == eVT_Color )
-			return *( (int32*)_GetBuff() );
+			return *( (int32_t*)_GetBuff() );
 		if( m_eType == eVT_ComboBox )
-			return *( (uint16*)_GetBuff() );
+			return *( (uint16_t*)_GetBuff() );
 		if( m_eType == eVT_CheckComboBox )
 		{
-			uint32 nCount = *( (uint32*)_GetBuff() );
+			uint32_t nCount = *( (uint32_t*)_GetBuff() );
 			const tbyte* aryMask = ComMask();
-			uint32 nResult = 0;
-			for( uint32 i = 0, n = 1; i < nCount; i++, n = n << 1 )
+			uint32_t nResult = 0;
+			for( uint32_t i = 0, n = 1; i < nCount; i++, n = n << 1 )
 				nResult |= aryMask[i] ? n : 0;
-			return (int32)nResult;
+			return (int32_t)nResult;
 		}
 		return GammaA2I( Str() );
 	}
@@ -386,11 +386,11 @@ namespace Gamma
 		return (float)GammaA2F( Str() );
 	}
 
-	uint32 CVarient::Uint() const
+	uint32_t CVarient::Uint() const
 	{
 		if( m_eType == eVT_Integer || m_eType == eVT_UnsignedInteger || m_eType == eVT_Color )
-			return *( (uint32*)_GetBuff() );
-		return (uint32)Int();
+			return *( (uint32_t*)_GetBuff() );
+		return (uint32_t)Int();
 	}
 
 	Gamma::CColor CVarient::Color() const
@@ -426,33 +426,33 @@ namespace Gamma
 		return Str();
 	}
 
-	uint16 CVarient::ComIndex() const
+	uint16_t CVarient::ComIndex() const
 	{
 		if( m_eType == eVT_ComboBox )
-			return *(uint16*)_GetBuff();
-		return (uint16)Int();
+			return *(uint16_t*)_GetBuff();
+		return (uint16_t)Int();
 	}
 
-	uint32 CVarient::MaskCount() const
+	uint32_t CVarient::MaskCount() const
 	{
 		if( m_eType == eVT_CheckComboBox )
-			return *(uint32*)_GetBuff();
+			return *(uint32_t*)_GetBuff();
 		return 0;
 	}
 
 	const tbyte* CVarient::ComMask() const
 	{
 		if( m_eType == eVT_CheckComboBox )
-			return (const tbyte*)( _GetBuff() + sizeof(uint32) );
+			return (const tbyte*)( _GetBuff() + sizeof(uint32_t) );
 		return (const tbyte*)"";
 	}
 
 	const wchar_t* CVarient::ComItems() const
 	{
 		if( m_eType == eVT_ComboBox )
-			return (const wchar_t*)( _GetBuff() + sizeof(uint16) );
+			return (const wchar_t*)( _GetBuff() + sizeof(uint16_t) );
 		if( m_eType == eVT_CheckComboBox )
-			return (const wchar_t*)( _GetBuff() + sizeof(uint32) + MaskCount() );
+			return (const wchar_t*)( _GetBuff() + sizeof(uint32_t) + MaskCount() );
 		return L"";
 	}
 

@@ -18,12 +18,12 @@ namespace Gamma
         CDbResult( MYSQL_RES* pRes );
         virtual ~CDbResult();
 
-        uint32           GetRowNum();
-        uint32           GetColNum();
+        uint32_t           GetRowNum();
+        uint32_t           GetColNum();
 
-        void             Locate( uint32 nIndex );
-        const char*      GetData( uint32 uColIndex );
-        uint32           GetDataLength( uint32 uColIndex );
+        void             Locate( uint32_t nIndex );
+        const char*      GetData( uint32_t uColIndex );
+        uint32_t           GetDataLength( uint32_t uColIndex );
         void             Release();
 
         void             SetTag( void* pTag );

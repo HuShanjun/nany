@@ -58,7 +58,7 @@ namespace Gamma
 		SLock				m_Lock;
 		size_t				m_nMoudleCount;
 		size_t				m_nMoudleMaxCount;
-		uint64*				m_pModuleBase;
+		uint64_t*				m_pModuleBase;
 #elif defined _ANDROID
 		unwindFn			m_unwind_backtrace;  
 		unwindSymbFn		m_get_backtrace_symbols;  
@@ -69,12 +69,12 @@ namespace Gamma
 		static CGammaDebug&	Instance();
 
 #ifdef _WIN32
-		static int _stdcall	EnumModuleCallback( char* sModuleName, uint64 nModuleBase, uint32, void* pArg );
+		static int _stdcall	EnumModuleCallback( char* sModuleName, uint64_t nModuleBase, uint32_t, void* pArg );
 		void				CheckAndLoadSymbol();
-		bool				AddModule( uint64 nModuleBase );
+		bool				AddModule( uint64_t nModuleBase );
 		void				DebugGenMiniDump( _EXCEPTION_POINTERS* pException, const wchar_t* szFileName, bool bFullMemDump );
 #endif
-		void				DebugAddress2Symbol( void* pAddress, char* szSymbolBuf, uint32 nSize );
-		size_t				GetStack( void** pStack, uint16 uBegin, uint16 uEnd, void* pMinStack = NULL );
+		void				DebugAddress2Symbol( void* pAddress, char* szSymbolBuf, uint32_t nSize );
+		size_t				GetStack( void** pStack, uint16_t uBegin, uint16_t uEnd, void* pMinStack = NULL );
 	};
 }

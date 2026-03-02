@@ -27,7 +27,7 @@ namespace Gamma
 		class CGammaRBTreeNode
 		{
 			bool					m_bRootNode;
-			int8					m_nNodeColor;
+			int8_t					m_nNodeColor;
 			CGammaRBTreeNode*		m_pLeftChild;
 			CGammaRBTreeNode*		m_pRightChild;
 #ifdef _DEBUG
@@ -92,7 +92,7 @@ namespace Gamma
 				CGammaRBTreeNode* pLeftChild = m_pLeftChild;
 				CGammaRBTreeNode* pRightChild = m_pRightChild;
 				bool bRootNode = m_bRootNode;
-				int8 nNodeColor = m_nNodeColor;
+				int8_t nNodeColor = m_nNodeColor;
 				if( bRootNode )
 					m_pTree->m_pRootNode = pNode;
 				else if( this == pParent->m_pLeftChild )
@@ -233,8 +233,8 @@ namespace Gamma
 						// 侄子的颜色
 						CGammaRBTreeNode* pLeftNephew = pBrother->m_pLeftChild;
 						CGammaRBTreeNode* pRightNephew = pBrother->m_pRightChild;
-						int8 nLeftNephewColor = pLeftNephew ? pLeftNephew->m_nNodeColor : eBlack;
-						int8 nRightNephewColor = pRightNephew ? pRightNephew->m_nNodeColor : eBlack; 
+						int8_t nLeftNephewColor = pLeftNephew ? pLeftNephew->m_nNodeColor : eBlack;
+						int8_t nRightNephewColor = pRightNephew ? pRightNephew->m_nNodeColor : eBlack; 
 						// Case 2: x是“黑+黑”节点，x的兄弟节点是黑色，x的兄弟节点的两个孩子都是黑色。
 						//	原理：共同抽取兄弟节点与当前节点的一个黑到父节点去
 						if( nLeftNephewColor == eBlack && nRightNephewColor == eBlack )
@@ -289,8 +289,8 @@ namespace Gamma
 						// 侄子的颜色
 						CGammaRBTreeNode* pLeftNephew = pBrother->m_pLeftChild;
 						CGammaRBTreeNode* pRightNephew = pBrother->m_pRightChild;
-						int8 nLeftNephewColor = pLeftNephew ? pLeftNephew->m_nNodeColor : eBlack;
-						int8 nRightNephewColor = pRightNephew ? pRightNephew->m_nNodeColor : eBlack; 
+						int8_t nLeftNephewColor = pLeftNephew ? pLeftNephew->m_nNodeColor : eBlack;
+						int8_t nRightNephewColor = pRightNephew ? pRightNephew->m_nNodeColor : eBlack; 
 						// Case 2: x是“黑+黑”节点，x的兄弟节点是黑色，x的兄弟节点的两个孩子都是黑色。
 						//	原理：共同抽取兄弟节点与当前节点的一个黑到父节点去
 						if( nLeftNephewColor == eBlack && nRightNephewColor == eBlack )
@@ -433,9 +433,9 @@ namespace Gamma
 			return !m_pRootNode;
 		}
 
-		uint32 Size() const
+		uint32_t Size() const
 		{
-			uint32 nSize = 0;			
+			uint32_t nSize = 0;			
 			for( CGammaRBTreeNode* pNode = GetFirst(); pNode; pNode = pNode->GetNext() )
 				nSize++;				
 			return nSize;
@@ -738,7 +738,7 @@ namespace Gamma
 			return iterator( Find( key ) );
 		}
 
-		uint32 size() const
+		uint32_t size() const
 		{
 			return Size();
 		}
@@ -746,7 +746,7 @@ namespace Gamma
 	private:
 		CGammaRBTreeNode*	m_pRootNode;
 #ifdef _DEBUG
-		int32 m_size;
+		int32_t m_size;
 #endif // DEBUG
 
 	};

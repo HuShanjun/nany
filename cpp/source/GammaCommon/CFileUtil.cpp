@@ -7,7 +7,7 @@
    Class	CFileUtil
 
 */
-int32 CFileUtil::GetLastModifiedTime(const char* pFileName,time_t& LastModifiedTime)
+int32_t CFileUtil::GetLastModifiedTime(const char* pFileName,time_t& LastModifiedTime)
 {
 	struct stat filestat;
 	if ( 0 != stat(pFileName,&filestat) )

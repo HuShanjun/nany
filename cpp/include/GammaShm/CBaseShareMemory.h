@@ -23,26 +23,26 @@ namespace Gamma
 	// 如角色，帮会等，由游戏定义
 	struct SChunckTypeInfo
 	{
-		uint32			m_bCommitFlagRequire;
-		uint32			m_nChunkOffset;
-		uint32			m_nChunkSize;
-		uint32			m_nChunkCount;
+		uint32_t			m_bCommitFlagRequire;
+		uint32_t			m_nChunkOffset;
+		uint32_t			m_nChunkSize;
+		uint32_t			m_nChunkCount;
 	};
 
 	// 大数据块头部结构
 	struct SChunckHead
 	{
-		uint64			m_nChunckID;
-		uint32			m_nChunkHeadSize;
-		uint32			m_nBlockCount;
-		uint16			m_nDBGasID;
-		uint16			m_nDataState;
-		uint32			m_nDataVersion;
+		uint64_t			m_nChunckID;
+		uint32_t			m_nChunkHeadSize;
+		uint32_t			m_nBlockCount;
+		uint16_t			m_nDBGasID;
+		uint16_t			m_nDataState;
+		uint32_t			m_nDataVersion;
 
-		uint32			m_nCommitIDFirst;	// 当前数据提交ID
-		uint32			m_nCommitIDLast;	// 当前数据提交ID
+		uint32_t			m_nCommitIDFirst;	// 当前数据提交ID
+		uint32_t			m_nCommitIDLast;	// 当前数据提交ID
 		
-		uint16			m_nQueryCheck;		//	提交检查
+		uint16_t			m_nQueryCheck;		//	提交检查
 	};
 
 	// 小数据块类型信息
@@ -50,14 +50,14 @@ namespace Gamma
 	// 如角色的技能、道具
 	struct SBlockInfo
 	{
-		uint32			m_nType;
-		uint32			m_nDataOffset;
-		uint32			m_nMaxBlockSize;
-		uint32			m_nArrayStartOff;	// 数组结构起始位置
-		uint32			m_nArrayElemSize;	// 数组元素大小
+		uint32_t			m_nType;
+		uint32_t			m_nDataOffset;
+		uint32_t			m_nMaxBlockSize;
+		uint32_t			m_nArrayStartOff;	// 数组结构起始位置
+		uint32_t			m_nArrayElemSize;	// 数组元素大小
 		union
 		{
-			uint64		m_ptPoint;
+			uint64_t		m_ptPoint;
 			void*		m_pContextData;
 		};
 	};
@@ -66,7 +66,7 @@ namespace Gamma
 	struct SSizeType
 	{
 		SSizeType() : m_nSize(0){}
-		uint32 m_nSize;
+		uint32_t m_nSize;
 	};
 
 
@@ -74,34 +74,34 @@ namespace Gamma
 	{
 	protected:
 		bool			m_bCloned;
-		int64			m_UUID;
-		std::set<int64> m_AllObserverID;
+		int64_t			m_UUID;
+		std::set<int64_t> m_AllObserverID;
 
 	public:
-		CDataContainer( uint64 uuid = 0 )
+		CDataContainer( uint64_t uuid = 0 )
 			: m_bCloned( false )
 			, m_UUID(uuid){}
 		virtual ~CDataContainer() {}
-		virtual uint8 GetDataDefineType() const = 0;
-		virtual void  UpdateDB( uint8 _eCTType, uint16 _nTableID, int64 nDataUUID, uint16 _nFieldIndex) = 0;
-		virtual void  OnDBResult( uint8 _eCTType, uint16 _nTableID, int64 nDataUUID ) = 0;
-		void SetUUID(int64 nID) { m_UUID = nID; }
-		int64 GetUUID() const { return m_UUID; }
-		bool AddObserver(int64 nID)
+		virtual uint8_t GetDataDefineType() const = 0;
+		virtual void  UpdateDB( uint8_t _eCTType, uint16_t _nTableID, int64_t nDataUUID, uint16_t _nFieldIndex) = 0;
+		virtual void  OnDBResult( uint8_t _eCTType, uint16_t _nTableID, int64_t nDataUUID ) = 0;
+		void SetUUID(int64_t nID) { m_UUID = nID; }
+		int64_t GetUUID() const { return m_UUID; }
+		bool AddObserver(int64_t nID)
 		{
 			if (m_AllObserverID.find(nID) != m_AllObserverID.end())
 				return false;
 			m_AllObserverID.insert(nID);
 			return true;
 		}
-		void DelObserver(int64 nID)
+		void DelObserver(int64_t nID)
 		{
 			if (-1 == nID)
 				m_AllObserverID.clear();
 			else
 				m_AllObserverID.erase(nID);
 		}
-		const std::set<int64>& GetAllObserverID() const
+		const std::set<int64_t>& GetAllObserverID() const
 		{
 			return m_AllObserverID;
 		}
@@ -117,27 +117,27 @@ namespace Gamma
 	// 当没有需要diff的数组结构的时候，m_nArrayElemSize为0
 	struct SBlockData
 	{
-		uint32			m_nQueryDataVersion;	//请求数据版本
-		uint32			m_nAnswerDataVersion;	//应答数据版本
-		uint32			m_nBlockInfoIndex;	// SBlockInfo
-		uint32			m_nRegistForCommit;	// 是否已经注册提交,INVALID_32BITID 表示不用提交，否则表示数据块的索引，用于服务器创建对象不成功的时候从commit列表删除
-		uint32			m_nCommitIDFirst;	// 当前数据提交ID
-		uint32			m_nCommitIDLast;	// 当前数据提交ID
+		uint32_t			m_nQueryDataVersion;	//请求数据版本
+		uint32_t			m_nAnswerDataVersion;	//应答数据版本
+		uint32_t			m_nBlockInfoIndex;	// SBlockInfo
+		uint32_t			m_nRegistForCommit;	// 是否已经注册提交,INVALID_32BITID 表示不用提交，否则表示数据块的索引，用于服务器创建对象不成功的时候从commit列表删除
+		uint32_t			m_nCommitIDFirst;	// 当前数据提交ID
+		uint32_t			m_nCommitIDLast;	// 当前数据提交ID
 
 		//观察者
 		union
 		{
-			uint64				m_ptPoint;
+			uint64_t				m_ptPoint;
 			CDataContainer*	m_pDataContainter;
 		};
 
 		bool			m_bSaveDB;
-		uint8			m_ShmStateMask;	//通用表 shm中，本块数据在shm中的状态
+		uint8_t			m_ShmStateMask;	//通用表 shm中，本块数据在shm中的状态
 		//db操作使用
-		uint16			m_nDataTableID;
-		uint32			m_nDataSize;
-		int64			m_UUID;	//必须为最后一个变量
-		SBlockData( uint16 nDataTableID = 0, uint32 nDataSize = 0, bool bSaveDB = false, uint64 uuid = 0  )
+		uint16_t			m_nDataTableID;
+		uint32_t			m_nDataSize;
+		int64_t			m_UUID;	//必须为最后一个变量
+		SBlockData( uint16_t nDataTableID = 0, uint32_t nDataSize = 0, bool bSaveDB = false, uint64_t uuid = 0  )
 			: m_ptPoint(0)
 			, m_nDataTableID(nDataTableID)
 			, m_nDataSize(nDataSize) 
@@ -159,14 +159,14 @@ namespace Gamma
 		{
 			return m_pDataContainter;
 		}
-		uint16 GetDataTableID() { return m_nDataTableID; }
-		uint32 GetDataSize() { return m_nDataSize; }
-		int64	GetUUID() const
+		uint16_t GetDataTableID() { return m_nDataTableID; }
+		uint32_t GetDataSize() { return m_nDataSize; }
+		int64_t	GetUUID() const
 		{
 			return m_UUID;
 		}
 		//返回值用于反射用，表示该表中第几个字段
-		int32	SetUUID(int64 uuid, bool bSimple = false )
+		int32_t	SetUUID(int64_t uuid, bool bSimple = false )
 		{
 			m_UUID = uuid;
 			return 0;
@@ -174,14 +174,14 @@ namespace Gamma
 		void SetSaveDB(bool bValue) { m_bSaveDB = bValue; }
 		bool IsSaveDB() { return m_bSaveDB; }
 
-		void SetShmState( uint8 nState, bool bSet )
+		void SetShmState( uint8_t nState, bool bSet )
 		{
 			if (bSet)
 				m_ShmStateMask |= (1 << nState);
 			else
 				m_ShmStateMask &= ~(1 << nState);
 		}
-		bool HasShmState( uint8 nState )
+		bool HasShmState( uint8_t nState )
 		{
 			return ( m_ShmStateMask & (1 << nState) ) == (1 << nState);
 		}
@@ -193,11 +193,11 @@ namespace Gamma
 	// 同时在共享文件的映射内存上构造了一个同样结构的对象
 	struct SShareCommonHead
 	{
-		uint32			m_nVersion;
-		uint32			m_nSizeOfShareFlie;
+		uint32_t			m_nVersion;
+		uint32_t			m_nSizeOfShareFlie;
 
 		// Trunk信息
-		uint32			m_nChunkTypeCount;
+		uint32_t			m_nChunkTypeCount;
 
 		/* 后面紧跟TrunkType信息
 		SChunckTypeInfo	m_aryChunkTypeInfo[0];
@@ -272,27 +272,27 @@ namespace Gamma
 	*/
 	struct SDBDebug
 	{
-		uint32			m_nQueryTime;	//发起
-		uint32			m_nMainThreadQueryTime;
-		uint32			m_nDBStartTime;	//
-		uint32			m_nDBResultTime;
-		uint32			m_nMainThreadFinishTime;
-		uint32			m_nDBCost;
+		uint32_t			m_nQueryTime;	//发起
+		uint32_t			m_nMainThreadQueryTime;
+		uint32_t			m_nDBStartTime;	//
+		uint32_t			m_nDBResultTime;
+		uint32_t			m_nMainThreadFinishTime;
+		uint32_t			m_nDBCost;
 	};
 
 	struct SDBBlockInfo : SDBDebug
 	{
-		uint32			m_nTrunkType;
-		uint32			m_nTrunkIndex;
-		uint16			m_nDBGasID;		
-		uint64			m_nTrunkID;
+		uint32_t			m_nTrunkType;
+		uint32_t			m_nTrunkIndex;
+		uint16_t			m_nDBGasID;		
+		uint64_t			m_nTrunkID;
 	};
 
 	struct SCommitBlocksInfo : SDBBlockInfo
 	{
-		uint32			m_nCommitID;
-		uint32			m_nCurDataVersion;
-		uint32			m_nBlockCount;
+		uint32_t			m_nCommitID;
+		uint32_t			m_nCurDataVersion;
+		uint32_t			m_nBlockCount;
 	};
 
 	struct SCommitFlag : SDBBlockInfo

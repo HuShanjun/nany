@@ -33,23 +33,23 @@ namespace Gamma
         // aux function
 		//==============================================================================
 		static void				PushCppObjAndWeakTable( lua_State* pL );
-		static int32			GetIndexClosure( lua_State* pL );
-		static int32			GetNewIndexClosure( lua_State* pL );
-		static int32			GetInstanceField( lua_State* pL );
-		static int32			SetInstanceField( lua_State* pL );
-		static int32			ClassCast( lua_State* pL );
-		static int32			CallByLua( lua_State* pL );
-		static int32			ErrorHandler( lua_State* pState );
-		static int32			DebugBreak( lua_State* pState );
-		static int32			BackTrace( lua_State* pState );
-        static int32			ObjectGC( lua_State* pL );
-        static int32			ObjectConstruct( lua_State* pL );
-		static int32			LoadFile( lua_State* pL );
-		static int32			DoFile( lua_State* pL );
-		static int32			Panic( lua_State* pL );	
+		static int32_t			GetIndexClosure( lua_State* pL );
+		static int32_t			GetNewIndexClosure( lua_State* pL );
+		static int32_t			GetInstanceField( lua_State* pL );
+		static int32_t			SetInstanceField( lua_State* pL );
+		static int32_t			ClassCast( lua_State* pL );
+		static int32_t			CallByLua( lua_State* pL );
+		static int32_t			ErrorHandler( lua_State* pState );
+		static int32_t			DebugBreak( lua_State* pState );
+		static int32_t			BackTrace( lua_State* pState );
+        static int32_t			ObjectGC( lua_State* pL );
+        static int32_t			ObjectConstruct( lua_State* pL );
+		static int32_t			LoadFile( lua_State* pL );
+		static int32_t			DoFile( lua_State* pL );
+		static int32_t			Panic( lua_State* pL );	
 		static void*			Realloc( void* pContex, void* pPreBuff, size_t nOldSize, size_t nNewSize );	
-		static int32			Print( lua_State* pL );
-		static int32			ToString( lua_State* pL );
+		static int32_t			Print( lua_State* pL );
+		static int32_t			ToString( lua_State* pL );
 
 		static void				DebugHookProc( lua_State *pState, lua_Debug* pDebug );
 		static bool				GetGlobObject( lua_State* pL, const char* szKey );
@@ -60,13 +60,13 @@ namespace Gamma
 		void					IO_Replace();
 
 		static void             RegistToLua( lua_State* pL, const CClassInfo* pInfo, void* pObj, 
-									int32 nObj, int32 nGlobalWeakTable, int32 nCppObjTable );
+									int32_t nObj, int32_t nGlobalWeakTable, int32_t nCppObjTable );
 
 		virtual bool			CallVM( const CCallbackInfo* pCallBase, void* pRetBuf, void** pArgArray );
 		virtual void			DestrucVM( const CCallbackInfo* pCallBase, SVirtualObj* pObject );
 
-		virtual bool			Set( void* pObject, int32 nIndex, void* pArgBuf, const STypeInfo& TypeInfo );
-		virtual bool			Get( void* pObject, int32 nIndex, void* pResultBuf, const STypeInfo& TypeInfo );
+		virtual bool			Set( void* pObject, int32_t nIndex, void* pArgBuf, const STypeInfo& TypeInfo );
+		virtual bool			Get( void* pObject, int32_t nIndex, void* pResultBuf, const STypeInfo& TypeInfo );
 		virtual bool			Set( void* pObject, const char* szName, void* pArgBuf, const STypeInfo& TypeInfo );
 		virtual bool			Get( void* pObject, const char* szName, void* pResultBuf, const STypeInfo& TypeInfo );
 		virtual bool        	Call( const STypeInfoArray& aryTypeInfo, void* pResultBuf, const char* szFunction, void** aryArg );
@@ -79,7 +79,7 @@ namespace Gamma
 		friend class CLuaBuffer;
 
     public:
-        CScriptLua(const char* strDebugHost, uint16 nDebugPort = 0, bool bWaitForDebugger = false );
+        CScriptLua(const char* strDebugHost, uint16_t nDebugPort = 0, bool bWaitForDebugger = false );
 		~CScriptLua(void);
 		//==============================================================================
 		// built keys
@@ -93,11 +93,11 @@ namespace Gamma
         //==============================================================================
         // common function
         //==============================================================================
-        static void*			NewLuaObj( lua_State* pL, const CClassInfo* pInfo, int32 nCppObjs );
+        static void*			NewLuaObj( lua_State* pL, const CClassInfo* pInfo, int32_t nCppObjs );
 		static void				RegisterObject( lua_State* pL, const CClassInfo* pInfo, 
-									void* pObj, bool bGC, int32 nCppObjStr, int32 nWeakTable );
+									void* pObj, bool bGC, int32_t nCppObjStr, int32_t nWeakTable );
 		static void				NewUnicodeString( lua_State* pL, const wchar_t* szStr );
-		static const wchar_t*	ConvertUtf8ToUcs2(lua_State* pL, int32 nStkId);
+		static const wchar_t*	ConvertUtf8ToUcs2(lua_State* pL, int32_t nStkId);
 
 		static void				DumpLuaMem(const char* szFile, int nMinSize = 100);
 		static void				ClearLuaMem();
@@ -108,8 +108,8 @@ namespace Gamma
 		void					SetDebugLine();
 
         static  CScriptLua*     GetScript( lua_State* pL );
-		virtual int32			IncRef( void* pObj );
-		virtual int32			DecRef( void* pObj );
+		virtual int32_t			IncRef( void* pObj );
+		virtual int32_t			DecRef( void* pObj );
 		virtual void            UnlinkCppObjFromScript( void* pObj );
 		virtual void        	GC();
 		virtual void        	GCAll();

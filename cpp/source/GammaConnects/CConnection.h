@@ -32,16 +32,16 @@ namespace Gamma
 		enum ECmdCloseType { eCT_None, eCT_Force, eCT_Grace };
 		enum EConnectionType { eTcp = 1, eServer = 2 };
 
-		int64					m_nCreateTime;
-		uint8					m_eConnectionType;
+		int64_t					m_nCreateTime;
+		uint8_t					m_eConnectionType;
 		bool					m_bEnableSendShellMsg;
 
-		uint8					m_nEnableDispatchState;
-		uint8					m_eCloseType;
+		uint8_t					m_nEnableDispatchState;
+		uint8_t					m_eCloseType;
 		string					m_strCloseLog;
 
-		uint32					m_nMinDelay;
-		uint32					m_nMaxDelay;
+		uint32_t					m_nMinDelay;
+		uint32_t					m_nMaxDelay;
 		string					m_szSendBuf;
 		string					m_szRecvBuf;
 
@@ -76,31 +76,31 @@ namespace Gamma
 		bool					IsDisconnecting() const;
 		CBaseConn*				GetHandler();
 		IConnecter*				GetConn();
-		int64					GetCreateTime() const;
+		int64_t					GetCreateTime() const;
 		bool					IsMsgDispatchEnable() const;
 		void					EnableMsgDispatch( bool bEnable );
-		void					SetNetDelay( uint32 nMinDelay, uint32 nMaxDelay );
+		void					SetNetDelay( uint32_t nMinDelay, uint32_t nMaxDelay );
 
 		virtual void			ShutDown( bool bGrace, const char* szLogContext );
 		const CAddress&			GetLocalAddress() const;
 		const CAddress&			GetRemoteAddress() const;
 
-		virtual uint32			GetPingDelay() const { return 0; }
-		virtual void			SendShellMsg( bool bReliable, const SSendBuf aryBuffer[], uint32 nBufferCount );
+		virtual uint32_t			GetPingDelay() const { return 0; }
+		virtual void			SendShellMsg( bool bReliable, const SSendBuf aryBuffer[], uint32_t nBufferCount );
 
-		virtual void			SetHeartBeatInterval( uint32 nSeconds ){};
-		virtual uint32			GetHeartBeatInterval() { return 0; }
+		virtual void			SetHeartBeatInterval( uint32_t nSeconds ){};
+		virtual uint32_t			GetHeartBeatInterval() { return 0; }
 		void					EnableSendShellMsg( bool bValue );
 		bool					IsEnableSendShellMsg() { return m_bEnableSendShellMsg; }
 
-		void					EnableProfile( uint8 nSendIDBits, uint8 nRecvIDBits );
-		size_t					GetSendBufferSize( uint16 nShellID );
-		size_t					GetRecvBufferSize( uint16 nShellID );
+		void					EnableProfile( uint8_t nSendIDBits, uint8_t nRecvIDBits );
+		size_t					GetSendBufferSize( uint16_t nShellID );
+		size_t					GetRecvBufferSize( uint16_t nShellID );
 		size_t					GetTotalSendSize();
 		size_t					GetTotalRecvSize();
 		void					PrintMsgSize();
-		void					AddSendSize( uint16 nShellID, size_t nSize );
-		void					AddRecvSize( uint16 nShellID, size_t nSize );
+		void					AddSendSize( uint16_t nShellID, size_t nSize );
+		void					AddRecvSize( uint16_t nShellID, size_t nSize );
 		bool					IsGraceClose() const;
 		bool					IsForceClose() const;
 		const char*				GetCloseLog() const;
@@ -111,9 +111,9 @@ namespace Gamma
 		if( m_nMaxDelay == 0 && m_szSendBuf.empty() )
 			return m_pConnecter->Send( pCmd, nSize );
 
-		uint32 nDelayTime = CGammaRand::Rand( m_nMinDelay, m_nMaxDelay );
-		int64 nSendTime = GetGammaTime() + nDelayTime;
-		m_szSendBuf.append( (const char*)&nSendTime, sizeof(int64) );
+		uint32_t nDelayTime = CGammaRand::Rand( m_nMinDelay, m_nMaxDelay );
+		int64_t nSendTime = GetGammaTime() + nDelayTime;
+		m_szSendBuf.append( (const char*)&nSendTime, sizeof(int64_t) );
 		m_szSendBuf.append( (const char*)&nSize, sizeof(size_t) );
 		m_szSendBuf.append( (const char*)pCmd, nSize );
 	}
@@ -123,14 +123,14 @@ namespace Gamma
 		return m_nEnableDispatchState != eES_Disable;
 	}
 
-	inline void CConnection::AddSendSize( uint16 nShellID, size_t nSize )
+	inline void CConnection::AddSendSize( uint16_t nShellID, size_t nSize )
 	{
 		if( m_vecTotalSendSize.empty() || !nSize )
 			return;
 		if( m_vecTotalSendSize.size() > 256 )
 			m_vecTotalSendSize[nShellID] += nSize;
 		else
-			m_vecTotalSendSize[(uint8)nShellID] += nSize;
+			m_vecTotalSendSize[(uint8_t)nShellID] += nSize;
 	}
 
 	inline void CConnection::PrintMsgSize()
@@ -139,11 +139,11 @@ namespace Gamma
 			return;
 		printf("\n=======================Send Msg==========================\n");
 		size_t total = 0;
-		for (uint32 i = 0; i < m_vecTotalSendSize.size(); ++i)
+		for (uint32_t i = 0; i < m_vecTotalSendSize.size(); ++i)
 		{
 			total += m_vecTotalSendSize[i];
 		}
-		for (uint32 i=0; i< m_vecTotalSendSize.size(); ++i)
+		for (uint32_t i=0; i< m_vecTotalSendSize.size(); ++i)
 		{
 			if (m_vecTotalSendSize[i] != 0)
 			{
@@ -153,11 +153,11 @@ namespace Gamma
 		}
 		printf("\n=======================Recv Msg==========================\n");
 		total = 0;
-		for (uint32 i = 0; i < m_vecTotalRecvSize.size(); ++i)
+		for (uint32_t i = 0; i < m_vecTotalRecvSize.size(); ++i)
 		{
 			total += m_vecTotalRecvSize[i];
 		}
-		for (uint32 i = 0; i < m_vecTotalRecvSize.size(); ++i)
+		for (uint32_t i = 0; i < m_vecTotalRecvSize.size(); ++i)
 		{
 			if (m_vecTotalRecvSize[i] != 0)
 			{
@@ -167,14 +167,14 @@ namespace Gamma
 		}
 	}
 
-	inline void CConnection::AddRecvSize( uint16 nShellID, size_t nSize )
+	inline void CConnection::AddRecvSize( uint16_t nShellID, size_t nSize )
 	{
 		if( m_vecTotalRecvSize.empty() || !nSize )
 			return;
 		if( m_vecTotalRecvSize.size() > 256 )
 			m_vecTotalRecvSize[nShellID] += nSize;
 		else
-			m_vecTotalRecvSize[(uint8)nShellID] += nSize;
+			m_vecTotalRecvSize[(uint8_t)nShellID] += nSize;
 	}
 }
 

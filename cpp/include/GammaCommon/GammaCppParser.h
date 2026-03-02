@@ -24,15 +24,15 @@ namespace Gamma
 	///< Builtin type of c++
 	template<> struct STypeID<void> { enum { eTypeID = eDT_void, eSize = 0 }; };
 	template<> struct STypeID<char> { enum { eTypeID = eDT_char, eSize = sizeof(char) }; };
-	template<> struct STypeID<int8> { enum { eTypeID = eDT_int8, eSize = sizeof(int8) }; };
-	template<> struct STypeID<int16> { enum { eTypeID = eDT_int16, eSize = sizeof(int16) }; };
-	template<> struct STypeID<int32> { enum { eTypeID = eDT_int32, eSize = sizeof(int32) }; };
+	template<> struct STypeID<int8_t> { enum { eTypeID = eDT_int8, eSize = sizeof(int8_t) }; };
+	template<> struct STypeID<int16_t> { enum { eTypeID = eDT_int16, eSize = sizeof(int16_t) }; };
+	template<> struct STypeID<int32_t> { enum { eTypeID = eDT_int32, eSize = sizeof(int32_t) }; };
 	template<> struct STypeID<long> { enum { eTypeID = eDT_long, eSize = sizeof(long) }; };
-	template<> struct STypeID<int64> { enum { eTypeID = eDT_int64, eSize = sizeof(int64) }; };
-	template<> struct STypeID<uint8> { enum { eTypeID = eDT_uint8, eSize = sizeof(uint8) }; };
-	template<> struct STypeID<uint16> { enum { eTypeID = eDT_uint16, eSize = sizeof(uint16) }; };
-	template<> struct STypeID<uint32> { enum { eTypeID = eDT_uint32, eSize = sizeof(uint32) }; };
-	template<> struct STypeID<uint64> { enum { eTypeID = eDT_uint64, eSize = sizeof(uint64) }; };
+	template<> struct STypeID<int64_t> { enum { eTypeID = eDT_int64, eSize = sizeof(int64_t) }; };
+	template<> struct STypeID<uint8_t> { enum { eTypeID = eDT_uint8, eSize = sizeof(uint8_t) }; };
+	template<> struct STypeID<uint16_t> { enum { eTypeID = eDT_uint16, eSize = sizeof(uint16_t) }; };
+	template<> struct STypeID<uint32_t> { enum { eTypeID = eDT_uint32, eSize = sizeof(uint32_t) }; };
+	template<> struct STypeID<uint64_t> { enum { eTypeID = eDT_uint64, eSize = sizeof(uint64_t) }; };
 	template<> struct STypeID<ulong> { enum { eTypeID = eDT_ulong, eSize = sizeof(ulong) }; };
 	template<> struct STypeID<wchar_t> { enum { eTypeID = eDT_wchar, eSize = sizeof(wchar_t) }; };
 	template<> struct STypeID<bool> { enum { eTypeID = eDT_bool, eSize = sizeof(bool) }; };
@@ -204,16 +204,16 @@ namespace Gamma
 
 	///< POD reference type
 	template<> struct TTypeInfo<const char&> : public TTypeInfo<char		> {};
-	template<> struct TTypeInfo<const int8&> : public TTypeInfo<int8		> {};
-	template<> struct TTypeInfo<const int16&> : public TTypeInfo<int16		> {};
-	template<> struct TTypeInfo<const int32&> : public TTypeInfo<int32		> {};
-	template<> struct TTypeInfo<const int64&> : public TTypeInfo<int64		> {};
+	template<> struct TTypeInfo<const int8_t&> : public TTypeInfo<int8_t		> {};
+	template<> struct TTypeInfo<const int16_t&> : public TTypeInfo<int16_t		> {};
+	template<> struct TTypeInfo<const int32_t&> : public TTypeInfo<int32_t		> {};
+	template<> struct TTypeInfo<const int64_t&> : public TTypeInfo<int64_t		> {};
 	template<> struct TTypeInfo<const long&> : public TTypeInfo<long		> {};
 	template<> struct TTypeInfo<const wchar_t&> : public TTypeInfo<wchar_t	> {};
-	template<> struct TTypeInfo<const uint8&> : public TTypeInfo<uint8		> {};
-	template<> struct TTypeInfo<const uint16&> : public TTypeInfo<uint16	> {};
-	template<> struct TTypeInfo<const uint32&> : public TTypeInfo<uint32	> {};
-	template<> struct TTypeInfo<const uint64&> : public TTypeInfo<uint64	> {};
+	template<> struct TTypeInfo<const uint8_t&> : public TTypeInfo<uint8_t		> {};
+	template<> struct TTypeInfo<const uint16_t&> : public TTypeInfo<uint16_t	> {};
+	template<> struct TTypeInfo<const uint32_t&> : public TTypeInfo<uint32_t	> {};
+	template<> struct TTypeInfo<const uint64_t&> : public TTypeInfo<uint64_t	> {};
 	template<> struct TTypeInfo<const ulong&> : public TTypeInfo<ulong		> {};
 	template<> struct TTypeInfo<const float&> : public TTypeInfo<float		> {};
 	template<> struct TTypeInfo<const double&> : public TTypeInfo<double	> {};
@@ -221,8 +221,8 @@ namespace Gamma
 
 	struct STypeInfo
 	{
-		uint32		m_nSize;
-		uint32		m_nType;
+		uint32_t		m_nSize;
+		uint32_t		m_nType;
 		const char* m_szTypeName;
 	};
 

@@ -45,7 +45,7 @@ namespace Gamma
 			return;
 		if( szLogContext )
 			m_strCloseLog.assign( szLogContext );
-		m_eCloseType = (uint8)( bGrace ? eCT_Grace : eCT_Force );
+		m_eCloseType = (uint8_t)( bGrace ? eCT_Grace : eCT_Force );
 		m_pConnecter->CmdClose( bGrace );
 	}
 
@@ -53,7 +53,7 @@ namespace Gamma
 	{ 
 		try
 		{
-			uint32 nCurInterval = GetHeartBeatInterval();
+			uint32_t nCurInterval = GetHeartBeatInterval();
 			SetHeartBeatInterval( 0 );
 			OnCheckTimeOut();
 			SetHeartBeatInterval( nCurInterval );
@@ -102,9 +102,9 @@ namespace Gamma
 		// 也要缓存到所有数据处理完毕
 		if( m_nMaxDelay || !m_szRecvBuf.empty() )
 		{
-			uint32 nDelayTime = CGammaRand::Rand( m_nMinDelay, m_nMaxDelay );
-			int64 nRecvTime  = GetGammaTime() + nDelayTime;
-			m_szRecvBuf.append( (const char*)&nRecvTime, sizeof(int64) );
+			uint32_t nDelayTime = CGammaRand::Rand( m_nMinDelay, m_nMaxDelay );
+			int64_t nRecvTime  = GetGammaTime() + nDelayTime;
+			m_szRecvBuf.append( (const char*)&nRecvTime, sizeof(int64_t) );
 			m_szRecvBuf.append( (const char*)&nSize, sizeof(size_t) );
 			m_szRecvBuf.append( (const char*)pBuf, nSize );
 			return nSize;
@@ -131,8 +131,8 @@ namespace Gamma
 			string szLog = szBuf;
 			for( size_t i = 0; i < 32 && i < nSize; i++ )
 			{
-				char c1 = (char)( ( (uint8)pBuf[i] ) & 0xf );
-				char c2 = (char)( ( (uint8)pBuf[i] ) >> 4 );
+				char c1 = (char)( ( (uint8_t)pBuf[i] ) & 0xf );
+				char c2 = (char)( ( (uint8_t)pBuf[i] ) >> 4 );
 				szLog.push_back( c2 + ( c2 > 9 ? ( 'a' - 10 ) : '0' ) );
 				szLog.push_back( c1 + ( c1 > 9 ? ( 'a' - 10 ) : '0' ) );
 				szLog.push_back( ' ' );
@@ -150,7 +150,7 @@ namespace Gamma
 	{
 		char nShellID[2] = { pBuf[0], pBuf[1] };
 		nSize = GetHandler()->OnShellMsg( pBuf, nSize, !( m_eConnectionType&eTcp ) );
-		AddRecvSize( *(uint16*)nShellID, (uint32)nSize );
+		AddRecvSize( *(uint16_t*)nShellID, (uint32_t)nSize );
 		return nSize;
 	}
 
@@ -205,26 +205,26 @@ namespace Gamma
 		return m_pConnecter && m_pConnecter->IsDisconnecting();
 	}
 
-	int64 CConnection::GetCreateTime() const
+	int64_t CConnection::GetCreateTime() const
 	{
 		return m_nCreateTime;
 	}
 
-	void CConnection::SendShellMsg( bool bReliable, const SSendBuf aryBuffer[], uint32 nBufferCount )
+	void CConnection::SendShellMsg( bool bReliable, const SSendBuf aryBuffer[], uint32_t nBufferCount )
 	{
 		if( !m_bEnableSendShellMsg || !IsConnected() )
 			return;
 
 		size_t nTotalSize = 0;
-		for( uint32 i = 0; i < nBufferCount; i++ )
+		for( uint32_t i = 0; i < nBufferCount; i++ )
 			nTotalSize += aryBuffer[i].second;
 
-		AddSendSize( *(const uint16*)aryBuffer[0].first, nTotalSize );
+		AddSendSize( *(const uint16_t*)aryBuffer[0].first, nTotalSize );
 
 		if( ( m_eConnectionType&eTcp ) || nBufferCount == 1 )
 		{
 			SendBuffer( aryBuffer[0].first, aryBuffer[0].second );
-			for( uint32 i = 1; i < nBufferCount; i++ )
+			for( uint32_t i = 1; i < nBufferCount; i++ )
 				SendBuffer( aryBuffer[i].first, aryBuffer[i].second );
 		}
 		else
@@ -232,7 +232,7 @@ namespace Gamma
 			GammaAst( !bReliable );
 			size_t nTotalSize = 0;
 			char szBuffer[MAX_RAW_UPD_SIZE];
-			for( uint32 i = 0; i < nBufferCount; i++ )
+			for( uint32_t i = 0; i < nBufferCount; i++ )
 			{
 				size_t nDataEnd = nTotalSize + aryBuffer[i].second;
 				GammaAst( nDataEnd < MAX_RAW_UPD_SIZE );
@@ -253,7 +253,7 @@ namespace Gamma
 		if( !IsConnected() )
 			return true;
 
-		int64 nCurTime = GetGammaTime();
+		int64_t nCurTime = GetGammaTime();
 		if( m_nEnableDispatchState == eES_Pending )
 		{
 			m_nEnableDispatchState = eES_Enable;
@@ -261,18 +261,18 @@ namespace Gamma
 		}
 
 		// 处理延时发送  
-		CBufFile SendBufFile( (const tbyte*)m_szSendBuf.c_str(), (uint32)m_szSendBuf.size() );
+		CBufFile SendBufFile( (const tbyte*)m_szSendBuf.c_str(), (uint32_t)m_szSendBuf.size() );
 		for( size_t nProcessSize = 0; SendBufFile.GetBufSize(); )
 		{			
-			int64 nSendTime;
-			SendBufFile.Read( &nSendTime, sizeof(int64) );
+			int64_t nSendTime;
+			SendBufFile.Read( &nSendTime, sizeof(int64_t) );
 			bool bSend = nCurTime >= nSendTime;
 			if( bSend )
 			{
 				size_t nSize = *SendBufFile.PopData<size_t>();
 				const tbyte* pBuffer = SendBufFile.GetBufByCur();
 				m_pConnecter->Send( pBuffer, nSize );
-				SendBufFile.SeekFromCur( (uint32)nSize );
+				SendBufFile.SeekFromCur( (uint32_t)nSize );
 				nProcessSize = SendBufFile.GetPos();
 			}
 
@@ -286,16 +286,16 @@ namespace Gamma
 		// 处理延时接收  
 		while( !m_szRecvBuf.empty() && IsMsgDispatchEnable() )
 		{
-			int64 nRecvTime;
-			uint32 nTotalSize = (uint32)m_szRecvBuf.size();
+			int64_t nRecvTime;
+			uint32_t nTotalSize = (uint32_t)m_szRecvBuf.size();
 			CBufFile RecvBufFile( (const tbyte*)m_szRecvBuf.c_str(), nTotalSize );
-			RecvBufFile.Read( &nRecvTime, sizeof(int64) );
+			RecvBufFile.Read( &nRecvTime, sizeof(int64_t) );
 			if( nCurTime < nRecvTime && m_nMaxDelay )
 				break;
 
 			size_t nSize;
 			RecvBufFile.Read( &nSize, sizeof(size_t) );
-			uint32 nCurPos = RecvBufFile.GetPos();
+			uint32_t nCurPos = RecvBufFile.GetPos();
 			const void* pCmd = RecvBufFile.GetBuf() + nCurPos;
 			size_t nProcessSize = Process( (const char *)pCmd, nSize );
 
@@ -313,27 +313,27 @@ namespace Gamma
 				if( nProcessSize )
 				{
 					m_szRecvBuf.erase( nCurPos, nProcessSize );
-					*(size_t*)&m_szRecvBuf[sizeof(int64)] = nSize - nProcessSize;
+					*(size_t*)&m_szRecvBuf[sizeof(int64_t)] = nSize - nProcessSize;
 				}
 				// 跳出循环，下次处理
 				break;
 			}
 			
 			// 如果有后续的数据，合并剩余数据到后续的数据段
-			size_t nHeadSize = sizeof(int64) + sizeof(size_t);
-			size_t nEraseBegin = nCurPos + (uint32)nSize;
+			size_t nHeadSize = sizeof(int64_t) + sizeof(size_t);
+			size_t nEraseBegin = nCurPos + (uint32_t)nSize;
 			size_t nEraseCount = nHeadSize;
-			size_t nRemainCount = (uint32)nSize - (uint32)nProcessSize;
+			size_t nRemainCount = (uint32_t)nSize - (uint32_t)nProcessSize;
 			memcpy( &m_szRecvBuf[0], &m_szRecvBuf[nEraseBegin], nHeadSize );
 			if( nProcessSize )
 			{
-				size_t nRemainBegin = nHeadSize + (uint32)nProcessSize;
+				size_t nRemainBegin = nHeadSize + (uint32_t)nProcessSize;
 				memmove( &m_szRecvBuf[nHeadSize], &m_szRecvBuf[nRemainBegin], nRemainCount );
 				nEraseCount += nProcessSize;
 				nEraseBegin -= nProcessSize;
 			}
 			m_szRecvBuf.erase( nEraseBegin, nEraseCount );
-			*(size_t*)&m_szRecvBuf[sizeof(int64)] += nRemainCount;
+			*(size_t*)&m_szRecvBuf[sizeof(int64_t)] += nRemainCount;
 		}
 
 		return !m_szSendBuf.empty() || !m_szRecvBuf.empty() || m_nMaxDelay;	
@@ -343,7 +343,7 @@ namespace Gamma
 	{
 		if( ( m_nEnableDispatchState != eES_Disable ) == bEnable )
 			return;
-		m_nEnableDispatchState = (uint8)( bEnable ? eES_Pending : eES_Disable );
+		m_nEnableDispatchState = (uint8_t)( bEnable ? eES_Pending : eES_Disable );
 		if( m_nEnableDispatchState == eES_Disable )
 			return;
 		if( TTinyList<CConnection>::CTinyListNode::IsInList() )
@@ -351,7 +351,7 @@ namespace Gamma
 		m_pConnMgr->AddUpdateConn( *this );
 	}
 
-	void CConnection::SetNetDelay( uint32 nMinDelay, uint32 nMaxDelay )
+	void CConnection::SetNetDelay( uint32_t nMinDelay, uint32_t nMaxDelay )
 	{
 		m_nMinDelay = nMinDelay;
 		m_nMaxDelay = nMaxDelay;
@@ -362,19 +362,19 @@ namespace Gamma
 		m_pConnMgr->AddUpdateConn( *this );
 	}
 
-	void CConnection::EnableProfile( uint8 nSendIDBits, uint8 nRecvIDBits )
+	void CConnection::EnableProfile( uint8_t nSendIDBits, uint8_t nRecvIDBits )
 	{
 		GammaAst( nSendIDBits <= 16 && nRecvIDBits <= 16 );
 		m_vecTotalSendSize.resize( nSendIDBits ? 1 << AligenUp( nSendIDBits, 8 ) : 0 );
 		m_vecTotalRecvSize.resize( nRecvIDBits ? 1 << AligenUp( nRecvIDBits, 8 ) : 0 );
 	}
 
-	size_t CConnection::GetSendBufferSize( uint16 nShellID )
+	size_t CConnection::GetSendBufferSize( uint16_t nShellID )
 	{
 		return nShellID >= m_vecTotalSendSize.size() ? 0 : m_vecTotalSendSize[nShellID];
 	}
 
-	size_t CConnection::GetRecvBufferSize( uint16 nShellID )
+	size_t CConnection::GetRecvBufferSize( uint16_t nShellID )
 	{
 		return nShellID >= m_vecTotalRecvSize.size() ? 0 : m_vecTotalRecvSize[nShellID];
 	}

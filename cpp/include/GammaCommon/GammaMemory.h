@@ -23,7 +23,7 @@ namespace Gamma
 	//========================================================================
 	// 获取内存页大小
 	//========================================================================
-	GAMMA_COMMON_API uint32 GetVirtualPageSize();
+	GAMMA_COMMON_API uint32_t GetVirtualPageSize();
 
 	//========================================================================
 	// 保留一段内存
@@ -38,7 +38,7 @@ namespace Gamma
 	//========================================================================
 	// 提交一段内存
 	//========================================================================
-	GAMMA_COMMON_API bool CommitMemoryPage( void* pAddress, size_t nSize, uint32 nProtectFlag );
+	GAMMA_COMMON_API bool CommitMemoryPage( void* pAddress, size_t nSize, uint32_t nProtectFlag );
 
 	//========================================================================
 	// 取消提交的一段内存
@@ -58,22 +58,22 @@ namespace Gamma
 	//========================================================================
 	// 被管理的已分配内存大小
 	//========================================================================
-	GAMMA_COMMON_API int64  GetTotalAllocSize();
+	GAMMA_COMMON_API int64_t  GetTotalAllocSize();
 
 	//========================================================================
 	// 被管理的内存总大小
 	//========================================================================
-	GAMMA_COMMON_API int64  GetTotalMgrSize();
+	GAMMA_COMMON_API int64_t  GetTotalMgrSize();
 
 	//========================================================================
 	// 被管理的空闲内存大小
 	//========================================================================
-	GAMMA_COMMON_API int64  GetFreeMgrSize();
+	GAMMA_COMMON_API int64_t  GetFreeMgrSize();
 
 	//========================================================================
 	// 得到在pAddress处分配的总内存数量
 	//========================================================================
-	GAMMA_COMMON_API uint32  GetAllocStack( uint32 nIndex, void**& pAddress, uint32& nAllocSize );
+	GAMMA_COMMON_API uint32_t  GetAllocStack( uint32_t nIndex, void**& pAddress, uint32_t& nAllocSize );
 
 	//========================================================================
 	// Dump内存信息
@@ -83,7 +83,7 @@ namespace Gamma
 	//========================================================================
 	// 页分配器
 	//========================================================================
-	template< uint32 nPageSize = 8192, uint32 nFlag = VIRTUAL_PAGE_READ|VIRTUAL_PAGE_WRITE >
+	template< uint32_t nPageSize = 8192, uint32_t nFlag = VIRTUAL_PAGE_READ|VIRTUAL_PAGE_WRITE >
 	class TFixedPageAlloc
 	{
 	public:

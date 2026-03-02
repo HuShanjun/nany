@@ -22,7 +22,7 @@ using namespace std;
 
 namespace Gamma
 {
-	typedef int32 (*InputHandler)( void*, uint32, uint32, uint32, uint32 );
+	typedef int32_t (*InputHandler)( void*, uint32_t, uint32_t, uint32_t, uint32_t );
 
 	class CAndroidApp
 	{
@@ -60,20 +60,20 @@ namespace Gamma
 			: public CFileOpenContextMap::CGammaRBTreeNode
 			, public CFileOpenContextList::CGammaListNode
 		{
-			uint32				m_nID;
-			int32				m_nType;
+			uint32_t				m_nID;
+			int32_t				m_nType;
 			void*				m_pContext;
 			void*				m_funCallback;
 			CFileNameList		m_vecFileName;
-			operator uint32() const { return m_nID; }
+			operator uint32_t() const { return m_nID; }
 		};
 
 		char					m_szExternalPath[2048];
 		char					m_szPackagePath[2048];
-		int32					m_nSDKInit;
-		uint64					m_nVersion;
+		int32_t					m_nSDKInit;
+		uint64_t					m_nVersion;
 		HLOCK					m_hInputLock;
-		vector<uint16>			m_vecInputBuffer;
+		vector<uint16_t>			m_vecInputBuffer;
 		bool					m_bFullScreenInput;
 		SHardwareDesc			m_HardwareDesc;
 		map<void*,InputHandler> m_mapHandlers;
@@ -151,10 +151,10 @@ namespace Gamma
 		AInputQueue*			m_pPendingInputQueue;
 		ANativeWindow*			m_pPendingWindow;
 
-		uint8					m_arySignatureMd5[33];
+		uint8_t					m_arySignatureMd5[33];
 
 		CLock					m_Lock;
-		uint8					m_nSysFileID;
+		uint8_t					m_nSysFileID;
 		CFileOpenContextList	m_listFileContext;
 		CFileOpenContextMap		m_mapFileContext;
 
@@ -162,30 +162,30 @@ namespace Gamma
 		CAndroidApp();
 		~CAndroidApp();
 
-		int32					DispatchMessage( uint32 nInputID, uint32 nMsg, uint32 wParam, uint32 lParam );
-		int32 					AndroidInputHandler( AInputEvent* event );
-		void 					AndroidCmdHandler( int32 nCmd );
+		int32_t					DispatchMessage( uint32_t nInputID, uint32_t nMsg, uint32_t wParam, uint32_t lParam );
+		int32_t 					AndroidInputHandler( AInputEvent* event );
+		void 					AndroidCmdHandler( int32_t nCmd );
 		void					FetchHardwareInfo();
 
 		void*					SaveInstanceState( size_t* &outLen );
 		void					FreeSavedState();
-		int8					ReadCommand();
-		void					PreExecCommand( int8 nCmd );
-		void					PostExecCommand( int8 nCmd );
-		int32					ProcessCommand();
-		int32					ProcessInput();
-		int32					MainThread();
+		int8_t					ReadCommand();
+		void					PreExecCommand( int8_t nCmd );
+		void					PostExecCommand( int8_t nCmd );
+		int32_t					ProcessCommand();
+		int32_t					ProcessInput();
+		int32_t					MainThread();
 
 		// --------------------------------------------------------------------
 		// Native activity interaction (called from main thread)
 		// --------------------------------------------------------------------
-		void					WriteCommand( int8 nCmd );
+		void					WriteCommand( int8_t nCmd );
 		void					SetInput( AInputQueue* inputQueue);
 		void					SetWindow( ANativeWindow* window);
-		void					SetActivityState( int8 cmd );
+		void					SetActivityState( int8_t cmd );
 		void					Free();
-		void 					OnSystemFileCallback( JNIEnv* env, int32 nID,
-									int32 nResult, jobject Intent );
+		void 					OnSystemFileCallback( JNIEnv* env, int32_t nID,
+									int32_t nResult, jobject Intent );
 		void 					FinishedSystemFileCallback( SFileOpenContext* pFileContext );
 
 		static void				OnDestroy( ANativeActivity* pActivity );
@@ -217,21 +217,21 @@ namespace Gamma
 		bool					GetLocation( double& fLongitude, double& fLatitude, double& fAltitude );
 
 		void					Run( ANativeActivity* pActivity, void* pSavedState, size_t nSavedStateSize );
-		void					AddCharMsgFromJava( const jchar* szBuffer, uint32 nSize );
+		void					AddCharMsgFromJava( const jchar* szBuffer, uint32_t nSize );
 		void					OnInputMgrShowFromJava( bool bShow );
-		void 					OnActivityResult( JNIEnv* env, int32 nID, int32 nResult, jobject Intent );
+		void 					OnActivityResult( JNIEnv* env, int32_t nID, int32_t nResult, jobject Intent );
 		
 		const char*				GetExternalPath();
 		const char*				GetPackagePath();
-		uint64					GetVersion() const;
+		uint64_t					GetVersion() const;
 		void					EnableInput( bool bEnable, const wchar_t* szFullScreenInitText );
 		void					RegisterMsgHandler( void* pContext, InputHandler handler );
-		int32					AndroidMessagePump();
-		void					SetClipboardContent( int32 nType, const void* pContent, uint32 nSize );
-		void					GetClipboardContent( int32 nType, const void*& pContent, uint32& nSize );
+		int32_t					AndroidMessagePump();
+		void					SetClipboardContent( int32_t nType, const void* pContent, uint32_t nSize );
+		void					GetClipboardContent( int32_t nType, const void*& pContent, uint32_t& nSize );
 		void					GetApplicationSignature( char szMd5[33] );
 		void					OpenURL( const char* szUrl );
-		bool 					GetSystemFile( bool bList, int32 nType, void* pContext, void* funCallback );
+		bool 					GetSystemFile( bool bList, int32_t nType, void* pContext, void* funCallback );
 		void*					LoadDynamicLib( const char* szName );
 		void*					GetFunctionAddress( void* pLibContext, const char* szName );
 	};

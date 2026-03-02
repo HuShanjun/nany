@@ -15,15 +15,15 @@ namespace Gamma
 	{
 		CConnectionMgr*		m_pMgr;
 		IListener*			m_pListener;
-		uint32				m_nConnClassID;
+		uint32_t				m_nConnClassID;
 		EConnType			m_eType;
 		void				OnAccept( Gamma::IConnecter& Connect );
 	public:
 		CListenHandler( CConnectionMgr* pMgr, 
-			IListener* pListener, uint32 nClassID, EConnType eType );
+			IListener* pListener, uint32_t nClassID, EConnType eType );
 		~CListenHandler();
-		uint32				GetConnClassID() const;
+		uint32_t				GetConnClassID() const;
 		const CAddress&		GetAddress() const;
-		bool				Match( uint32 nClassID, const CAddress& Address );
+		bool				Match( uint32_t nClassID, const CAddress& Address );
 	};
 }

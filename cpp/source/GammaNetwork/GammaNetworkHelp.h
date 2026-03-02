@@ -17,7 +17,7 @@
 	#include <ws2tcpip.h>
 	#include <MSWSock.h>
 
-	#define SOCKET uint32
+	#define SOCKET uint32_t
 	#define GNWGetLastError		WSAGetLastError
 
 	#define NE_EADDRNOTAVAIL	WSAEADDRNOTAVAIL
@@ -220,13 +220,13 @@
 	#include <netdb.h>
 	#include <cerrno>
 
-	#define SOCKET uint32
+	#define SOCKET uint32_t
 	#define INVALID_SOCKET        -1
 
 	#define GNWGetLastError	GetLastError
 	#define closesocket		close
 	#define ioctlsocket		ioctl
-	//typedef int32              SOCKET; //re-defined against the line:222!
+	//typedef int32_t              SOCKET; //re-defined against the line:222!
 	typedef struct linger	LINGER;
 	#define SOCKET_ERROR	-1
 	#define SD_SEND			SHUT_WR
@@ -246,7 +246,7 @@
 	#define NE_ENOTCONN			ENOTCONN		
 	#define NE_EOPERABORTED		EOPERABORTED	
 
-	inline int32 GetLastError() { return errno; }
+	inline int32_t GetLastError() { return errno; }
 	struct SDataBuffer { char* buf; size_t len; };
 
 #endif 
@@ -260,7 +260,7 @@
 		eCS_Unknow,
 	};
 	
-	inline Gamma::CAddress MakeAddress( const sockaddr* addr, uint32 nSize )
+	inline Gamma::CAddress MakeAddress( const sockaddr* addr, uint32_t nSize )
 	{
 		Gamma::CAddress Address;
 		if( addr->sa_family == AF_INET )
@@ -273,7 +273,7 @@
 		{
 			char szAdress[256];
 			const sockaddr_in6* addrIpv6 = (const sockaddr_in6*)addr;
-			const uint8* aryBuf = (const uint8*)&addrIpv6->sin6_addr;
+			const uint8_t* aryBuf = (const uint8_t*)&addrIpv6->sin6_addr;
 			sprintf( szAdress, "%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x",
 				aryBuf[0], aryBuf[1], aryBuf[2], aryBuf[3], aryBuf[4], aryBuf[5], aryBuf[6], aryBuf[7],
 				aryBuf[8], aryBuf[9], aryBuf[10], aryBuf[11], aryBuf[12], aryBuf[13], aryBuf[14], aryBuf[15] );

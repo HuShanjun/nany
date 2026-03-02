@@ -130,9 +130,9 @@ namespace Gamma
 			return !m_pNodeHead;
 		}
 
-		uint32 Size() const
+		uint32_t Size() const
 		{
-			uint32 nSize = 0;
+			uint32_t nSize = 0;
 			for( auto pNode = GetFirst(); pNode; pNode = pNode->GetNext() )
 				nSize++;
 			return nSize;

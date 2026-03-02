@@ -5,14 +5,14 @@
 
 namespace Gamma
 {
-	inline float noise( int32 x, int32 y )   
+	inline float noise( int32_t x, int32_t y )   
 	{   
-		int32 n = x + y*57;   
+		int32_t n = x + y*57;   
 		n = ( n << 13 )^n;   
 		return (float)( 1.0 - ( ( n * (n * n * 15731 + 789221 ) + 1376312589 ) & 0x7fffffff ) / 1073741824.0 );    
 	}   
 
-	inline float smoothedNoise( int32 x, int32 y )   
+	inline float smoothedNoise( int32_t x, int32_t y )   
 	{   
 		float corners = ( noise( x - 1, y - 1 ) + noise( x + 1, y - 1 ) + noise( x - 1, y + 1 ) + noise( x + 1, y + 1) ) / 16;   
 		float sides = ( noise( x - 1, y ) + noise( x + 1, y ) +noise( x, y - 1 ) + noise( x, y + 1 ) ) / 8;   
@@ -29,8 +29,8 @@ namespace Gamma
 
 	inline float interpolatedNoise( float x, float y )   
 	{   
-		int32 intX = x < 0 ? (int32)x - 1 : (int32)x;
-		int32 intY = y < 0 ? (int32)y - 1 : (int32)y; 
+		int32_t intX = x < 0 ? (int32_t)x - 1 : (int32_t)x;
+		int32_t intY = y < 0 ? (int32_t)y - 1 : (int32_t)y; 
 		float fractionalX = x - intX;   
 		float fractionalY = y - intY; 
 		float v1 = smoothedNoise( intX, intY );   
@@ -42,12 +42,12 @@ namespace Gamma
 		return interpolate(i1 , i2 , fractionalY);   
 	}   
 
-	float PerlinNoise_2D( float x, float y, int32 octave_num, float persistence, float frequenceInc )   
+	float PerlinNoise_2D( float x, float y, int32_t octave_num, float persistence, float frequenceInc )   
 	{       
 		float total = 0;   
 		float amplitude = 1;
 		float frequency = 1; 
-		for( int32 i = 0; i < octave_num; ++i ) 
+		for( int32_t i = 0; i < octave_num; ++i ) 
 		{
 			total += interpolatedNoise( x * frequency, y * frequency ) * amplitude;
 			amplitude = amplitude * persistence;
@@ -56,12 +56,12 @@ namespace Gamma
 		return total;   
 	}
 
-	GAMMA_COMMON_API void PerlinNoise2D( float* aryNoise, uint32 nWidth, float persistence, float frequenceInc )
+	GAMMA_COMMON_API void PerlinNoise2D( float* aryNoise, uint32_t nWidth, float persistence, float frequenceInc )
 	{
-		uint8 nNum = GammaLog2( nWidth );
-		GammaAst( nWidth == (uint32)( 1 << nNum ) );
-		for( uint32 i = 0; i < nWidth; i++ )
-			for( uint32 j = 0; j < nWidth; j++ )
+		uint8_t nNum = GammaLog2( nWidth );
+		GammaAst( nWidth == (uint32_t)( 1 << nNum ) );
+		for( uint32_t i = 0; i < nWidth; i++ )
+			for( uint32_t j = 0; j < nWidth; j++ )
 				aryNoise[i*nWidth+j] = PerlinNoise_2D( (float)j, (float)i, nNum, persistence, frequenceInc );
 	}
 

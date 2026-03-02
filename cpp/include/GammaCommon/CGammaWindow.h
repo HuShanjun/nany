@@ -15,7 +15,7 @@ namespace Gamma
 	struct SWindowContext;
 
 	typedef bool (*WndMsgCallback)( void* /*pContext*/, CGammaWindow* /*pWnd*/,
-			uint32 /*nInputID*/, uint32 /*nMsg*/, uint32 /*wParam*/, uint32 /*lParam*/ );
+			uint32_t /*nInputID*/, uint32_t /*nMsg*/, uint32_t /*wParam*/, uint32_t /*lParam*/ );
 	 
 	class GAMMA_COMMON_API CGammaWindow
 	{
@@ -25,7 +25,7 @@ namespace Gamma
 
 		void* GetContext() const;
 		void* GetHandle() const;
-		void Initialize( void* pContext, void* pParent, uint32 nWidth, uint32 nHeight, const char* szTitle, uint32 nIconID);
+		void Initialize( void* pContext, void* pParent, uint32_t nWidth, uint32_t nHeight, const char* szTitle, uint32_t nIconID);
 		void Initialize( void* pContext, void* pHandler, bool bHookMsg );
 		void AddMsgCallback( WndMsgCallback funCallback, void* pContext );
 		void RemoveMsgCallback( WndMsgCallback funCallback, void* pContext );
@@ -34,8 +34,8 @@ namespace Gamma
 		virtual void Show( bool bShow );
 		virtual void GetClientRect( CIRect& rt );
 		virtual void GetWindowRect( CIRect& rt );
-		virtual uint32 GetClientWidth();
-		virtual uint32 GetClientHeight();
+		virtual uint32_t GetClientWidth();
+		virtual uint32_t GetClientHeight();
 		virtual void SetTitle( const char* szTitle );
 		virtual void EnableInput( bool bEnable, bool bFullScreen, const wchar_t* szInitText );
 
@@ -49,8 +49,8 @@ namespace Gamma
 		void SetCursorPos( CPos vPos );
 		void ClipCursor( const CIRect* rtRange, bool bLockCenter );
 
-		static int32 MessagePump();
-		static int16 GetKeyState( uint8 nKeyCode );
+		static int32_t MessagePump();
+		static int16_t GetKeyState( uint8_t nKeyCode );
 	protected:
 		virtual void OnCreated(){}
 		virtual bool OnClose(){ return true; };
@@ -61,7 +61,7 @@ namespace Gamma
 		virtual void OnMaximized(){};
 		virtual void OnRestore(){};
 		virtual void OnLowMemory(){}
-		virtual bool OnProcessMsg( uint32 nInputID, uint32 nMsg, uint32 wParam, uint32 lParam );
+		virtual bool OnProcessMsg( uint32_t nInputID, uint32_t nMsg, uint32_t wParam, uint32_t lParam );
 
 	private:
 		friend struct		SWindowContext;

@@ -37,15 +37,15 @@ namespace Gamma
 
 	template<class BufferAlloc, bool bFreeEmptyBuffer>
 	inline void TCircleBuffer<BufferAlloc, bFreeEmptyBuffer>::WriteBuffer(
-			SQuerryNodePtr& pWriteBuffer, uint32& nWritePos,
+			SQuerryNodePtr& pWriteBuffer, uint32_t& nWritePos,
 			SQuerryNodePtr pReadBuffer, const void* pBuffer, size_t nSize )
 	{
 		const tbyte* pCurBuffer = (const tbyte*)pBuffer;
 
 		while( nSize )
 		{
-			uint32 nLeftSize = nNodeBufferSize - nWritePos;
-			uint32 nWriteSize = (uint32)Min<size_t>( nSize, nLeftSize );
+			uint32_t nLeftSize = nNodeBufferSize - nWritePos;
+			uint32_t nWriteSize = (uint32_t)Min<size_t>( nSize, nLeftSize );
 			tbyte* pTargetBuf = pWriteBuffer->m_aryBuffer + nWritePos;
 			memcpy( pTargetBuf, pCurBuffer, nWriteSize );
 			pCurBuffer += nWriteSize;
@@ -83,16 +83,16 @@ namespace Gamma
 
 	template<class BufferAlloc, bool bFreeEmptyBuffer>
 	inline void TCircleBuffer<BufferAlloc, bFreeEmptyBuffer>::ReadBuffer (
-		SQuerryNodePtr& pReadBuffer, uint32& nReadPos,
+		SQuerryNodePtr& pReadBuffer, uint32_t& nReadPos,
 		void* pBuffer, size_t nSize )
 	{
 		tbyte* pCurBuffer = (tbyte*)pBuffer;
 		while( nSize )
 		{
-			uint32 nWritePos = pReadBuffer->m_nWritePos;
-			uint32 nLeftSize = nWritePos - nReadPos;
+			uint32_t nWritePos = pReadBuffer->m_nWritePos;
+			uint32_t nLeftSize = nWritePos - nReadPos;
 			GammaAst( nLeftSize > 0 );
-			uint32 nReadSize = (uint32)nSize;
+			uint32_t nReadSize = (uint32_t)nSize;
 			if( nSize > nLeftSize )
 			{
 				GammaAst( nWritePos == nNodeBufferSize );
@@ -113,23 +113,23 @@ namespace Gamma
 	template<class BufferAlloc, bool bFreeEmptyBuffer>
 	template<class ContextType>
 	inline void TCircleBuffer<BufferAlloc, bFreeEmptyBuffer>::PushBuffer( 
-		ContextType nContext, const SSendBuf aryBuffer[], uint32 nBufferCount, bool bMerge )
+		ContextType nContext, const SSendBuf aryBuffer[], uint32_t nBufferCount, bool bMerge )
 	{
 		SQuerryNodePtr pBufferStart = m_pWriteBuffer;
 		SQuerryNodePtr pBufferEnd = m_pWriteBuffer;
 		SQuerryNodePtr pReadBuffer = m_pReadBuffer;
-		uint32 nWritePos = pBufferStart->m_nWritePos;
+		uint32_t nWritePos = pBufferStart->m_nWritePos;
 		WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, &nContext, sizeof(nContext) );
 
 		if( bMerge && nBufferCount )
 		{
 			size_t nCount = 1;
-			WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, &nCount, sizeof(uint32) );
+			WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, &nCount, sizeof(uint32_t) );
 			size_t nTotalSize = 0;
-			for( uint32 i = 0; i < nBufferCount; i++ )
+			for( uint32_t i = 0; i < nBufferCount; i++ )
 				nTotalSize += aryBuffer[i].second;
-			WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, &nTotalSize, sizeof(uint32) );
-			for( uint32 i = 0; i < nBufferCount; i++ )
+			WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, &nTotalSize, sizeof(uint32_t) );
+			for( uint32_t i = 0; i < nBufferCount; i++ )
 			{
 				WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, 
 				aryBuffer[i].first, aryBuffer[i].second );
@@ -137,11 +137,11 @@ namespace Gamma
 		}
 		else
 		{
-			WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, &nBufferCount, sizeof(uint32) );
-			for( uint32 i = 0; i < nBufferCount; i++ )
+			WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, &nBufferCount, sizeof(uint32_t) );
+			for( uint32_t i = 0; i < nBufferCount; i++ )
 			{
 				WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, 
-					&aryBuffer[i].second, sizeof(uint32) );
+					&aryBuffer[i].second, sizeof(uint32_t) );
 				WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, 
 					aryBuffer[i].first, aryBuffer[i].second );
 			}
@@ -161,38 +161,38 @@ namespace Gamma
 	template<class BufferAlloc, bool bFreeEmptyBuffer>
 	template<class ContextType>
 	inline bool TCircleBuffer<BufferAlloc, bFreeEmptyBuffer>::PopBuffer( 
-		ContextType& nContext, SSendBuf aryBuffer[], uint32& nBufferCount )
+		ContextType& nContext, SSendBuf aryBuffer[], uint32_t& nBufferCount )
 	{
 		SQuerryNodePtr pWriteBuffer = m_pWriteBuffer;
-		uint32 nWritePos = pWriteBuffer->m_nWritePos;
+		uint32_t nWritePos = pWriteBuffer->m_nWritePos;
 
 		// 尚未写入完毕（当前已经写入结束的Buffer的位置不可能是nNodeBufferSize）
 		if( nWritePos == nNodeBufferSize )
 			return false;
 
 		SQuerryNodePtr pBufferEnd = m_pReadBuffer;
-		uint32 nReadPos = pBufferEnd->m_nReadPos;
+		uint32_t nReadPos = pBufferEnd->m_nReadPos;
 		// 没有写入完整的数据可读
 		if( pBufferEnd == pWriteBuffer && 
 			nReadPos == nWritePos )
 			return false;
 
-		uint32 nCount;
+		uint32_t nCount;
 		m_strBuffer.clear();
 		ReadBuffer( pBufferEnd, nReadPos, &nContext, sizeof(nContext) );
-		ReadBuffer( pBufferEnd, nReadPos, &nCount, sizeof(uint32) );
+		ReadBuffer( pBufferEnd, nReadPos, &nCount, sizeof(uint32_t) );
 		GammaAst( nCount <= nBufferCount );
 		nBufferCount = nCount;
 
 		size_t nTotalSize = 0;
-		for( uint32 i = 0; i < nBufferCount; i++ )
+		for( uint32_t i = 0; i < nBufferCount; i++ )
 		{
-			ReadBuffer( pBufferEnd, nReadPos, &aryBuffer[i].second, sizeof(uint32) );
+			ReadBuffer( pBufferEnd, nReadPos, &aryBuffer[i].second, sizeof(uint32_t) );
 			size_t nNeedSize = nTotalSize + aryBuffer[i].second;
 			if( m_strBuffer.size() < nNeedSize )
 				m_strBuffer.resize( nNeedSize );
 			ReadBuffer( pBufferEnd, nReadPos, 
-				&m_strBuffer[nTotalSize], (uint32)aryBuffer[i].second );
+				&m_strBuffer[nTotalSize], (uint32_t)aryBuffer[i].second );
 			nTotalSize = nNeedSize;
 		}
 
@@ -208,16 +208,16 @@ namespace Gamma
 
 	template<class BufferAlloc, bool bFreeEmptyBuffer>
 	void TCircleBuffer<BufferAlloc, bFreeEmptyBuffer>::PushRaw( 
-		const SSendBuf aryBuffer[], uint32 nBufferCount )
+		const SSendBuf aryBuffer[], uint32_t nBufferCount )
 	{
 		if( nBufferCount == 0 )
 			return;
 		SQuerryNodePtr pBufferStart = m_pWriteBuffer;
 		SQuerryNodePtr pBufferEnd = m_pWriteBuffer;
 		SQuerryNodePtr pReadBuffer = m_pReadBuffer;
-		uint32 nWritePos = pBufferStart->m_nWritePos;
+		uint32_t nWritePos = pBufferStart->m_nWritePos;
 
-		for( uint32 i = 0; i < nBufferCount; i++ )
+		for( uint32_t i = 0; i < nBufferCount; i++ )
 		{
 			WriteBuffer( pBufferEnd, nWritePos, pReadBuffer,
 				aryBuffer[i].first, aryBuffer[i].second );
@@ -236,25 +236,25 @@ namespace Gamma
 
 	template<class BufferAlloc, bool bFreeEmptyBuffer>
 	void TCircleBuffer<BufferAlloc, bFreeEmptyBuffer>::PushRaw(
-		const void* pBuffer, uint32 nBufferSize )
+		const void* pBuffer, uint32_t nBufferSize )
 	{
 		SSendBuf SendBuff( pBuffer, nBufferSize );
 		PushRaw( &SendBuff, 1 );
 	}
 
 	template<class BufferAlloc, bool bFreeEmptyBuffer>
-	uint32 TCircleBuffer<BufferAlloc, bFreeEmptyBuffer>::PopRaw(
-		void* pBuffer, uint32 nBufferSize )
+	uint32_t TCircleBuffer<BufferAlloc, bFreeEmptyBuffer>::PopRaw(
+		void* pBuffer, uint32_t nBufferSize )
 	{
 		SQuerryNodePtr pWriteBuffer = m_pWriteBuffer;
-		uint32 nWritePos = pWriteBuffer->m_nWritePos;
+		uint32_t nWritePos = pWriteBuffer->m_nWritePos;
 
 		// 尚未写入完毕（当前已经写入结束的Buffer的位置不可能是nNodeBufferSize）
 		if( nWritePos == nNodeBufferSize )
 			return 0;
 
 		SQuerryNodePtr pReadBuffer = m_pReadBuffer;
-		uint32 nReadPos = pReadBuffer->m_nReadPos;
+		uint32_t nReadPos = pReadBuffer->m_nReadPos;
 		// 没有写入完整的数据可读
 		if( pReadBuffer == pWriteBuffer &&
 			nReadPos == nWritePos )
@@ -263,11 +263,11 @@ namespace Gamma
 		tbyte* pCurBuffer = (tbyte*)pBuffer;
 		while( nBufferSize )
 		{
-			uint32 nWritePos = pReadBuffer->m_nWritePos;
-			uint32 nLeftSize = nWritePos - nReadPos;
+			uint32_t nWritePos = pReadBuffer->m_nWritePos;
+			uint32_t nLeftSize = nWritePos - nReadPos;
 			if( nLeftSize == 0 )
 				break;
-			uint32 nReadSize = Min( nBufferSize, nLeftSize );
+			uint32_t nReadSize = Min( nBufferSize, nLeftSize );
 			const tbyte* pSrcBuf = pReadBuffer->m_aryBuffer + nReadPos;
 			memcpy( pCurBuffer, pSrcBuf, nReadSize );
 			pCurBuffer += nReadSize;
@@ -283,7 +283,7 @@ namespace Gamma
 		pReadBuffer->m_nReadPos = nReadPos;
 		m_pReadBuffer = pReadBuffer;
 		m_nPopCount++;
-		return (uint32)( pCurBuffer - (tbyte*)pBuffer );
+		return (uint32_t)( pCurBuffer - (tbyte*)pBuffer );
 	}
 
 	template<class BufferAlloc, bool bFreeEmptyBuffer>
@@ -306,8 +306,8 @@ namespace Gamma
 	}
 
 	template<class BufferAlloc, bool bFreeEmptyBuffer>
-	uint32 Gamma::TCircleBuffer<BufferAlloc, bFreeEmptyBuffer>::GetWaitingBufferCount() const
+	uint32_t Gamma::TCircleBuffer<BufferAlloc, bFreeEmptyBuffer>::GetWaitingBufferCount() const
 	{
-		return (uint32)( m_nPushCount - m_nPopCount );
+		return (uint32_t)( m_nPushCount - m_nPopCount );
 	}
 }

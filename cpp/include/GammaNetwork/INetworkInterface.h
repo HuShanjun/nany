@@ -57,10 +57,10 @@ namespace Gamma
 		virtual ECloseType			GetCloseType() const = 0;
 		virtual size_t				GetTotalSendSize() const = 0;
 		virtual size_t				GetTotalRecvSize() const = 0;
-		virtual int64				GetCreateTime() const = 0;
-		virtual int64				GetConnectTime() const = 0;
-		virtual int64				GetConnectOKTime() const = 0;
-		virtual int64				GetFirstEvenTime() const = 0;
+		virtual int64_t				GetCreateTime() const = 0;
+		virtual int64_t				GetConnectTime() const = 0;
+		virtual int64_t				GetConnectOKTime() const = 0;
+		virtual int64_t				GetFirstEvenTime() const = 0;
 	};
 
 	class INetwork
@@ -68,15 +68,15 @@ namespace Gamma
 	public:
 		virtual void				Release() = 0;
 		virtual void				EnableLog( bool bLog ) = 0;
-		virtual bool				PreResolveDomain( const char* szAddress, uint32 nValidSeconds = INVALID_32BITID ) = 0;
+		virtual bool				PreResolveDomain( const char* szAddress, uint32_t nValidSeconds = INVALID_32BITID ) = 0;
 
-		virtual IListener*			StartListener( const char* szAddres, uint16 nPort, EConnecterType eType = eConnecterType_TCP,
+		virtual IListener*			StartListener( const char* szAddres, uint16_t nPort, EConnecterType eType = eConnecterType_TCP,
 										const char* pCertificatePath = NULL, const char* pPrivateKeyPath = NULL ) = 0;
-		virtual IConnecter*			Connect( const char* szAddres, uint16 nPort, EConnecterType eType = eConnecterType_TCP ) = 0;
-		virtual bool				Check( uint32 nTimeOut ) = 0;
+		virtual IConnecter*			Connect( const char* szAddres, uint16_t nPort, EConnecterType eType = eConnecterType_TCP ) = 0;
+		virtual bool				Check( uint32_t nTimeOut ) = 0;
 	};
 
-	GAMMA_NETWORK_API INetwork* CreateNetWork( uint32 nMaxConnect = -1, uint32 nNetworkThread = -1 );
+	GAMMA_NETWORK_API INetwork* CreateNetWork( uint32_t nMaxConnect = -1, uint32_t nNetworkThread = -1 );
 }
 
 #endif

@@ -22,7 +22,7 @@ namespace Gamma
 		, m_nPreSendTime( 0 )
 		, m_nPreUpdateTime( 0 )
 	{
-		m_nHeartBeatInterval = Limit<uint32>( pConnMgr->GetAutoDisconnectTime()/10, 1, 10 );
+		m_nHeartBeatInterval = Limit<uint32_t>( pConnMgr->GetAutoDisconnectTime()/10, 1, 10 );
 		if( bTcp || !GetConn() )
 			return;
 
@@ -32,9 +32,9 @@ namespace Gamma
 			{
 				GammaAst( len < MAX_RAW_UPD_SIZE );
 				char szBuffer[sizeof(CGC_ShellMsg8) + MAX_RAW_UPD_SIZE];
-				uint8 nId = (uint8)( len >> 8 ) + MAX_RAW_UPD_SIZE/256;
+				uint8_t nId = (uint8_t)( len >> 8 ) + MAX_RAW_UPD_SIZE/256;
 				CGC_ShellMsg8& NetData = *( new( szBuffer )CGC_ShellMsg8( nId ) );
-				NetData.nMsgLen = (uint8)( len );
+				NetData.nMsgLen = (uint8_t)( len );
 				memcpy( szBuffer + sizeof( CGC_ShellMsg8 ), buf, len );
 				len = len + sizeof(CGC_ShellMsg8);
 				( (CPrtConnection*)user )->SendBuffer( false, szBuffer, len );
@@ -67,14 +67,14 @@ namespace Gamma
 		if( !pCmd->nMsgLen && !pCmd->GetId() )
 			return;
 
-		uint32 nLen = pCmd->nMsgLen;
+		uint32_t nLen = pCmd->nMsgLen;
 		const char* szBuffer = (const char*)( pCmd + 1 );
 
 		if( !m_pKCP )
 		{
 			nLen += pCmd->GetId() << 8;
 			szBuffer = (const char*)AligenBuffer( szBuffer, nLen );
-			AddRecvSize( *(const uint16*)szBuffer, nLen );
+			AddRecvSize( *(const uint16_t*)szBuffer, nLen );
 			GetHandler()->OnShellMsg( szBuffer, nLen, false );
 			return;
 		}
@@ -91,20 +91,20 @@ namespace Gamma
 
 		nLen += pCmd->GetId() << 8;
 		const void* pBuffer = (const char*)AligenBuffer( szBuffer, nLen );
-		AddRecvSize( *(const uint16*)pBuffer, nLen );
+		AddRecvSize( *(const uint16_t*)pBuffer, nLen );
 		GetHandler()->OnShellMsg( pBuffer, nLen, !bInKcpBuffer );
 	}
 
 	template<> 
 	void CPrtConnection::OnNetMsg( const CGC_ShellMsg32* pCmd, size_t nSize )
 	{
-		uint32 nLen;
-		memcpy( &nLen, &pCmd->nMsgLen, sizeof(uint32) );
+		uint32_t nLen;
+		memcpy( &nLen, &pCmd->nMsgLen, sizeof(uint32_t) );
 		if( !nLen )
 			return;
 
 		const void* pBuffer = AligenBuffer( pCmd + 1, nLen );
-		AddRecvSize( *(const uint16*)pBuffer, nLen );
+		AddRecvSize( *(const uint16_t*)pBuffer, nLen );
 		GetHandler()->OnShellMsg( pBuffer, nLen, false );
 	}
 
@@ -120,7 +120,7 @@ namespace Gamma
 	template<> 
 	void CPrtConnection::OnNetMsg( const CGC_HeartbeatReply* pCmd, size_t nSize )
 	{
-		m_nPingDelay = (uint32)( GetGammaTime() - m_nPreSendTime );
+		m_nPingDelay = (uint32_t)( GetGammaTime() - m_nPreSendTime );
 		m_nPreSendTime = 0;
 	}
 
@@ -129,7 +129,7 @@ namespace Gamma
 		struct __{ static size_t Check( CPrtConnection*, const void*, size_t ){ return eCR_Again; } };
 		if( !IsMsgDispatchEnable() )
 			return &__::Check;
-		return TDispatch<CPrtConnection, uint8>::GetCheckFun( nIndex );
+		return TDispatch<CPrtConnection, uint8_t>::GetCheckFun( nIndex );
 	}
 
 	//===========================================================================
@@ -137,7 +137,7 @@ namespace Gamma
 	//===========================================================================
 	void CPrtConnection::RegisterMsgHandler()
 	{
-		std::vector<CMsgFunction>& vecMsgFun = TDispatch<CPrtConnection, uint8>::GetMsgFunction();
+		std::vector<CMsgFunction>& vecMsgFun = TDispatch<CPrtConnection, uint8_t>::GetMsgFunction();
 		if( !vecMsgFun.empty() )
 			return;
 
@@ -172,7 +172,7 @@ namespace Gamma
 		vecMsgFun.resize( 256 );
 		typedef void (CPrtConnection::*CGC_ShellMsg8Fun)( const CGC_ShellMsg8*, size_t );
 		CGC_ShellMsg8Fun funShellMsg = &CPrtConnection::OnNetMsg<CGC_ShellMsg8>;
-		for( uint8 i = 0; i < eGC_ShellMsg32; i++ )
+		for( uint8_t i = 0; i < eGC_ShellMsg32; i++ )
 		{
 			vecMsgFun[i].first = &SCheckMsg8::CheckMsg;
 			vecMsgFun[i].second = (MsgProcessFun_t)funShellMsg;
@@ -180,9 +180,9 @@ namespace Gamma
 			vecMsgFun[i].nHeadSize = sizeof( CGC_ShellMsg8 );
 		}
 
-		TDispatch<CPrtConnection, uint8>::RegistProcessFun( &CPrtConnection::OnNetMsg<CGC_ShellMsg32> );
-		TDispatch<CPrtConnection, uint8>::RegistProcessFun( &CPrtConnection::OnNetMsg<CGC_HeartbeatMsg> );
-		TDispatch<CPrtConnection, uint8>::RegistProcessFun( &CPrtConnection::OnNetMsg<CGC_HeartbeatReply> );
+		TDispatch<CPrtConnection, uint8_t>::RegistProcessFun( &CPrtConnection::OnNetMsg<CGC_ShellMsg32> );
+		TDispatch<CPrtConnection, uint8_t>::RegistProcessFun( &CPrtConnection::OnNetMsg<CGC_HeartbeatMsg> );
+		TDispatch<CPrtConnection, uint8_t>::RegistProcessFun( &CPrtConnection::OnNetMsg<CGC_HeartbeatReply> );
 	}	
 
 	size_t CPrtConnection::Dispatch( const char* pBuf, size_t nSize )
@@ -191,7 +191,7 @@ namespace Gamma
 		m_nRecvCount = 0;
 		if( !IsMsgDispatchEnable() )
 			return 0;
-		return TDispatch<CPrtConnection, uint8>::Dispatch( pBuf, nSize );
+		return TDispatch<CPrtConnection, uint8_t>::Dispatch( pBuf, nSize );
 	}
 
 	void CPrtConnection::OnCheckTimeOut()
@@ -220,15 +220,15 @@ namespace Gamma
 		CPrtConnection::ShutDown( false, "CPrtConnection::OnHeartBeatStop" );
 	}
 
-	uint32 CPrtConnection::GetPingDelay() const
+	uint32_t CPrtConnection::GetPingDelay() const
 	{
 		if( m_nPreSendTime == 0 )
 			return m_nPingDelay;
-		uint32 nDelay = (uint32)( GetGammaTime() - m_nPreSendTime );
+		uint32_t nDelay = (uint32_t)( GetGammaTime() - m_nPreSendTime );
 		return Max( m_nPingDelay, nDelay );
 	}
 
-	void CPrtConnection::SetHeartBeatInterval( uint32 nSeconds )
+	void CPrtConnection::SetHeartBeatInterval( uint32_t nSeconds )
 	{
 		m_nHeartBeatInterval = nSeconds;
 	}
@@ -237,55 +237,55 @@ namespace Gamma
 	{
 		if( !IsConnected() )
 			return;
-		int64 nCurTime = GetGammaTime();
+		int64_t nCurTime = GetGammaTime();
 		m_nSendCount = 0;
 		m_nPreSendTime = nCurTime;
 		CGC_HeartbeatMsg NetMsg;
 		SendBuffer( true, &NetMsg, sizeof(NetMsg) );
 	}
 	
-	void CPrtConnection::SendShellMsg( bool bReliable, const SSendBuf aryBuffer[], uint32 nBufferCount )
+	void CPrtConnection::SendShellMsg( bool bReliable, const SSendBuf aryBuffer[], uint32_t nBufferCount )
 	{
 		if( !IsEnableSendShellMsg() || !IsConnected() )
 			return;
 
 		size_t nTotalSize = 0;
-		for( uint32 i = 0; i < nBufferCount; i++ )
+		for( uint32_t i = 0; i < nBufferCount; i++ )
 			nTotalSize += aryBuffer[i].second;
 
-		AddSendSize( *(const uint16*)aryBuffer[0].first, nTotalSize );
+		AddSendSize( *(const uint16_t*)aryBuffer[0].first, nTotalSize );
 
 		if( !m_pKCP || bReliable )
 		{
 			if( nTotalSize < eGC_ShellMsg32*256 )
 			{
-				uint8 nId = (uint8)( nTotalSize >> 8 );
+				uint8_t nId = (uint8_t)( nTotalSize >> 8 );
 				CGC_ShellMsg8 NetData( nId );
-				NetData.nMsgLen = (uint8)( nTotalSize );
+				NetData.nMsgLen = (uint8_t)( nTotalSize );
 				SendBuffer( true, &NetData, sizeof(NetData) );
 			}
 			else
 			{
 				GammaAst( nTotalSize <= INVALID_32BITID );
 				CGC_ShellMsg32 NetData;
-				NetData.nMsgLen = (uint32)nTotalSize;
+				NetData.nMsgLen = (uint32_t)nTotalSize;
 				SendBuffer( true, &NetData, sizeof(NetData) );
 			}
 
-			for( uint32 i = 0; i < nBufferCount; i++ )
+			for( uint32_t i = 0; i < nBufferCount; i++ )
 				SendBuffer( true, aryBuffer[i].first, aryBuffer[i].second );
 		}
 		else
 		{
 			GammaAst( nTotalSize < MAX_RAW_UPD_SIZE );
 			char szBuffer[sizeof(CGC_ShellMsg8) + MAX_RAW_UPD_SIZE];
-			uint8 nId = (uint8)( nTotalSize >> 8 );
+			uint8_t nId = (uint8_t)( nTotalSize >> 8 );
 			CGC_ShellMsg8& NetData = *( new( szBuffer )CGC_ShellMsg8( nId ) );
-			NetData.nMsgLen = (uint8)( nTotalSize );
-			for( uint32 i = 0, n = sizeof( CGC_ShellMsg8 ); i < nBufferCount; i++ )
+			NetData.nMsgLen = (uint8_t)( nTotalSize );
+			for( uint32_t i = 0, n = sizeof( CGC_ShellMsg8 ); i < nBufferCount; i++ )
 			{
 				memcpy( szBuffer + n, aryBuffer[i].first, aryBuffer[i].second );
-				n += (uint32)aryBuffer[i].second;
+				n += (uint32_t)aryBuffer[i].second;
 			}
 
 			nTotalSize += sizeof(CGC_ShellMsg8);
@@ -297,9 +297,9 @@ namespace Gamma
 	{
 		if( m_pKCP )
 		{
-			uint32 nCurTime = (uint32)GetGammaTime();
-			uint32 nDataSize = (uint32)m_strKCPSendBuffer.size();
-			uint32 nInterval = GetConnMgr()->KcpConfig().KCPCONFIG_UPDATE;
+			uint32_t nCurTime = (uint32_t)GetGammaTime();
+			uint32_t nDataSize = (uint32_t)m_strKCPSendBuffer.size();
+			uint32_t nInterval = GetConnMgr()->KcpConfig().KCPCONFIG_UPDATE;
 			if( ( nDataSize && nCurTime - m_nPreUpdateTime > nInterval ) ||
 				nDataSize >= MAX_RAW_UPD_SIZE )
 			{
@@ -319,14 +319,14 @@ namespace Gamma
 
 			while( true )
 			{
-				uint32 nLeftSize = (uint32)m_strKCPRecvBuffer.size() - m_nKCPBufferSize;
-				int32 nPeekSize = ikcp_peeksize( m_pKCP );
+				uint32_t nLeftSize = (uint32_t)m_strKCPRecvBuffer.size() - m_nKCPBufferSize;
+				int32_t nPeekSize = ikcp_peeksize( m_pKCP );
 				if( nPeekSize < 0 )
 					break;
-				if( (int32)nLeftSize < nPeekSize )
+				if( (int32_t)nLeftSize < nPeekSize )
 					m_strKCPRecvBuffer.resize( m_nKCPBufferSize + nPeekSize + 1024 );
 				char* szBuffer = &m_strKCPRecvBuffer[m_nKCPBufferSize];
-				int32 nRecvSize = ikcp_recv( m_pKCP, szBuffer, nPeekSize + 1024 );
+				int32_t nRecvSize = ikcp_recv( m_pKCP, szBuffer, nPeekSize + 1024 );
 				if( nRecvSize <= 0 )
 					break;
 				m_nKCPBufferSize += nRecvSize;
@@ -339,7 +339,7 @@ namespace Gamma
 					size_t nSize = Dispatch( &m_strKCPRecvBuffer[0], m_nKCPBufferSize );				
 					if( nSize != m_nKCPBufferSize )
 						memcpy( &m_strKCPRecvBuffer[0], &m_strKCPRecvBuffer[nSize], m_nKCPBufferSize - nSize );
-					m_nKCPBufferSize -= (uint32)nSize;
+					m_nKCPBufferSize -= (uint32_t)nSize;
 				}
 				catch( ... )
 				{
@@ -351,8 +351,8 @@ namespace Gamma
 					string szLog = szBuf;
 					for( size_t i = 0; i < 32 && i < m_nKCPBufferSize; i++ )
 					{
-						char c1 = (char)( ( (uint8)m_strKCPRecvBuffer[i] ) & 0xf );
-						char c2 = (char)( ( (uint8)m_strKCPRecvBuffer[i] ) >> 4 );
+						char c1 = (char)( ( (uint8_t)m_strKCPRecvBuffer[i] ) & 0xf );
+						char c2 = (char)( ( (uint8_t)m_strKCPRecvBuffer[i] ) >> 4 );
 						szLog.push_back( c2 + ( c2 > 9 ? ( 'a' - 10 ) : '0' ) );
 						szLog.push_back( c1 + ( c1 > 9 ? ( 'a' - 10 ) : '0' ) );
 						szLog.push_back( ' ' );

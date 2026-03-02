@@ -49,13 +49,13 @@ namespace Gamma
 		}       
 	}
 
-	inline void rc4(unsigned char *buffer_ptr, int32 buffer_len, rc4_key *key)
+	inline void rc4(unsigned char *buffer_ptr, int32_t buffer_len, rc4_key *key)
 	{ 
 		unsigned char x;
 		unsigned char y;
 		unsigned char* state;
 		unsigned char xorIndex;
-		int32 counter;              
+		int32_t counter;              
 
 		x = key->x;     
 		y = key->y;     
@@ -75,13 +75,13 @@ namespace Gamma
 		key->y = y;
 	}
 
-	inline void rc4( unsigned char* buffer_dst, const unsigned char *buffer_src, int32 buffer_len, rc4_key *key)
+	inline void rc4( unsigned char* buffer_dst, const unsigned char *buffer_src, int32_t buffer_len, rc4_key *key)
 	{ 
 		unsigned char x;
 		unsigned char y;
 		unsigned char* state;
 		unsigned char xorIndex;
-		int32 counter;              
+		int32_t counter;              
 
 		x = key->x;     
 		y = key->y;     

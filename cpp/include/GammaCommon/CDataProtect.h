@@ -24,7 +24,7 @@ namespace Gamma
 		typedef typename CValuesType::iterator iterator;
         map<unsigned,T*> m_mapValues;
 
-        inline unsigned Void2Unsigned( const uint8* p )
+        inline unsigned Void2Unsigned( const uint8_t* p )
         {
             unsigned short* pU16 = (unsigned short*)&p;
             unsigned short m = pU16[0]*0xe941 + pU16[1]*0x9843;
@@ -33,12 +33,12 @@ namespace Gamma
         }
 
     public:
-        void RegistValue( uint8* p )
+        void RegistValue( uint8_t* p )
         {
             m_mapValues[ Void2Unsigned( p ) ] = NULL;
         }
 
-        void RemoveValue( uint8* p )
+        void RemoveValue( uint8_t* p )
         {
             iterator it = m_mapValues.find( Void2Unsigned( p ) );
 			T* pData = it->second;
@@ -46,21 +46,21 @@ namespace Gamma
             m_mapValues.erase( it );
         }
 
-        T Get( const uint8* p )
+        T Get( const uint8_t* p )
         {
 			iterator it = m_mapValues.find( Void2Unsigned( p ) );
             if ( it == m_mapValues.end() || !it->second )
                 return T();
 
-            T a = it->second[ uint8( p[0] + 5 ) ];
-            uint8* pBuf = (uint8*)&a;
+            T a = it->second[ uint8_t( p[0] + 5 ) ];
+            uint8_t* pBuf = (uint8_t*)&a;
             for( int i = 0; i < sizeof(T); i++ )
                 pBuf[i] = pBuf[i]^0x78;
 
             return a;
         }
 
-        const T& Set( uint8* p, const T& value )
+        const T& Set( uint8_t* p, const T& value )
         {
             T* pNew = new T[256];
             iterator it = m_mapValues.find( Void2Unsigned( p ) );
@@ -69,13 +69,13 @@ namespace Gamma
 
             delete []it->second;
             it->second = pNew;
-            p[0] = (uint8)CGammaRand::Rand<int16>( 0, 256 );
+            p[0] = (uint8_t)CGammaRand::Rand<int16_t>( 0, 256 );
 
             T a = value;
-            uint8* pBuf = (uint8*)&a;
+            uint8_t* pBuf = (uint8_t*)&a;
             for( int i = 0; i < sizeof(T); i++ )
                 pBuf[i] = pBuf[i]^0x78;
-            it->second[uint8( p[0] + 5 ) ] = a;
+            it->second[uint8_t( p[0] + 5 ) ] = a;
 
             return value;
         }
@@ -90,7 +90,7 @@ namespace Gamma
     template<class T>
     class CDataProtect
     {
-        uint8 uMagicValue;
+        uint8_t uMagicValue;
     public:
         CDataProtect()
         {

@@ -31,29 +31,29 @@ namespace Gamma
 		ECloseType		GetCloseType() const;
 	
 		bool			IsConnected() const;
-		uint32			GetPingDelay() const;
+		uint32_t			GetPingDelay() const;
 
 		const CAddress&	GetRemoteAddress() const;
 		const CAddress& GetLocalAddress() const;
 
 		bool			IsMsgDispatchEnable() const;
 		void			EnableMsgDispatch( bool bEnable );
-		void			SetNetDelay( uint32 nMinDelay, uint32 nMaxDelay );
+		void			SetNetDelay( uint32_t nMinDelay, uint32_t nMaxDelay );
 
 		void			EnableSendShellMsg( bool bValue );
-		void			SetHeartBeatInterval( uint32 nSeconds );
+		void			SetHeartBeatInterval( uint32_t nSeconds );
 		virtual	void	OnHeartBeatStop(){};
 
 		// 统计收发流量
-		void			EnableProfile(uint8 nSendIDBits, uint8 nRecvIDBits);
+		void			EnableProfile(uint8_t nSendIDBits, uint8_t nRecvIDBits);
 		void			PrintMsgSize();
-		size_t			GetSendBufferSize( uint16 nShellID );
-		size_t			GetRecvBufferSize( uint16 nShellID );
+		size_t			GetSendBufferSize( uint16_t nShellID );
+		size_t			GetRecvBufferSize( uint16_t nShellID );
 		size_t			GetTotalSendSize();
 		size_t			GetTotalRecvSize();
 
 		virtual size_t	OnShellMsg( const void* pCmd, size_t nSize, bool bUnreliable ) = 0;	/// shell层消息
-		virtual void	SendShellMsg( const SSendBuf aryBuffer[], uint32 nBufferCount, bool bUnreliable = false );
-		virtual void	SendShellMsg( const void* pData1, uint32 nSize1, bool bUnreliable = false );
+		virtual void	SendShellMsg( const SSendBuf aryBuffer[], uint32_t nBufferCount, bool bUnreliable = false );
+		virtual void	SendShellMsg( const void* pData1, uint32_t nSize1, bool bUnreliable = false );
 	};
 }

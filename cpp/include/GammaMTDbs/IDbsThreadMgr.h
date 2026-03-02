@@ -20,9 +20,9 @@ namespace Gamma
 
 	struct SDbsCreateParam
 	{
-		int32		nDBId;		//数据库唯一表示
+		int32_t		nDBId;		//数据库唯一表示
 		const char* szDbsHost;
-		uint16		nDbsPort;
+		uint16_t		nDbsPort;
 		const char*	szDataBase;
 		const char* szUser;
 		const char* szPassword;
@@ -34,17 +34,17 @@ namespace Gamma
 	public:
 		virtual IDbsQuery*			CreateDbsQuery( IDbsQueryHandler* pHandler ) = 0;
 		virtual void				Check() = 0;
-		virtual uint32				GetChannelCmdWaitingCount( uint32 nChannel ) = 0;
-		virtual uint32				GetAllCmdWaitingCount() = 0;
-		virtual uint32				GetChannelResultWaitingCount( uint32 nChannel ) = 0;
-		virtual uint32				GetAllResultWaitingCount() = 0;
+		virtual uint32_t				GetChannelCmdWaitingCount( uint32_t nChannel ) = 0;
+		virtual uint32_t				GetAllCmdWaitingCount() = 0;
+		virtual uint32_t				GetChannelResultWaitingCount( uint32_t nChannel ) = 0;
+		virtual uint32_t				GetAllResultWaitingCount() = 0;
 	};
 
-	GAMMA_MTDBS_API IDbsThreadMgr*	CreateDbsThreadMgr( uint32 nThreadCount, 
-		uint32 nDbsConnClassID, const SDbsCreateParam* aryParam, uint8 nDbsCount,
-		uint32 nRecordThreadCount, const Gamma::SDbsCreateParam* _aryRecordParam, uint8 _nRecordDbsCount);
+	GAMMA_MTDBS_API IDbsThreadMgr*	CreateDbsThreadMgr( uint32_t nThreadCount, 
+		uint32_t nDbsConnClassID, const SDbsCreateParam* aryParam, uint8_t nDbsCount,
+		uint32_t nRecordThreadCount, const Gamma::SDbsCreateParam* _aryRecordParam, uint8_t _nRecordDbsCount);
 
 	GAMMA_MTDBS_API IDbsThreadMgr*	CreateDbsThreadMgr( 
-		uint32 nThreadCount, uint32 nDbsConnClassID, const char* szDbsHost, uint16 nDbsPort, 
+		uint32_t nThreadCount, uint32_t nDbsConnClassID, const char* szDbsHost, uint16_t nDbsPort, 
 		const char* szDatabase, const char* szUser, const char* szPassword, bool bFoundAsUpdateRow );
 }

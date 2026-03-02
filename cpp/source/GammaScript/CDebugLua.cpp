@@ -35,7 +35,7 @@ namespace Gamma
 	void* s_szDebuger = (void*)"CDebugLua";
 
     CDebugLua::CDebugLua( IDebugHandler* pHandler, 
-		const char* strDebugHost, uint16 nDebugPort )
+		const char* strDebugHost, uint16_t nDebugPort )
         : CDebugBase( pHandler, strDebugHost, nDebugPort )
 		, m_pState( nullptr )
 		, m_pPreState( nullptr )
@@ -72,16 +72,16 @@ namespace Gamma
 		m_pPreState = nullptr;
 	}
 
-	uint32 CDebugLua::GetFrameCount()
+	uint32_t CDebugLua::GetFrameCount()
 	{
 		HackLuaDebug ld = {};
-		uint32 nDepth = 0;
+		uint32_t nDepth = 0;
 		while( lua_getstack ( m_pState, nDepth, &ld ) )
 			nDepth++;
 		return nDepth;
 	}
 
-	bool CDebugLua::GetFrameInfo( int32 nFrame, int32* nLine, 
+	bool CDebugLua::GetFrameInfo( int32_t nFrame, int32_t* nLine, 
 		const char** szFunction, const char** szSource )
 	{
 		HackLuaDebug ld = {};
@@ -107,15 +107,15 @@ namespace Gamma
 		return true;
 	}
 
-	uint32 CDebugLua::GenBreakPointID( const char* szFileName, int32 nLine )
+	uint32_t CDebugLua::GenBreakPointID( const char* szFileName, int32_t nLine )
 	{
-		static uint32 s_nBreakPointID = 1;
+		static uint32_t s_nBreakPointID = 1;
 		return s_nBreakPointID++;
 	}
 
 	const char* CDebugLua::PresentValue( void* pValue )
 	{
-		lua_pushvalue( m_pState, (int32)(ptrdiff_t)pValue );
+		lua_pushvalue( m_pState, (int32_t)(ptrdiff_t)pValue );
 		static_cast<CScriptLua*>(GetDebugHandler())->ToString( m_pState );
 		const char* szValue = lua_tostring( m_pState, -1 );
 		lua_pop( m_pState, 1 );
@@ -172,7 +172,7 @@ namespace Gamma
 			return;
 
 		// check break frame
-		if( (int32)pDebugger->GetFrameCount() > pDebugger->m_nBreakFrame )
+		if( (int32_t)pDebugger->GetFrameCount() > pDebugger->m_nBreakFrame )
 			return;
 
 		pDebugger->m_strLastSorece = pDebug->source;
@@ -210,16 +210,16 @@ namespace Gamma
 		lua_rawset( m_pState, LUA_REGISTRYINDEX );
 	}
 
-	uint32 CDebugLua::AddBreakPoint( const char* szFileName, int32 nLine )
+	uint32_t CDebugLua::AddBreakPoint( const char* szFileName, int32_t nLine )
 	{
-		uint32 nID = CDebugBase::AddBreakPoint( szFileName, nLine );
+		uint32_t nID = CDebugBase::AddBreakPoint( szFileName, nLine );
 		lua_State* pState = (lua_State*)(GetDebugHandler()->GetVM());
 		if( HaveBreakPoint() )
 			lua_sethook( pState, &CDebugLua::DebugHook, STEP_DEBUG_MASK, 0 );
 		return nID;
 	}
 
-	void CDebugLua::DelBreakPoint( uint32 nBreakPointID )
+	void CDebugLua::DelBreakPoint( uint32_t nBreakPointID )
 	{
 		CDebugBase::DelBreakPoint( nBreakPointID );
 		lua_State* pState = (lua_State*)(GetDebugHandler()->GetVM());
@@ -260,7 +260,7 @@ namespace Gamma
     void CDebugLua::StepOut()
     {
         lua_sethook( m_pState, &CDebugLua::DebugHook, STEP_DEBUG_MASK, 0 );
-		m_nBreakFrame = (int32)GetFrameCount() - 1;
+		m_nBreakFrame = (int32_t)GetFrameCount() - 1;
 		m_pPreState = m_pState;
     }
 
@@ -293,7 +293,7 @@ namespace Gamma
 		}
 	}
 
-	int32 CDebugLua::SwitchFrame(int32 nCurFrame)
+	int32_t CDebugLua::SwitchFrame(int32_t nCurFrame)
 	{
 		HackLuaDebug ld = {};
 		if( !lua_getstack( m_pState, nCurFrame, &ld ) )
@@ -324,7 +324,7 @@ namespace Gamma
 		// local value
 		lua_newtable( m_pState );
 		const char* name = nullptr;
-		int32 nLocalIndex = lua_gettop( m_pState );
+		int32_t nLocalIndex = lua_gettop( m_pState );
 
 		#ifndef lua_equal
 		#define lua_equal lua_rawequal
@@ -340,7 +340,7 @@ namespace Gamma
 
 		// up value
 		lua_newtable(m_pState);
-		int32 nCurCount = GetFrameCount() - 1;
+		int32_t nCurCount = GetFrameCount() - 1;
 		while( nCurCount >= 0 )
 		{
 			if( !lua_getstack( m_pState, nCurCount, &ld ) )
@@ -360,7 +360,7 @@ namespace Gamma
 		return nCurFrame;
 	}
 
-	uint32 CDebugLua::TouchVariable( const char* szField, uint32 nParentID )
+	uint32_t CDebugLua::TouchVariable( const char* szField, uint32_t nParentID )
 	{
 		bool bIndex = szField[0] >= '0' && szField[0] <= '9';
 		SVariableInfo* pInfo = m_mapVariable.Find( nParentID );
@@ -382,7 +382,7 @@ namespace Gamma
 		lua_rawget( m_pState, LUA_REGISTRYINDEX );			//2[value,value2ID]
 		lua_pushvalue( m_pState, -2 );						//3[value,value2ID,value]
 		lua_rawget( m_pState, -2 );							//3[value,value2ID,id]
-		uint32 nRegisterID = (uint32)lua_tonumber( m_pState, -1 );
+		uint32_t nRegisterID = (uint32_t)lua_tonumber( m_pState, -1 );
 		if( nRegisterID )
 		{
 			lua_pop( m_pState, 3 );
@@ -398,7 +398,7 @@ namespace Gamma
 		lua_pop( m_pState, 1 );								//2[value,value2ID]
 
 		// add to s_szValue2ID
-		uint32 nID = ++m_nValueID;
+		uint32_t nID = ++m_nValueID;
 		lua_pushvalue( m_pState, -2 );						//3[value,value2ID,value]
 		lua_pushnumber( m_pState, nID );					//4[value,value2ID,value,id]
 		lua_rawset( m_pState, -3 );   						//2[value,value2ID]
@@ -422,12 +422,12 @@ namespace Gamma
 		return nID;
 	}
 
-	uint32 CDebugLua::GetScopeChainID( int32 nCurFrame )
+	uint32_t CDebugLua::GetScopeChainID( int32_t nCurFrame )
 	{
 		return ePDVID_Scopes;
 	}
 
-	Gamma::SValueInfo CDebugLua::GetVariable( uint32 nID )
+	Gamma::SValueInfo CDebugLua::GetVariable( uint32_t nID )
 	{
 		SValueInfo Info;
 		Info.nID = nID;
@@ -463,8 +463,8 @@ namespace Gamma
 		return Info;
 	}
 
-	uint32 CDebugLua::GetChildrenID( uint32 nParentID, bool bIndex, 
-		uint32 nStart, uint32* aryChild, uint32 nCount )
+	uint32_t CDebugLua::GetChildrenID( uint32_t nParentID, bool bIndex, 
+		uint32_t nStart, uint32_t* aryChild, uint32_t nCount )
 	{
 		if( nParentID == ePDVID_Scopes )
 		{
@@ -487,7 +487,7 @@ namespace Gamma
 
 		if( pInfo->m_mapFields[0].IsEmpty() && pInfo->m_mapFields[1].IsEmpty() )
 		{
-			int32 nTop = lua_gettop( m_pState );
+			int32_t nTop = lua_gettop( m_pState );
 			lua_pushlightuserdata( m_pState, s_szID2Value );
 			lua_rawget( m_pState, LUA_REGISTRYINDEX );
 			lua_pushnumber( m_pState, pNode->m_nRegisterID );
@@ -532,7 +532,7 @@ namespace Gamma
 			GammaAst( nTop == lua_gettop( m_pState ) );
 		}
 
-		uint32 nIndex = 0, nCurCount = 0;
+		uint32_t nIndex = 0, nCurCount = 0;
 		for( auto pField = mapFields.GetFirst(); pField;
 			pField = pField->GetNext(), nIndex++ )
 		{
@@ -548,14 +548,14 @@ namespace Gamma
 		return nCurCount;
 	}
 
-	uint32 CDebugLua::EvaluateExpression(int32 nCurFrame, const char* szName)
+	uint32_t CDebugLua::EvaluateExpression(int32_t nCurFrame, const char* szName)
 	{
 		if (szName == nullptr)
 			return INVALID_32BITID;
 		gammacstring strKey(szName, true);
 
-		uint32 aryID[] = { ePDVID_Local, ePDVID_UpValue, ePDVID_Global };
-		for (uint32 i = 0; i < ELEM_COUNT(aryID); i++)
+		uint32_t aryID[] = { ePDVID_Local, ePDVID_UpValue, ePDVID_Global };
+		for (uint32_t i = 0; i < ELEM_COUNT(aryID); i++)
 		{
 			SVariableInfo* pInfo = m_mapVariable.Find(aryID[i]);
 			if (!pInfo)

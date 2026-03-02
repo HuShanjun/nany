@@ -52,21 +52,21 @@ namespace Gamma
 		SSendBuffer*				m_pFreeBuffer;
 
     public:
-        CGNetwork( uint32 nMaxConnect = -1, uint32 nNetworkThread = -1 );
+        CGNetwork( uint32_t nMaxConnect = -1, uint32_t nNetworkThread = -1 );
 		~CGNetwork(void);
 
 		const SSL_METHOD*			GetSSLServerMethod() const { return m_sslServerMethod; }
 		const SSL_METHOD*			GetSSLClientMethod() const { return m_sslClientMethod; }
 
 		void						Release(){ delete this; }
-		bool						PreResolveDomain( const char* szAddress, uint32 nValidSeconds );
+		bool						PreResolveDomain( const char* szAddress, uint32_t nValidSeconds );
 		void						EnableLog( bool bLog ) { m_bLog = bLog; }
 		bool						IsLogEnable() { return m_bLog; }
 
 		/// 上层调用
-		IListener*					StartListener( const char* szAddres, uint16 nPort, EConnecterType eType,
+		IListener*					StartListener( const char* szAddres, uint16_t nPort, EConnecterType eType,
 											const char* pCertificatePath,	const char* pPrivateKeyPath );
-		IConnecter*					Connect( const char* szAddres, uint16 nPort, EConnecterType eType );
+		IConnecter*					Connect( const char* szAddres, uint16_t nPort, EConnecterType eType );
 		CAddrResolutionDelegate*	GetAddressReslv( const char* szAddres );
 		CGNetThread*				GetMinSocketThread();
 
@@ -75,7 +75,7 @@ namespace Gamma
 		void						ReleaseListener( CGListener* pListener );
 		void						AddDisConnSocket( CDisconnectNode* pDisConnSocket );
 
-		bool		                Check( uint32 nTimeOut );
+		bool		                Check( uint32_t nTimeOut );
 		SSendBuffer*				Alloc();
 		void						Free( SSendBuffer* pData );
     };

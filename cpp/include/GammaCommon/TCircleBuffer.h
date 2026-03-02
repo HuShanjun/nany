@@ -5,7 +5,7 @@
 
 namespace Gamma
 {
-	template<uint32 nBlockSize = 8192>
+	template<uint32_t nBlockSize = 8192>
 	class TCircleBufferBlockAlloc
 	{
 	public:
@@ -23,8 +23,8 @@ namespace Gamma
 
 		struct SQuerryBufferHead
 		{
-			volatile uint32			m_nReadPos;
-			volatile uint32			m_nWritePos;
+			volatile uint32_t			m_nReadPos;
+			volatile uint32_t			m_nWritePos;
 			volatile SQuerryNodePtr	m_pNextBuffer;
 		};
 
@@ -43,13 +43,13 @@ namespace Gamma
 		volatile SQuerryNodePtr		m_pReadBuffer;
 		volatile SQuerryNodePtr		m_pWriteBuffer;
 	public://todo:
-		uint64						m_nPushCount;  
-		uint64						m_nPopCount; 
+		uint64_t						m_nPushCount;  
+		uint64_t						m_nPopCount; 
 		std::string					m_strBuffer;
 
-		void						WriteBuffer( SQuerryNodePtr& pWriteBuffer, uint32& nWritePos,
+		void						WriteBuffer( SQuerryNodePtr& pWriteBuffer, uint32_t& nWritePos,
 										SQuerryNodePtr pReadBuffer, const void* pBuffer, size_t nSize );
-		void						ReadBuffer( SQuerryNodePtr& pReadBuffer, uint32& nReadPos,
+		void						ReadBuffer( SQuerryNodePtr& pReadBuffer, uint32_t& nReadPos,
 										void* pBuffer, size_t nSize );
 	public:
 		TCircleBuffer( BufferAlloc _Alloc = BufferAlloc() );
@@ -57,17 +57,17 @@ namespace Gamma
 
 		template<class ContextType>
 		void						PushBuffer( ContextType nContext, 
-										const SSendBuf aryBuffer[], uint32 nBufferCount, bool bMerge );
+										const SSendBuf aryBuffer[], uint32_t nBufferCount, bool bMerge );
 		template<class ContextType>
 		bool						PopBuffer( ContextType& nContext,
-										SSendBuf aryBuffer[], uint32& nBufferCount );
+										SSendBuf aryBuffer[], uint32_t& nBufferCount );
 
-		void						PushRaw( const SSendBuf aryBuffer[], uint32 nBufferCount );
-		void						PushRaw( const void* pBuffer, uint32 nBufferSize );
-		uint32						PopRaw( void* pBuffer, uint32 nBufferSize );
+		void						PushRaw( const SSendBuf aryBuffer[], uint32_t nBufferCount );
+		void						PushRaw( const void* pBuffer, uint32_t nBufferSize );
+		uint32_t						PopRaw( void* pBuffer, uint32_t nBufferSize );
 
 		bool						CanPop() const;
-		uint32						GetWaitingBufferCount() const;
+		uint32_t						GetWaitingBufferCount() const;
 	};
 
 	typedef TCircleBuffer< TCircleBufferBlockAlloc<8192> > CCircleBuffer;

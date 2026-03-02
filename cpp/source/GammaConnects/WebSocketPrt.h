@@ -9,13 +9,13 @@ namespace Gamma
 #pragma pack(push,1)
 	struct SWebSocketMsg : public SWebSocketProtocal
 	{
-		SWebSocketMsg( uint8 nId )
+		SWebSocketMsg( uint8_t nId )
 		{
 			m_nId = nId;
 			m_nReserved = 0;
 		}
 
-		uint8 GetId() const	
+		uint8_t GetId() const	
 		{
 			return m_nId; 
 		}
@@ -35,7 +35,7 @@ namespace Gamma
 	{\
 	public:\
 	CommandName() : SWebSocketMsg( CommandId ){}\
-	static uint8 GetIdByType()		{ return (uint8)CommandId; }\
+	static uint8_t GetIdByType()		{ return (uint8_t)CommandId; }\
 	static size_t GetHeaderSize()	{ return sizeof(CommandName); }\
 	static const char* GetName()	{ return #CommandName; }
 

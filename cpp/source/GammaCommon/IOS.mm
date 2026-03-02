@@ -48,11 +48,11 @@
 // IOSMessage 传递的消息结构定义
 //==============================================================
 @interface IOSMessage : NSObject
-@property uint32 nWindowID;
-@property uint32 nInputID;
-@property uint32 nType;
-@property uint32 nParam1;
-@property uint32 nParam2;
+@property uint32_t nWindowID;
+@property uint32_t nInputID;
+@property uint32_t nType;
+@property uint32_t nParam1;
+@property uint32_t nParam2;
 @property (strong, nonatomic) id param1;
 @property (strong, nonatomic) id param2;
 @end
@@ -67,7 +67,7 @@
 <UIImagePickerControllerDelegate,
 UINavigationControllerDelegate,
 MPMediaPickerControllerDelegate>
-@property int32 nType;
+@property int32_t nType;
 @property void* pContext;
 @property Gamma::SystemFileCallback funFileCallback;
 @property Gamma::SystemFileListCallback funListCallback;
@@ -95,8 +95,8 @@ static Class s_gammaAppDelegate = nil;
 {
 	#define MAX_TOUCH_POINT 10
 	
-    uint32                  	m_nWindowID;
-	std::map<UITouch*,uint32>	m_mapTouchs;
+    uint32_t                  	m_nWindowID;
+	std::map<UITouch*,uint32_t>	m_mapTouchs;
 	UITouch*					m_aryTounchs[MAX_TOUCH_POINT];
     UITextField*            	m_pTextField;
 	NSString*					m_sPreText;
@@ -115,7 +115,7 @@ static Class s_gammaAppDelegate = nil;
 	return [[UIScreen mainScreen] scale];
 }
 
-- (id)initGLView:(uint32)windowID Size:(CGRect)rtSize
+- (id)initGLView:(uint32_t)windowID Size:(CGRect)rtSize
 {
 	GammaLog << "GLViewSize:"
 		<< rtSize.size.width << ","
@@ -170,7 +170,7 @@ static Class s_gammaAppDelegate = nil;
 	m_pTextField.placeholder = msg.param2;
 	[m_pTextField setText:msg.param2];
 	
-	uint32 nLen = msg.param2 ? (uint32)[(NSString*)msg.param2 length] : 0;
+	uint32_t nLen = msg.param2 ? (uint32_t)[(NSString*)msg.param2 length] : 0;
 	UITextPosition* beginning = m_pTextField.beginningOfDocument;
 	UITextPosition* startPosition = [m_pTextField positionFromPosition:beginning offset:nLen];
 	UITextPosition* endPosition = [m_pTextField positionFromPosition:beginning offset:nLen];
@@ -235,13 +235,13 @@ static Class s_gammaAppDelegate = nil;
 	}
 }
 
--(uint32)addTouchID:(UITouch*)touch
+-(uint32_t)addTouchID:(UITouch*)touch
 {
-	std::map<UITouch*,uint32>::iterator it = m_mapTouchs.find( touch );
+	std::map<UITouch*,uint32_t>::iterator it = m_mapTouchs.find( touch );
 	if( it != m_mapTouchs.end() )
 		return it->second;
 	
-    for( uint32 i = 0; i < MAX_TOUCH_POINT; i++ )
+    for( uint32_t i = 0; i < MAX_TOUCH_POINT; i++ )
     {
         if( m_aryTounchs[i] )
             continue;
@@ -253,25 +253,25 @@ static Class s_gammaAppDelegate = nil;
 	return INVALID_32BITID;
 }
 
--(uint32)delTouchID:(UITouch*)touch
+-(uint32_t)delTouchID:(UITouch*)touch
 {
-	std::map<UITouch*,uint32>::iterator it = m_mapTouchs.find( touch );
+	std::map<UITouch*,uint32_t>::iterator it = m_mapTouchs.find( touch );
 	if( it == m_mapTouchs.end() )
 		return INVALID_32BITID;
-	uint32 nID = it->second;
+	uint32_t nID = it->second;
 	m_aryTounchs[nID] = NULL;
 	m_mapTouchs.erase( it );
 	return nID;
 }
 
--(void)postTouchEvent:(NSSet *)touches withMsgID:(uint32)msgID withParam:(uint32)param
+-(void)postTouchEvent:(NSSet *)touches withMsgID:(uint32_t)msgID withParam:(uint32_t)param
 {
     UIApplication* app = [UIApplication sharedApplication];
     GammaAppDelegate* pAppDelegate = (GammaAppDelegate *)app.delegate;
     
     for( UITouch *touch in touches )
 	{
-		uint32 nID;
+		uint32_t nID;
 		if( msgID == WM_LBUTTONUP )
 			nID = [self delTouchID:touch];
 		else
@@ -282,15 +282,15 @@ static Class s_gammaAppDelegate = nil;
 		
 		float scale = [OpenGLView getScale];
         CGPoint curPos = [touch locationInView:self];
-		uint32 x = (uint32)( curPos.x*scale );
-		uint32 y = (uint32)( curPos.y*scale );
+		uint32_t x = (uint32_t)( curPos.x*scale );
+		uint32_t y = (uint32_t)( curPos.y*scale );
 		
         IOSMessage* msg = [[IOSMessage alloc]init];
         msg.nWindowID = m_nWindowID;
         msg.nInputID = nID;
         msg.nType = msgID;
         msg.nParam1 = param;
-        msg.nParam2 = MAKE_UINT32( (int16)x, (int16)y );
+        msg.nParam2 = MAKE_UINT32( (int16_t)x, (int16_t)y );
         msg.param1 = self;
         [pAppDelegate sendMessage:msg waitUntilDone:NO];
     }
@@ -330,8 +330,8 @@ static Class s_gammaAppDelegate = nil;
 	GammaAppDelegate* pAppDelegate = (GammaAppDelegate *)app.delegate;
 	UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
 	
-	GammaLog << "pAppDelegate.m_mask:" << (uint32)pAppDelegate.m_mask << std::endl;
-	GammaLog << "orientation:" << (uint32)( 1 << orientation ) << std::endl;
+	GammaLog << "pAppDelegate.m_mask:" << (uint32_t)pAppDelegate.m_mask << std::endl;
+	GammaLog << "orientation:" << (uint32_t)( 1 << orientation ) << std::endl;
 	
 	if( ( pAppDelegate.m_mask&( 1 << orientation ) ) == 0 )
 	{
@@ -374,15 +374,15 @@ static Class s_gammaAppDelegate = nil;
 	[self setCenter:posCenter];
 	
 	float scale = [OpenGLView getScale];
-	uint32 w = (uint32)( rtBounds.size.width*scale );
-	uint32 h = (uint32)( rtBounds.size.height*scale );
+	uint32_t w = (uint32_t)( rtBounds.size.width*scale );
+	uint32_t h = (uint32_t)( rtBounds.size.height*scale );
 
 	IOSMessage* msg = [[IOSMessage alloc]init];
 	msg.nWindowID = m_nWindowID;
 	msg.nInputID = 0;
 	msg.nType = WM_SIZE;
 	msg.nParam1 = 0;
-	msg.nParam2 = MAKE_UINT32( (int16)w, (int16)h );
+	msg.nParam2 = MAKE_UINT32( (int16_t)w, (int16_t)h );
 	msg.param1 = self;
 	[pAppDelegate sendMessage:msg waitUntilDone:NO];
 }
@@ -630,7 +630,7 @@ didFinishPickingMediaWithInfo:(NSDictionary*)info
 -(void)createView:(NSNumber*)windowID
 {
     CGRect screenBounds = [self.window.rootViewController.view bounds];
-    uint32 nWindowID = (uint32)[windowID unsignedIntegerValue];
+    uint32_t nWindowID = (uint32_t)[windowID unsignedIntegerValue];
 	OpenGLView* pGLView = [[OpenGLView alloc] initGLView:nWindowID Size:screenBounds];
 	[self.window.rootViewController.view addSubview:pGLView];
 	
@@ -639,8 +639,8 @@ didFinishPickingMediaWithInfo:(NSDictionary*)info
     msg.nWindowID = nWindowID;
     msg.nInputID = 0;
     msg.nType = WM_CREATE;
-    msg.nParam1 = (uint32)( screenBounds.size.width*scale );
-    msg.nParam2 = (uint32)( screenBounds.size.height*scale );
+    msg.nParam1 = (uint32_t)( screenBounds.size.width*scale );
+    msg.nParam2 = (uint32_t)( screenBounds.size.height*scale );
     msg.param1 = pGLView;
 	[self sendMessage:msg waitUntilDone:NO];
 	
@@ -745,8 +745,8 @@ didFinishPickingMediaWithInfo:(NSDictionary*)info
 	else if( file.funListCallback )
 	{
 		std::vector<const char*> vecPath;
-		uint32 nCount = file.fileList ? file.fileList.count : 0;
-		for( uint32 i = 0; i < nCount; i++ )
+		uint32_t nCount = file.fileList ? file.fileList.count : 0;
+		for( uint32_t i = 0; i < nCount; i++ )
 			vecPath.push_back( [file.fileList objectAtIndex:i].UTF8String );
 		const char** aryPath = nCount ? &vecPath[0] : NULL;
 		( file.funListCallback )( file.pContext, aryPath, nCount );
@@ -770,7 +770,7 @@ namespace Gamma
     //==================================================
     struct SIOSWnd
     {
-        uint32              m_nWindowID;
+        uint32_t              m_nWindowID;
         OpenGLView*         m_pIOSView;
         InputHandler        m_funHandler;
         void*               m_pContext;
@@ -805,7 +805,7 @@ namespace Gamma
     //==============================================================
     // CIOSApp 方法
 	//==============================================================
-	uint64 CIOSApp::GetVersion()
+	uint64_t CIOSApp::GetVersion()
 	{
 		return m_nVersion;
 	}
@@ -862,7 +862,7 @@ namespace Gamma
 		return false;
 	}
 	
-	void CIOSApp::SetClipboardContent( int32 nType, const void* pContent, uint32 nSize )
+	void CIOSApp::SetClipboardContent( int32_t nType, const void* pContent, uint32_t nSize )
 	{
 		if( nType == CONTENT_TYPE_TEXT )
 		{
@@ -878,23 +878,23 @@ namespace Gamma
 		}
 	}
 	
-	void CIOSApp::GetClipboardContent( int32 nType, const void*& pContent, uint32& nSize )
+	void CIOSApp::GetClipboardContent( int32_t nType, const void*& pContent, uint32_t& nSize )
 	{
 		if( nType == CONTENT_TYPE_TEXT )
 		{
 			pContent = [[UIPasteboard generalPasteboard].string UTF8String];
-			nSize = (uint32)( strlen( (const char*)pContent ) );
+			nSize = (uint32_t)( strlen( (const char*)pContent ) );
 		}
 		else if( nType == CONTENT_TYPE_IMAGE )
 		{
 			UIImage* image = [UIPasteboard generalPasteboard].image;
 			NSData* imageData = UIImageJPEGRepresentation( image, 1 );
 			pContent = imageData.bytes;
-			nSize = (uint32)imageData.length;
+			nSize = (uint32_t)imageData.length;
 		}
 	}
 	
-	bool CIOSApp::GetSystemFile( int32 nType, void* pContext, SystemFileCallback funCallback )
+	bool CIOSApp::GetSystemFile( int32_t nType, void* pContext, SystemFileCallback funCallback )
 	{
 		FileDelegete* delegate = [[FileDelegete alloc]init];
 		delegate.nType = nType;
@@ -907,7 +907,7 @@ namespace Gamma
 		return true;
 	}
 	
-	bool CIOSApp::GetSystemFileList( int32 nType, void* pContext, SystemFileListCallback funCallback )
+	bool CIOSApp::GetSystemFileList( int32_t nType, void* pContext, SystemFileListCallback funCallback )
 	{
 		FileDelegete* delegate = [[FileDelegete alloc]init];
 		delegate.nType = nType;
@@ -923,7 +923,7 @@ namespace Gamma
 				predicateWithValue:nMediaType  forProperty:MPMediaItemPropertyMediaType];
 			[allMusic addFilterPredicate:predicate];
 			NSArray<MPMediaItem*>* aryItems = allMusic.items;
-			for( uint32 i = 0; i < aryItems.count; i++ )
+			for( uint32_t i = 0; i < aryItems.count; i++ )
 			{
 				MPMediaItem* item = [aryItems objectAtIndex:i];
 				NSURL* assetURL = [item valueForProperty:MPMediaItemPropertyAssetURL];
@@ -944,7 +944,7 @@ namespace Gamma
 			options.version = PHImageRequestOptionsVersionCurrent;
 			options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
 			options.synchronous = YES;
-			for( uint32 i = 0; i < fetchResult.count; i++ )
+			for( uint32_t i = 0; i < fetchResult.count; i++ )
 			{
 				PHAsset* item = [fetchResult objectAtIndex:i];
 				[[PHImageManager defaultManager] requestImageDataForAsset:item
@@ -977,7 +977,7 @@ namespace Gamma
 			PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
 			options.version = PHVideoRequestOptionsVersionCurrent;
 			options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
-			for( uint32 i = 0; i < fetchResult.count; i++ )
+			for( uint32_t i = 0; i < fetchResult.count; i++ )
 			{
 				PHAsset* item = [fetchResult objectAtIndex:i];
 				[[PHImageManager defaultManager] requestAVAssetForVideo:item
@@ -1089,9 +1089,9 @@ namespace Gamma
 		return false;
 	}
 	
-	void CIOSApp::StartLocation( uint32 nLocationInterval )
+	void CIOSApp::StartLocation( uint32_t nLocationInterval )
 	{
-		m_nLocationInterval = Gamma::Max<uint32>( nLocationInterval, 1000 );
+		m_nLocationInterval = Gamma::Max<uint32_t>( nLocationInterval, 1000 );
 	}
 	
 	void CIOSApp::SetLocation( double fLongitude, double fLatitude, double fAltitude )
@@ -1143,7 +1143,7 @@ namespace Gamma
 	}
 	
     // 主线程入口
-    int32 CIOSApp::StartApp( AppEntryFunction funEntry, int nArg, const char* szArg[] )
+    int32_t CIOSApp::StartApp( AppEntryFunction funEntry, int nArg, const char* szArg[] )
     {
 		NSLog( @"StartApp" );
 		
@@ -1155,7 +1155,7 @@ namespace Gamma
     }
     
     // 游戏线程入口	
-    int32 CIOSApp::MainThread()
+    int32_t CIOSApp::MainThread()
 	{
 		return m_funEntry( m_nArg, m_szArg );
 	}
@@ -1230,13 +1230,13 @@ namespace Gamma
 		 char	m_szCpuType[CPUTYPE_LEN]*;
 		 char	m_szOSDesc[OSDESC_LEN]*;
 		 char	m_szLanguage[LANGUAGE_LEN]*;
-		 uint64	m_nMac*;
-		 uint32	m_nCpuFrequery*;
-		 uint32	m_nCpuCount*;
-		 uint32	m_nMemSize;
-		 uint16  m_nScreen_X;
-		 uint16	m_nScreen_Y;
-		 uint32	m_nVideoMemSize*;
+		 uint64_t	m_nMac*;
+		 uint32_t	m_nCpuFrequery*;
+		 uint32_t	m_nCpuCount*;
+		 uint32_t	m_nMemSize;
+		 uint16_t  m_nScreen_X;
+		 uint16_t	m_nScreen_Y;
+		 uint32_t	m_nVideoMemSize*;
 		 */
 		
 		strcpy2array_safe( m_HardwareDesc.m_szDeviceDesc, GetDeviceDesc() );
@@ -1258,12 +1258,12 @@ namespace Gamma
 		
 		NSProcessInfo* processInfo = [NSProcessInfo processInfo];
 		m_HardwareDesc.m_nMac = 0x02;
-		m_HardwareDesc.m_nMemSize = (uint32)processInfo.physicalMemory;
+		m_HardwareDesc.m_nMemSize = (uint32_t)processInfo.physicalMemory;
 		
 		CGRect rect = [[UIScreen mainScreen] bounds];
 		CGFloat scale = [[UIScreen mainScreen] scale];
-		m_HardwareDesc.m_nScreen_X = (uint16)( rect.size.width * scale + 0.5f );
-		m_HardwareDesc.m_nScreen_Y = (uint16)( rect.size.height * scale + 0.5f );
+		m_HardwareDesc.m_nScreen_X = (uint16_t)( rect.size.width * scale + 0.5f );
+		m_HardwareDesc.m_nScreen_Y = (uint16_t)( rect.size.height * scale + 0.5f );
 		
 		//获取设备唯一id
 		NSString* KEY = @"com.joyegame.engine";
@@ -1314,7 +1314,7 @@ namespace Gamma
     // 创建窗口中间层
     SIOSWnd* CIOSApp::CreateIOSGLView( InputHandler funHandler, void* pContext )
     {
-        uint32 nWindowID = m_nWindowID++;
+        uint32_t nWindowID = m_nWindowID++;
         SIOSWnd& Wnd = m_mapWindows[nWindowID];
         Wnd.m_nWindowID = nWindowID;
         Wnd.m_pIOSView = NULL;
@@ -1368,16 +1368,16 @@ namespace Gamma
     }
     
     // 消息泵，调用NSRunLoop完成消息接收
-    uint32 CIOSApp::IOSMessagePump()
+    uint32_t CIOSApp::IOSMessagePump()
     {
-        uint32 nMsgCount = 0;
+        uint32_t nMsgCount = 0;
         NSRunLoop* runloop = [NSRunLoop currentRunLoop];
         [runloop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantPast]];
 		
 		// 更新定位
 		if( m_nLocationInterval && m_nLocationInterval != INVALID_32BITID )
 		{
-			int64 nCurTime = Gamma::GetGammaTime();
+			int64_t nCurTime = Gamma::GetGammaTime();
 			if( nCurTime > m_nPreLocationTime + m_nLocationInterval )
 			{
 				m_nPreLocationTime = nCurTime;
@@ -1424,15 +1424,15 @@ namespace Gamma
 				Wnd.m_funHandler( Wnd.m_pContext, 0, WM_CHAR, 0, 0 );
 			else
 			{
-				for( uint32 i = 0; i < msgIOS.nParam2; i++ )
+				for( uint32_t i = 0; i < msgIOS.nParam2; i++ )
 				{
 					Wnd.m_funHandler( Wnd.m_pContext, 0, WM_KEYDOWN, VK_BACK, 0 );
 					Wnd.m_funHandler( Wnd.m_pContext, 0, WM_KEYUP, VK_BACK, 0 );
 				}
 			}
 			
-			uint32 length = (uint32)strChar.length;
-			for( uint32 i = 0; i < length; i++ )
+			uint32_t length = (uint32_t)strChar.length;
+			for( uint32_t i = 0; i < length; i++ )
 				Wnd.m_funHandler( Wnd.m_pContext, 0, WM_CHAR, [strChar characterAtIndex:i], 0 );
 			
             [strChar release];

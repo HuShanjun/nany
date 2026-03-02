@@ -18,7 +18,7 @@ namespace Gamma
 
 	struct SFileContext
 	{
-		uint32					m_nCacheSize;
+		uint32_t					m_nCacheSize;
 		char*					m_pFile;
 	};
 
@@ -43,12 +43,12 @@ namespace Gamma
 	static SFunctionTableHead* AllocFunArray( size_t nArraySize )
 	{
 		static std::mutex s_Lock;
-		static uint32 s_nFuctionTableUseCount = 0;
-		static uint32 s_nFuctionTableCommitCount = 0;
+		static uint32_t s_nFuctionTableUseCount = 0;
+		static uint32_t s_nFuctionTableCommitCount = 0;
 
 		s_Lock.lock();
 		nArraySize += ePointerCount;
-		uint32 nUseCount = s_nFuctionTableUseCount + (uint32)nArraySize;
+		uint32_t nUseCount = s_nFuctionTableUseCount + (uint32_t)nArraySize;
 		if( nUseCount > s_nFuctionTableCommitCount )
 		{
 			if( nUseCount > MAX_VIRTUAL_FUN_COUNT )
@@ -57,21 +57,21 @@ namespace Gamma
 				throw( "No enough buffer for funtion table!!!!" );
 			}
 
-			uint32 nPageSize = GetVirtualPageSize();
-			uint32 nPageFuctionCount = nPageSize/sizeof(void*);
+			uint32_t nPageSize = GetVirtualPageSize();
+			uint32_t nPageFuctionCount = nPageSize/sizeof(void*);
 			GammaAst( nPageFuctionCount*sizeof(void*) == nPageSize );
 
 			void* pCommitStart = s_aryFuctionTable + s_nFuctionTableCommitCount;
-			uint32 nCommitEnd = AligenUp( nUseCount, nPageFuctionCount );
-			uint32 nCommitCount = nCommitEnd - s_nFuctionTableCommitCount;
-			uint32 nCommitFlag = VIRTUAL_PAGE_READ|VIRTUAL_PAGE_WRITE;
+			uint32_t nCommitEnd = AligenUp( nUseCount, nPageFuctionCount );
+			uint32_t nCommitCount = nCommitEnd - s_nFuctionTableCommitCount;
+			uint32_t nCommitFlag = VIRTUAL_PAGE_READ|VIRTUAL_PAGE_WRITE;
 			CommitMemoryPage( pCommitStart, nCommitCount*sizeof(void*), nCommitFlag );
 			s_nFuctionTableCommitCount = nCommitEnd;
 			s_aryFuctionTableEnd = s_aryFuctionTable + nCommitEnd;
 		}
 
 		void** aryFun = s_aryFuctionTable + s_nFuctionTableUseCount;
-		s_nFuctionTableUseCount += (uint32)nArraySize;
+		s_nFuctionTableUseCount += (uint32_t)nArraySize;
 		s_Lock.unlock();
 		return (SFunctionTableHead*)aryFun;
 	}
@@ -100,7 +100,7 @@ namespace Gamma
 			SFunctionTable* pNewFunTable = it->second;
 			SFunctionTableHead* pFunTableHead = ( (SFunctionTableHead*)pNewFunTable ) - 1;
 			pFunTableHead->m_pClassInfo = nullptr;
-			int32 nFunCount = pNewFunTable->GetFunctionCount();
+			int32_t nFunCount = pNewFunTable->GetFunctionCount();
 			GammaAst( it->first == pFunTableHead->m_pOldFunTable );
 			memcpy( pNewFunTable->m_pFun, it->first->m_pFun, nFunCount*sizeof(void*) );
 		}
@@ -123,7 +123,7 @@ namespace Gamma
 	}
 
 	bool CScriptBase::RegisterClassCallback( 
-		IFunctionWrap* funWrap, uintptr_t funBoot, uint32 nFunIndex, bool bPureVirtual,
+		IFunctionWrap* funWrap, uintptr_t funBoot, uint32_t nFunIndex, bool bPureVirtual,
 		const STypeInfoArray& aryTypeInfo, const char* szFunctionName )
 	{
 		return new CCallbackInfo( funWrap, aryTypeInfo, funBoot, nFunIndex, 
@@ -142,12 +142,12 @@ namespace Gamma
 			szTypeInfoName, szMemberName ) != nullptr;
 	}
 
-	bool CScriptBase::RegisterClass( const char* szClass, uint32 nCount, 
+	bool CScriptBase::RegisterClass( const char* szClass, uint32_t nCount, 
 		const char** aryType, const ptrdiff_t* aryValue )
 	{
 		auto pClassInfo = CClassInfo::RegisterClass( 
-			szClass, aryType[0], (uint32)aryValue[0], false );
-		for( uint32 i = 1; i < nCount; i++ )
+			szClass, aryType[0], (uint32_t)aryValue[0], false );
+		for( uint32_t i = 1; i < nCount; i++ )
 		{
 			GammaAst( CClassInfo::GetClassInfo( aryType[i] ) != nullptr );
 			pClassInfo->AddBaseInfo( aryType[0], aryType[i], aryValue[i] );
@@ -163,23 +163,23 @@ namespace Gamma
 	}
 
 	bool CScriptBase::RegisterDestructor( IFunctionWrap* funWrap,
-		uintptr_t funBoot, uint32 nFunIndex, const STypeInfoArray& aryTypeInfo )
+		uintptr_t funBoot, uint32_t nFunIndex, const STypeInfoArray& aryTypeInfo )
 	{
 		return new CCallbackInfo( funWrap, aryTypeInfo,funBoot, nFunIndex, 
 			false, aryTypeInfo.aryInfo[0].m_szTypeName, "" ) != nullptr;
 	}
 
-	bool CScriptBase::RegisterEnumType( const char* szTypeIDName, const char* szEnumType, int32 nTypeSize )
+	bool CScriptBase::RegisterEnumType( const char* szTypeIDName, const char* szEnumType, int32_t nTypeSize )
 	{
 		return CClassInfo::RegisterClass( szEnumType, szTypeIDName, nTypeSize, true ) != nullptr;
 	}
 
-	bool CScriptBase::RegisterEnumValue( const char* szTypeIDName, const char* szEnumValue, int32 nValue )
+	bool CScriptBase::RegisterEnumValue( const char* szTypeIDName, const char* szEnumValue, int32_t nValue )
 	{
 		const CClassInfo* pClassInfo = CClassInfo::GetClassInfo( szTypeIDName );
 		gammacstring keyName( szEnumValue, true );
 		GammaAst( pClassInfo && pClassInfo->GetRegistFunction().Find( keyName ) == nullptr );
-		STypeInfo TypeInfo = GetTypeInfo<int32>(); 
+		STypeInfo TypeInfo = GetTypeInfo<int32_t>(); 
 		STypeInfoArray aryInfo = { &TypeInfo, 1 };
 		return new CCallInfo( nullptr, aryInfo, nValue, szTypeIDName, eCT_Value, szEnumValue ) != nullptr;
 	}
@@ -212,7 +212,7 @@ namespace Gamma
     }
 
     SFunctionTable* CScriptBase::CheckNewVirtualTable( SFunctionTable* pOldFunTable, 
-		const CClassInfo* pClassInfo, bool bNewByVM, uint32 nInheritDepth )
+		const CClassInfo* pClassInfo, bool bNewByVM, uint32_t nInheritDepth )
 	{
 		GammaAst( !IsAllocVirtualTable( pOldFunTable ) );
 
@@ -229,7 +229,7 @@ namespace Gamma
 				return VMObjectVTableInfo.first;
 
 			VMObjectVTableInfo.second = nInheritDepth;
-			int32 nFunCount = pOldFunTable->GetFunctionCount();	
+			int32_t nFunCount = pOldFunTable->GetFunctionCount();	
 			if( VMObjectVTableInfo.first == nullptr )
 			{
 				SFunctionTableHead* pFunTableHead = AllocFunArray( nFunCount + 1 );
@@ -251,10 +251,10 @@ namespace Gamma
 
 		if( it == m_mapVirtualTableOld2New.end() || it->first != pOldFunTable )
 		{
-			int32 nFunCount = pOldFunTable->GetFunctionCount();			
+			int32_t nFunCount = pOldFunTable->GetFunctionCount();			
 			if( it != m_mapVirtualTableOld2New.end() && 
 				(void**)it->first < (void**)pOldFunTable + nFunCount )
-				nFunCount = (int32)(ptrdiff_t)( (void**)it->first - (void**)pOldFunTable );
+				nFunCount = (int32_t)(ptrdiff_t)( (void**)it->first - (void**)pOldFunTable );
 
 			SFunctionTableHead* pFunTableHead = AllocFunArray( nFunCount + 1 );
 			SFunctionTable* pNewFunTable = (SFunctionTable*)( pFunTableHead + 1 );
@@ -280,7 +280,7 @@ namespace Gamma
 	{
 		m_listSearchPath.push_back( szPath );
 		auto& strPath = *m_listSearchPath.rbegin();
-		for( uint32 i = 0; i < strPath.size(); i++ )
+		for( uint32_t i = 0; i < strPath.size(); i++ )
 		{
 			if( strPath[i] != '\\' )
 				continue;
@@ -294,7 +294,7 @@ namespace Gamma
 
 	int CScriptBase::Input( char* szBuffer, int nCount )
 	{
-		for( int32 i = 0; i < nCount - 1; i++ )
+		for( int32_t i = 0; i < nCount - 1; i++ )
 		{
 			std::cin.read( &szBuffer[i], 1 );
 			if( szBuffer[i] != '\n' )
@@ -326,7 +326,7 @@ namespace Gamma
 			if( !address )
 				return nullptr;
 			SFileContext* pContext = new SFileContext;
-			pContext->m_nCacheSize = (uint32)strlen( (const char*)address );
+			pContext->m_nCacheSize = (uint32_t)strlen( (const char*)address );
 			pContext->m_pFile = (char*)address;
 			return pContext;
 		}
@@ -340,16 +340,16 @@ namespace Gamma
 		return pContext;
 	}
 
-	int32 CScriptBase::ReadFile( void* pContext, char* szBuffer, int32 nCount )
+	int32_t CScriptBase::ReadFile( void* pContext, char* szBuffer, int32_t nCount )
 	{
 		if( !pContext )
 			return -1;
 		SFileContext* pFileContext = (SFileContext*)pContext;
 		if( pFileContext->m_nCacheSize == INVALID_32BITID )
-			return (int32)fread( szBuffer, 1, nCount, (FILE*)( pFileContext->m_pFile ) );
+			return (int32_t)fread( szBuffer, 1, nCount, (FILE*)( pFileContext->m_pFile ) );
 		if( pFileContext->m_nCacheSize == 0 )
 			return 0;
-		if( (uint32)nCount > pFileContext->m_nCacheSize )
+		if( (uint32_t)nCount > pFileContext->m_nCacheSize )
 			nCount = pFileContext->m_nCacheSize;
 		memcpy( szBuffer, pFileContext->m_pFile, nCount );
 		pFileContext->m_pFile += nCount;
@@ -380,7 +380,7 @@ namespace Gamma
 			if( !pContext )
 				return strBuffer;
 			char szBuffer[1024];
-			int32 nReadSize = 0;
+			int32_t nReadSize = 0;
 			while( (nReadSize = ReadFile( pContext, szBuffer, 1024 )) > 0 )
 				strBuffer.append( szBuffer, nReadSize );
 			CloseFile( pContext );
@@ -435,7 +435,7 @@ namespace Gamma
 		return true;
 	}
 
-	void CScriptBase::CallBack( int32 nIndex, void* pRetBuf, void** pArgArray )
+	void CScriptBase::CallBack( int32_t nIndex, void* pRetBuf, void** pArgArray )
 	{
 		SVirtualObj* pVirtualObj = *(SVirtualObj**)pArgArray[0];
 		GammaAst( IsAllocVirtualTable( pVirtualObj->m_pTable ) );

@@ -28,7 +28,7 @@ namespace Gamma
     #define _STD_REGISTER register
 #endif // __cplusplus >= 201703L
 
-#define hashsize(n) ((uint32)1<<(n))
+#define hashsize(n) ((uint32_t)1<<(n))
 #define hashmask(n) (hashsize(n)-1)
 
         /*
@@ -70,7 +70,7 @@ namespace Gamma
         c -= a; c -= b; c ^= (b>>15); \
     }
 
-        /* same, but slower, works on systems that might have 8 byte uint32's */
+        /* same, but slower, works on systems that might have 8 byte uint32_t's */
 #define mix2(a,b,c) \
         { \
         a -= b; a -= c; a ^= (c>>13); \
@@ -100,7 +100,7 @@ namespace Gamma
         h = (h & hashmask(10));
         In which case, the hash table should have hashsize(10) elements.
 
-        If you are hashing n strings (uint8 **)k, do it like this:
+        If you are hashing n strings (uint8_t **)k, do it like this:
         for (i=0, h=0; i<n; ++i) h = hash( k[i], len[i], h);
 
         By Bob Jenkins, 1996.  bob_jenkins@burtleburtle.net.  You may use this
@@ -112,13 +112,13 @@ namespace Gamma
         --------------------------------------------------------------------
         */
 
-        inline uint32 hash( 
-            _STD_REGISTER const uint8* k,    /* the key */
-            _STD_REGISTER uint32  length,    /* the length of the key */
-            _STD_REGISTER uint32  initval    /* the previous hash, or an arbitrary value */
+        inline uint32_t hash( 
+            _STD_REGISTER const uint8_t* k,    /* the key */
+            _STD_REGISTER uint32_t  length,    /* the length of the key */
+            _STD_REGISTER uint32_t  initval    /* the previous hash, or an arbitrary value */
             )
         {
-            uint32 a,b,c,len;
+            uint32_t a,b,c,len;
 
             /* Set up the internal state */
             len = length;
@@ -128,9 +128,9 @@ namespace Gamma
             /*---------------------------------------- handle most of the key */
             while (len >= 12)
             {
-                a += (k[0] +((uint32)k[1]<<8) +((uint32)k[2]<<16) +((uint32)k[3]<<24));
-                b += (k[4] +((uint32)k[5]<<8) +((uint32)k[6]<<16) +((uint32)k[7]<<24));
-                c += (k[8] +((uint32)k[9]<<8) +((uint32)k[10]<<16)+((uint32)k[11]<<24));
+                a += (k[0] +((uint32_t)k[1]<<8) +((uint32_t)k[2]<<16) +((uint32_t)k[3]<<24));
+                b += (k[4] +((uint32_t)k[5]<<8) +((uint32_t)k[6]<<16) +((uint32_t)k[7]<<24));
+                c += (k[8] +((uint32_t)k[9]<<8) +((uint32_t)k[10]<<16)+((uint32_t)k[11]<<24));
                 mix(a,b,c);
                 k += 12; len -= 12;
             }
@@ -139,17 +139,17 @@ namespace Gamma
             c += length;
             switch(len)              /* all the case statements fall through */
             {
-            case 11: c+=((uint32)k[10]<<24);
-            case 10: c+=((uint32)k[9]<<16);
-            case 9 : c+=((uint32)k[8]<<8);
+            case 11: c+=((uint32_t)k[10]<<24);
+            case 10: c+=((uint32_t)k[9]<<16);
+            case 9 : c+=((uint32_t)k[8]<<8);
                 /* the first byte of c is reserved for the length */
-            case 8 : b+=((uint32)k[7]<<24);
-            case 7 : b+=((uint32)k[6]<<16);
-            case 6 : b+=((uint32)k[5]<<8);
+            case 8 : b+=((uint32_t)k[7]<<24);
+            case 7 : b+=((uint32_t)k[6]<<16);
+            case 6 : b+=((uint32_t)k[5]<<8);
             case 5 : b+=k[4];
-            case 4 : a+=((uint32)k[3]<<24);
-            case 3 : a+=((uint32)k[2]<<16);
-            case 2 : a+=((uint32)k[1]<<8);
+            case 4 : a+=((uint32_t)k[3]<<24);
+            case 3 : a+=((uint32_t)k[2]<<16);
+            case 2 : a+=((uint32_t)k[1]<<8);
             case 1 : a+=k[0];
                 /* case 0: nothing left to add */
             }
@@ -165,18 +165,18 @@ namespace Gamma
         little-endian machines, except that the length has to be measured
         in uint32s instead of bytes.  It is much faster than hash().  It 
         requires
-        -- that the key be an array of uint32's, and
+        -- that the key be an array of uint32_t's, and
         -- that all your machines have the same endianness, and
-        -- that the length be the number of uint32's in the key
+        -- that the length be the number of uint32_t's in the key
         --------------------------------------------------------------------
         */
-        inline uint32 hash2( 
-            _STD_REGISTER uint32 *k,        /* the key */
-            _STD_REGISTER uint32  length,   /* the length of the key, in uint32s */
-            _STD_REGISTER uint32  initval  /* the previous hash, or an arbitrary value */
+        inline uint32_t hash2( 
+            _STD_REGISTER uint32_t *k,        /* the key */
+            _STD_REGISTER uint32_t  length,   /* the length of the key, in uint32s */
+            _STD_REGISTER uint32_t  initval  /* the previous hash, or an arbitrary value */
             )
         {
-             uint32 a,b,c,len;
+             uint32_t a,b,c,len;
 
             /* Set up the internal state */
             len = length;
@@ -193,7 +193,7 @@ namespace Gamma
                 k += 3; len -= 3;
             }
 
-            /*-------------------------------------- handle the last 2 uint32's */
+            /*-------------------------------------- handle the last 2 uint32_t's */
             c += length;
             switch(len)              /* all the case statements fall through */
             {
@@ -217,13 +217,13 @@ namespace Gamma
         --------------------------------------------------------------------
         */
 
-        inline uint32 hash3(
-            _STD_REGISTER const uint8* k,    /* the key */
-            _STD_REGISTER uint32  length,    /* the length of the key */
-            _STD_REGISTER uint32  initval    /* the previous hash, or an arbitrary value */
+        inline uint32_t hash3(
+            _STD_REGISTER const uint8_t* k,    /* the key */
+            _STD_REGISTER uint32_t  length,    /* the length of the key */
+            _STD_REGISTER uint32_t  initval    /* the previous hash, or an arbitrary value */
             )
         {
-             uint32 a,b,c,len;
+             uint32_t a,b,c,len;
 
             /* Set up the internal state */
             len = length;
@@ -235,9 +235,9 @@ namespace Gamma
             {
                 while (len >= 12)    /* unaligned */
                 {
-                    a += (k[0] +((uint32)k[1]<<8) +((uint32)k[2]<<16) +((uint32)k[3]<<24));
-                    b += (k[4] +((uint32)k[5]<<8) +((uint32)k[6]<<16) +((uint32)k[7]<<24));
-                    c += (k[8] +((uint32)k[9]<<8) +((uint32)k[10]<<16)+((uint32)k[11]<<24));
+                    a += (k[0] +((uint32_t)k[1]<<8) +((uint32_t)k[2]<<16) +((uint32_t)k[3]<<24));
+                    b += (k[4] +((uint32_t)k[5]<<8) +((uint32_t)k[6]<<16) +((uint32_t)k[7]<<24));
+                    c += (k[8] +((uint32_t)k[9]<<8) +((uint32_t)k[10]<<16)+((uint32_t)k[11]<<24));
                     mix(a,b,c);
                     k += 12; len -= 12;
                 }
@@ -246,9 +246,9 @@ namespace Gamma
             {
                 while (len >= 12)    /* aligned */
                 {
-                    a += *(uint32 *)(k+0);
-                    b += *(uint32 *)(k+4);
-                    c += *(uint32 *)(k+8);
+                    a += *(uint32_t *)(k+0);
+                    b += *(uint32_t *)(k+4);
+                    c += *(uint32_t *)(k+8);
                     mix(a,b,c);
                     k += 12; len -= 12;
                 }
@@ -258,17 +258,17 @@ namespace Gamma
             c += length;
             switch(len)              /* all the case statements fall through */
             {
-            case 11: c+=((uint32)k[10]<<24);
-            case 10: c+=((uint32)k[9]<<16);
-            case 9 : c+=((uint32)k[8]<<8);
+            case 11: c+=((uint32_t)k[10]<<24);
+            case 10: c+=((uint32_t)k[9]<<16);
+            case 9 : c+=((uint32_t)k[8]<<8);
                 /* the first byte of c is reserved for the length */
-            case 8 : b+=((uint32)k[7]<<24);
-            case 7 : b+=((uint32)k[6]<<16);
-            case 6 : b+=((uint32)k[5]<<8);
+            case 8 : b+=((uint32_t)k[7]<<24);
+            case 7 : b+=((uint32_t)k[6]<<16);
+            case 6 : b+=((uint32_t)k[5]<<8);
             case 5 : b+=k[4];
-            case 4 : a+=((uint32)k[3]<<24);
-            case 3 : a+=((uint32)k[2]<<16);
-            case 2 : a+=((uint32)k[1]<<8);
+            case 4 : a+=((uint32_t)k[3]<<24);
+            case 3 : a+=((uint32_t)k[2]<<16);
+            case 2 : a+=((uint32_t)k[1]<<8);
             case 1 : a+=k[0];
                 /* case 0: nothing left to add */
             }
@@ -281,7 +281,7 @@ namespace Gamma
         * hash the integerer ,by bob jenkins
         * from http://www.concentric.net/~Ttwang/tech/inthash.htm
         */
-        inline uint32 hash(uint32 key)
+        inline uint32_t hash(uint32_t key)
         {
             key += (key << 12);
             key ^= (key >> 22);
@@ -298,7 +298,7 @@ namespace Gamma
         * another hash function for integere, by Thomas Wang's
         * from http://www.concentric.net/~Ttwang/tech/inthash.htm
         */
-        inline uint32 hash2(uint32 key)
+        inline uint32_t hash2(uint32_t key)
         {
             key += ~(key << 15);
             key ^=  (key >> 10);
@@ -309,12 +309,12 @@ namespace Gamma
             return key;
         };
 
-        inline uint32 fasthash(
-            _STD_REGISTER const uint8 *k,        /* the key */
-            _STD_REGISTER uint32  length   /* the length of the key */
+        inline uint32_t fasthash(
+            _STD_REGISTER const uint8_t *k,        /* the key */
+            _STD_REGISTER uint32_t  length   /* the length of the key */
             )
         {
-             uint32 a,b,c,len;
+             uint32_t a,b,c,len;
 
             /* Set up the internal state */
             len = length;
@@ -326,9 +326,9 @@ namespace Gamma
             {
                 while (len >= 12)    /* unaligned */
                 {
-                    a += (k[0] +((uint32)k[1]<<8) +((uint32)k[2]<<16) +((uint32)k[3]<<24));
-                    b += (k[4] +((uint32)k[5]<<8) +((uint32)k[6]<<16) +((uint32)k[7]<<24));
-                    c += (k[8] +((uint32)k[9]<<8) +((uint32)k[10]<<16)+((uint32)k[11]<<24));
+                    a += (k[0] +((uint32_t)k[1]<<8) +((uint32_t)k[2]<<16) +((uint32_t)k[3]<<24));
+                    b += (k[4] +((uint32_t)k[5]<<8) +((uint32_t)k[6]<<16) +((uint32_t)k[7]<<24));
+                    c += (k[8] +((uint32_t)k[9]<<8) +((uint32_t)k[10]<<16)+((uint32_t)k[11]<<24));
                     mix(a,b,c);
                     k += 12; len -= 12;
                 }
@@ -337,9 +337,9 @@ namespace Gamma
             {
                 while (len >= 12)    /* aligned */
                 {
-                    a += *(uint32 *)(k+0);
-                    b += *(uint32 *)(k+4);
-                    c += *(uint32 *)(k+8);
+                    a += *(uint32_t *)(k+0);
+                    b += *(uint32_t *)(k+4);
+                    c += *(uint32_t *)(k+8);
                     mix(a,b,c);
                     k += 12; len -= 12;
                 }
@@ -349,17 +349,17 @@ namespace Gamma
             c += length;
             switch(len)              /* all the case statements fall through */
             {
-            case 11: c+=((uint32)k[10]<<24);
-            case 10: c+=((uint32)k[9]<<16);
-            case 9 : c+=((uint32)k[8]<<8);
+            case 11: c+=((uint32_t)k[10]<<24);
+            case 10: c+=((uint32_t)k[9]<<16);
+            case 9 : c+=((uint32_t)k[8]<<8);
                 /* the first byte of c is reserved for the length */
-            case 8 : b+=((uint32)k[7]<<24);
-            case 7 : b+=((uint32)k[6]<<16);
-            case 6 : b+=((uint32)k[5]<<8);
+            case 8 : b+=((uint32_t)k[7]<<24);
+            case 7 : b+=((uint32_t)k[6]<<16);
+            case 6 : b+=((uint32_t)k[5]<<8);
             case 5 : b+=k[4];
-            case 4 : a+=((uint32)k[3]<<24);
-            case 3 : a+=((uint32)k[2]<<16);
-            case 2 : a+=((uint32)k[1]<<8);
+            case 4 : a+=((uint32_t)k[3]<<24);
+            case 3 : a+=((uint32_t)k[2]<<16);
+            case 2 : a+=((uint32_t)k[1]<<8);
             case 1 : a+=k[0];
                 /* case 0: nothing left to add */
             }
@@ -373,8 +373,8 @@ namespace Gamma
 
 namespace Gamma
 {
-	uint32 GammaHash( const void* pMem, size_t size )
+	uint32_t GammaHash( const void* pMem, size_t size )
 	{
-		return jenkins::hash( (const uint8*)pMem, (uint32)size, 0 );
+		return jenkins::hash( (const uint8_t*)pMem, (uint32_t)size, 0 );
 	}
 }

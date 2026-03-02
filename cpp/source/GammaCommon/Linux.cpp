@@ -35,12 +35,12 @@ namespace Gamma
 		char	m_szOSDesc[OSDESC_LEN];
 		char	m_szUUID[UUID_LEN];
 		char	m_szLanguage[LANGUAGE_LEN];
-		uint64	m_nMac;
-		uint32	m_nCpuFrequery;
-		uint32	m_nCpuCount;
-		uint32	m_nMemSize;
-		uint16  m_nScreen_X;
-		uint16	m_nScreen_Y; */
+		uint64_t	m_nMac;
+		uint32_t	m_nCpuFrequery;
+		uint32_t	m_nCpuCount;
+		uint32_t	m_nMemSize;
+		uint16_t  m_nScreen_X;
+		uint16_t	m_nScreen_Y; */
 
 		m_HardwareDesc.m_nScreen_X = 0;
 		m_HardwareDesc.m_nScreen_Y = 0;
@@ -69,7 +69,7 @@ namespace Gamma
 			 strncpy( ifr.ifr_name, "eth0", IFNAMSIZ - 1 );
 			 ioctl( nSock, SIOCGIFHWADDR, &ifr );
 			 close( nSock );
-			 uint8* nMac = (uint8*)&m_HardwareDesc.m_nMac;
+			 uint8_t* nMac = (uint8_t*)&m_HardwareDesc.m_nMac;
 			 nMac[0] = ValueFromHexNumber( (unsigned char)ifr.ifr_hwaddr.sa_data[0] );
 			 nMac[1] = ValueFromHexNumber( (unsigned char)ifr.ifr_hwaddr.sa_data[1] );
 			 nMac[2] = ValueFromHexNumber( (unsigned char)ifr.ifr_hwaddr.sa_data[2] );
@@ -108,12 +108,12 @@ namespace Gamma
 				else if ( strstr( szTempBuffer, "cpu MHz" ) )
 				{
 					strcpy2array_safe( szBuffer, szFind );
-					m_HardwareDesc.m_nCpuFrequery = (uint32)atof( szBuffer );
+					m_HardwareDesc.m_nCpuFrequery = (uint32_t)atof( szBuffer );
 				}
 				else if ( strstr( szTempBuffer, "cpu cores" ) )
 				{
 					strcpy2array_safe( szBuffer, szFind );
-					m_HardwareDesc.m_nCpuCount = (uint32)atof( szBuffer );
+					m_HardwareDesc.m_nCpuCount = (uint32_t)atof( szBuffer );
 				}
 			}
 			fclose( fp );
@@ -133,7 +133,7 @@ namespace Gamma
 				if( strstr( szTempBuffer, "MemTotal" ) )
 				{
 					strcpy2array_safe( szBuffer, szFind );
-					m_HardwareDesc.m_nMemSize = (uint32)atof( szBuffer );
+					m_HardwareDesc.m_nMemSize = (uint32_t)atof( szBuffer );
 				}
 				fclose( fp );
 				break;

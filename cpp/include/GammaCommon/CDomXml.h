@@ -62,37 +62,37 @@ namespace Gamma
 	}
 
 	template<>
-	inline uint8 CDomXmlAttribute::As<uint8>() const
+	inline uint8_t CDomXmlAttribute::As<uint8_t>() const
 	{
-		return (uint8)GammaA2I( m_szContent );
+		return (uint8_t)GammaA2I( m_szContent );
 	}
 
 	template<>
-	inline int8 CDomXmlAttribute::As<int8>() const
+	inline int8_t CDomXmlAttribute::As<int8_t>() const
 	{
-		return (int8)GammaA2I( m_szContent );
+		return (int8_t)GammaA2I( m_szContent );
 	}
 
 	template<>
-	inline uint16 CDomXmlAttribute::As<uint16>() const
+	inline uint16_t CDomXmlAttribute::As<uint16_t>() const
 	{
-		return (uint16)GammaA2I( m_szContent );
+		return (uint16_t)GammaA2I( m_szContent );
 	}
 
 	template<>
-	inline int16 CDomXmlAttribute::As<int16>() const
+	inline int16_t CDomXmlAttribute::As<int16_t>() const
 	{
-		return (int16)GammaA2I( m_szContent );
+		return (int16_t)GammaA2I( m_szContent );
 	}
 
 	template<>
-	inline uint32 CDomXmlAttribute::As<uint32>() const
+	inline uint32_t CDomXmlAttribute::As<uint32_t>() const
 	{
-		return (uint32)GammaA2I( m_szContent );
+		return (uint32_t)GammaA2I( m_szContent );
 	}
 
 	template<>
-	inline int32 CDomXmlAttribute::As<int32>() const
+	inline int32_t CDomXmlAttribute::As<int32_t>() const
 	{
 		return GammaA2I( m_szContent );
 	}
@@ -104,15 +104,15 @@ namespace Gamma
 	}
 
 	template<>
-	inline uint64 CDomXmlAttribute::As<uint64>() const
+	inline uint64_t CDomXmlAttribute::As<uint64_t>() const
 	{
-		return (uint64)GammaA2I64( m_szContent );
+		return (uint64_t)GammaA2I64( m_szContent );
 	}
 
 	template<>
-	inline int64 CDomXmlAttribute::As<int64>() const
+	inline int64_t CDomXmlAttribute::As<int64_t>() const
 	{
-		return (int64)GammaA2I64( m_szContent );
+		return (int64_t)GammaA2I64( m_szContent );
 	}
 
 	template<>
@@ -124,7 +124,7 @@ namespace Gamma
 			(m_szContent[2]=='u' || m_szContent[2]=='U')  &&
 			(m_szContent[3]=='e' || m_szContent[3]=='E') )
 			return true;
-		return As<int32>() != 0;
+		return As<int32_t>() != 0;
 	}
 
 	template<>
@@ -148,8 +148,8 @@ namespace Gamma
 		CRefStringPtr				m_ptrBuffer;
 		const char*					m_szName;
 		const char*					m_szContent;
-		uint32						m_nLevel;
-		uint32						m_nChildCount;
+		uint32_t						m_nLevel;
+		uint32_t						m_nChildCount;
 
 		friend class CDomXmlAttribute;
 		friend class TGammaList<CDomXmlDocument>;
@@ -170,7 +170,7 @@ namespace Gamma
 		bool Load( const char* szFileName );
 		bool LoadFromBuffer( const char* pBuffer, size_t nCount = -1 );
 		bool Save( const wchar_t* szFileName ) const;
-		bool Save( std::ostream& os, uint32 nStack = 0 ) const;
+		bool Save( std::ostream& os, uint32_t nStack = 0 ) const;
 		void clear();
 
 		CDomXmlDocument* InsertNodeFirst( const char* szName );
@@ -199,7 +199,7 @@ namespace Gamma
 
 		const char* GetName() const;
 		const char*	GetText() const;
-		uint32 Count() const;
+		uint32_t Count() const;
 
 		CDomXmlDocument& operator()( size_t nChildIndex );
 		CDomXmlDocument& operator()( const char* szChildName );

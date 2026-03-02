@@ -5,7 +5,7 @@
 namespace Gamma
 {
 	CDbsQuery::CDbsQuery( CDbsThreadMgr* pDbsMgr, 
-		IDbsQueryHandler* pHandler, uint32 nQueryID )
+		IDbsQueryHandler* pHandler, uint32_t nQueryID )
 		: m_pDbsMgr( pDbsMgr )
 		, m_pHandler( pHandler )
 		, m_nQueryID( nQueryID )
@@ -24,17 +24,17 @@ namespace Gamma
 		m_pDbsMgr->FreeDbsQuery( this );
 	}
 
-	void CDbsQuery::SetQueryID( uint32 nQueryID )
+	void CDbsQuery::SetQueryID( uint32_t nQueryID )
 	{
 		m_nQueryID = nQueryID;
 	}
 
-	void CDbsQuery::Query( uint32 nChannel, const SSendBuf aryBuffer[], uint32 nBufferCount )
+	void CDbsQuery::Query( uint32_t nChannel, const SSendBuf aryBuffer[], uint32_t nBufferCount )
 	{
 		m_pDbsMgr->Query( m_nQueryID, nChannel, aryBuffer, nBufferCount );
 	}
 
-	void CDbsQuery::Query( uint32 nChannel, const void* pData1, size_t nSize1 )
+	void CDbsQuery::Query( uint32_t nChannel, const void* pData1, size_t nSize1 )
 	{
 		SSendBuf SendBuff( pData1, nSize1 );
 		m_pDbsMgr->Query( m_nQueryID, nChannel, &SendBuff, 1 );

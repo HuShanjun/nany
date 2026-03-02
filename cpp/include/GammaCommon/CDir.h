@@ -14,9 +14,9 @@ namespace Gamma
     class CDir 
     {
     public:
-        uint8	uDir;
+        uint8_t	uDir;
 
-        CDir( uint8 nDir = 0 ) : uDir(nDir){}
+        CDir( uint8_t nDir = 0 ) : uDir(nDir){}
         CDir( const CVector2f& vecDir ){ Set( vecDir ); }
 
         void Get( CVector2f& vecDir )const	{ vecDir = CVector2f(*this); }
@@ -46,11 +46,11 @@ namespace Gamma
 			float fDir = acosf( vecDir.y/fLen )*256/( GM_PI * 2 );
 			if( vecDir.x < 0 )
 				fDir = 256.0f - fDir;
-			uDir = (uint8)( fDir + 0.5f );            
+			uDir = (uint8_t)( fDir + 0.5f );            
 			return *this;
         }
 
-		operator uint8() const { return uDir; }
+		operator uint8_t() const { return uDir; }
     };
 
 	template<class T>
@@ -62,7 +62,7 @@ namespace Gamma
 	}
 
 	template<class T> 
-	inline uint8 TVector2<T>::GetDir() const
+	inline uint8_t TVector2<T>::GetDir() const
 	{
 		return CDir(*this).uDir;
 	}

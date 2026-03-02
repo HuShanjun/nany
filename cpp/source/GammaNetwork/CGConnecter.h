@@ -32,10 +32,10 @@ namespace Gamma
 		IConnectHandler*	m_pHandler;
 		CAddress			m_LocalAddress;
 		CAddress			m_RemoteAddress;
-		int64				m_nCreateTime;
-		int64				m_nConnectTime;
-		int64				m_nFirstEvenTime;
-		int64				m_nConnectOKTime;
+		int64_t				m_nCreateTime;
+		int64_t				m_nConnectTime;
+		int64_t				m_nFirstEvenTime;
+		int64_t				m_nConnectOKTime;
 		size_t				m_nTotalSend;
 		size_t				m_nTotalRecv;
 		EConnectState       m_eState;
@@ -72,13 +72,13 @@ namespace Gamma
 		ECloseType			GetCloseType()		const { return m_eCloseType ; }
 		size_t				GetTotalSendSize()	const { return m_nTotalSend; }
 		size_t				GetTotalRecvSize()	const { return m_nTotalRecv; }
-		int64				GetCreateTime()		const { return m_nCreateTime; };
-		int64				GetConnectTime()	const { return m_nConnectTime; };
-		int64				GetConnectOKTime()	const { return m_nConnectOKTime; };
-		int64				GetFirstEvenTime()	const { return m_nFirstEvenTime; };
+		int64_t				GetCreateTime()		const { return m_nCreateTime; };
+		int64_t				GetConnectTime()	const { return m_nConnectTime; };
+		int64_t				GetConnectOKTime()	const { return m_nConnectOKTime; };
+		int64_t				GetFirstEvenTime()	const { return m_nFirstEvenTime; };
 
-		void				OnEvent( bool bError, const tbyte* pData, uint32 nSize );
-		virtual void		RecvData( const tbyte* pData, uint32 nSize ) = 0;
+		void				OnEvent( bool bError, const tbyte* pData, uint32_t nSize );
+		virtual void		RecvData( const tbyte* pData, uint32_t nSize ) = 0;
 	};
 
     class CGConnecterTCP : public CGConnecter
@@ -90,7 +90,7 @@ namespace Gamma
 		~CGConnecterTCP();
 
 		void			CheckRecvBuff();
-		virtual void	RecvData( const tbyte* pData, uint32 nSize );
+		virtual void	RecvData( const tbyte* pData, uint32_t nSize );
     };
 
 	class CGConnecterUDP  : public CGConnecter
@@ -100,7 +100,7 @@ namespace Gamma
 		~CGConnecterUDP();
 
 		void			CheckRecvBuff() {};
-		virtual void	RecvData( const tbyte* pData, uint32 nSize );
+		virtual void	RecvData( const tbyte* pData, uint32_t nSize );
 	};
 }
 

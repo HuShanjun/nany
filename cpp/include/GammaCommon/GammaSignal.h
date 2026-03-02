@@ -51,16 +51,16 @@
 
 namespace Gamma
 {
-	typedef void (*SignalHandler)( int32, void* );
+	typedef void (*SignalHandler)( int32_t, void* );
 
 	// 安装信号处理，触发信号后会被重置成默认行为
-	GAMMA_COMMON_API void InstallSignalHandler( int32 nSignal, SignalHandler funSigHandler );
+	GAMMA_COMMON_API void InstallSignalHandler( int32_t nSignal, SignalHandler funSigHandler );
 
 	// 永远忽略某个信号
-	GAMMA_COMMON_API void IgnoreSignal( int32 nSignal );
+	GAMMA_COMMON_API void IgnoreSignal( int32_t nSignal );
 
 	// 产生某个信号
-	GAMMA_COMMON_API void RaiseSignal( int32 nSignal );
+	GAMMA_COMMON_API void RaiseSignal( int32_t nSignal );
 }
 
 #endif

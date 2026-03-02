@@ -12,15 +12,15 @@
 namespace Gamma
 {
 
-	template< class PosType, int32 nRange >
+	template< class PosType, int32_t nRange >
 	class TRangeSearch
 	{
 		struct DistPos : public PosType
 		{	
 			bool operator < ( const DistPos& arg ) const
 			{ 
-				return int32(PosType::x)*int32(PosType::x) + int32(PosType::y)*int32(PosType::y) 
-					< int32(arg.x)*int32(arg.x) + int32(arg.y)*int32(arg.y); 
+				return int32_t(PosType::x)*int32_t(PosType::x) + int32_t(PosType::y)*int32_t(PosType::y) 
+					< int32_t(arg.x)*int32_t(arg.x) + int32_t(arg.y)*int32_t(arg.y); 
 			} 
 		};
 
@@ -30,9 +30,9 @@ namespace Gamma
 	public:
 		TRangeSearch()
 		{
-			for( int32 i = -nRange, n = 0; i <= nRange; i++ )
+			for( int32_t i = -nRange, n = 0; i <= nRange; i++ )
 			{
-				for( int32 j = -nRange; j <= nRange; j++, n++ )
+				for( int32_t j = -nRange; j <= nRange; j++, n++ )
 				{ 
 					m_aryDisPos[n].x = j;
 					m_aryDisPos[n].y = i;

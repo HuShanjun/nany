@@ -8,11 +8,11 @@ namespace Gamma
 	struct SFileBuffer
 	{
 		SFileBuffer() : m_nOffset(0), m_nBufferSize(0){}
-		SFileBuffer( const CRefStringPtr& Buffer, uint32 nOffset, uint32 nBufferSize )
+		SFileBuffer( const CRefStringPtr& Buffer, uint32_t nOffset, uint32_t nBufferSize )
 			: m_BufferPtr(Buffer), m_nOffset(nOffset), m_nBufferSize(nBufferSize){}
 		CRefStringPtr	m_BufferPtr;
-		uint32			m_nOffset;
-		uint32			m_nBufferSize;
+		uint32_t			m_nOffset;
+		uint32_t			m_nBufferSize;
 	};
 
 	class CAddressHttp;
@@ -29,14 +29,14 @@ namespace Gamma
 			SPackagePart* pPkgNode );
 		~CPackage();
 
-		uint32				GetRef();
+		uint32_t				GetRef();
 		void				AddRef();
 		void				Release();
 
 		void				MarkNotLoad();
 		void				MarkLoading();
 		SFileBuffer			GetFileBuffer( const char* szFileName ) const;
-		SFileBuffer			GetFileBuffer( uint32 nIndex ) const;
+		SFileBuffer			GetFileBuffer( uint32_t nIndex ) const;
 		const char*			GetFileBuffer() const;
 		bool				IsHttpRes() const;
 		ELoadState			GetLoadState() const;		
@@ -45,17 +45,17 @@ namespace Gamma
 		CReaderList&		GetReaderList() { return m_listReader; }
 		CReaderList&		CreateReaders( bool bCache );
 		void				AddResObject( CResObject& ResObject );
-		bool				OnLoaded( uint32 nIdleTime );
+		bool				OnLoaded( uint32_t nIdleTime );
 
 	private:
 		CPackageMgr*		m_pMgr;
 		SPackagePart*		m_pPkgNode;
 
-		uint32				m_nRef;
+		uint32_t				m_nRef;
 		ELoadState			m_eLoadState;
 
 		CRefStringPtr		m_strFileBuffer;
-		std::vector<uint32>	m_vecBlockOffset; 
+		std::vector<uint32_t>	m_vecBlockOffset; 
 		CResObjectList		m_listResObject;
 		CReaderList			m_listReader;
 	};

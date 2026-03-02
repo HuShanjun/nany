@@ -7,7 +7,7 @@ namespace Gamma
 	//==========================================
 	// CDictionary::SLocalizeString
 	//==========================================
-	uint32 CDictionary::SLocalizeString::SetNewKey( uint32 nNewKey, const char* szNewValue )
+	uint32_t CDictionary::SLocalizeString::SetNewKey( uint32_t nNewKey, const char* szNewValue )
 	{
 		if( eInvalidKey == nNewKey )
 			return _InvalidKey;
@@ -52,7 +52,7 @@ namespace Gamma
 		MapType		m_mapLocalString;
 		bool		m_bModify[16];
 		std::string	m_strDirectory;
-		uint32		m_nOffset; 
+		uint32_t		m_nOffset; 
 	};
 
 	//==========================================
@@ -71,7 +71,7 @@ namespace Gamma
 	bool CDictionary::LoadFromDir( const char* _szDir )
 	{
 		char szFileName[1024];
-		uint32 nLen = 0;
+		uint32_t nLen = 0;
 		while( _szDir[nLen] )
 		{
 			szFileName[nLen] = _szDir[nLen];
@@ -80,7 +80,7 @@ namespace Gamma
 
 		if( szFileName[ nLen - 1 ] != '\\' && szFileName[ nLen - 1 ] != '/' )
 			szFileName[nLen++] = '/';
-		uint32 nIndexPos = nLen;
+		uint32_t nIndexPos = nLen;
 		szFileName[nLen++] = '0';
 		szFileName[nLen++] = '.';
 		szFileName[nLen++] = 't';
@@ -88,7 +88,7 @@ namespace Gamma
 		szFileName[nLen++] = 't';
 		szFileName[nLen++] = 0;
 
-		for( uint8 i = 0; i <= 0xf; i++ )
+		for( uint8_t i = 0; i <= 0xf; i++ )
 		{
 			szFileName[nIndexPos] = i <= 9 ? '0' + i : 'a' + i - 10;
 			Load( szFileName );
@@ -111,7 +111,7 @@ namespace Gamma
 		if( !tabFile.Load( szFileName ) || tabFile.GetHeight() == 0 )
 			return false;
 
-		for( int32 nRow = 0; nRow < tabFile.GetHeight(); nRow++ )
+		for( int32_t nRow = 0; nRow < tabFile.GetHeight(); nRow++ )
 		{
 			const char* szKey = tabFile.GetString( nRow, 0 );
 			const char* szValue = tabFile.GetString( nRow, 1 );
@@ -135,13 +135,13 @@ namespace Gamma
 	bool CDictionary::Save()
 	{		
 		std::map<KeyType, gammacstring>& mapLocalString = m_pDictionary->m_mapLocalString;
-		for( uint32 i = 0; i < 16; i++ )
+		for( uint32_t i = 0; i < 16; i++ )
 		{
 			if( !m_pDictionary->m_bModify[i] )
 				continue;
 
-			uint32 nKeyBegin = i << 28;
-			uint32 nKeyEnd = nKeyBegin|0x0fffffff;
+			uint32_t nKeyBegin = i << 28;
+			uint32_t nKeyEnd = nKeyBegin|0x0fffffff;
 			std::map<KeyType, gammacstring>::iterator itBegin = mapLocalString.lower_bound( nKeyBegin ); 
 			std::map<KeyType, gammacstring>::iterator itEnd = mapLocalString.upper_bound( nKeyEnd ); 
 
@@ -158,7 +158,7 @@ namespace Gamma
 			if( !ofs )
 				return false;
 
-			const uint8 _tag[] = { 0xFF, 0xFE };
+			const uint8_t _tag[] = { 0xFF, 0xFE };
 			ofs.write( (const char*)_tag, sizeof(_tag) );
 
 			for( std::map<KeyType, gammacstring>::iterator j = itBegin; j != itEnd; j++ )
@@ -168,7 +168,7 @@ namespace Gamma
 				std::wstring strCombine = Utf8ToUcs( szTemp ) + 
 					Utf8ToUcs( j->second.c_str() ) + std::wstring( L"\r\n" );
 				for( size_t i = 0; i < strCombine.size(); i++ )
-					ofs.write( (const char*)&strCombine[i], sizeof(uint16) );
+					ofs.write( (const char*)&strCombine[i], sizeof(uint16_t) );
 			}
 			ofs.close();
 		}
@@ -182,14 +182,14 @@ namespace Gamma
 		return m_pDictionary->m_mapLocalString.find( nKey ) != m_pDictionary->m_mapLocalString.end();
 	}
 
-	CDictionary::KeyType CDictionary::AddValueWithOffset( const wchar_t* szValue, uint32 nKey )
+	CDictionary::KeyType CDictionary::AddValueWithOffset( const wchar_t* szValue, uint32_t nKey )
 	{
 		if( !szValue )
 			return (KeyType)eInvalidKey;
 		return AddValueWithOffset( UcsToUtf8( szValue ).c_str(), nKey );
 	}
 
-	CDictionary::KeyType CDictionary::AddValueWithOffset( const char* szValue, uint32 nKey )
+	CDictionary::KeyType CDictionary::AddValueWithOffset( const char* szValue, uint32_t nKey )
 	{
 		if( !szValue || strlen( szValue ) == 0 )
 			return (KeyType)eInvalidKey;
@@ -215,12 +215,12 @@ namespace Gamma
 		return nCurKey;
 	}
 
-	void CDictionary::SetOffset( uint32 nOffset )
+	void CDictionary::SetOffset( uint32_t nOffset )
 	{
 		m_pDictionary->m_nOffset = nOffset;
 	}
 
-	uint32 CDictionary::GetOffset() const
+	uint32_t CDictionary::GetOffset() const
 	{
 		return m_pDictionary->m_nOffset;
 	}
@@ -290,7 +290,7 @@ namespace Gamma
 		nKeyBegin = nKeyBegin >> 28;
 		nKeyEnd = ( nKeyEnd - 1 ) >> 28;
 
-		for( uint32 i = nKeyBegin; i <= nKeyEnd; i++ )
+		for( uint32_t i = nKeyBegin; i <= nKeyEnd; i++ )
 			m_pDictionary->m_bModify[i] = true;
 	}
 
@@ -335,7 +335,7 @@ namespace Gamma
 		CDictionary::KeyType nKey = 0;
 		for( size_t i = 0; i < 8; i++ )
 		{
-			int32 n = ValueFromHexNumber( szKey[i] );
+			int32_t n = ValueFromHexNumber( szKey[i] );
 			if( n < 0 )
 				return (CDictionary::KeyType)CDictionary::eInvalidKey;
 			nKey = ( nKey << 4 ) + n;
@@ -354,14 +354,14 @@ namespace Gamma
 		return _StrToKey( HasTagHead( szKey ) ? szKey + 3 : szKey );
 	}
 
-	uint8 CDictionary::MakeID( KeyType nValue )
+	uint8_t CDictionary::MakeID( KeyType nValue )
 	{
-		return (uint8) ( uint32( ( nValue >> 28 ) & 0xf ) ) ;
+		return (uint8_t) ( uint32_t( ( nValue >> 28 ) & 0xf ) ) ;
 	}
 
 	CDictionary::KeyType CDictionary::GetKey() 
 	{
-		uint32 nOffset = GetOffset();
+		uint32_t nOffset = GetOffset();
 
 		std::map<KeyType, gammacstring>& mapLocalString = m_pDictionary->m_mapLocalString;
 		if( mapLocalString.empty() )

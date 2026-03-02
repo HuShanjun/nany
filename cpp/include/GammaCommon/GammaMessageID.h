@@ -1,13 +1,13 @@
 ﻿#pragma once
 #ifndef _WIN32
-#define MAKEINTRESOURCE(i)				((const wchar_t*)((uint32)((uint16)(i))))
+#define MAKEINTRESOURCE(i)				((const wchar_t*)((uint32_t)((uint16_t)(i))))
 #define IDC_ARROW						MAKEINTRESOURCE(32512)
 #define IDC_IBEAM						MAKEINTRESOURCE(32513)
 #define IDC_HAND						MAKEINTRESOURCE(32649)
-#define MAKELONG(a, b)					((uint32)(((uint16)(((uint32)(a)) & 0xffff)) | ((uint32)((uint16)(((uint32)(b)) & 0xffff))) << 16))
+#define MAKELONG(a, b)					((uint32_t)(((uint16_t)(((uint32_t)(a)) & 0xffff)) | ((uint32_t)((uint16_t)(((uint32_t)(b)) & 0xffff))) << 16))
 
-#define LOWORD(l)						((uint16)(((uint32)(l)) & 0xffff))
-#define HIWORD(l)						((uint16)((((uint32)(l)) >> 16) & 0xffff))
+#define LOWORD(l)						((uint16_t)(((uint32_t)(l)) & 0xffff))
+#define HIWORD(l)						((uint16_t)((((uint32_t)(l)) >> 16) & 0xffff))
 #define CF_TEXT             1
 #define CF_BITMAP           2
 #define CF_METAFILEPICT     3

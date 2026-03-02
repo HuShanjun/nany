@@ -37,7 +37,7 @@ namespace Gamma
 	}
 
 	const CClassInfo* CClassInfo::RegisterClass(
-		const char* szClassName, const char* szTypeIDName, uint32 nSize, bool bEnum )
+		const char* szClassName, const char* szTypeIDName, uint32_t nSize, bool bEnum )
 	{
 		gammacstring strKey( szTypeIDName, true );
 		CGlobalClassRegist& Inst = CGlobalClassRegist::GetInst();
@@ -83,7 +83,7 @@ namespace Gamma
 		for (size_t i = 0; i < pInfo->m_vecParamType.size(); i++)
 		{
 			pInfo->m_vecParamType[i] = ToDataType(aryTypeInfo.aryInfo[i]);
-			pInfo->m_vecParamSize[i] = (uint32)GetAligenSizeOfType(pInfo->m_vecParamType[i]);
+			pInfo->m_vecParamSize[i] = (uint32_t)GetAligenSizeOfType(pInfo->m_vecParamType[i]);
 			pInfo->m_nTotalParamSize += pInfo->m_vecParamSize[i];
 		}
 		return pInfo;
@@ -98,7 +98,7 @@ namespace Gamma
 		gammacstring strBaseKey( szBaseTypeInfoName, true );
 		CClassInfo* pBaseInfo = Inst.m_mapTypeID2ClassInfo.Find( strBaseKey );
 		GammaAst( pInfo && pBaseInfo && nOffset >= 0 );
-		SBaseInfo BaseInfo = { pBaseInfo, (int32)nOffset };
+		SBaseInfo BaseInfo = { pBaseInfo, (int32_t)nOffset };
 		if( pBaseInfo->m_nInheritDepth + 1 > pInfo->m_nInheritDepth )
 			pInfo->m_nInheritDepth = pBaseInfo->m_nInheritDepth + 1;
 		pInfo->m_vecBaseRegist.push_back( BaseInfo );
@@ -112,7 +112,7 @@ namespace Gamma
 
 		// 自然继承，虚表要延续
 		auto& vecNewFunction = pBaseInfo->m_vecOverridableFun;
-		for( int32 i = 0; i < (int32)vecNewFunction.size(); i++ )
+		for( int32_t i = 0; i < (int32_t)vecNewFunction.size(); i++ )
 		{
 			if( !vecNewFunction[i] )
 				continue;
@@ -137,7 +137,7 @@ namespace Gamma
 	}
 
 	const CCallInfo* CClassInfo::RegisterCallBack(
-		const char* szTypeInfoName, uint32 nIndex, CCallbackInfo* pCallScriptBase )
+		const char* szTypeInfoName, uint32_t nIndex, CCallbackInfo* pCallScriptBase )
 	{
 		gammacstring strKey( szTypeInfoName, true );
 		CGlobalClassRegist& Inst = CGlobalClassRegist::GetInst();
@@ -187,7 +187,7 @@ namespace Gamma
 
     void CClassInfo::InitVirtualTable( SFunctionTable* pNewTable ) const
 	{
-		for( int32 i = 0; i < (int32)m_vecOverridableFun.size(); i++ )
+		for( int32_t i = 0; i < (int32_t)m_vecOverridableFun.size(); i++ )
 		{
 			if( !m_vecOverridableFun[i] )
 				continue;
@@ -197,9 +197,9 @@ namespace Gamma
 		}
     }
 
-    int32 CClassInfo::GetMaxRegisterFunctionIndex() const
+    int32_t CClassInfo::GetMaxRegisterFunctionIndex() const
     {        
-		return (int32)m_vecOverridableFun.size();
+		return (int32_t)m_vecOverridableFun.size();
     }
 
     void CClassInfo::Construct( CScriptBase* pScript, void* pObject, void** aryArg ) const
@@ -251,14 +251,14 @@ namespace Gamma
 		return !m_vecOverridableFun.empty();
     }
 
-    int32 CClassInfo::GetBaseOffset( const CClassInfo* pRegist ) const
+    int32_t CClassInfo::GetBaseOffset( const CClassInfo* pRegist ) const
     {
         if( pRegist == this )
             return 0;
 
         for( size_t i = 0; i < m_vecBaseRegist.size(); i++ )
         {
-            int32 nOffset = m_vecBaseRegist[i].m_pBaseInfo->GetBaseOffset( pRegist );
+            int32_t nOffset = m_vecBaseRegist[i].m_pBaseInfo->GetBaseOffset( pRegist );
             if( nOffset >= 0 )
                 return m_vecBaseRegist[i].m_nBaseOff + nOffset;
         }
@@ -267,7 +267,7 @@ namespace Gamma
 	}
 
     void CClassInfo::ReplaceVirtualTable( CScriptBase* pScript,
-		void* pObj, bool bNewByVM, uint32 nInheritDepth ) const
+		void* pObj, bool bNewByVM, uint32_t nInheritDepth ) const
     {
         SVirtualObj* pVObj        = (SVirtualObj*)pObj;
         SFunctionTable* pOldTable = pVObj->m_pTable;
@@ -329,7 +329,7 @@ namespace Gamma
 			return true;
 
 		// 超出基类内存范围
-		if( nDiff > (int32)GetClassSize() )
+		if( nDiff > (int32_t)GetClassSize() )
 			return false;
 
 		for( size_t i = 0; i < m_vecBaseRegist.size(); i++ )

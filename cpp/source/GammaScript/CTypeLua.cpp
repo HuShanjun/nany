@@ -26,15 +26,15 @@ namespace Gamma
 	struct SBufferInfo
 	{
 		tbyte*			pBuffer;
-		uint32			nPosition;
-		uint32			nDataSize;
-		uint32			nCapacity;
+		uint32_t			nPosition;
+		uint32_t			nDataSize;
+		uint32_t			nCapacity;
 	};
 
 	//=====================================================================
 	/// lua对C++数据的操作方法封装
 	//=====================================================================
-	inline int32 ToAbsStackIndex( lua_State* pL, int32 nStkId )
+	inline int32_t ToAbsStackIndex( lua_State* pL, int32_t nStkId )
 	{
 		if( nStkId > 0 )
 			return nStkId;
@@ -69,10 +69,10 @@ namespace Gamma
 	}
 
 	void CLuaObject::GetFromVM(DataType eType, lua_State* pL, char* pDataBuf,
-		int32 nStkId, int32 nCppObjStr, int32 nWeakTable)
+		int32_t nStkId, int32_t nCppObjStr, int32_t nWeakTable)
     {
         nStkId = ToAbsStackIndex( pL, nStkId );
-		int32 nType = lua_type( pL, nStkId );
+		int32_t nType = lua_type( pL, nStkId );
         if( nType == LUA_TNIL || nType == LUA_TNONE )
             *(void**)( pDataBuf ) = nullptr;    
         else
@@ -112,7 +112,7 @@ namespace Gamma
     }
 
     void CLuaObject::PushToVM( DataType eType, lua_State* pL, char* pDataBuf, 
-		int32 nCppObjStr, int32 nWeakTable )
+		int32_t nCppObjStr, int32_t nWeakTable )
     {
         void* pObj = *(void**)( pDataBuf );
         if( pObj == nullptr )
@@ -188,20 +188,20 @@ namespace Gamma
 	}
 
 	void CLuaValueObject::GetFromVM(DataType eType, lua_State* pL, char* pDataBuf,
-		int32 nStkId, int32 nCppObjStr, int32 nWeakTable)
+		int32_t nStkId, int32_t nCppObjStr, int32_t nWeakTable)
 	{
 		CLuaObject::GetFromVM( eType, pL, pDataBuf, nStkId, nCppObjStr, nWeakTable );
 	}
 
 	void CLuaValueObject::PushToVM( DataType eType, lua_State* pL, char* pDataBuf, 
-		int32 nCppObjStr, int32 nWeakTable )
+		int32_t nCppObjStr, int32_t nWeakTable )
 	{
 		// Table 在Lua栈顶
 		lua_newtable( pL ); // Obj
 		lua_pushvalue( pL, nCppObjStr );
 		lua_newtable( pL );
 		lua_rawset( pL, -3 );
-		int32 nStkId = ToAbsStackIndex( pL, -1 );
+		int32_t nStkId = ToAbsStackIndex( pL, -1 );
 
 		auto pClassInfo = (const CClassInfo*)( ( eType >> 1 ) << 1 );
 		lua_getglobal( pL, pClassInfo->GetClassName().c_str() );
@@ -225,9 +225,9 @@ namespace Gamma
 	{
 	public:
 		static bool			IsLightData( SBufferInfo* pInfo );
-		static SBufferInfo*	GetBufferInfo( lua_State* pL, int32 nStkID );
+		static SBufferInfo*	GetBufferInfo( lua_State* pL, int32_t nStkID );
 		static SBufferInfo* CheckBufferSpace( SBufferInfo* pInfo,
-			uint32 nSize, lua_State* pL, int32 nStkID );
+			uint32_t nSize, lua_State* pL, int32_t nStkID );
 
 		template<class Type>
 		static Type			ReadData( lua_State* pL );
@@ -235,52 +235,52 @@ namespace Gamma
 		template<class Type>
 		static void			WriteData( lua_State* pL, Type v );
 
-		static int32		GetBit( lua_State* pL );
-		static int32		ReadBoolean( lua_State* pL );
-		static int32		ReadInt8( lua_State* pL );
-		static int32		ReadDouble( lua_State* pL );
-		static int32		ReadFloat( lua_State* pL );
-		static int32		ReadInt64( lua_State* pL );
-		static int32		ReadInt32( lua_State* pL );
-		static int32		ReadInt16( lua_State* pL );
-		static int32		ReadUint8( lua_State* pL );
-		static int32		ReadUint64( lua_State* pL );
-		static int32		ReadUint32( lua_State* pL );
-		static int32		ReadUint16( lua_State* pL );
-		static int32		ReadUTF(lua_State* pL);
-		static int32		ReadString(lua_State* pL);
-		static int32		ReadUTFBytes( lua_State* pL );
-		static int32		ReadUCS( lua_State* pL );
-		static int32		ReadUCSCounts( lua_State* pL );
-		static int32		ReadBytes( lua_State* pL );
+		static int32_t		GetBit( lua_State* pL );
+		static int32_t		ReadBoolean( lua_State* pL );
+		static int32_t		ReadInt8( lua_State* pL );
+		static int32_t		ReadDouble( lua_State* pL );
+		static int32_t		ReadFloat( lua_State* pL );
+		static int32_t		ReadInt64( lua_State* pL );
+		static int32_t		ReadInt32( lua_State* pL );
+		static int32_t		ReadInt16( lua_State* pL );
+		static int32_t		ReadUint8( lua_State* pL );
+		static int32_t		ReadUint64( lua_State* pL );
+		static int32_t		ReadUint32( lua_State* pL );
+		static int32_t		ReadUint16( lua_State* pL );
+		static int32_t		ReadUTF(lua_State* pL);
+		static int32_t		ReadString(lua_State* pL);
+		static int32_t		ReadUTFBytes( lua_State* pL );
+		static int32_t		ReadUCS( lua_State* pL );
+		static int32_t		ReadUCSCounts( lua_State* pL );
+		static int32_t		ReadBytes( lua_State* pL );
 
-		static int32		SetBit( lua_State* pL );
-		static int32		WriteBoolean( lua_State* pL );
-		static int32		WriteInt8( lua_State* pL );
-		static int32		WriteUint8( lua_State* pL );
-		static int32		WriteDouble( lua_State* pL );
-		static int32		WriteFloat( lua_State* pL );
-		static int32		WriteInt32( lua_State* pL );
-		static int32		WriteUint32( lua_State* pL );
-		static int32		WriteInt64( lua_State* pL );
-		static int32		WriteUint64( lua_State* pL );
-		static int32		WriteInt16( lua_State* pL );
-		static int32		WriteUint16( lua_State* pL );
-		static int32		WriteUTF( lua_State* pL );
-		static int32		WriteUTFBytes( lua_State* pL );
-		static int32		WriteBytes(lua_State* pL);
-		static int32		Load(lua_State* pL);
+		static int32_t		SetBit( lua_State* pL );
+		static int32_t		WriteBoolean( lua_State* pL );
+		static int32_t		WriteInt8( lua_State* pL );
+		static int32_t		WriteUint8( lua_State* pL );
+		static int32_t		WriteDouble( lua_State* pL );
+		static int32_t		WriteFloat( lua_State* pL );
+		static int32_t		WriteInt32( lua_State* pL );
+		static int32_t		WriteUint32( lua_State* pL );
+		static int32_t		WriteInt64( lua_State* pL );
+		static int32_t		WriteUint64( lua_State* pL );
+		static int32_t		WriteInt16( lua_State* pL );
+		static int32_t		WriteUint16( lua_State* pL );
+		static int32_t		WriteUTF( lua_State* pL );
+		static int32_t		WriteUTFBytes( lua_State* pL );
+		static int32_t		WriteBytes(lua_State* pL);
+		static int32_t		Load(lua_State* pL);
 
-		static int32		SetPosition( lua_State* pL );
-		static int32		GetPosition( lua_State* pL );
+		static int32_t		SetPosition( lua_State* pL );
+		static int32_t		GetPosition( lua_State* pL );
 
-		static int32		SetDataSize( lua_State* pL );
-		static int32		GetDataSize( lua_State* pL );
+		static int32_t		SetDataSize( lua_State* pL );
+		static int32_t		GetDataSize( lua_State* pL );
 
-		static int32		Reset( lua_State* pL );
-		static int32		Clear( lua_State* pL );
+		static int32_t		Reset( lua_State* pL );
+		static int32_t		Clear( lua_State* pL );
 
-		friend void*		GetPointerFromLua( lua_State* pL, int32 nStkId );
+		friend void*		GetPointerFromLua( lua_State* pL, int32_t nStkId );
 		friend void			PushPointerToLua( lua_State* pL, void* pBuffer );
 	};
 
@@ -290,7 +290,7 @@ namespace Gamma
 	}
 
 	inline SBufferInfo* CLuaBuffer::CheckBufferSpace( 
-		SBufferInfo* pInfo, uint32 nTotalSize, lua_State* pL, int32 nStkID )
+		SBufferInfo* pInfo, uint32_t nTotalSize, lua_State* pL, int32_t nStkID )
 	{
 		if( pInfo && IsLightData( pInfo ) && nTotalSize > pInfo->nDataSize )
 		{
@@ -301,9 +301,9 @@ namespace Gamma
 		if( pInfo == nullptr || pInfo->pBuffer == nullptr || nTotalSize > pInfo->nCapacity )
 		{
 			lua_pushlightuserdata( pL, (void*)s_szLuaBufferInfo );
-			uint32 nLen = std::max<uint32>( nTotalSize, 16 );
-			uint32 nCapacity = nLen + nLen/2;
-			uint32 nAlocSize = nCapacity + sizeof(SBufferInfo);
+			uint32_t nLen = std::max<uint32_t>( nTotalSize, 16 );
+			uint32_t nCapacity = nLen + nLen/2;
+			uint32_t nAlocSize = nCapacity + sizeof(SBufferInfo);
 			SBufferInfo* pNewBufferInfo = (SBufferInfo*)lua_newuserdata( pL, nAlocSize );
 			pNewBufferInfo->pBuffer = (tbyte*)( pNewBufferInfo + 1 );
 			pNewBufferInfo->nPosition = pInfo ? pInfo->nPosition : 0;
@@ -314,14 +314,14 @@ namespace Gamma
 				memcpy( pNewBufferInfo->pBuffer, pInfo->pBuffer, pInfo->nDataSize );
 			pInfo = pNewBufferInfo;
 			lua_rawset( pL, nStkID );
-			uint32 nNewStart = pInfo->nDataSize;
-			uint32 nNewSize = nCapacity - pInfo->nDataSize;
+			uint32_t nNewStart = pInfo->nDataSize;
+			uint32_t nNewSize = nCapacity - pInfo->nDataSize;
 			memset( pNewBufferInfo->pBuffer + nNewStart, 0, nNewSize );
 		}	
 		return pInfo;
 	}
 
-	inline SBufferInfo* CLuaBuffer::GetBufferInfo( lua_State* pL, int32 nStkID )
+	inline SBufferInfo* CLuaBuffer::GetBufferInfo( lua_State* pL, int32_t nStkID )
 	{
 		nStkID = ToAbsStackIndex(pL, nStkID);
 		lua_pushlightuserdata( pL, (void*)s_szLuaBufferInfo );
@@ -346,132 +346,132 @@ namespace Gamma
 		return data;
 	}
 
-	int32 CLuaBuffer::GetBit( lua_State* pL )
+	int32_t CLuaBuffer::GetBit( lua_State* pL )
 	{
-		uint32 nArg = lua_gettop( pL );
+		uint32_t nArg = lua_gettop( pL );
 		if( nArg < 2 )
 		{
 			luaL_error( pL, "GetBit Invalid Param" );
 			return 0;
 		}
 
-		uint32 nReadPos = (uint32)GetNumFromLua( pL, 2 );
-		uint32 nNum = 1;
+		uint32_t nReadPos = (uint32_t)GetNumFromLua( pL, 2 );
+		uint32_t nNum = 1;
 		if( nArg > 3 )
-			nNum = (uint32)GetNumFromLua( pL, 3 );
+			nNum = (uint32_t)GetNumFromLua( pL, 3 );
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
 		if( nNum <= 0 || nNum > 64 )
 			return 0;
 		if( nReadPos + nNum > pInfo->nDataSize * 8 )
 			return 0;
-		int32 nOffset = nReadPos%8;
-		int32 nStart = nReadPos/8;
-		int32 nEnd = ( nReadPos + nNum - 1 )/8 + 1;
+		int32_t nOffset = nReadPos%8;
+		int32_t nStart = nReadPos/8;
+		int32_t nEnd = ( nReadPos + nNum - 1 )/8 + 1;
 		char aryBuffer[9];
 		memcpy( aryBuffer, pInfo->pBuffer, nEnd - nStart );
-		uint64& nValue = *(uint64*)aryBuffer;
+		uint64_t& nValue = *(uint64_t*)aryBuffer;
 		nValue = nValue >> nOffset;
 		aryBuffer[7] |= aryBuffer[8] << ( 8 - nOffset );
-		lua_pushnumber( pL, (double)(int64)nValue );
+		lua_pushnumber( pL, (double)(int64_t)nValue );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadBoolean( lua_State* pL )
+	int32_t CLuaBuffer::ReadBoolean( lua_State* pL )
 	{
-		lua_pushboolean( pL, ReadData<uint8>( pL ) );		
+		lua_pushboolean( pL, ReadData<uint8_t>( pL ) );		
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadInt8( lua_State* pL )
+	int32_t CLuaBuffer::ReadInt8( lua_State* pL )
 	{
-		lua_pushnumber( pL, ReadData<int8>( pL ) );
+		lua_pushnumber( pL, ReadData<int8_t>( pL ) );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadDouble( lua_State* pL )
+	int32_t CLuaBuffer::ReadDouble( lua_State* pL )
 	{
 		lua_pushnumber( pL, ReadData<double>( pL ) );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadFloat( lua_State* pL )
+	int32_t CLuaBuffer::ReadFloat( lua_State* pL )
 	{
 		lua_pushnumber( pL, ReadData<float>( pL ) );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadInt64( lua_State* pL )
+	int32_t CLuaBuffer::ReadInt64( lua_State* pL )
 	{
-		lua_pushnumber( pL, (double)ReadData<int64>( pL ) );
+		lua_pushnumber( pL, (double)ReadData<int64_t>( pL ) );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadInt32( lua_State* pL )
+	int32_t CLuaBuffer::ReadInt32( lua_State* pL )
 	{
-		lua_pushnumber( pL, ReadData<int32>( pL ) );
+		lua_pushnumber( pL, ReadData<int32_t>( pL ) );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadInt16( lua_State* pL )
+	int32_t CLuaBuffer::ReadInt16( lua_State* pL )
 	{
-		lua_pushnumber( pL, ReadData<int16>( pL ) );
+		lua_pushnumber( pL, ReadData<int16_t>( pL ) );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadUint8( lua_State* pL )
+	int32_t CLuaBuffer::ReadUint8( lua_State* pL )
 	{
-		lua_pushnumber( pL, ReadData<uint8>( pL ) );
+		lua_pushnumber( pL, ReadData<uint8_t>( pL ) );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadUint64( lua_State* pL )
+	int32_t CLuaBuffer::ReadUint64( lua_State* pL )
 	{
-		lua_pushnumber( pL, (double)ReadData<uint64>( pL ) );
+		lua_pushnumber( pL, (double)ReadData<uint64_t>( pL ) );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadUint32( lua_State* pL )
+	int32_t CLuaBuffer::ReadUint32( lua_State* pL )
 	{
-		lua_pushnumber( pL, ReadData<uint32>( pL ) );
+		lua_pushnumber( pL, ReadData<uint32_t>( pL ) );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadUint16( lua_State* pL )
+	int32_t CLuaBuffer::ReadUint16( lua_State* pL )
 	{
-		lua_pushnumber( pL, ReadData<uint16>( pL ) );
+		lua_pushnumber( pL, ReadData<uint16_t>( pL ) );
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadString(lua_State* pL)
+	int32_t CLuaBuffer::ReadString(lua_State* pL)
 	{
 		return ReadUTFBytes(pL);
 	}
 
-	int32 CLuaBuffer::ReadUTF( lua_State* pL )
+	int32_t CLuaBuffer::ReadUTF( lua_State* pL )
 	{
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
-		if( !pInfo || pInfo->nPosition + sizeof(uint16) > pInfo->nDataSize )
+		if( !pInfo || pInfo->nPosition + sizeof(uint16_t) > pInfo->nDataSize )
 		{
 			luaL_error( pL, "invalid buffer" );
 			return 0;
 		}
-		uint16 nLen;
-		memcpy( &nLen, pInfo->pBuffer + pInfo->nPosition, sizeof(uint16) );
-		const char* szUtf8 = (const char*)( pInfo->pBuffer + pInfo->nPosition + sizeof(uint16) );
+		uint16_t nLen;
+		memcpy( &nLen, pInfo->pBuffer + pInfo->nPosition, sizeof(uint16_t) );
+		const char* szUtf8 = (const char*)( pInfo->pBuffer + pInfo->nPosition + sizeof(uint16_t) );
 		
-		if( pInfo->nPosition + sizeof(uint16) + nLen > pInfo->nDataSize )
+		if( pInfo->nPosition + sizeof(uint16_t) + nLen > pInfo->nDataSize )
 		{
 			luaL_error( pL, "invalid buffer" );
 			return 0;
 		}
 		lua_pushlstring( pL, szUtf8, nLen );
-		pInfo->nPosition += sizeof(uint16) + nLen;
+		pInfo->nPosition += sizeof(uint16_t) + nLen;
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadUTFBytes( lua_State* pL )
+	int32_t CLuaBuffer::ReadUTFBytes( lua_State* pL )
 	{
-		uint32 nLen = (uint32)GetNumFromLua( pL, -1 );
+		uint32_t nLen = (uint32_t)GetNumFromLua( pL, -1 );
 		lua_pop( pL, 1 );
 
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
@@ -486,25 +486,25 @@ namespace Gamma
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadUCS( lua_State* pL )
+	int32_t CLuaBuffer::ReadUCS( lua_State* pL )
 	{
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
-		if( !pInfo || pInfo->nPosition + sizeof(uint16) > pInfo->nDataSize )
+		if( !pInfo || pInfo->nPosition + sizeof(uint16_t) > pInfo->nDataSize )
 		{
 			luaL_error( pL, "invalid buffer" );
 			return 0;
 		}
 
 
-		uint16 nLen;
-		memcpy( &nLen, pInfo->pBuffer + pInfo->nPosition, sizeof(uint16) );
-		const uint16* szUtf16 = (const uint16*)( pInfo->pBuffer + pInfo->nPosition + sizeof(uint16) );
-		if( pInfo->nPosition + sizeof(uint16) + nLen*sizeof(uint16) > pInfo->nDataSize)
+		uint16_t nLen;
+		memcpy( &nLen, pInfo->pBuffer + pInfo->nPosition, sizeof(uint16_t) );
+		const uint16_t* szUtf16 = (const uint16_t*)( pInfo->pBuffer + pInfo->nPosition + sizeof(uint16_t) );
+		if( pInfo->nPosition + sizeof(uint16_t) + nLen*sizeof(uint16_t) > pInfo->nDataSize)
 		{
 			luaL_error( pL, "invalid buffer" );
 			return 0;
 		}
-		pInfo->nPosition += sizeof(uint16) + nLen*sizeof(uint16);
+		pInfo->nPosition += sizeof(uint16_t) + nLen*sizeof(uint16_t);
 		CScriptLua* pScript = CScriptLua::GetScript( pL );
 		pScript->m_szTempUtf8.resize( nLen*6 + 1 );
 		nLen = Ucs2ToUtf8( &pScript->m_szTempUtf8[0], nLen*6+1, szUtf16 );
@@ -512,11 +512,11 @@ namespace Gamma
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadUCSCounts( lua_State* pL )
+	int32_t CLuaBuffer::ReadUCSCounts( lua_State* pL )
 	{
-		uint32 nLen = (uint32)GetNumFromLua( pL, 2 );
+		uint32_t nLen = (uint32_t)GetNumFromLua( pL, 2 );
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
-		if( !pInfo || pInfo->nPosition + nLen*sizeof(uint16) > pInfo->nDataSize )
+		if( !pInfo || pInfo->nPosition + nLen*sizeof(uint16_t) > pInfo->nDataSize )
 		{
 			luaL_error( pL, "invalid buffer" );
 			return 0;
@@ -524,8 +524,8 @@ namespace Gamma
 
 		lua_settop( pL, 0 );
 
-		const uint16* szUtf16 = (const uint16*)( pInfo->pBuffer + pInfo->nPosition );
-		pInfo->nPosition += nLen*sizeof(uint16);
+		const uint16_t* szUtf16 = (const uint16_t*)( pInfo->pBuffer + pInfo->nPosition );
+		pInfo->nPosition += nLen*sizeof(uint16_t);
 
 		CScriptLua* pScript = CScriptLua::GetScript( pL );
 		pScript->m_szTempUtf8.resize( nLen*6 + 1 );
@@ -534,9 +534,9 @@ namespace Gamma
 		return 1;
 	}
 
-	int32 CLuaBuffer::ReadBytes( lua_State* pL )
+	int32_t CLuaBuffer::ReadBytes( lua_State* pL )
 	{
-		uint32 nArg = lua_gettop( pL );
+		uint32_t nArg = lua_gettop( pL );
 		SBufferInfo* pInfoSrc = GetBufferInfo( pL, 1 );
 
 		if( !pInfoSrc || !pInfoSrc->pBuffer )
@@ -547,7 +547,7 @@ namespace Gamma
 
 		if( lua_type( pL, 2 ) != LUA_TTABLE )
 		{
-			uint32 nReadCount = nArg >= 2 ? (uint32)GetNumFromLua( pL, 2 ) : INVALID_32BITID;
+			uint32_t nReadCount = nArg >= 2 ? (uint32_t)GetNumFromLua( pL, 2 ) : INVALID_32BITID;
 
 			if( nReadCount == INVALID_32BITID )
 				nReadCount = pInfoSrc->nDataSize - pInfoSrc->nPosition;
@@ -566,10 +566,10 @@ namespace Gamma
 		else
 		{
 			SBufferInfo* pInfoDes = GetBufferInfo( pL, 2 );
-			uint32 nOffset = nArg >= 3 ? (uint32)GetNumFromLua( pL, 3 ) : 0;
-			uint32 nReadCount = nArg >= 4 ? (uint32)GetNumFromLua( pL, 4 ) : INVALID_32BITID;
+			uint32_t nOffset = nArg >= 3 ? (uint32_t)GetNumFromLua( pL, 3 ) : 0;
+			uint32_t nReadCount = nArg >= 4 ? (uint32_t)GetNumFromLua( pL, 4 ) : INVALID_32BITID;
 			tbyte* pDesBuf = nullptr;
-			uint32 nMaxSize = 0;
+			uint32_t nMaxSize = 0;
 
 			if( nReadCount == INVALID_32BITID )
 				nReadCount = pInfoSrc->nDataSize - pInfoSrc->nPosition;
@@ -591,14 +591,14 @@ namespace Gamma
 				pInfoSrc = CheckBufferSpace( pInfoSrc, nOffset + nReadCount, pL, 2 );
 				pDesBuf = pInfoSrc->pBuffer;
 				nMaxSize = pInfoSrc->nDataSize;
-				pInfoSrc->nDataSize = std::max<uint32>( nOffset + nReadCount, pInfoSrc->nDataSize );
+				pInfoSrc->nDataSize = std::max<uint32_t>( nOffset + nReadCount, pInfoSrc->nDataSize );
 			}
 			else if( pInfoDes && pInfoDes->pBuffer )
 			{
 				pInfoDes = CheckBufferSpace( pInfoDes, nOffset + nReadCount, pL, 2 );
 				pDesBuf = pInfoDes->pBuffer;
 				nMaxSize = pInfoDes->nDataSize;
-				pInfoDes->nDataSize = std::max<uint32>( nOffset + nReadCount, pInfoDes->nDataSize );
+				pInfoDes->nDataSize = std::max<uint32_t>( nOffset + nReadCount, pInfoDes->nDataSize );
 			}
 			else
 			{
@@ -638,13 +638,13 @@ namespace Gamma
 		pInfo = CheckBufferSpace( pInfo, ( pInfo ? pInfo->nPosition : 0 )  + sizeof(Type), pL, 1 );
 		memcpy( pInfo->pBuffer + pInfo->nPosition, &v, sizeof(Type) );
 		pInfo->nPosition += sizeof(Type);
-		pInfo->nDataSize = std::max<uint32>( pInfo->nPosition, pInfo->nDataSize );
+		pInfo->nDataSize = std::max<uint32_t>( pInfo->nPosition, pInfo->nDataSize );
 		lua_settop( pL, 0 );
 	}
 
-	int32 CLuaBuffer::SetBit( lua_State* pL )
+	int32_t CLuaBuffer::SetBit( lua_State* pL )
 	{
-		uint32 nArg = lua_gettop( pL );
+		uint32_t nArg = lua_gettop( pL );
 		if( nArg < 3 )
 		{
 			luaL_error( pL, "invalid parameter count" );
@@ -652,19 +652,19 @@ namespace Gamma
 		}
 
 		char aryBuffer[9];
-		uint64& nValue = *(uint64*)aryBuffer;
-		uint32 nWritePos = (uint32)GetNumFromLua( pL, 2 );
-		nValue = (uint64)( LUA_TBOOLEAN == lua_type( pL, 3 ) ?
-			lua_toboolean( pL, 3 ) : (int64)GetNumFromLua( pL, 3 ) );
+		uint64_t& nValue = *(uint64_t*)aryBuffer;
+		uint32_t nWritePos = (uint32_t)GetNumFromLua( pL, 2 );
+		nValue = (uint64_t)( LUA_TBOOLEAN == lua_type( pL, 3 ) ?
+			lua_toboolean( pL, 3 ) : (int64_t)GetNumFromLua( pL, 3 ) );
 
-		uint32 nNum = 1;
+		uint32_t nNum = 1;
 		if( nArg > 4 )
-			nNum = (uint32)GetNumFromLua( pL, 4 );
+			nNum = (uint32_t)GetNumFromLua( pL, 4 );
 		if( nNum <= 0 || nNum > 64 )
 			return 0;
-		int32 nOffset = nWritePos%8;
-		int32 nStart = nWritePos/8;
-		int32 nEnd = ( nWritePos + nNum - 1 )/8 + 1;
+		int32_t nOffset = nWritePos%8;
+		int32_t nStart = nWritePos/8;
+		int32_t nEnd = ( nWritePos + nNum - 1 )/8 + 1;
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
 		pInfo = CheckBufferSpace( pInfo, nEnd, pL, 1 );
 
@@ -677,95 +677,95 @@ namespace Gamma
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteBoolean( lua_State* pL )
+	int32_t CLuaBuffer::WriteBoolean( lua_State* pL )
 	{
-		WriteData( pL, (uint8)(int64)lua_toboolean( pL, 2 ) );
+		WriteData( pL, (uint8_t)(int64_t)lua_toboolean( pL, 2 ) );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteInt8( lua_State* pL )
+	int32_t CLuaBuffer::WriteInt8( lua_State* pL )
 	{
-		WriteData( pL, (int8)(int64)GetNumFromLua( pL, 2 ) );
+		WriteData( pL, (int8_t)(int64_t)GetNumFromLua( pL, 2 ) );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteUint8( lua_State* pL )
+	int32_t CLuaBuffer::WriteUint8( lua_State* pL )
 	{
-		WriteData( pL, (uint8)(int64)GetNumFromLua( pL, 2 ) );
+		WriteData( pL, (uint8_t)(int64_t)GetNumFromLua( pL, 2 ) );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteDouble( lua_State* pL )
+	int32_t CLuaBuffer::WriteDouble( lua_State* pL )
 	{
 		WriteData( pL, GetNumFromLua( pL, 2 ) );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteFloat( lua_State* pL )
+	int32_t CLuaBuffer::WriteFloat( lua_State* pL )
 	{
 		WriteData( pL, (float)GetNumFromLua( pL, 2 ) );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteInt64( lua_State* pL )
+	int32_t CLuaBuffer::WriteInt64( lua_State* pL )
 	{
-		WriteData( pL, (int64)GetNumFromLua( pL, 2 ) );
+		WriteData( pL, (int64_t)GetNumFromLua( pL, 2 ) );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteInt32( lua_State* pL )
+	int32_t CLuaBuffer::WriteInt32( lua_State* pL )
 	{
-		WriteData( pL, (int32)(int64)GetNumFromLua( pL, 2 ) );
+		WriteData( pL, (int32_t)(int64_t)GetNumFromLua( pL, 2 ) );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteUint32( lua_State* pL )
+	int32_t CLuaBuffer::WriteUint32( lua_State* pL )
 	{
-		WriteData( pL, (uint32)(int64)GetNumFromLua( pL, 2 ) );
+		WriteData( pL, (uint32_t)(int64_t)GetNumFromLua( pL, 2 ) );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteUint64( lua_State* pL )
+	int32_t CLuaBuffer::WriteUint64( lua_State* pL )
 	{
-		WriteData( pL, (uint64)GetNumFromLua( pL, 2 ) );
+		WriteData( pL, (uint64_t)GetNumFromLua( pL, 2 ) );
 		return 0;
 	}
 	
-	int32 CLuaBuffer::WriteInt16( lua_State* pL )
+	int32_t CLuaBuffer::WriteInt16( lua_State* pL )
 	{
-		WriteData( pL, (int16)(int64)GetNumFromLua( pL, 2 ) );
+		WriteData( pL, (int16_t)(int64_t)GetNumFromLua( pL, 2 ) );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteUint16( lua_State* pL )
+	int32_t CLuaBuffer::WriteUint16( lua_State* pL )
 	{
-		WriteData( pL, (uint16)(int64)GetNumFromLua( pL, 2 ) );
+		WriteData( pL, (uint16_t)(int64_t)GetNumFromLua( pL, 2 ) );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteUTF( lua_State* pL )
+	int32_t CLuaBuffer::WriteUTF( lua_State* pL )
 	{
 		const char* szString = lua_tostring( pL, 2 );
 		szString = szString ? szString : "";
-		uint16 nSize = (uint16)strlen( szString );
+		uint16_t nSize = (uint16_t)strlen( szString );
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
-		uint32 nNewSize = ( pInfo ? pInfo->nPosition : 0 ) + nSize + sizeof(uint16);
+		uint32_t nNewSize = ( pInfo ? pInfo->nPosition : 0 ) + nSize + sizeof(uint16_t);
 		pInfo = CheckBufferSpace( pInfo, nNewSize, pL, 1 );
 		lua_settop( pL, 0 );
 
-		memcpy( pInfo->pBuffer + pInfo->nPosition, &nSize, sizeof(uint16) );
-		memcpy( pInfo->pBuffer + pInfo->nPosition + sizeof(uint16), szString, nSize );
-		pInfo->nPosition += nSize + sizeof(uint16);
-		pInfo->nDataSize = std::max<uint32>( pInfo->nPosition, pInfo->nDataSize );
+		memcpy( pInfo->pBuffer + pInfo->nPosition, &nSize, sizeof(uint16_t) );
+		memcpy( pInfo->pBuffer + pInfo->nPosition + sizeof(uint16_t), szString, nSize );
+		pInfo->nPosition += nSize + sizeof(uint16_t);
+		pInfo->nDataSize = std::max<uint32_t>( pInfo->nPosition, pInfo->nDataSize );
 		return 0;
 	}
 
-	int32 CLuaBuffer::WriteUTFBytes( lua_State* pL )
+	int32_t CLuaBuffer::WriteUTFBytes( lua_State* pL )
 	{
-		uint32 nArg = lua_gettop( pL );
-		uint32 nLen = (uint32)lua_strlen( pL, 2 );
+		uint32_t nArg = lua_gettop( pL );
+		uint32_t nLen = (uint32_t)lua_strlen( pL, 2 );
 		const char* szString = lua_tostring( pL, 2 );
-		uint32 nSize = nArg >= 3 ? (uint32)(int64)GetNumFromLua( pL, 3 ) : nLen;
+		uint32_t nSize = nArg >= 3 ? (uint32_t)(int64_t)GetNumFromLua( pL, 3 ) : nLen;
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
 		pInfo = CheckBufferSpace( pInfo, ( pInfo ? pInfo->nPosition : 0 ) + nSize, pL, 1 );
 		lua_settop( pL, 0 );
@@ -775,24 +775,24 @@ namespace Gamma
 		if( nSize > nLen )
 			memset( pInfo->pBuffer + pInfo->nPosition + nLen, 0, nSize - nLen );
 		pInfo->nPosition += nSize;
-		pInfo->nDataSize = std::max<uint32>( pInfo->nPosition, pInfo->nDataSize );
+		pInfo->nDataSize = std::max<uint32_t>( pInfo->nPosition, pInfo->nDataSize );
 		return 0;
 	}
 
-	int32 CLuaBuffer::Load(lua_State* pL)
+	int32_t CLuaBuffer::Load(lua_State* pL)
 	{
-		uint32 nArg = lua_gettop(pL);
+		uint32_t nArg = lua_gettop(pL);
 		SBufferInfo* pInfoDes = GetBufferInfo(pL, 1);
 
 		if (lua_type(pL, 2) != LUA_TTABLE)
 		{
 			size_t nDataSize = 0;
 			const char* szSrc = luaL_checklstring(pL, 2, &nDataSize);
-			uint32 nOffset = nArg >= 3 ? (uint32)GetNumFromLua(pL, 3) : 0;
-			uint32 nWriteCount = nArg >= 4 ? (uint32)GetNumFromLua(pL, 4) : INVALID_32BITID;
+			uint32_t nOffset = nArg >= 3 ? (uint32_t)GetNumFromLua(pL, 3) : 0;
+			uint32_t nWriteCount = nArg >= 4 ? (uint32_t)GetNumFromLua(pL, 4) : INVALID_32BITID;
 
 			if (nWriteCount == INVALID_32BITID)
-				nWriteCount = (uint32)nDataSize - nOffset;
+				nWriteCount = (uint32_t)nDataSize - nOffset;
 
 			if (nWriteCount > 200 * 1024 * 1024)
 			{
@@ -811,17 +811,17 @@ namespace Gamma
 
 			memmove(pInfoDes->pBuffer + pInfoDes->nPosition, szSrc + nOffset, nWriteCount);
 			pInfoDes->nPosition += nWriteCount;
-			pInfoDes->nDataSize = std::max<uint32>(pInfoDes->nPosition, pInfoDes->nDataSize);
+			pInfoDes->nDataSize = std::max<uint32_t>(pInfoDes->nPosition, pInfoDes->nDataSize);
 			pInfoDes->nPosition = 0;
 			return 0;
 		}
 		else
 		{
 			SBufferInfo* pInfoSrc = GetBufferInfo(pL, 2);
-			uint32 nOffset = nArg >= 3 ? (uint32)(int64)GetNumFromLua(pL, 3) : 0;
-			uint32 nWriteCount = nArg >= 4 ? (uint32)(int64)GetNumFromLua(pL, 4) : INVALID_32BITID;
+			uint32_t nOffset = nArg >= 3 ? (uint32_t)(int64_t)GetNumFromLua(pL, 3) : 0;
+			uint32_t nWriteCount = nArg >= 4 ? (uint32_t)(int64_t)GetNumFromLua(pL, 4) : INVALID_32BITID;
 			const tbyte* pSrcBuf = nullptr;
-			uint32 nMaxSize = 0;
+			uint32_t nMaxSize = 0;
 
 			if (lua_isnil(pL, 2))
 			{
@@ -872,26 +872,26 @@ namespace Gamma
 
 			memmove(pInfoDes->pBuffer + pInfoDes->nPosition, pSrcBuf + nOffset, nWriteCount);
 			pInfoDes->nPosition += nWriteCount;
-			pInfoDes->nDataSize = std::max<uint32>(pInfoDes->nPosition, pInfoDes->nDataSize);
+			pInfoDes->nDataSize = std::max<uint32_t>(pInfoDes->nPosition, pInfoDes->nDataSize);
 			pInfoDes->nPosition = 0;
 			return 0;
 		}
 	}
 
-	int32 CLuaBuffer::WriteBytes( lua_State* pL )
+	int32_t CLuaBuffer::WriteBytes( lua_State* pL )
 	{
-		uint32 nArg = lua_gettop( pL );
+		uint32_t nArg = lua_gettop( pL );
 		SBufferInfo* pInfoDes = GetBufferInfo( pL, 1 );
 
 		if( lua_type( pL, 2 ) != LUA_TTABLE )
 		{
 			size_t nDataSize = 0;
 			const char* szSrc = luaL_checklstring( pL, 2, &nDataSize );
-			uint32 nOffset = nArg >= 3 ? (uint32)GetNumFromLua( pL, 3 ) : 0;
-			uint32 nWriteCount = nArg >= 4 ? (uint32)GetNumFromLua( pL, 4 ) : INVALID_32BITID;
+			uint32_t nOffset = nArg >= 3 ? (uint32_t)GetNumFromLua( pL, 3 ) : 0;
+			uint32_t nWriteCount = nArg >= 4 ? (uint32_t)GetNumFromLua( pL, 4 ) : INVALID_32BITID;
 
 			if( nWriteCount == INVALID_32BITID )
-				nWriteCount = (uint32)nDataSize - nOffset;
+				nWriteCount = (uint32_t)nDataSize - nOffset;
 
 			if( nWriteCount > 200*1024*1024 )
 			{
@@ -910,16 +910,16 @@ namespace Gamma
 
 			memmove( pInfoDes->pBuffer + pInfoDes->nPosition, szSrc + nOffset, nWriteCount );
 			pInfoDes->nPosition += nWriteCount;
-			pInfoDes->nDataSize = std::max<uint32>( pInfoDes->nPosition, pInfoDes->nDataSize );
+			pInfoDes->nDataSize = std::max<uint32_t>( pInfoDes->nPosition, pInfoDes->nDataSize );
 			return 0;
 		}
 		else
 		{
 			SBufferInfo* pInfoSrc = GetBufferInfo( pL, 2 );
-			uint32 nOffset = nArg >= 3 ? (uint32)(int64)GetNumFromLua( pL, 3 ) : 0;
-			uint32 nWriteCount = nArg >= 4 ? (uint32)(int64)GetNumFromLua( pL, 4 ) : INVALID_32BITID;
+			uint32_t nOffset = nArg >= 3 ? (uint32_t)(int64_t)GetNumFromLua( pL, 3 ) : 0;
+			uint32_t nWriteCount = nArg >= 4 ? (uint32_t)(int64_t)GetNumFromLua( pL, 4 ) : INVALID_32BITID;
 			const tbyte* pSrcBuf = nullptr;
-			uint32 nMaxSize = 0;
+			uint32_t nMaxSize = 0;
 
 			if( lua_isnil( pL, 2 ) )
 			{
@@ -970,14 +970,14 @@ namespace Gamma
 
 			memmove( pInfoDes->pBuffer + pInfoDes->nPosition, pSrcBuf + nOffset, nWriteCount );
 			pInfoDes->nPosition += nWriteCount;
-			pInfoDes->nDataSize = std::max<uint32>( pInfoDes->nPosition, pInfoDes->nDataSize );
+			pInfoDes->nDataSize = std::max<uint32_t>( pInfoDes->nPosition, pInfoDes->nDataSize );
 			return 0;
 		}
 	}
 
-	int32 CLuaBuffer::SetPosition( lua_State* pL )
+	int32_t CLuaBuffer::SetPosition( lua_State* pL )
 	{
-		uint32 nPosition = (uint32)(int64)GetNumFromLua( pL, 2 );
+		uint32_t nPosition = (uint32_t)(int64_t)GetNumFromLua( pL, 2 );
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
 		if( pInfo && IsLightData( pInfo ) )
 		{
@@ -993,7 +993,7 @@ namespace Gamma
 		return 0;
 	}
 
-	int32 CLuaBuffer::GetPosition( lua_State* pL )
+	int32_t CLuaBuffer::GetPosition( lua_State* pL )
 	{
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
 		lua_settop( pL, 0 );
@@ -1001,9 +1001,9 @@ namespace Gamma
 		return 1;
 	}
 
-	int32 CLuaBuffer::SetDataSize( lua_State* pL )
+	int32_t CLuaBuffer::SetDataSize( lua_State* pL )
 	{
-		uint32 nLen = (uint32)(int64)GetNumFromLua( pL, 2 );
+		uint32_t nLen = (uint32_t)(int64_t)GetNumFromLua( pL, 2 );
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
 		if( pInfo && pInfo->pBuffer && IsLightData( pInfo ) )
 		{
@@ -1018,7 +1018,7 @@ namespace Gamma
 		return 0;
 	}
 
-	int32 CLuaBuffer::GetDataSize( lua_State* pL )
+	int32_t CLuaBuffer::GetDataSize( lua_State* pL )
 	{
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
 		lua_settop( pL, 0 );
@@ -1026,7 +1026,7 @@ namespace Gamma
 		return 1;
 	}
 
-	int32 CLuaBuffer::Reset( lua_State* pL )
+	int32_t CLuaBuffer::Reset( lua_State* pL )
 	{
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
 		if( !pInfo || IsLightData( pInfo ) )
@@ -1037,11 +1037,11 @@ namespace Gamma
 		return 0;
 	}
 	
-	int32 CLuaBuffer::Clear( lua_State* pL )
+	int32_t CLuaBuffer::Clear( lua_State* pL )
 	{
-		uint32 nArg = lua_gettop( pL );
-		uint32 nClearCount = nArg >= 3 ? (uint32)(int64)GetNumFromLua( pL, 3 ) : 1;
-		uint32 nOffset = nArg >= 2 ? (uint32)(int64)GetNumFromLua( pL, 2 ) : 0;
+		uint32_t nArg = lua_gettop( pL );
+		uint32_t nClearCount = nArg >= 3 ? (uint32_t)(int64_t)GetNumFromLua( pL, 3 ) : 1;
+		uint32_t nOffset = nArg >= 2 ? (uint32_t)(int64_t)GetNumFromLua( pL, 2 ) : 0;
 		SBufferInfo* pInfo = GetBufferInfo( pL, 1 );
 
 		if( nClearCount == INVALID_32BITID || nArg < 2 )
@@ -1051,7 +1051,7 @@ namespace Gamma
 		lua_settop( pL, 0 );
 
 		memset( pInfo->pBuffer + nOffset, 0, nClearCount );
-		pInfo->nDataSize = std::max<uint32>( nOffset + nClearCount, pInfo->nDataSize );
+		pInfo->nDataSize = std::max<uint32_t>( nOffset + nClearCount, pInfo->nDataSize );
 		return 0;
 	}
 
@@ -1117,11 +1117,11 @@ namespace Gamma
 	//=====================================================================
 	/// lua对C++数据的操作方法封装
 	//=====================================================================
-	double GetNumFromLua( lua_State* pL, int32 nStkId )
+	double GetNumFromLua( lua_State* pL, int32_t nStkId )
 	{
 		nStkId = ToAbsStackIndex( pL, nStkId );
 		if( lua_isboolean( pL, nStkId ) )
-			return (double)(int32)lua_toboolean( pL, nStkId );
+			return (double)(int32_t)lua_toboolean( pL, nStkId );
 		if( LUA_TSTRING == lua_type( pL, nStkId ) )
 		{
 			char *endptr;
@@ -1133,7 +1133,7 @@ namespace Gamma
 			/* maybe an hexadecimal constant? */
 			if( *endptr == 'x' || *endptr == 'X' )
 			{
-				uint64 nValue = 0;
+				uint64_t nValue = 0;
 				int n = ValueFromHexNumber( *++endptr );
 				while( n >= 0 )
 				{
@@ -1149,12 +1149,12 @@ namespace Gamma
 	}
 
 	void* GetPointerFromLua( lua_State* pL,
-		int32 nStkId, int32 nCppObjStr, int32 nWeakTable )
+		int32_t nStkId, int32_t nCppObjStr, int32_t nWeakTable )
 	{
 		nStkId = ToAbsStackIndex( pL, nStkId );
 		if (nStkId > lua_gettop(pL))
 			return nullptr;
-		int32 nType = lua_type( pL, nStkId );
+		int32_t nType = lua_type( pL, nStkId );
 		if( nType == LUA_TNIL || nType == LUA_TNONE || 
 			nType == LUA_TBOOLEAN || nType == LUA_TNUMBER )
 			return nullptr;
@@ -1211,7 +1211,7 @@ namespace Gamma
 	}
 
 	bool PushPointerToLua( lua_State* pL, void* pBuffer, 
-		int32 nCppObjStr, int32 nWeakTable, bool bCreateStreamBuff )
+		int32_t nCppObjStr, int32_t nWeakTable, bool bCreateStreamBuff )
 	{
 		if( pBuffer == nullptr )
 		{
@@ -1222,7 +1222,7 @@ namespace Gamma
 		lua_pushlightuserdata( pL, pBuffer );
 		lua_rawget( pL, nWeakTable );
 
-		int32 type = lua_type( pL, -1 );
+		int32_t type = lua_type( pL, -1 );
 		if( type != LUA_TNIL )
 		{
 			if( type == LUA_TTABLE )
@@ -1230,8 +1230,8 @@ namespace Gamma
 				SBufferInfo* pInfo = CLuaBuffer::GetBufferInfo( pL, -1 );
 				if( pInfo && pInfo->pBuffer == pBuffer )
 				{
-					pInfo->nDataSize = (uint32)INVALID_32BITID;
-					pInfo->nCapacity = (uint32)INVALID_32BITID;
+					pInfo->nDataSize = (uint32_t)INVALID_32BITID;
+					pInfo->nCapacity = (uint32_t)INVALID_32BITID;
 					pInfo->nPosition = 0;
 					return true;
 				}
@@ -1252,7 +1252,7 @@ namespace Gamma
 		lua_pop( pL, 1 );
 
 		lua_newtable( pL );// Obj
-		int32 nStkId = ToAbsStackIndex( pL, -1 );
+		int32_t nStkId = ToAbsStackIndex( pL, -1 );
 
 		lua_getglobal( pL, s_szLuaBufferClass );
 		if( lua_isnil( pL, -1 ) )//szClass必须被注册
@@ -1266,8 +1266,8 @@ namespace Gamma
 		// 设置数据到table上
 		lua_pushlightuserdata( pL, (void*)s_szLuaBufferInfo );
 		SBufferInfo* pInfo = (SBufferInfo*)lua_newuserdata( pL, sizeof( SBufferInfo ) );
-		pInfo->nDataSize = (uint32)INVALID_32BITID;
-		pInfo->nCapacity = (uint32)INVALID_32BITID;
+		pInfo->nDataSize = (uint32_t)INVALID_32BITID;
+		pInfo->nCapacity = (uint32_t)INVALID_32BITID;
 		pInfo->nPosition = 0;
 		pInfo->pBuffer = (tbyte*)pBuffer;
 		lua_rawset( pL, nStkId );

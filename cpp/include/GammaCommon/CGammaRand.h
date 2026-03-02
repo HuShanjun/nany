@@ -17,12 +17,12 @@ namespace Gamma
 {
     class CGammaRand
     {
-        int32 nRandSeed;
+        int32_t nRandSeed;
         bool bBoxmullerGen;
         float fBoxmullerNext;
 
     public:
-        CGammaRand( int32 nSeed )
+        CGammaRand( int32_t nSeed )
         {
             nRandSeed = nSeed;
             bBoxmullerGen = false;
@@ -30,36 +30,36 @@ namespace Gamma
 
         CGammaRand()
         {
-            nRandSeed = (int32)time(NULL);
+            nRandSeed = (int32_t)time(NULL);
             bBoxmullerGen = false;
         }
 
-        operator int32()
+        operator int32_t()
         {
             return ( ( ( nRandSeed = nRandSeed * 214013L + 2531011L) >> 16 ) & 0x7fff );
         }
 
-        int32 operator = ( int32 nSeed )
+        int32_t operator = ( int32_t nSeed )
         {
             return nRandSeed = nSeed;
 		}
 
-		int32 SetSeed( int32 nSeed ) 
+		int32_t SetSeed( int32_t nSeed ) 
 		{
 			return nRandSeed = nSeed;
 		}
 
-        int32 GetSeed() const
+        int32_t GetSeed() const
         {
             return nRandSeed;
 		}
 
-		int32 GetRand()
+		int32_t GetRand()
 		{
-			return (int32)( *this );
+			return (int32_t)( *this );
 		}
 
-        bool Percent(int32 Pct)
+        bool Percent(int32_t Pct)
         {
             return GetRand(0.0f, 1.0f) * 100 < Pct;
         }
@@ -95,11 +95,11 @@ namespace Gamma
 		}
 
 		template<typename T>
-		void Shuffle( T* pElems, uint32 nElems )
+		void Shuffle( T* pElems, uint32_t nElems )
 		{
-			for( uint32 i = 0; i < nElems; i++ )
+			for( uint32_t i = 0; i < nElems; i++ )
 			{
-				uint32 r = GetRand<uint32>( i, nElems );
+				uint32_t r = GetRand<uint32_t>( i, nElems );
 				if( r == i )
 					continue;
 				T temp = pElems[i];
@@ -121,8 +121,8 @@ namespace Gamma
         static T RandEx( const T& Min, const T& Max )
         { 
             static CGammaRand sGlob;
-            int32 nFirst = sGlob;
-            int32 nSecond = sGlob;
+            int32_t nFirst = sGlob;
+            int32_t nSecond = sGlob;
             double f = (nFirst<<15)|nSecond;
             return (T)( f*( Max - Min )/0x40000000 + Min ); 
         }

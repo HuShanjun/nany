@@ -322,7 +322,7 @@ namespace Gamma
         const COrientBoundingBox& Transform( const CMatrix& matWorld );
 
         const CVector3f* GetCorners() const { return m_vCorners; }
-        const CVector3f& GetCorner( uint32 nIndex ) const { return m_vCorners[nIndex]; }
+        const CVector3f& GetCorner( uint32_t nIndex ) const { return m_vCorners[nIndex]; }
 
         const CAxisAlignBoudingBox& GetAABB() const { return m_AABB; }
 
@@ -331,7 +331,7 @@ namespace Gamma
         const CVector3f& GetCenter() const { return m_vCenter; }
         const CVector3f& GetScale() const { return m_vScale; }
 
-        const CPlane& GetFace( uint32 nFaceIndex ) const { return m_faces[nFaceIndex]; }
+        const CPlane& GetFace( uint32_t nFaceIndex ) const { return m_faces[nFaceIndex]; }
         bool Contain( const CVector3f& vPoint ) const;
         bool Intersect( const CVector3f& vStart, const CVector3f& vEnd, std::vector<CVector3f>* pvIntersects = NULL ) const;
 

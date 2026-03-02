@@ -58,15 +58,15 @@ namespace Gamma
 
 #define GlobalTypeTemplateArgs( Template, ClassPointerType, ClassValueType ) \
 		&Template<char>::GetInst(), \
-		&Template<int8>::GetInst(), \
-		&Template<int16>::GetInst(), \
-		&Template<int32>::GetInst(), \
-		&Template<int64>::GetInst(), \
+		&Template<int8_t>::GetInst(), \
+		&Template<int16_t>::GetInst(), \
+		&Template<int32_t>::GetInst(), \
+		&Template<int64_t>::GetInst(), \
 		&Template<long>::GetInst(), \
-		&Template<uint8>::GetInst(), \
-		&Template<uint16>::GetInst(), \
-		&Template<uint32>::GetInst(), \
-		&Template<uint64>::GetInst(), \
+		&Template<uint8_t>::GetInst(), \
+		&Template<uint16_t>::GetInst(), \
+		&Template<uint32_t>::GetInst(), \
+		&Template<uint64_t>::GetInst(), \
 		&Template<ulong>::GetInst(), \
 		&Template<wchar_t>::GetInst(), \
 		&Template<bool>::GetInst(), \

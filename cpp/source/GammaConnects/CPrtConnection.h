@@ -22,21 +22,21 @@ namespace Gamma
 	class CConnectionMgr;
 	class CPrtConnection
 		: public CConnection
-		, public TDispatch<CPrtConnection, uint8>
+		, public TDispatch<CPrtConnection, uint8_t>
 	{
 		ikcpcb*					m_pKCP;
-		uint32					m_nNextKcpUpdateTime;
+		uint32_t					m_nNextKcpUpdateTime;
 		string					m_strKCPRecvBuffer;
-		uint32					m_nKCPBufferSize; 
+		uint32_t					m_nKCPBufferSize; 
 		string					m_strKCPSendBuffer;
-		uint32					m_nPreUpdateTime;
+		uint32_t					m_nPreUpdateTime;
 
-		uint32					m_nRecvCount;
-		uint32					m_nSendCount;
+		uint32_t					m_nRecvCount;
+		uint32_t					m_nSendCount;
 
-		int64					m_nPreSendTime;
-		uint32					m_nPingDelay;
-		uint32					m_nHeartBeatInterval;
+		int64_t					m_nPreSendTime;
+		uint32_t					m_nPingDelay;
+		uint32_t					m_nHeartBeatInterval;
 
 		void					SendHeartBeatMsg();
 
@@ -51,7 +51,7 @@ namespace Gamma
 		void					OnCheckTimeOut();
 		void					OnHeartBeatStop();
 
-		const void*				AligenBuffer( const void* pBuffer, uint32 nLen );
+		const void*				AligenBuffer( const void* pBuffer, uint32_t nLen );
 		void					SendBuffer( bool bReliable, const void* pCmd, size_t nSize );
 
 		template<class T> void	OnNetMsg( const T* pCmd, size_t nSize );
@@ -63,14 +63,14 @@ namespace Gamma
 
 		static void				RegisterMsgHandler();
 		MsgCheckFun_t			GetCheckFun( size_t nIndex );
-		uint32					GetPingDelay() const;
-		void					SetHeartBeatInterval( uint32 nSeconds );
-		uint32					GetHeartBeatInterval() { return m_nHeartBeatInterval; }
+		uint32_t					GetPingDelay() const;
+		void					SetHeartBeatInterval( uint32_t nSeconds );
+		uint32_t					GetHeartBeatInterval() { return m_nHeartBeatInterval; }
 
-		virtual void			SendShellMsg( bool bReliable, const SSendBuf aryBuffer[], uint32 nBufferCount );
+		virtual void			SendShellMsg( bool bReliable, const SSendBuf aryBuffer[], uint32_t nBufferCount );
 	};
 
-	inline const void* CPrtConnection::AligenBuffer( const void* pBuffer, uint32 nLen )
+	inline const void* CPrtConnection::AligenBuffer( const void* pBuffer, uint32_t nLen )
 	{
 #if( defined _ANDROID || defined _IOS )
 		if( m_szAligenBuf.size() < nLen )

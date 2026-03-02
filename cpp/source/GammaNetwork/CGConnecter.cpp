@@ -69,7 +69,7 @@ namespace Gamma
 			return;
 		}
 
-		uint16 nPort = m_RemoteAddress.GetPort();
+		uint16_t nPort = m_RemoteAddress.GetPort();
 		bool bUdp = GetConnectType() == eConnecterType_UDP;
 		const UAddressInfo* pInfo = pAddrResolution->GetAddressBuff( bUdp );
 		if( !pInfo )
@@ -83,7 +83,7 @@ namespace Gamma
 			( (sockaddr_in*)&Info.IPv4 )->sin_port = htons( (u_short)nPort );
 		else if( Info.IPv6.sin6_family == AF_INET6 )
 			( (sockaddr_in6*)&Info.IPv6 )->sin6_port = htons( (u_short)nPort );
-		uint32 nBufferSize = Info.IPv4.sin_family == AF_INET ?
+		uint32_t nBufferSize = Info.IPv4.sin_family == AF_INET ?
 			sizeof( sockaddr_in ) : sizeof( sockaddr_in6 );
 
 		m_RemoteAddress = MakeAddress( (sockaddr*)&Info, nBufferSize );
@@ -156,11 +156,11 @@ namespace Gamma
 		m_RemoteAddress = Address;
 	}
 
-	void CGConnecter::OnEvent( bool bError, const tbyte* pData, uint32 nSize )
+	void CGConnecter::OnEvent( bool bError, const tbyte* pData, uint32_t nSize )
 	{
 		if( IsConnecting() )
 		{
-			int64 nCurTime = 0;
+			int64_t nCurTime = 0;
 			if( m_nFirstEvenTime == 0 )
 				m_nFirstEvenTime = nCurTime = GetNatureTime();
 
@@ -223,7 +223,7 @@ namespace Gamma
 		m_RecvBuf.Pop( nPopSize );
 	}
 
-	void CGConnecterTCP::RecvData( const tbyte* pData, uint32 nSize )
+	void CGConnecterTCP::RecvData( const tbyte* pData, uint32_t nSize )
 	{
 		GammaAst( pData && nSize );
 		size_t nLeftSize = m_RecvBuf.GetLeftSize();
@@ -248,7 +248,7 @@ namespace Gamma
 	{
 	}
 
-	void CGConnecterUDP::RecvData( const tbyte* pData, uint32 nSize )
+	void CGConnecterUDP::RecvData( const tbyte* pData, uint32_t nSize )
 	{
 		if( !m_pHandler )
 			return;

@@ -63,14 +63,14 @@ namespace Gamma
 		CCheckMemoryExecutable()
 		{
 			FILE* fp;
-			uint32 nPID = (uint32)getpid();
+			uint32_t nPID = (uint32_t)getpid();
 			char szBuffer[2048];
 			gammasstream( szBuffer ) << "/proc/" << nPID << "/maps";
 			if( nullptr != ( fp = fopen( szBuffer, "r" ) ) )
 			{
 				while ( fgets( szBuffer, 2048, fp ) )
 				{
-					uint32 nIndex = 0;
+					uint32_t nIndex = 0;
 					const char* szStart = szBuffer;
 					while( nIndex < 2048 && szBuffer[nIndex] != '-' )
 						nIndex++;
@@ -105,14 +105,14 @@ namespace Gamma
 
 	SFunctionTable::SFunctionTable()
 	{
-		for( int32 i = 0; i < MAX_VTABLE_SIZE; i++ )
+		for( int32_t i = 0; i < MAX_VTABLE_SIZE; i++ )
 			m_pFun[i] = (void*)&NullFunCall;
 	}
 
-	int32 SFunctionTable::GetFunctionCount()
+	int32_t SFunctionTable::GetFunctionCount()
 	{        
 		CCheckMemoryExecutable Checker;
-		for( int32 n = 0; n < MAX_VTABLE_SIZE; n++ )
+		for( int32_t n = 0; n < MAX_VTABLE_SIZE; n++ )
 			if( !Checker.IsExecutable( m_pFun[n] ) )
 				return n;
 		return MAX_VTABLE_SIZE;
@@ -122,7 +122,7 @@ namespace Gamma
 	struct SFunctionContext : public SFunctionTable { jmp_buf JumpFlag; };
 
 	///< Build virtual table by template
-	template<uint32 nStart, uint32 nCount>
+	template<uint32_t nStart, uint32_t nCount>
 	class TBuildTable
 	{
 		enum
@@ -141,7 +141,7 @@ namespace Gamma
 		}
 	};
 
-	template<uint32 nStart>
+	template<uint32_t nStart>
 	class TBuildTable<nStart, 1>
 	{	
 		void GetIndex() 
@@ -160,15 +160,15 @@ namespace Gamma
 	};
 
 	///< Find function index
-	uint32 FindVirtualFunction( uint32 nSize,
+	uint32_t FindVirtualFunction( uint32_t nSize,
 		VirtualFunCallback funCallback, void* pContext )
 	{
 		static SFunctionTable FunctionTable;
 		static TBuildTable<0, MAX_VTABLE_SIZE> s_FunIndex( FunctionTable.m_pFun );
 
 		SFunctionContext FunContext;
-		uint32 nAllocSize, i, nIndex;
-		nAllocSize = AligenUp( (uint32)nSize, sizeof( void* ) );
+		uint32_t nAllocSize, i, nIndex;
+		nAllocSize = AligenUp( (uint32_t)nSize, sizeof( void* ) );
 		void** pObj = (void**)alloca( nAllocSize );
 		for( i = 0; i < nAllocSize/sizeof(void*); i++ )
 			pObj[i] = &FunContext;

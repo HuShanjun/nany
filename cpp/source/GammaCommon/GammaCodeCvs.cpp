@@ -16,7 +16,7 @@
 namespace Gamma
 {
 	template<class wchar_type>
-	inline const uint8* GetUcs2( wchar_type* pUcs, const uint8* pUtf8 )
+	inline const uint8_t* GetUcs2( wchar_type* pUcs, const uint8_t* pUtf8 )
 	{
 		if( ( pUtf8[0]&0x80 ) == 0 )
 		{
@@ -25,9 +25,9 @@ namespace Gamma
 			return pUtf8 + 1;
 		}
 
-		uint8 nZeroBit = 6;
+		uint8_t nZeroBit = 6;
 		// 0100 0000 --------> 0000 0010，查找第几位是0
-		for( uint8 nMask = 0x40; nZeroBit && ( nMask&pUtf8[0] ); nMask = nMask >> 1 )
+		for( uint8_t nMask = 0x40; nZeroBit && ( nMask&pUtf8[0] ); nMask = nMask >> 1 )
 			nZeroBit--;
 
 		// 第六位或者1～7位都为1的字符串不是utf8字符串
@@ -35,7 +35,7 @@ namespace Gamma
 			return NULL;
 
 		// 位数不够也不是utf8字符串
-		uint8 nLearderByte = *( pUtf8++ );
+		uint8_t nLearderByte = *( pUtf8++ );
 		size_t nFollowByte = 6 - nZeroBit;
 		for( size_t i = 0; i < nFollowByte; i++ )
 			if( ( pUtf8[i]&0xC0 ) != 0x80 )
@@ -51,57 +51,57 @@ namespace Gamma
 		return pUtf8 + nFollowByte;
 	}
 
-	const char* GetUnicode( uint32& cUnicode, const char* pUtf8 )
+	const char* GetUnicode( uint32_t& cUnicode, const char* pUtf8 )
 	{
-		return (const char*)GetUcs2( &cUnicode, (const uint8*)pUtf8 );
+		return (const char*)GetUcs2( &cUnicode, (const uint8_t*)pUtf8 );
 	}
 
-	bool IsUtf8( const char* pUtf8, uint32 nLen )
+	bool IsUtf8( const char* pUtf8, uint32_t nLen )
 	{
 		if( !pUtf8 )
 			return false;
 
-		const uint32 nMaxLen = (uint32)-1;
-		const uint8* pBuf = (const uint8*)pUtf8;
+		const uint32_t nMaxLen = (uint32_t)-1;
+		const uint8_t* pBuf = (const uint8_t*)pUtf8;
 		while( *pBuf && nLen )
 		{       
-			const uint8* pNextBuf = GetUcs2( (wchar_t*)NULL, pBuf );
+			const uint8_t* pNextBuf = GetUcs2( (wchar_t*)NULL, pBuf );
 			if( !pNextBuf )
 				return false;
-			nLen = ( nLen == nMaxLen ) ? nMaxLen : (uint32)( nLen - ( pNextBuf - pBuf ) );
+			nLen = ( nLen == nMaxLen ) ? nMaxLen : (uint32_t)( nLen - ( pNextBuf - pBuf ) );
 			pBuf = pNextBuf;
 		}
 
 		return true;		
 	}
 	
-	int32 GetCharacterCount( const char* pUtf8, uint32 nLen )
+	int32_t GetCharacterCount( const char* pUtf8, uint32_t nLen )
 	{
 		if( !pUtf8 )
 			return 0;
-		uint32 nPos = 0;
-		for( const uint8* pBuf = (const uint8*)pUtf8; *pBuf && nPos < nLen; nPos++ )
+		uint32_t nPos = 0;
+		for( const uint8_t* pBuf = (const uint8_t*)pUtf8; *pBuf && nPos < nLen; nPos++ )
 			if( ( pBuf = GetUcs2( (wchar_t*)NULL, pBuf ) ) == NULL )
 				return -1;
-		return (int32)nPos;
+		return (int32_t)nPos;
 	}
 
-	uint32 Utf8ToUcs( wchar_t* pUcs, uint32 nSize, const char* pUtf8, uint32 nLen )
+	uint32_t Utf8ToUcs( wchar_t* pUcs, uint32_t nSize, const char* pUtf8, uint32_t nLen )
 	{    
 		if( !pUtf8 )
 			return 0;
 
-		const uint32 nMaxLen = (uint32)-1;
-		uint32 nPos = 0;
-		for( const uint8* pBuf = (const uint8*)pUtf8; *pBuf && nLen; nPos++ )
+		const uint32_t nMaxLen = (uint32_t)-1;
+		uint32_t nPos = 0;
+		for( const uint8_t* pBuf = (const uint8_t*)pUtf8; *pBuf && nLen; nPos++ )
 		{
 			if( pUcs && nPos >= nSize )
 				break;
 
-			const uint8* pNextBuf = GetUcs2( pUcs ? pUcs + nPos : NULL, pBuf );
+			const uint8_t* pNextBuf = GetUcs2( pUcs ? pUcs + nPos : NULL, pBuf );
 			if( !pNextBuf )
 				break;
-			nLen = ( nLen == nMaxLen ) ? nMaxLen : (uint32)( nLen - ( pNextBuf - pBuf ) );
+			nLen = ( nLen == nMaxLen ) ? nMaxLen : (uint32_t)( nLen - ( pNextBuf - pBuf ) );
 			pBuf = pNextBuf;
 		}
 
@@ -111,22 +111,22 @@ namespace Gamma
 		return nPos;
 	}
 
-	uint32 Utf8ToUcs2( uint16* pUcs, uint32 nSize, const char* pUtf8, uint32 nLen /*= -1 */ )
+	uint32_t Utf8ToUcs2( uint16_t* pUcs, uint32_t nSize, const char* pUtf8, uint32_t nLen /*= -1 */ )
 	{
 		if( !pUtf8 )
 			return 0;
 
-		const uint32 nMaxLen = (uint32)-1;
-		uint32 nPos = 0;
-		for( const uint8* pBuf = (const uint8*)pUtf8; *pBuf && nLen; nPos++ )
+		const uint32_t nMaxLen = (uint32_t)-1;
+		uint32_t nPos = 0;
+		for( const uint8_t* pBuf = (const uint8_t*)pUtf8; *pBuf && nLen; nPos++ )
 		{
 			if( pUcs && nPos >= nSize )
 				break;
 
-			const uint8* pNextBuf = GetUcs2( pUcs ? pUcs + nPos : NULL, pBuf );
+			const uint8_t* pNextBuf = GetUcs2( pUcs ? pUcs + nPos : NULL, pBuf );
 			if( !pNextBuf )
 				break;
-			nLen = ( nLen == nMaxLen ) ? nMaxLen : (uint32)( nLen - ( pNextBuf - pBuf ) );
+			nLen = ( nLen == nMaxLen ) ? nMaxLen : (uint32_t)( nLen - ( pNextBuf - pBuf ) );
 			pBuf = pNextBuf;
 		}
 
@@ -137,16 +137,16 @@ namespace Gamma
 	}
 
 	template<typename wchar_type>
-	uint32 TUcsToUtf8( char* pUtf8, uint32 sizeBuf, const wchar_type* pUnicode, uint32 nLen )
+	uint32_t TUcsToUtf8( char* pUtf8, uint32_t sizeBuf, const wchar_type* pUnicode, uint32_t nLen )
 	{
 		if( !pUnicode )
 			return 0;
 
-		uint32 nDesPos = 0;
-		uint32 nSrcPos = 0;
+		uint32_t nDesPos = 0;
+		uint32_t nSrcPos = 0;
 		while( nSrcPos < nLen && pUnicode[nSrcPos] )
 		{
-			uint32 cUnicode = pUnicode[nSrcPos++];
+			uint32_t cUnicode = pUnicode[nSrcPos++];
 			if( cUnicode < 0x00000080 )
 			{
 				if( pUtf8 )
@@ -230,23 +230,23 @@ namespace Gamma
 		return nDesPos;
 	}
 	
-	uint32 UcsToUtf8( char* pUtf8, uint32 sizeBuf, const wchar_t* pUnicode, uint32 nLen )
+	uint32_t UcsToUtf8( char* pUtf8, uint32_t sizeBuf, const wchar_t* pUnicode, uint32_t nLen )
 	{
 		return TUcsToUtf8( pUtf8, sizeBuf, pUnicode, nLen );
 	}
 
-	uint32 Ucs2ToUtf8( char* pUtf8, uint32 sizeBuf, const uint16* pUnicode, uint32 nLen )
+	uint32_t Ucs2ToUtf8( char* pUtf8, uint32_t sizeBuf, const uint16_t* pUnicode, uint32_t nLen )
 	{
 		return TUcsToUtf8( pUtf8, sizeBuf, pUnicode, nLen );
 	}
 
-	uint32 Uint82Base16( const uint8* pUint8, char* pBase16, uint32 sizeBuf )
+	uint32_t Uint82Base16( const uint8_t* pUint8, char* pBase16, uint32_t sizeBuf )
 	{
 		if( !pUint8 || !pBase16 )
 			return 0;
 
-		uint32 nPos = 0;
-		for( uint8* pBuf = (uint8*)pUint8; *pBuf; nPos++ )
+		uint32_t nPos = 0;
+		for( uint8_t* pBuf = (uint8_t*)pUint8; *pBuf; nPos++ )
 		{
 			if(pBase16)
 			{
@@ -264,14 +264,14 @@ namespace Gamma
 		return 2 * nPos + 1;
 	}
 
-	GAMMA_COMMON_API uint32 URLEncode( const uint8* pUint8, char* pEncode, uint32 sizeBuf )
+	GAMMA_COMMON_API uint32_t URLEncode( const uint8_t* pUint8, char* pEncode, uint32_t sizeBuf )
 	{
-		uint32 i = 0;
+		uint32_t i = 0;
 		static unsigned char hexchars[] = "0123456789ABCDEF";
 
 		while( *pUint8 )
 		{
-			uint8 c = *pUint8++;
+			uint8_t c = *pUint8++;
 
 			if( c < 0x80 )
 			{
@@ -293,24 +293,24 @@ namespace Gamma
 		return i;
 	}
 
-	GAMMA_COMMON_API uint32 URLDecode( const char* pEncode, uint8* pUint8, uint32 sizeBuf )
+	GAMMA_COMMON_API uint32_t URLDecode( const char* pEncode, uint8_t* pUint8, uint32_t sizeBuf )
 	{
-		uint32 i = 0;
+		uint32_t i = 0;
 
 		while( *pEncode && i + 1 < sizeBuf )
 		{
-			uint8 c = *pEncode++;
+			uint8_t c = *pEncode++;
 
 			if( c == '+' )
-				pUint8[i++] = (uint8)' ';
+				pUint8[i++] = (uint8_t)' ';
 			else if( c == '%' && IsHexNumber( pEncode[0] ) && IsHexNumber( pEncode[1] ) )
             {
-                uint32 c1 = ValueFromHexNumber( *pEncode++ ) << 4;
-                uint32 c2 = ValueFromHexNumber( *pEncode++ );
-				pUint8[i++] = (uint8)( c1|c2 );
+                uint32_t c1 = ValueFromHexNumber( *pEncode++ ) << 4;
+                uint32_t c2 = ValueFromHexNumber( *pEncode++ );
+				pUint8[i++] = (uint8_t)( c1|c2 );
             }
 			else
-				pUint8[i++] = (uint8)c;
+				pUint8[i++] = (uint8_t)c;
 		}
 		if (*pEncode)
 			pUint8[i++] = *pEncode;
@@ -318,16 +318,16 @@ namespace Gamma
 		return i;
 	}
 
-	int32 Base64Decode( const int8* map64, uint32 nMapSize, char cMin, char cEnd, 
-		void* pDesBuffer, uint32 nOutLen, const char* pBase64Buffer, uint32 nSrcLen )
+	int32_t Base64Decode( const int8_t* map64, uint32_t nMapSize, char cMin, char cEnd, 
+		void* pDesBuffer, uint32_t nOutLen, const char* pBase64Buffer, uint32_t nSrcLen )
 	{
 		if( nSrcLen == 0 )
 			return -1;
 		if( nSrcLen == INVALID_32BITID )
-			nSrcLen = (uint32)strlen( pBase64Buffer );
+			nSrcLen = (uint32_t)strlen( pBase64Buffer );
 		if( nSrcLen&0x3 )
 			return -1;
-		uint32 nNeedOutLen = ( nSrcLen >> 2 )*3;
+		uint32_t nNeedOutLen = ( nSrcLen >> 2 )*3;
 		if( pBase64Buffer[nSrcLen - 1] == cEnd )
 			nNeedOutLen--;
 		if( pBase64Buffer[nSrcLen - 2] == cEnd )
@@ -336,56 +336,56 @@ namespace Gamma
 		if( nOutLen < nNeedOutLen )
 			return -1;
 
-		uint8* pDes = (uint8*)pDesBuffer;
-		uint32 nDes = 0;
+		uint8_t* pDes = (uint8_t*)pDesBuffer;
+		uint32_t nDes = 0;
 
-		for( uint32 i = 0; i < nSrcLen; i += 4 )
+		for( uint32_t i = 0; i < nSrcLen; i += 4 )
 		{
 			const char* pSrc = pBase64Buffer + i;
-			uint32 nValue0 = pSrc[0] - cMin;
+			uint32_t nValue0 = pSrc[0] - cMin;
 			if( nValue0 >= nMapSize || map64[nValue0] == -1 )
 				return -1;
-			uint32 nValue1 = pSrc[1] - cMin;
+			uint32_t nValue1 = pSrc[1] - cMin;
 			if( nValue1 >= nMapSize || map64[nValue1] == -1 )
 				return -1;
 			
-			int32 nValue = ( map64[nValue0] << 6 )|map64[nValue1];
-			pDes[nDes++] = (uint8)( nValue >> 4 );
+			int32_t nValue = ( map64[nValue0] << 6 )|map64[nValue1];
+			pDes[nDes++] = (uint8_t)( nValue >> 4 );
 
 			if( pSrc[2] == cEnd )
 				break;
-			uint32 nValue2 = pSrc[2] - cMin;
+			uint32_t nValue2 = pSrc[2] - cMin;
 			if( nValue2 >= nMapSize || map64[nValue2] == -1 )
 				return -1;
 
 			nValue = ( ( nValue&0xf ) << 6 )|map64[nValue2];
-			pDes[nDes++] = (uint8)( nValue >> 2 );
+			pDes[nDes++] = (uint8_t)( nValue >> 2 );
 
 			if( pSrc[3] == cEnd )
 				break;
-			uint32 nValue3 = pSrc[3] - cMin;
+			uint32_t nValue3 = pSrc[3] - cMin;
 			if( nValue3 >= nMapSize || map64[nValue3] == -1 )
 				return -1;
 
 			nValue = ( ( nValue&0x3 ) << 6 )|map64[nValue3];
-			pDes[nDes++] = (uint8)nValue;
+			pDes[nDes++] = (uint8_t)nValue;
 		}
 		return nDes;
 	}
 
-	int32 Base64Encode( const char* aryTable64, char cEnd, 
-		char* pBase64Buffer, uint32 nOutLen, const void* pSrcBuffer, uint32 nSrcLen )
+	int32_t Base64Encode( const char* aryTable64, char cEnd, 
+		char* pBase64Buffer, uint32_t nOutLen, const void* pSrcBuffer, uint32_t nSrcLen )
 	{
-		if( nOutLen < (uint32)AligenUp( nSrcLen, 3 )*4/3 )
+		if( nOutLen < (uint32_t)AligenUp( nSrcLen, 3 )*4/3 )
 			return -1;
 
-		const uint8* pSrc = (const uint8*)pSrcBuffer;
-		uint32 nSrc = 0;
-		uint32 nDes = 0;
+		const uint8_t* pSrc = (const uint8_t*)pSrcBuffer;
+		uint32_t nSrc = 0;
+		uint32_t nDes = 0;
 		while( nSrc < nSrcLen )
 		{
 			// 剩余的位在下一个编码的高位
-			uint32 c = pSrc[nSrc++];
+			uint32_t c = pSrc[nSrc++];
 			pBase64Buffer[nDes++] = aryTable64[c>>2];
 			c = c & 0x3;
 
@@ -415,15 +415,15 @@ namespace Gamma
 			}
 		}
 
-		if( (int32)nDes < (int32)nOutLen )
+		if( (int32_t)nDes < (int32_t)nOutLen )
 			pBase64Buffer[nDes] = 0;
 		return nDes;
 	}
 
-	GAMMA_COMMON_API int32 Base64Decode( 
-		void* pDesBuffer, uint32 nOutLen, const char* pBase64Buffer, uint32 nSrcLen )
+	GAMMA_COMMON_API int32_t Base64Decode( 
+		void* pDesBuffer, uint32_t nOutLen, const char* pBase64Buffer, uint32_t nSrcLen )
 	{
-		static int8 map64[] =
+		static int8_t map64[] =
 		{
 			62, -1, -1, -1, 63,	52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 
 			-1, -1, -1, -1, -1, -1,	-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
@@ -436,8 +436,8 @@ namespace Gamma
 			'+', '=', pDesBuffer, nOutLen, pBase64Buffer, nSrcLen );
 	}
 
-	GAMMA_COMMON_API int32 Base64Encode( 
-		char* pBase64Buffer, uint32 nOutLen, const void* pSrcBuffer, uint32 nSrcLen )
+	GAMMA_COMMON_API int32_t Base64Encode( 
+		char* pBase64Buffer, uint32_t nOutLen, const void* pSrcBuffer, uint32_t nSrcLen )
 	{
 		static char alphabet64[64] =
 		{
@@ -453,10 +453,10 @@ namespace Gamma
 		return Base64Encode( alphabet64, '=', pBase64Buffer, nOutLen, pSrcBuffer, nSrcLen );
 	}
 
-	GAMMA_COMMON_API int32 Base64UrlDecode( 
-		void* pDesBuffer, uint32 nOutLen, const char* pBase64Buffer, uint32 nSrcLen )
+	GAMMA_COMMON_API int32_t Base64UrlDecode( 
+		void* pDesBuffer, uint32_t nOutLen, const char* pBase64Buffer, uint32_t nSrcLen )
 	{
-		static int8 map64[] =
+		static int8_t map64[] =
 		{
 			62, -1, -1, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, 
 			-1, -1, -1,	-1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 
@@ -469,8 +469,8 @@ namespace Gamma
 			'-', '.', pDesBuffer, nOutLen, pBase64Buffer, nSrcLen );
 	}
 
-	GAMMA_COMMON_API int32 Base64UrlEncode( 
-		char* pBase64Buffer, uint32 nOutLen, const void* pSrcBuffer, uint32 nSrcLen )
+	GAMMA_COMMON_API int32_t Base64UrlEncode( 
+		char* pBase64Buffer, uint32_t nOutLen, const void* pSrcBuffer, uint32_t nSrcLen )
 	{
 		static char alphabet64[64] =
 		{

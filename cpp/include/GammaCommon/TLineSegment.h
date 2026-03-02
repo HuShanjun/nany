@@ -28,10 +28,10 @@ namespace Gamma
 		inline T ClosetPointSegment( const TVector3<T>& vPoint, TVector3<T>* vOut );
 
 		// 根据坐标轴的一点得到线段上的点
-		inline TVector3<T> GetPosition( T v, int32 eAxis );
+		inline TVector3<T> GetPosition( T v, int32_t eAxis );
 
 		// 根据坐标轴的一点得到线段上的点到起点的距离
-		inline T GetDistFromStart( T v, int32 eAxis );
+		inline T GetDistFromStart( T v, int32_t eAxis );
 	};
 
 	/*!
@@ -50,14 +50,14 @@ namespace Gamma
 	}
 
 	// 根据坐标轴的一点得到线段上的点
-	template<class T> inline TVector3<T> TLineSegment<T>::GetPosition( T v, int32 eAxis )
+	template<class T> inline TVector3<T> TLineSegment<T>::GetPosition( T v, int32_t eAxis )
 	{
 		GammaAst( m_vDirection.v[eAxis] != 0 );
 		return m_vStartPoint + m_vDirection*( ( v - m_vStartPoint.v[eAxis] )/m_vDirection.v[eAxis] );
 	}
 
 	// 根据坐标轴的一点得到线段上的点到起点的距离
-	template<class T> inline T TLineSegment<T>::GetDistFromStart( T v, int32 eAxis )
+	template<class T> inline T TLineSegment<T>::GetDistFromStart( T v, int32_t eAxis )
 	{
 		GammaAst( m_vDirection.v[eAxis] != 0 );
 		return m_vDirection.Len()*( ( v - m_vStartPoint.v[eAxis] )/m_vDirection.v[eAxis] );

@@ -9,9 +9,9 @@ namespace Gamma
 	//======================================================================
 	// Process
 	//======================================================================
-	uint32 GammaGetCurrentProcessID()
+	uint32_t GammaGetCurrentProcessID()
 	{
-		return (uint32)getpid();
+		return (uint32_t)getpid();
 	}
 
 	GAMMA_COMMON_API void GammaGetCurrentProcessPath( char* szBuffer, size_t nCount )
@@ -19,26 +19,26 @@ namespace Gamma
 #ifdef _WIN32
 		wchar_t szTemp[2048] = { 0 };
 		::GetModuleFileNameW( NULL, szTemp, 2048 );
-		UcsToUtf8( szBuffer, (uint32)nCount, szTemp );
+		UcsToUtf8( szBuffer, (uint32_t)nCount, szTemp );
 #else
 		memset( szBuffer, 0, nCount );
 		readlink( "/proc/self/exe", szBuffer, nCount );
 #endif
 	}
 	
-	bool GammaCheckProcessExist( uint32 nProcessID )
+	bool GammaCheckProcessExist( uint32_t nProcessID )
 	{
 #ifdef _WIN32
 		HANDLE hProcess = ::OpenProcess( PROCESS_QUERY_INFORMATION, false, nProcessID );
 		::CloseHandle( hProcess );
 		return NULL != hProcess;
 #else
-		int32 nRes = kill( nProcessID, 0 );
+		int32_t nRes = kill( nProcessID, 0 );
 		return !nRes || errno != ESRCH;
 #endif
 	}
 
-	uint64 GammaGetProcessMemCost()
+	uint64_t GammaGetProcessMemCost()
 	{
 #ifdef _WIN32
 		MEMORYSTATUS stat;
@@ -57,7 +57,7 @@ namespace Gamma
     //======================================================================
     // Sleep
     //======================================================================
-    void GammaSleep( uint32 nMiliSecond )
+    void GammaSleep( uint32_t nMiliSecond )
     {
 #ifdef _WIN32
         ::Sleep( nMiliSecond );
@@ -73,7 +73,7 @@ namespace Gamma
     //======================================================================
     // Gamma Thread
     //======================================================================
-    bool GammaCreateThread( HTHREAD* phThread, uint32 nStackSize, THREADPROC pThreadFun, void* pParam )
+    bool GammaCreateThread( HTHREAD* phThread, uint32_t nStackSize, THREADPROC pThreadFun, void* pParam )
     {
         if ( pThreadFun == NULL || phThread == NULL )
             return false;
@@ -96,7 +96,7 @@ namespace Gamma
 #endif
     }
 
-    void GammaExitThread( uint32 uExitCode )
+    void GammaExitThread( uint32_t uExitCode )
     {
 #ifdef _WIN32
         ::_endthreadex(uExitCode);
@@ -105,7 +105,7 @@ namespace Gamma
 #endif
     }
 
-    bool GammaTerminateThread( HTHREAD hThread, uint32 uExitCode )
+    bool GammaTerminateThread( HTHREAD hThread, uint32_t uExitCode )
     {
 #ifdef _WIN32
 		return ::TerminateThread( hThread, uExitCode ) != 0;
@@ -114,16 +114,16 @@ namespace Gamma
 #endif
     }
 
-	uint64 GammmaGetCurrentThreadID()
+	uint64_t GammmaGetCurrentThreadID()
 	{
 #ifdef _WIN32
 		return ::GetCurrentThreadId();
 #else
-		return (uint64)(ptrdiff_t)pthread_self();
+		return (uint64_t)(ptrdiff_t)pthread_self();
 #endif
 	}
 
-	bool GammaIsCurrentThread( uint64 nThreadID )
+	bool GammaIsCurrentThread( uint64_t nThreadID )
 	{
 #ifdef _WIN32
 		return ::GetCurrentThreadId() == nThreadID;
@@ -151,7 +151,7 @@ namespace Gamma
 #endif
     }
 
-    bool GammaSetThreadPriority( HTHREAD hThread, int32 nPriority )
+    bool GammaSetThreadPriority( HTHREAD hThread, int32_t nPriority )
     {
 #ifdef _WIN32
 		return ::SetThreadPriority( hThread, nPriority ) != 0;
@@ -247,7 +247,7 @@ namespace Gamma
         return true;
     }
     
-    int32 GammaGetSemaphore( HSEMAPHORE hSemaphore, unsigned nMilliSecs )
+    int32_t GammaGetSemaphore( HSEMAPHORE hSemaphore, unsigned nMilliSecs )
     {
 #ifdef _WIN32
         switch( WaitForSingleObjectEx( hSemaphore, nMilliSecs, FALSE ) )
@@ -260,7 +260,7 @@ namespace Gamma
 			return -1;
 		}
 #elif defined _IOS
-		int64 nTime = (int64)nMilliSecs * NSEC_PER_MSEC;
+		int64_t nTime = (int64_t)nMilliSecs * NSEC_PER_MSEC;
 		dispatch_time_t waittime = dispatch_time( DISPATCH_TIME_NOW, nTime );
         return dispatch_semaphore_wait( (dispatch_semaphore_t)hSemaphore, waittime ) == 0;
 #else

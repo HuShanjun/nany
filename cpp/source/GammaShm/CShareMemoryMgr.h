@@ -20,16 +20,16 @@ namespace Gamma
 	{
 		DEFAULT_METHOD( CShareMemoryMgr );
 	public:
-		CShareMemoryMgr( uint16 nGasID, SShareCommonHead* pSrc,
+		CShareMemoryMgr( uint16_t nGasID, SShareCommonHead* pSrc,
 			const char* szFileName, IShareMemoryHandler* pHandler,
-			uint32 nCommitInterval, bool bKeepShmFile, uint32 nFlushInterval );
+			uint32_t nCommitInterval, bool bKeepShmFile, uint32_t nFlushInterval );
 		virtual ~CShareMemoryMgr(void);
 
 		SShareCommonHead*		GetShareMemory();
 		void					Start();
 		bool					IsReady();
 		void					Check();
-		void					SetCheckInterval( uint32 nInterval );
+		void					SetCheckInterval( uint32_t nInterval );
 		void					NotifyAppClose(){ m_bAppShutdown = true; };
 
 		void					OnRebootFinish( bool bFailed );
@@ -40,9 +40,9 @@ namespace Gamma
 		///< 数据成员
 	private:
 		ILog*	m_pThreadLog;
-		uint32	m_nSendCount;
-		uint32	m_nStopTime;
-		vector<uint32> m_vecNextQueryIndex;
+		uint32_t	m_nSendCount;
+		uint32_t	m_nStopTime;
+		vector<uint32_t> m_vecNextQueryIndex;
 
 		enum ECheckState
 		{ 
@@ -60,12 +60,12 @@ namespace Gamma
 		};
 
 		IShareMemoryHandler*	m_pHandler;
-		uint16					m_nGasID;
+		uint16_t					m_nGasID;
 		bool					m_bKeepShmFile;
-		uint32					m_nCommitInterval;
-		uint32					m_nFlushInterval;
-		uint32					m_nCheckInterval;
-		int64					m_nPreCheckTime;
+		uint32_t					m_nCommitInterval;
+		uint32_t					m_nFlushInterval;
+		uint32_t					m_nCheckInterval;
+		int64_t					m_nPreCheckTime;
 
 		string					m_strShmFilePath;
 
@@ -82,9 +82,9 @@ namespace Gamma
 		// 处理中的数据
 		//================================================================
 		string					m_szDiffData;
-		vector<uint16>			m_vecDiffArrayIndex;
-		uint16					m_nArrayIndexCount;
-		uint32					m_nBlockCommitID;
+		vector<uint16_t>			m_vecDiffArrayIndex;
+		uint16_t					m_nArrayIndexCount;
+		uint32_t					m_nBlockCommitID;
 
 		vector<STrunkTypeData>	m_vecTrunkTypeData;
 
@@ -105,15 +105,15 @@ namespace Gamma
 		static void				RunSync( void* pParam );
 #endif
 
-		void					PollInfo( uint32 nTrunkType );
-		size_t					GetCountInCommit( uint32 nTrunkType, uint16 nGasID );
+		void					PollInfo( uint32_t nTrunkType );
+		size_t					GetCountInCommit( uint32_t nTrunkType, uint16_t nGasID );
 		bool					HasOtherGasData( );
 
-		CCommitMap&				GetCommitMap( uint32 nTrunkType );
-		void					FreeInfoOnEnd( uint32 nTrunkType );
+		CCommitMap&				GetCommitMap( uint32_t nTrunkType );
+		void					FreeInfoOnEnd( uint32_t nTrunkType );
 		bool					HasCommitID();
 
-		uint32					BuildDiff( SBlockInfo* pBlockInfo );
+		uint32_t					BuildDiff( SBlockInfo* pBlockInfo );
 
 		SChunckHead*			GetChunckHead(const SDBBlockInfo* pAnswer, bool bSucceeded, ECmdType eType );
 		void					ProcessRebootGas();
@@ -123,7 +123,7 @@ namespace Gamma
 
 		void					CheckShareMemoryState();
 		void					CheckResult();
-		void					SendCmd( ECmdType eQueryType, uint16 nGasID, int64 uuid,
+		void					SendCmd( ECmdType eQueryType, uint16_t nGasID, int64_t uuid,
 									const void* pData1, size_t nSize1, const void* pData2, size_t nSize2 );
 	};
 }

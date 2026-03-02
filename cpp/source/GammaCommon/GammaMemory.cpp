@@ -16,7 +16,7 @@ namespace Gamma
 	//--------------------------------------------------------------------------
 	// 操作系统相关
 	//--------------------------------------------------------------------------
-	uint32 GetVirtualPageSize()
+	uint32_t GetVirtualPageSize()
 	{
 #ifdef _WIN32
 		struct __ : public SYSTEM_INFO { __() { GetSystemInfo( this ); }; };
@@ -24,7 +24,7 @@ namespace Gamma
 #else
 		static size_t pagesize = (size_t)sysconf(_SC_PAGESIZE);
 #endif
-		return (uint32)pagesize;
+		return (uint32_t)pagesize;
 	}
 
 	void* ReserveMemoryPage( void* pAddress, size_t nSize )
@@ -56,7 +56,7 @@ namespace Gamma
 #endif
 	}
 
-	bool CommitMemoryPage( void* pAddress, size_t nSize, uint32 nProtectFlag )
+	bool CommitMemoryPage( void* pAddress, size_t nSize, uint32_t nProtectFlag )
 	{
 #ifdef _WIN32
 		if( nProtectFlag&VIRTUAL_PAGE_WRITE )
@@ -86,18 +86,18 @@ namespace Gamma
 
 		return bSuccess;
 #else
-		int32 nProtect = 0;
+		int32_t nProtect = 0;
 		if( nProtectFlag&VIRTUAL_PAGE_READ )
 			nProtect |= PROT_READ;
 		if( nProtectFlag&VIRTUAL_PAGE_WRITE )
 			nProtect |= PROT_WRITE;
 		if( nProtectFlag&VIRTUAL_PAGE_EXECUTE )
 			nProtect |= PROT_EXEC;
-		int32 nFlag = MAP_PRIVATE | MAP_FIXED | MAP_ANONYMOUS;
+		int32_t nFlag = MAP_PRIVATE | MAP_FIXED | MAP_ANONYMOUS;
 		void* pResult = mmap( pAddress, nSize, nProtect, nFlag, -1, 0 );
 		if( pResult == pAddress )
 			return true;
-		//int32 nError = errno;
+		//int32_t nError = errno;
 		return false;
 #endif // _WIN32
 	}
@@ -124,7 +124,7 @@ namespace Gamma
 		// could reserve it after we munmap it and even worse if that happened the mmap call would
 		// still work causing both mmap callers to think they mapped the memory.  Mac does have
 		// to release first but it can tell that the following reserve succeeded or not.
-		int32 nFlag = MAP_PRIVATE | MAP_FIXED | MAP_ANONYMOUS;
+		int32_t nFlag = MAP_PRIVATE | MAP_FIXED | MAP_ANONYMOUS;
 		return mmap( pAddress, nSize, PROT_NONE, nFlag, -1, 0 ) == pAddress;
 #endif // _WIN32
 	}
@@ -143,22 +143,22 @@ namespace Gamma
 		CMemoryMgr::Instance().Free( p );
 	}
 
-	int64 GetTotalAllocSize()
+	int64_t GetTotalAllocSize()
 	{
 		return CMemoryMgr::Instance().GetTotalAlloc();
 	}
 
-	int64 GetTotalMgrSize()
+	int64_t GetTotalMgrSize()
 	{
 		return CMemoryMgr::Instance().GetTotalMgrSize();
 	}
 
-	int64 GetFreeMgrSize()
+	int64_t GetFreeMgrSize()
 	{
 		return CMemoryMgr::Instance().GetFreeMgrSize();
 	}
 
-	uint32 GetAllocStack( uint32 nIndex, void**& pAddress, uint32& nAllocSize )
+	uint32_t GetAllocStack( uint32_t nIndex, void**& pAddress, uint32_t& nAllocSize )
 	{
 		return CMemoryMgr::Instance().GetAllocStack( nIndex, pAddress, nAllocSize );
 	}

@@ -12,13 +12,13 @@
 
 namespace Gamma
 {
-	template< int32 nSize, class IntType = uint32, bool bLittleEndian = true >
+	template< int32_t nSize, class IntType = uint32_t, bool bLittleEndian = true >
 	class TBitSet
 	{
 	public:
 		enum { nBufSize = ( nSize - 1 )/8 + 1 };
 
-		uint8 _Buf[ nBufSize ];
+		uint8_t _Buf[ nBufSize ];
 
 		void Reset()
 		{
@@ -28,12 +28,12 @@ namespace Gamma
 		// param1: 要获取位值的位置
 		// param2: 要获得多少位
 		// return: 返回值为获得多少位的数值
-		uint32 GetBit( uint32 pos, uint32 Num = 1 ) const
+		uint32_t GetBit( uint32_t pos, uint32_t Num = 1 ) const
 		{
 			if( bLittleEndian )
 			{
-				uint32 nBytePos = pos >> 3;
-				uint8 nBitOffset = uint8( pos&0x7 );
+				uint32_t nBytePos = pos >> 3;
+				uint8_t nBitOffset = uint8_t( pos&0x7 );
 				GammaAst( pos + Num <= nSize );
 
 				IntType n = _Buf[nBytePos++];
@@ -43,40 +43,40 @@ namespace Gamma
 			}
 			else
 			{
-				uint32 n = 0;
-				for( uint32 i = 0; i < Num; i++, pos++ )
+				uint32_t n = 0;
+				for( uint32_t i = 0; i < Num; i++, pos++ )
 				{
 					if( _Buf[ pos >> 3 ]&( 0x80 >> ( pos&0x07 ) ) )
 						n = ( n << 1 )|0x1;
 					else
 						n = n << 1;
 				}
-				return (uint32)n;
+				return (uint32_t)n;
 			}
 		}
 
 		// param1: 要设置位值的位置
 		// param2: 要设置的数据
 		// param3: 要设置多少位
-		void SetBit( uint32 pos, uint32 v, uint32 Num = 1 )
+		void SetBit( uint32_t pos, uint32_t v, uint32_t Num = 1 )
 		{
 			if( bLittleEndian )
 			{
-				uint32 nBytePos = pos >> 3;
-				int32 nBitOffset = pos&0x7;
+				uint32_t nBytePos = pos >> 3;
+				int32_t nBitOffset = pos&0x7;
 				GammaAst( pos + Num <= nSize );
 
 				IntType vv = IntType( v ) << nBitOffset;
 				IntType m = IntType( ( ( IntType( 1 ) << Num ) - 1 ) << ( pos&0x07 ) );
-				for( int32 i = -nBitOffset, j = 0; i < (int32)Num && nBytePos < nBufSize; 
+				for( int32_t i = -nBitOffset, j = 0; i < (int32_t)Num && nBytePos < nBufSize; 
 					i += 8, j += 8, m = m >> 8, vv = vv >> 8, nBytePos++ )
-					_Buf[nBytePos] = (uint8)( ( _Buf[nBytePos]&(~m ) )|( vv&m ) );
+					_Buf[nBytePos] = (uint8_t)( ( _Buf[nBytePos]&(~m ) )|( vv&m ) );
 			}
 			else
 			{
-				for( int32 i = Num - 1; i >= 0; i--, pos++ )
+				for( int32_t i = Num - 1; i >= 0; i--, pos++ )
 				{
-					uint8 n = (uint8)( 0x80 >> ( pos&0x07 ) );
+					uint8_t n = (uint8_t)( 0x80 >> ( pos&0x07 ) );
 					if( v&( 1 << i ) )
 						_Buf[ pos >> 3 ] |= n;
 					else

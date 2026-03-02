@@ -80,8 +80,8 @@ namespace Gamma
 		static const char*		ToAbsolutePath( const char* szSrcPath, char* szAbsolutePath, uint32_t nMaxSize );
 		static const wchar_t*	ToPhysicalPath( const wchar_t* szAbsolutePath, wchar_t* szPhysicalPath, uint32_t nMaxSize );
 		static const char*		ToPhysicalPath( const char* szAbsolutePath, char* szPhysicalPath, uint32_t nMaxSize );
-		static void				GetPathSpaceInfo( const wchar_t* szPath, uint64* pAvailableSize, uint64* pFreeSize, uint64* pTotalSize );
-		static void				GetPathSpaceInfo( const char* szPath, uint64* pAvailableSize, uint64* pFreeSize, uint64* pTotalSize );
+		static void				GetPathSpaceInfo( const wchar_t* szPath, uint64_t* pAvailableSize, uint64_t* pFreeSize, uint64_t* pTotalSize );
+		static void				GetPathSpaceInfo( const char* szPath, uint64_t* pAvailableSize, uint64_t* pFreeSize, uint64_t* pTotalSize );
 		static FTW_FLAG			GetFlag( const wchar_t* szPath );
 		static FTW_FLAG			GetFlag( const char* szPath );
 		

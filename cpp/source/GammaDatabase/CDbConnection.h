@@ -14,42 +14,42 @@ namespace Gamma
     {
         CDatabase*		m_pDatabase;
         void*			m_pTag;
-        uint32          m_nDBId;
+        uint32_t          m_nDBId;
 		ILog*			m_pLog;
-        CDbResult*		GetResult( int32 nQueryReturnCode );
+        CDbResult*		GetResult( int32_t nQueryReturnCode );
 
     public:
 		MYSQL*			m_pMySql;
-		uint32			m_nTotalStatement;
+		uint32_t			m_nTotalStatement;
 
-		CDbConnection(uint32 nDBId);
+		CDbConnection(uint32_t nDBId);
 		virtual ~CDbConnection();
 
-        uint32			GetDBId() { return m_nDBId; }
+        uint32_t			GetDBId() { return m_nDBId; }
 
-		std::string		Connect( CDatabase* pDatabase, const char* szHost, uint16 uPort,
+		std::string		Connect( CDatabase* pDatabase, const char* szHost, uint16_t uPort,
 							const char* szUser, const char* szPassword, const char* szDatabase, 
 							bool bFoundAsUpdateRow, bool bMultiStatements, bool bPingReconnect );
 		std::string		Connect( CDatabase* pDatabase, const char* szPipe, 
 							const char* szUser, const char* szPassword, const char* szDatabase, 
 							bool bFoundAsUpdateRow, bool bMultiStatements, bool bPingReconnect );
 
-        uint64          LastInsertId() const;
-        uint64          LastAffectedRowNum() const;
-		uint32			CheckMultiExecute() const;
-        uint32          EscapeString( char* szOut, const char* szIn, uint32 uInSize );
+        uint64_t          LastInsertId() const;
+        uint64_t          LastAffectedRowNum() const;
+		uint32_t			CheckMultiExecute() const;
+        uint32_t          EscapeString( char* szOut, const char* szIn, uint32_t uInSize );
         bool            Ping();
 
         IDbTextResult*  Execute( const char* szSqlBuffer );
-        IDbTextResult*  Execute( const char* szSqlBuffer, uint32 uSize );
-        IDbStatement*   CreateStatement( const char* szSqlBuffer, uint32 uSize );
+        IDbTextResult*  Execute( const char* szSqlBuffer, uint32_t uSize );
+        IDbStatement*   CreateStatement( const char* szSqlBuffer, uint32_t uSize );
 		IDbStatement*   CreateStatement( const char* szSqlBuffer );
-		IDbStatement*	CreateDynamicStatement( const char* szSqlBuffer, uint32 uSqlLength );
+		IDbStatement*	CreateDynamicStatement( const char* szSqlBuffer, uint32_t uSqlLength );
 		IDbStatement*	CreateDynamicStatement( const char* szSqlBuffer );
-		uint32			GetTotalStatement() const;
+		uint32_t			GetTotalStatement() const;
 
-		IDbTextResult*  ExecuteProcedure(const char* szSqlProcedureBuffer, uint32 uSize1,
-                            const char* szSqlResultBuffer, uint32 uSize2);
+		IDbTextResult*  ExecuteProcedure(const char* szSqlProcedureBuffer, uint32_t uSize1,
+                            const char* szSqlResultBuffer, uint32_t uSize2);
 
         
 		void			SetLog(ILog* pLog );
@@ -62,7 +62,7 @@ namespace Gamma
 		void			EndTran();
 		void			CancelTran();
 
-		int32			GetFoundRow();
+		int32_t			GetFoundRow();
     };
 }
 #endif

@@ -38,8 +38,8 @@ namespace Gamma
 		struct SFileFailed
 		{
 			SFileFailed() : m_nFailedTime( 0 ), m_nFailedCount( 0 ){}
-			uint32					m_nFailedTime;
-			uint32					m_nFailedCount;
+			uint32_t					m_nFailedTime;
+			uint32_t					m_nFailedCount;
 		};
 
 		CReadFileThread*			m_vecReadThreadList[READ_THREAD_COUNT];
@@ -59,12 +59,12 @@ namespace Gamma
 		bool						m_bEnableFileProgress;
 
 		CPackageMgr					m_FilePackageManager;
-		uint32						m_objectCountInHistory;
-		uint32						m_nWaitingObjectCount;
+		uint32_t						m_objectCountInHistory;
+		uint32_t						m_nWaitingObjectCount;
 		CResObjectList				m_arrSerialWaitingObject;
 		CResObjectList				m_arrParallelFinishObject;
 		CResObjectList				m_arrParallelWaitingObject;
-		uint32						m_nCurWaitingSerialID;
+		uint32_t						m_nCurWaitingSerialID;
 
 		CExcludeFileMap				m_mapExcludeFile;
 		CMapListener				m_mapListener;
@@ -73,7 +73,7 @@ namespace Gamma
 		std::string					m_strTempBuffer;
 
 		void						OnResObjectLoadedEnd( CResObject* pResObject );
-		void						ApplyAllLoaded( uint32 nIdleTime );
+		void						ApplyAllLoaded( uint32_t nIdleTime );
 
 		void						ProcessObject( CResObject* pResObject );
 		void						RemoveObject( CResObject* pResObject );
@@ -81,7 +81,7 @@ namespace Gamma
 										ELoadPriority eLoadPriority, IResListener* pListener );
 
 		CPackage*					CreatePackage( const char* szPathName );
-		uint32						LoadDir( const char* szDirName, bool bCache, bool bSerial,
+		uint32_t						LoadDir( const char* szDirName, bool bCache, bool bSerial,
 										ELoadPriority eLoadPriority, IResListener* pListener );
 
 		CGammaFileMgr();
@@ -107,26 +107,26 @@ namespace Gamma
 		virtual void				EnableCheckPackageWithWifiOpen( bool bEnable );
 
 		virtual void				ReleaseCache( bool bReleaseCache );
-		virtual bool				GetCacheInfo( const char* szFileName, char* szCacheName, size_t nMaxCount, uint32& offset, uint32& size );		
+		virtual bool				GetCacheInfo( const char* szFileName, char* szCacheName, size_t nMaxCount, uint32_t& offset, uint32_t& size );		
 		virtual void				CheckFileCacheState( const char* szFileName, bool& bInCache, bool& bInPackage );
 		virtual bool				IsInFileList( const char* szFileName, char* szAbsolutePath = NULL, size_t nMaxSize = 0 );
 
 		virtual void				SetLocalizeDir( const char* szOrgPathName, const char* szLocalizePathName );
 		virtual void				SetLocalCachePath( const char* szLocalCachePath );
 		virtual const char*			GetLocalCachePath(){ return m_strLocalCachePath.c_str(); }
-		virtual void				Flush( uint32 nElapseTime );
+		virtual void				Flush( uint32_t nElapseTime );
 
-		virtual uint32				GetResWaitingCount();
-		virtual uint32				GetObjectCountInHistory();
+		virtual uint32_t				GetResWaitingCount();
+		virtual uint32_t				GetObjectCountInHistory();
 		virtual void				SetListener( IGammaFileMgrListener* pMgrListener );
 		virtual void				RemoveListener( IResListener* pListener );
 		virtual void				EnableFileProgress( bool bEnable );
 		virtual void				Exit();
 
 		virtual void				CreateExtractThread( const CPackageInfoList& listPackage );
-		virtual uint32				SyncLoad( const char* szPathName, bool bSave2Cache, IResListener* pListener );
-		virtual uint32				ParallelLoad( const char* szPathName, bool bHighPriority, bool bSave2Cache, IResListener* pListener );
-		virtual uint32				Load( const char* szPathName, bool bHighPriority, bool bSave2Cache, IResListener* pListener );
+		virtual uint32_t				SyncLoad( const char* szPathName, bool bSave2Cache, IResListener* pListener );
+		virtual uint32_t				ParallelLoad( const char* szPathName, bool bHighPriority, bool bSave2Cache, IResListener* pListener );
+		virtual uint32_t				Load( const char* szPathName, bool bHighPriority, bool bSave2Cache, IResListener* pListener );
 	};
 }
 

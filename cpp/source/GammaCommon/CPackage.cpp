@@ -63,27 +63,27 @@ namespace Gamma
 		const char* szShortPath = m_pMgr->RevertToShortPath( szFileName );
 		const CFileContext* pFile = m_pMgr->GetFileContext( szShortPath ? szShortPath : szFileName );
 		if( !pFile )
-			return SFileBuffer( m_strFileBuffer, 0, (uint32)m_strFileBuffer->length() );
+			return SFileBuffer( m_strFileBuffer, 0, (uint32_t)m_strFileBuffer->length() );
 		if( pFile->GetPackage() != this )
 			return SFileBuffer();
 		if( m_pPkgNode->m_nOrgSize == 0 )
-			return SFileBuffer( m_strFileBuffer, 0, (uint32)m_strFileBuffer->length() );
+			return SFileBuffer( m_strFileBuffer, 0, (uint32_t)m_strFileBuffer->length() );
 		return GetFileBuffer( pFile->m_nIndex );
 	}
 
-	SFileBuffer CPackage::GetFileBuffer( uint32 nIndex ) const
+	SFileBuffer CPackage::GetFileBuffer( uint32_t nIndex ) const
 	{
 		if( m_eLoadState == eLoadState_Failed )
 			return SFileBuffer();
 		if( m_vecBlockOffset.empty() || nIndex == INVALID_32BITID )
-			return SFileBuffer( m_strFileBuffer, 0, (uint32)m_strFileBuffer->size() );
+			return SFileBuffer( m_strFileBuffer, 0, (uint32_t)m_strFileBuffer->size() );
 		if( nIndex >= m_vecBlockOffset.size() )
 			return SFileBuffer();
-		uint32 nSize = 0;
-		uint32 nOffset = m_vecBlockOffset[nIndex];
+		uint32_t nSize = 0;
+		uint32_t nOffset = m_vecBlockOffset[nIndex];
 		const char* szBuffer = m_strFileBuffer->c_str() + nOffset;	
-		memcpy( &nSize, szBuffer, sizeof(uint32) );
-		return SFileBuffer( m_strFileBuffer, nOffset + sizeof(uint32), nSize );
+		memcpy( &nSize, szBuffer, sizeof(uint32_t) );
+		return SFileBuffer( m_strFileBuffer, nOffset + sizeof(uint32_t), nSize );
 	}
 
 	void CPackage::MarkNotLoad()
@@ -91,7 +91,7 @@ namespace Gamma
 		m_eLoadState = eLoadState_NotLoad;
 		CReaderList list = m_listReader;
 		m_listReader.clear();
-		for( uint32 i = 0; i < list.size(); i++ )
+		for( uint32_t i = 0; i < list.size(); i++ )
 			delete list[i];
 	}
 
@@ -100,7 +100,7 @@ namespace Gamma
 		m_eLoadState = eLoadState_Loading;
 	}
 
-	uint32 CPackage::GetRef()
+	uint32_t CPackage::GetRef()
 	{
 		return m_nRef;
 	}
@@ -133,15 +133,15 @@ namespace Gamma
 	CReaderList& CPackage::CreateReaders( bool bCache )
 	{
 		GammaAst( m_listReader.empty() );
-		uint8 aryMd5Buffer[16] = { 0 };
+		uint8_t aryMd5Buffer[16] = { 0 };
 		std::string strUrl;
 
 		SPackagePart* pPkgNode = m_pPkgNode;
 		m_listReader.resize( m_pPkgNode->m_nPackageIndex + 1 );
-		for( int32 i = m_pPkgNode->m_nPackageIndex; i >= 0; --i )
+		for( int32_t i = m_pPkgNode->m_nPackageIndex; i >= 0; --i )
 		{
-			uint8* aryMd5  = NULL;
-			uint32 nOrgSize = pPkgNode->m_nOrgSize;
+			uint8_t* aryMd5  = NULL;
+			uint32_t nOrgSize = pPkgNode->m_nOrgSize;
 			if( nOrgSize && nOrgSize != INVALID_32BITID )
 			{
 				const std::string& strPath = pPkgNode->m_strFilePath;
@@ -152,8 +152,8 @@ namespace Gamma
 					const char* szMd5 = strPath.c_str() + nPos + 1;
 					for( size_t i = 0; i < 16; i++ )
 					{
-						aryMd5[i] = (uint8)( ValueFromHexNumber( *szMd5++ ) << 4 );
-						aryMd5[i] |= (uint8)( ValueFromHexNumber( *szMd5++ ) );
+						aryMd5[i] = (uint8_t)( ValueFromHexNumber( *szMd5++ ) << 4 );
+						aryMd5[i] |= (uint8_t)( ValueFromHexNumber( *szMd5++ ) );
 					}
 				}
 			}
@@ -175,11 +175,11 @@ namespace Gamma
 		return m_listReader;
 	}
 
-	bool CPackage::OnLoaded( uint32 nIdleTime )
+	bool CPackage::OnLoaded( uint32_t nIdleTime )
 	{
 		GammaAst( !m_listReader.empty() );
 		bool bSucceeded = true;
-		for( uint32 i = 0; i < m_listReader.size(); i++ )
+		for( uint32_t i = 0; i < m_listReader.size(); i++ )
 		{
 			CFileReader* pReader = m_listReader[i];
 			if( pReader->GetLoadState() < eLoadState_Failed )
@@ -206,39 +206,39 @@ namespace Gamma
 				else
 				{
 					size_t nTotalSize = 0;
-					for( uint32 i = 0; i < m_listReader.size(); i++ )
+					for( uint32_t i = 0; i < m_listReader.size(); i++ )
 						nTotalSize += m_listReader[i]->GetFileBuffer()->size();
 
 					m_strFileBuffer = new CRefString;
 					m_strFileBuffer->resize( nTotalSize );
 					char* szDest = &( (*m_strFileBuffer)[0]);
 
-					uint32 nCurPos = 0;
-					for( uint32 i = 0; i < m_listReader.size(); i++ )
+					uint32_t nCurPos = 0;
+					for( uint32_t i = 0; i < m_listReader.size(); i++ )
 					{
 						const CRefStringPtr& ptrBuffer = m_listReader[i]->GetFileBuffer();
 						memcpy( szDest + nCurPos, &( (*ptrBuffer)[0] ), ptrBuffer->size() ); 
-						nCurPos += (uint32)ptrBuffer->size();
+						nCurPos += (uint32_t)ptrBuffer->size();
 					}
 				}
 
 				if( m_pPkgNode && m_pPkgNode->m_nOrgSize != 0 )
 				{
-					uint32 nFileCount = 0;
-					for( uint32 nOffset = 0; nOffset < m_strFileBuffer->size(); nFileCount++ )
-						nOffset += sizeof(uint32) + *(uint32*)( m_strFileBuffer->c_str() + nOffset );
+					uint32_t nFileCount = 0;
+					for( uint32_t nOffset = 0; nOffset < m_strFileBuffer->size(); nFileCount++ )
+						nOffset += sizeof(uint32_t) + *(uint32_t*)( m_strFileBuffer->c_str() + nOffset );
 
 					m_vecBlockOffset.resize( nFileCount );
-					for( uint32 nOffset = 0, i = 0; nOffset < m_strFileBuffer->size(); i++ )
+					for( uint32_t nOffset = 0, i = 0; nOffset < m_strFileBuffer->size(); i++ )
 					{
 						m_vecBlockOffset[i] = nOffset; 
-						nOffset += sizeof(uint32) + *(uint32*)( m_strFileBuffer->c_str() + nOffset );
+						nOffset += sizeof(uint32_t) + *(uint32_t*)( m_strFileBuffer->c_str() + nOffset );
 					}
 				}
 
 				// 文件曾经加载成功，这些文件会在并行加载中被优先加载
 				SPackagePart* pPkgNode = m_pPkgNode;
-				for( int32 i = m_pPkgNode->m_nPackageIndex; i >= 0; --i )
+				for( int32_t i = m_pPkgNode->m_nPackageIndex; i >= 0; --i )
 				{
 					pPkgNode->m_bLoaded = true;
 					pPkgNode = pPkgNode->m_pPrePart;
@@ -263,7 +263,7 @@ namespace Gamma
 
 		CReaderList list = m_listReader;
 		m_listReader.clear();
-		for( uint32 i = 0; i < list.size(); i++ )
+		for( uint32_t i = 0; i < list.size(); i++ )
 			delete list[i];
 		return true;
 	}

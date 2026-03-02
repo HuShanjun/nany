@@ -23,23 +23,23 @@ namespace Gamma
 	public:
 		virtual INetwork*	GetNetwork() = 0;
 		virtual void		PreResolveDomain( const char* szAddress ) = 0;
-		virtual bool		Check( uint32 nWaitTimes ) = 0;
-		virtual void		StopService( const char* szAddres, uint16 nPort, uint32 nConnectClassID ) = 0;
+		virtual bool		Check( uint32_t nWaitTimes ) = 0;
+		virtual void		StopService( const char* szAddres, uint16_t nPort, uint32_t nConnectClassID ) = 0;
 		virtual void		StopAllService() = 0;
-		virtual bool		StopConnect( uint32 nConnectClassID ) = 0;
+		virtual bool		StopConnect( uint32_t nConnectClassID ) = 0;
 		virtual bool		StopAllConnect() = 0;
 
-		virtual void		StartService( const char* szAddres, uint16 nPort, 
-								uint32 nConnectClassID, EConnType eType = eConnType_TCP_Prt,
+		virtual void		StartService( const char* szAddres, uint16_t nPort, 
+								uint32_t nConnectClassID, EConnType eType = eConnType_TCP_Prt,
 								const char* pCertificatePath = NULL, const char* pPrivateKeyPath = NULL ) = 0;
-		virtual CBaseConn*	Connect( const char* szAddres, uint16 nPort, 
-								uint32 nConnectClassID, EConnType eType = eConnType_TCP_Prt ) = 0;
-		virtual uint32		GetAllConn( uint32 nConnectClassID, CBaseConn* aryConn[], uint32 nCount ) = 0;
+		virtual CBaseConn*	Connect( const char* szAddres, uint16_t nPort, 
+								uint32_t nConnectClassID, EConnType eType = eConnType_TCP_Prt ) = 0;
+		virtual uint32_t		GetAllConn( uint32_t nConnectClassID, CBaseConn* aryConn[], uint32_t nCount ) = 0;
 
 		virtual SKcpConfig	GetKcpConfig() = 0;
 		virtual void		SetKcpConfig( SKcpConfig config ) = 0;
 	};
 
 	// 严格模式下，连接没有回调OnConnected，就不会回调OnDisconnect
-	GAMMA_CONNECTS_API IConnectionMgr* CreateConnMgr( uint32 nAutoDisconnectTime, bool bStrictMode = false );
+	GAMMA_CONNECTS_API IConnectionMgr* CreateConnMgr( uint32_t nAutoDisconnectTime, bool bStrictMode = false );
 }

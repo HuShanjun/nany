@@ -12,24 +12,24 @@ namespace Gamma
 		: public IDbsQuery
 		, public TGammaRBTree<CDbsQuery>::CGammaRBTreeNode
 	{
-		uint32				m_nQueryID;
-		uint32				m_nRef;
+		uint32_t				m_nQueryID;
+		uint32_t				m_nRef;
 		IDbsQueryHandler*	m_pHandler;
 		CDbsThreadMgr*		m_pDbsMgr;
 	public:
 		CDbsQuery( CDbsThreadMgr* pDbsMgr, 
-			IDbsQueryHandler* pHandler, uint32 nQueryID );
+			IDbsQueryHandler* pHandler, uint32_t nQueryID );
 		~CDbsQuery();
-		operator			uint32() const { return m_nQueryID; }
+		operator			uint32_t() const { return m_nQueryID; }
 		IDbsQueryHandler*	GetHandler() const { return m_pHandler; }
-		uint32				GetQueryID() const { return m_nQueryID; }
-		void				SetQueryID( uint32 nQueryID );
-		uint32				GetRef() { return m_nRef; } 
+		uint32_t				GetQueryID() const { return m_nQueryID; }
+		void				SetQueryID( uint32_t nQueryID );
+		uint32_t				GetRef() { return m_nRef; } 
 		void				AddRef() { ++m_nRef; }
 		void				Release();
 
-		virtual void		Query( uint32 nChannel, const SSendBuf aryBuffer[], uint32 nBufferCount );
-		virtual void		Query(uint32 nChannel, const void* pData1, size_t nSize1);
+		virtual void		Query( uint32_t nChannel, const SSendBuf aryBuffer[], uint32_t nBufferCount );
+		virtual void		Query(uint32_t nChannel, const void* pData1, size_t nSize1);
 		virtual void		Record(const void* pData, size_t nSize);
 
 	};

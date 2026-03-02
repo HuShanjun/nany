@@ -68,12 +68,12 @@ namespace Gamma
     //========================================================
     // 创建socket
     //========================================================
-    void CGSocket::Create( int32 nAiFamily )
+    void CGSocket::Create( int32_t nAiFamily )
     {
         //创建socket
 		bool bUDP = GetConnectType() == eConnecterType_UDP;
-		uint32 nType = bUDP ? SOCK_DGRAM : SOCK_STREAM;
-        m_hSocket = (uint32)socket( nAiFamily, nType, 0 );
+		uint32_t nType = bUDP ? SOCK_DGRAM : SOCK_STREAM;
+        m_hSocket = (uint32_t)socket( nAiFamily, nType, 0 );
         if( !IsValid() )
         {
             ostringstream strm;
@@ -92,7 +92,7 @@ namespace Gamma
             GammaThrow( strm.str() );
         }
 #else
-		int32 opts;
+		int32_t opts;
 		opts = fcntl( m_hSocket, F_GETFL );
 		if( opts < 0)
 		{
@@ -113,7 +113,7 @@ namespace Gamma
 		}
 #endif
 
-		int32 nVal = 1;
+		int32_t nVal = 1;
 		if( SOCKET_ERROR == setsockopt( m_hSocket, SOL_SOCKET, 
 			SO_REUSEADDR, (const char*)(&nVal), sizeof(nVal) ) )
 		{
@@ -177,7 +177,7 @@ namespace Gamma
 			return false;
 		}
 
-		m_strLocalSockAddr.assign( szAddress, (uint32)nSize );
+		m_strLocalSockAddr.assign( szAddress, (uint32_t)nSize );
 		return true;
 	}
 
@@ -187,15 +187,15 @@ namespace Gamma
 			!m_strLocalSockAddr.empty() && !m_strRemoteSockAddr.empty();
 	}
 
-	ECloseType CGSocket::Connect( const sockaddr* pAddr, uint32 nSize )
+	ECloseType CGSocket::Connect( const sockaddr* pAddr, uint32_t nSize )
 	{
 		m_strRemoteSockAddr.assign( (const char*)pAddr, nSize );
 		Create( pAddr->sa_family );
 
-		int32 nResult = connect( m_hSocket, pAddr, nSize );
+		int32_t nResult = connect( m_hSocket, pAddr, nSize );
 		if( SOCKET_ERROR == nResult )
 		{
-			uint32 nError = GNWGetLastError();
+			uint32_t nError = GNWGetLastError();
 #ifdef _WIN32
 			if( nError != NE_EWOULDBLOCK )
 #else
@@ -212,7 +212,7 @@ namespace Gamma
 		return eCE_Null;
 	}
 
-	void CGSocket::StartListener( const char* szAddres, uint16 nPort )
+	void CGSocket::StartListener( const char* szAddres, uint16_t nPort )
 	{
 		m_bListener = true;
 		Create( AF_INET );
@@ -250,7 +250,7 @@ namespace Gamma
 		}
 	}
 
-	bool CGSocket::NT_ProcessEvent( uint32 nEvent, bool bError )
+	bool CGSocket::NT_ProcessEvent( uint32_t nEvent, bool bError )
 	{
 		if( IsListener() )
 			return NT_ProcessListener( nEvent, bError );
@@ -269,7 +269,7 @@ namespace Gamma
 	{
 	}
 
-	bool CGSocketUDP::NT_ProcessListener( uint32 nEvent, bool bError )
+	bool CGSocketUDP::NT_ProcessListener( uint32_t nEvent, bool bError )
 	{
 		GammaAst( IsValid() );
 
@@ -281,12 +281,12 @@ namespace Gamma
 			while( true )
 			{
 				socklen_t nLen = sizeof( szAddress );
-				int32 nResult = (int32)recvfrom( m_hSocket,
+				int32_t nResult = (int32_t)recvfrom( m_hSocket,
 					szRecvBuf, MAX_UDP_SIZE, 0, (sockaddr*)szAddress, &nLen );
 				if( nResult == SOCKET_ERROR )
 					break;
 
-				gammacstring strKey( szAddress, (uint32)nLen );
+				gammacstring strKey( szAddress, (uint32_t)nLen );
 				auto pSocket = m_mapSockets.Find( strKey );
 				if( pSocket == NULL )
 				{
@@ -317,7 +317,7 @@ namespace Gamma
 		return true;
 	}
 
-	bool CGSocketUDP::NT_ProcessConnect( uint32 nEvent, bool bError )
+	bool CGSocketUDP::NT_ProcessConnect( uint32_t nEvent, bool bError )
 	{
 		if( bError )
 		{
@@ -367,7 +367,7 @@ namespace Gamma
 			while( !bError && m_bRecvAllow )
 			{
 				socklen_t nLen = sizeof( szAddress );
-				int32 nResult = recvfrom( m_hSocket, 
+				int32_t nResult = recvfrom( m_hSocket, 
 					aryBuffer, MAX_UDP_SIZE, 0, (sockaddr*)szAddress, &nLen );
 				if( nResult != SOCKET_ERROR )
 				{
@@ -387,19 +387,19 @@ namespace Gamma
 		}
 
 		const sockaddr* addrRemote = (const sockaddr*)m_strRemoteSockAddr.c_str();
-		uint32 nAddrSize = (uint32)m_strRemoteSockAddr.size();
+		uint32_t nAddrSize = (uint32_t)m_strRemoteSockAddr.size();
 		if( !bError && ( nEvent & eNE_ConnectedWrite ) )
 		{
 			m_bSendAllow = true;
 			SQuerryNodePtr pWriteBuffer = m_pWriteBuffer;
-			uint32 nWritePos = pWriteBuffer->m_nWritePos;
+			uint32_t nWritePos = pWriteBuffer->m_nWritePos;
 
 			// 尚未写入完毕（当前已经写入结束的Buffer的位置不可能是nNodeBufferSize）
 			if( nWritePos == nNodeBufferSize )
 				return true;
 
 			SQuerryNodePtr pReadBuffer = m_pReadBuffer;
-			uint32 nReadPos = pReadBuffer->m_nReadPos;
+			uint32_t nReadPos = pReadBuffer->m_nReadPos;
 			// 没有写入完整的数据可读
 			if( pReadBuffer == pWriteBuffer &&
 				nReadPos == nWritePos )
@@ -409,10 +409,10 @@ namespace Gamma
 			{
 				if( pReadBuffer->m_nWritePos == nReadPos )
 					break;
-				uint32 nBufferSize;
-				ReadBuffer( pReadBuffer, nReadPos, &nBufferSize, sizeof( uint32 ) );
+				uint32_t nBufferSize;
+				ReadBuffer( pReadBuffer, nReadPos, &nBufferSize, sizeof( uint32_t ) );
 				ReadBuffer( pReadBuffer, nReadPos, aryBuffer, nBufferSize );
-				int32 nResult = sendto( m_hSocket, aryBuffer, nBufferSize,
+				int32_t nResult = sendto( m_hSocket, aryBuffer, nBufferSize,
 					0, addrRemote, nAddrSize );
 
 				if( nResult != SOCKET_ERROR )
@@ -447,8 +447,8 @@ namespace Gamma
 		SQuerryNodePtr pBufferStart = m_pWriteBuffer;
 		SQuerryNodePtr pBufferEnd = m_pWriteBuffer;
 		SQuerryNodePtr pReadBuffer = m_pReadBuffer;
-		uint32 nWritePos = pBufferStart->m_nWritePos;
-		WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, &nSize, sizeof(uint32) );
+		uint32_t nWritePos = pBufferStart->m_nWritePos;
+		WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, &nSize, sizeof(uint32_t) );
 		WriteBuffer( pBufferEnd, nWritePos, pReadBuffer, pBuf, nSize );
 
 		// 保证原子操作，一次query完整写入
@@ -486,7 +486,7 @@ namespace Gamma
 	{
 	}
 
-	void CGSocketTCP::StartListener( const char* szAddres, uint16 nPort )
+	void CGSocketTCP::StartListener( const char* szAddres, uint16_t nPort )
 	{
 		CGSocket::StartListener( szAddres, nPort );
 		if( listen( m_hSocket, INVALID_16BITID ) )
@@ -499,7 +499,7 @@ namespace Gamma
 		}
 	}
 
-	bool CGSocketTCP::NT_ProcessListener( uint32 nEvent, bool bError )
+	bool CGSocketTCP::NT_ProcessListener( uint32_t nEvent, bool bError )
 	{
 		GammaAst( IsValid() );
 
@@ -514,7 +514,7 @@ namespace Gamma
 
 			if( INVALID_SOCKET == hSocket )
 			{
-				int32 nErrorCode = GNWGetLastError();
+				int32_t nErrorCode = GNWGetLastError();
 				switch( nErrorCode )
 				{
 #ifndef _WIN32
@@ -558,7 +558,7 @@ namespace Gamma
 		return pNewSocket;
 	}
 
-	bool CGSocketTCP::NT_ProcessConnect( uint32 nEvent, bool bError )
+	bool CGSocketTCP::NT_ProcessConnect( uint32_t nEvent, bool bError )
 	{
 		if( bError )
 		{
@@ -589,7 +589,7 @@ namespace Gamma
 
 			while( !bError && m_bRecvAllow )
 			{
-				int32 nResult = recv( m_hSocket,
+				int32_t nResult = recv( m_hSocket,
 					aryBuffer, ELEM_COUNT(aryBuffer), 0 );
 				if( nResult != SOCKET_ERROR )
 				{
@@ -614,14 +614,14 @@ namespace Gamma
 			bool bError = false;
 
 			SQuerryNodePtr pWriteBuffer = m_pWriteBuffer;
-			uint32 nWritePos = pWriteBuffer->m_nWritePos;
+			uint32_t nWritePos = pWriteBuffer->m_nWritePos;
 
 			// 尚未写入完毕（当前已经写入结束的Buffer的位置不可能是nNodeBufferSize）
 			if( nWritePos == nNodeBufferSize )
 				return true;
 
 			SQuerryNodePtr pReadBuffer = m_pReadBuffer;
-			uint32 nReadPos = pReadBuffer->m_nReadPos;
+			uint32_t nReadPos = pReadBuffer->m_nReadPos;
 			// 没有写入完整的数据可读
 			if( pReadBuffer == pWriteBuffer &&
 				nReadPos == nWritePos )
@@ -629,13 +629,13 @@ namespace Gamma
 
 			while( !bError && m_bSendAllow )
 			{
-				uint32 nWritePos = pReadBuffer->m_nWritePos;
-				uint32 nLeftSize = nWritePos - nReadPos;
+				uint32_t nWritePos = pReadBuffer->m_nWritePos;
+				uint32_t nLeftSize = nWritePos - nReadPos;
 				if( nLeftSize == 0 )
 					break;
 				const tbyte* pSrcBuf = pReadBuffer->m_aryBuffer + nReadPos;
-				int32 nResult = (int32)send( m_hSocket,
-					(const char*)pSrcBuf, (int32)nLeftSize, 0 );
+				int32_t nResult = (int32_t)send( m_hSocket,
+					(const char*)pSrcBuf, (int32_t)nLeftSize, 0 );
 				if( nResult != SOCKET_ERROR )
 				{
 					nReadPos += nResult;
@@ -690,7 +690,7 @@ namespace Gamma
 	{
 	}
 
-	void CGSocketTCPS::Create( int32 nAiFamily )
+	void CGSocketTCPS::Create( int32_t nAiFamily )
 	{
 		CGSocket::Create( nAiFamily );
 		m_sslSocket = SSL_new( m_sslContext );
@@ -711,7 +711,7 @@ namespace Gamma
 		CGSocketTCP::NT_Close();
 	}
 
-	bool CGSocketTCPS::NT_ProcessConnect( uint32 nEvent, bool bError )
+	bool CGSocketTCPS::NT_ProcessConnect( uint32_t nEvent, bool bError )
 	{
 		if( bError )
 		{
@@ -722,11 +722,11 @@ namespace Gamma
 		// 这是发起connect动作的连接，不是accept的
 		if( !m_strRemoteSockAddr.empty() && m_strLocalSockAddr.empty() )
 		{
-			int32 nResult = SSL_do_handshake( m_sslSocket );
+			int32_t nResult = SSL_do_handshake( m_sslSocket );
 			m_sslState = eCS_Connecting;
 			if( 1 != nResult )
 			{
-				int32 nError = 0;
+				int32_t nError = 0;
 				// 没有立刻握手成功，需要通过错误码来判断现在的状态
 				nError = SSL_get_error( m_sslSocket, nResult );
 				if( SSL_ERROR_WANT_READ == nError || SSL_ERROR_WANT_WRITE == nError )
@@ -752,7 +752,7 @@ namespace Gamma
 			nEvent |= eNE_ConnectedRead|eNE_ConnectedWrite;
 		}
 
-		uint32 nEventForSSL = nEvent;
+		uint32_t nEventForSSL = nEvent;
 		if( (nEvent & eNE_ConnectedRead) && m_bReadToSSLWrite )
 		{
 			nEventForSSL &= ~eNE_ConnectedRead;
@@ -773,10 +773,10 @@ namespace Gamma
 
 			while( !bError && m_bRecvAllow )
 			{
-				int32 nResult = SOCKET_ERROR;
-				uint32 nError = 0;
+				int32_t nResult = SOCKET_ERROR;
+				uint32_t nError = 0;
 
-				nResult = (int32)SSL_read( m_sslSocket, 
+				nResult = (int32_t)SSL_read( m_sslSocket, 
 					aryBuffer, ELEM_COUNT(aryBuffer) );
 
 				if( nResult >= 0 )
@@ -820,14 +820,14 @@ namespace Gamma
 		{
 			m_bSendAllow = true;
 			SQuerryNodePtr pWriteBuffer = m_pWriteBuffer;
-			uint32 nWritePos = pWriteBuffer->m_nWritePos;
+			uint32_t nWritePos = pWriteBuffer->m_nWritePos;
 
 			// 尚未写入完毕（当前已经写入结束的Buffer的位置不可能是nNodeBufferSize）
 			if( nWritePos == nNodeBufferSize )
 				return true;
 
 			SQuerryNodePtr pReadBuffer = m_pReadBuffer;
-			uint32 nReadPos = pReadBuffer->m_nReadPos;
+			uint32_t nReadPos = pReadBuffer->m_nReadPos;
 			// 没有写入完整的数据可读
 			if( pReadBuffer == pWriteBuffer &&
 				nReadPos == nWritePos )
@@ -835,15 +835,15 @@ namespace Gamma
 
 			while( !bError && m_bSendAllow )
 			{
-				uint32 nError = 0;
-				uint32 nWritePos = pReadBuffer->m_nWritePos;
-				uint32 nLeftSize = nWritePos - nReadPos;
+				uint32_t nError = 0;
+				uint32_t nWritePos = pReadBuffer->m_nWritePos;
+				uint32_t nLeftSize = nWritePos - nReadPos;
 				if( nLeftSize == 0 )
 					break;
 				const tbyte* pSrcBuf = pReadBuffer->m_aryBuffer + nReadPos;
 
-				int32 nResult = (int32)SSL_write( m_sslSocket, 
-					(const char*)pSrcBuf, (int32)nLeftSize );
+				int32_t nResult = (int32_t)SSL_write( m_sslSocket, 
+					(const char*)pSrcBuf, (int32_t)nLeftSize );
 				if( nResult >= 0 )
 				{
 					nReadPos += nResult;

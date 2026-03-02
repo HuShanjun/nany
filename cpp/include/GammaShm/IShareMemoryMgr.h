@@ -31,7 +31,7 @@ namespace Gamma
 	{
 	public:
 		virtual SShareCommonHead*	GetShareMemory() = 0;
-		virtual void				SetCheckInterval( uint32 nInterval ) = 0;
+		virtual void				SetCheckInterval( uint32_t nInterval ) = 0;
 		virtual void				Start() = 0;
 		virtual bool				IsReady() = 0;
 		virtual void				Check() = 0;
@@ -43,7 +43,7 @@ namespace Gamma
 		virtual void				OnCommitFlagFinish( const SCommitFlag* pInfo, bool bFailed ) = 0;
 	};
 
-	GAMMA_SHM_API IShareMemoryMgr* CreateShareMemoryMgr( uint16 nGasID,
+	GAMMA_SHM_API IShareMemoryMgr* CreateShareMemoryMgr( uint16_t nGasID,
 		SShareCommonHead* pSrc, const char* szFileName, IShareMemoryHandler* pHandler,
-		uint32 nCommitInterval, bool bKeepShmFile, uint32 nFlushInterval );
+		uint32_t nCommitInterval, bool bKeepShmFile, uint32_t nFlushInterval );
 }

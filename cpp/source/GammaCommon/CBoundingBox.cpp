@@ -175,17 +175,17 @@ namespace Gamma
     void COrientBoundingBox::UpdateFaces()
     {
         // 三个点索引和下个平行面的距离在Scale的索引
-        const static uint8 FaceCornerIndex[eBoxFace_Count/2][4] = {
+        const static uint8_t FaceCornerIndex[eBoxFace_Count/2][4] = {
             { LeftBottomBack, LeftTopBack, LeftTopFront, 0 }, // left
             { LeftTopBack, RightTopBack, RightTopFront, 1 }, // top
             { LeftTopFront, RightTopFront, RightBottomFront, 2}, // near
         };
 
-        for ( uint8 i = 0; i < eBoxFace_Count/2; i++ )
+        for ( uint8_t i = 0; i < eBoxFace_Count/2; i++ )
         {
-            uint8 nCorner1 = FaceCornerIndex[i][0];
-            uint8 nCorner2 = FaceCornerIndex[i][1];
-            uint8 nCorner3 = FaceCornerIndex[i][2];
+            uint8_t nCorner1 = FaceCornerIndex[i][0];
+            uint8_t nCorner2 = FaceCornerIndex[i][1];
+            uint8_t nCorner3 = FaceCornerIndex[i][2];
             m_faces[i*2].Init( m_vCorners[ nCorner1 ], m_vCorners[ nCorner2 ], m_vCorners[ nCorner3 ] );
             m_faces[i*2+1].m_Normal = -m_faces[i*2].m_Normal;
             m_faces[i*2+1].m_Dist = -m_vScale[ FaceCornerIndex[i][3] ] - m_faces[i*2].m_Dist ;
@@ -195,7 +195,7 @@ namespace Gamma
     bool COrientBoundingBox::Contain( const CVector3f& vPoint ) const
     {
         
-        for ( uint32 i = 0; i < eBoxFace_Count; i++ )
+        for ( uint32_t i = 0; i < eBoxFace_Count; i++ )
         {
             if ( m_faces[i].DistTo( vPoint ) > 0 )
                 return false;
@@ -206,10 +206,10 @@ namespace Gamma
 
     bool COrientBoundingBox::Intersect( const CVector3f& vStart, const CVector3f& vEnd, std::vector<CVector3f>* pvIntersects /*= NULL*/ ) const
     {
-        static const uint32 nParallelFaceIndex[eBoxFace_Count] = { 1, 0, 3, 2, 5, 4 };
+        static const uint32_t nParallelFaceIndex[eBoxFace_Count] = { 1, 0, 3, 2, 5, 4 };
         bool bSkipFace[eBoxFace_Count] = {false};
         bool bIntersect = false;
-        for ( uint32 i = 0; i < eBoxFace_Count; i++ )
+        for ( uint32_t i = 0; i < eBoxFace_Count; i++ )
         {
             if ( bSkipFace[i] )
                 continue;

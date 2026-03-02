@@ -68,7 +68,7 @@ namespace Gamma
 		return m_pConnection->IsConnected();
 	}
 
-	uint32 CBaseConn::GetPingDelay() const
+	uint32_t CBaseConn::GetPingDelay() const
 	{
 		if( !IsValid() || !m_pConnection )
 			return INVALID_32BITID;
@@ -82,14 +82,14 @@ namespace Gamma
 		m_pConnection->EnableSendShellMsg( bValue );
 	}
 
-	void CBaseConn::SetHeartBeatInterval( uint32 nSeconds )
+	void CBaseConn::SetHeartBeatInterval( uint32_t nSeconds )
 	{
 		if( !IsValid() || !m_pConnection )
 			return;
 		m_pConnection->SetHeartBeatInterval( nSeconds );
 	}
 
-	void CBaseConn::SetNetDelay( uint32 nMinDelay, uint32 nMaxDelay )
+	void CBaseConn::SetNetDelay( uint32_t nMinDelay, uint32_t nMaxDelay )
 	{
 		if( !IsValid() || !m_pConnection )
 			return;
@@ -110,7 +110,7 @@ namespace Gamma
 		m_pConnection->EnableMsgDispatch( bEnable );
 	}
 
-	void CBaseConn::EnableProfile( uint8 nSendIDBits, uint8 nRecvIDBits )
+	void CBaseConn::EnableProfile( uint8_t nSendIDBits, uint8_t nRecvIDBits )
 	{
 		if( !IsValid() || !m_pConnection )
 			return;
@@ -124,14 +124,14 @@ namespace Gamma
 		m_pConnection->PrintMsgSize();
 	}
 
-	size_t CBaseConn::GetSendBufferSize( uint16 nShellID )
+	size_t CBaseConn::GetSendBufferSize( uint16_t nShellID )
 	{
 		if( !IsValid() || !m_pConnection )
 			return 0;
 		return m_pConnection->GetSendBufferSize( nShellID );
 	}
 
-	size_t CBaseConn::GetRecvBufferSize( uint16 nShellID )
+	size_t CBaseConn::GetRecvBufferSize( uint16_t nShellID )
 	{
 		if( !IsValid() || !m_pConnection )
 			return 0;
@@ -180,14 +180,14 @@ namespace Gamma
 		return m_pConnection->GetConn()->GetCloseType();
 	}
 
-	void CBaseConn::SendShellMsg( const SSendBuf aryBuffer[], uint32 nBufferCount, bool bUnreliable )
+	void CBaseConn::SendShellMsg( const SSendBuf aryBuffer[], uint32_t nBufferCount, bool bUnreliable )
 	{
 		if( !IsValid() || !m_pConnection )
 			return;
 		m_pConnection->SendShellMsg( !bUnreliable, aryBuffer, nBufferCount );
 	}
 
-	void CBaseConn::SendShellMsg( const void* pData1, uint32 nSize1, bool bUnreliable )
+	void CBaseConn::SendShellMsg( const void* pData1, uint32_t nSize1, bool bUnreliable )
 	{
 		if( !IsValid() || !m_pConnection )
 			return;

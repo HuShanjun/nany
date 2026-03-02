@@ -24,7 +24,7 @@ namespace Gamma
 		#endif
 	}
 
-	CGNetThread::CGNetThread( CGNetwork* pNetwork, uint32 nMaxConnect )
+	CGNetThread::CGNetThread( CGNetwork* pNetwork, uint32_t nMaxConnect )
 		: m_pNetwork(pNetwork)
 		, m_nSocketCount(0)
 		, m_hThread(nullptr)
@@ -110,14 +110,14 @@ namespace Gamma
 	{
 		GammaAst( !pSocket->IsListener() );
 		auto pConnect = static_cast<CGConnecter*>(pSocket->GetContext());
-		pConnect->OnEvent( false, (const tbyte*)pData, (uint32)nSize );
+		pConnect->OnEvent( false, (const tbyte*)pData, (uint32_t)nSize );
 	}
 
 	bool CGNetThread::MainThreadCheck()
 	{
 		SNetCmd Cmd;
 		SSendBuf SendBuf;
-		uint32 nBufferCount = 1;
+		uint32_t nBufferCount = 1;
 		while( m_RecvBuffer.PopBuffer( Cmd, &SendBuf, nBufferCount ) )
 		{
 			if( Cmd.first == eNC_Accept )
@@ -209,7 +209,7 @@ namespace Gamma
 			NT_SetEvent( pSocket, eNE_ConnectedRead | eNE_ConnectedWrite );
 	}
 
-	uint32 CGNetThread::NT_RunThread( void* pParam )
+	uint32_t CGNetThread::NT_RunThread( void* pParam )
 	{
 		auto pThread = reinterpret_cast<CGNetThread*>(pParam);
 		GammaSetThreadName(pThread->m_strThreadName.c_str());
@@ -222,8 +222,8 @@ namespace Gamma
 	{
 		SNetCmd Cmd;
 		SSendBuf SendBuf;
-		uint32 nBufferCount = 1;
-		uint32 nCount = 0;
+		uint32_t nBufferCount = 1;
+		uint32_t nCount = 0;
 
 		// 退出时要处理完所有命令
 		while( nCount++ < 1000 || m_bQuit )
@@ -250,7 +250,7 @@ namespace Gamma
 			return true;
 
 		/* 检查发送缓冲区的数据 */
-		uint32 nSocketCount = 0;
+		uint32_t nSocketCount = 0;
 		for( auto pSocket = m_listSockets.GetFirst();
 			pSocket; pSocket = pSocket->GetNext() )
 		{
@@ -269,13 +269,13 @@ namespace Gamma
 			FD_ZERO( &fdSend );
 			FD_ZERO( &fdError );
 
-			uint32 nCount = 0;
+			uint32_t nCount = 0;
 			SOCKET hMaxSocket = 0;
 			CGSocket* arySocket[FD_SETSIZE];
 			while( nCount < FD_SETSIZE && pSocket )
 			{
 				SOCKET hSocket = pSocket->GetSocket();
-				uint32 nEvent = (uint32)pSocket->NT_GetEventID();
+				uint32_t nEvent = (uint32_t)pSocket->NT_GetEventID();
 				if( nEvent )
 				{
 					if( nEvent & (eNE_ConnectedRead) )
@@ -298,9 +298,9 @@ namespace Gamma
 			if( select( hMaxSocket + 1, &fdRecv, &fdSend, &fdError, &tv ) == 0 )
 				continue;
 
-			for( uint32 i = 0; i < nCount; i++ )
+			for( uint32_t i = 0; i < nCount; i++ )
 			{
-				uint32 nEvent = 0;
+				uint32_t nEvent = 0;
 				SOCKET hSocket = arySocket[i]->GetSocket();
 				if( FD_ISSET( hSocket, &fdRecv ) )
 					nEvent |= eNE_ConnectedRead;
@@ -320,7 +320,7 @@ namespace Gamma
 		auto pSocket = m_listSockets.GetFirst();
 		while( pSocket )
 		{
-			uint32 nWaitCount = 0;
+			uint32_t nWaitCount = 0;
 			while( pSocket && nWaitCount < MAXIMUM_WAIT_OBJECTS )
 			{
 				WSAEVENT hEvent = (WSAEVENT)pSocket->NT_GetEventID();
@@ -335,9 +335,9 @@ namespace Gamma
 			if( nWaitCount == 0 )
 				break;
 
-			uint32 nResult = WaitForMultipleObjects( 
+			uint32_t nResult = WaitForMultipleObjects( 
 				nWaitCount, aryEvent, FALSE, 0 );
-			uint32 nIndex = nResult - WAIT_OBJECT_0;
+			uint32_t nIndex = nResult - WAIT_OBJECT_0;
 			if( nIndex < nWaitCount )
 			{
 				WSANETWORKEVENTS NetworkEvents;
@@ -353,7 +353,7 @@ namespace Gamma
 					GammaThrow( strm.str() );
 				}
 
-				uint32 nEvent = NetworkEvents.lNetworkEvents;
+				uint32_t nEvent = NetworkEvents.lNetworkEvents;
 				if( NetworkEvents.iErrorCode[FD_CONNECT_BIT] )
 					nEvent |= eNE_Error;
 				pSocket->NT_ProcessEvent( nEvent, (nEvent & eNE_Error) != 0 );
@@ -370,7 +370,7 @@ namespace Gamma
 		if( m_vecEvent.size() < nSocketCount )
 			m_vecEvent.resize( nSocketCount );
 
-		int32 nEventCount = epoll_wait( m_nEpoll,
+		int32_t nEventCount = epoll_wait( m_nEpoll,
 			&m_vecEvent[0], m_vecEvent.size(), 0 );
 		if( -1 == nEventCount )
 		{
@@ -383,19 +383,19 @@ namespace Gamma
 			GammaThrow( strm.str() );
 		}
 
-		for( int32 i = 0; i < nEventCount; ++i )
+		for( int32_t i = 0; i < nEventCount; ++i )
 		{
 			epoll_event& e = m_vecEvent[i];
 			GammaAst( e.data.ptr );
 			CGSocket* pSocket = (CGSocket*)e.data.ptr;
-			uint32 nEvent = e.events;
+			uint32_t nEvent = e.events;
 			pSocket->NT_ProcessEvent( nEvent, (nEvent& eNE_Error) != 0 );
 		}
 #endif
 		return true;
 	}
 
-	void CGNetThread::NT_SetEvent( CGSocket* pSocket, uint32 nEvent )
+	void CGNetThread::NT_SetEvent( CGSocket* pSocket, uint32_t nEvent )
 	{
 		GammaAst( pSocket->IsInList() && nEvent );
 #ifdef FORCE_SELECT_MODE
@@ -429,7 +429,7 @@ namespace Gamma
 		ee.data.ptr = pSocket;
 		ee.events = nEvent;
 
-		int32 nOperator = pSocket->NT_GetEventID() ? EPOLL_CTL_MOD : EPOLL_CTL_ADD;
+		int32_t nOperator = pSocket->NT_GetEventID() ? EPOLL_CTL_MOD : EPOLL_CTL_ADD;
 		if( -1 == epoll_ctl( m_nEpoll, nOperator, pSocket->GetSocket(), &ee ) )
 		{
 			ostringstream strm;
@@ -450,7 +450,7 @@ namespace Gamma
 		epoll_event ee;
 		ee.data.ptr = pSocket;
 		ee.events = 0;
-		int32 nOperator = EPOLL_CTL_DEL;
+		int32_t nOperator = EPOLL_CTL_DEL;
 		if( -1 == epoll_ctl( m_nEpoll, nOperator, pSocket->GetSocket(), &ee ) )
 		{
 			ostringstream strm;

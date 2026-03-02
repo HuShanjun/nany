@@ -35,7 +35,7 @@ namespace Gamma
 		virtual const CAddress& GetLocalAddress() const;
 		virtual EConnecterType	GetConnectType() const;
 
-		virtual void			Start( const char* szAddres, uint16 nPort );
+		virtual void			Start( const char* szAddres, uint16_t nPort );
 		virtual void			Release();
 	};
 }

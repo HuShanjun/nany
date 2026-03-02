@@ -30,7 +30,7 @@ namespace Gamma
 		~CTabFile(void);
 
 		// 从缓冲区初始化		
-		bool			Init( const tbyte* pBuffer, uint32 nSize, char cSeperator = '\t' );
+		bool			Init( const tbyte* pBuffer, uint32_t nSize, char cSeperator = '\t' );
 		// 载入制表符分隔文件
 		bool			Load( const char* szFileName, char cSeperator = '\t' );
 		// 载入制表符分隔文件
@@ -38,101 +38,101 @@ namespace Gamma
 		// 清空
 		void			Clear();
 		// 得到行数
-		int32			GetHeight() const;
+		int32_t			GetHeight() const;
 		// 得到列数
-		int32			GetWidth() const;
+		int32_t			GetWidth() const;
 		// 得到列名
-		int32			GetCloumn( const char* szColumnName ) const;
+		int32_t			GetCloumn( const char* szColumnName ) const;
 		// 根据列号得到某行某列
-		const char*		GetString( int32 nRow, int32 nColumn, const char* szDefault = "" ) const;
+		const char*		GetString( int32_t nRow, int32_t nColumn, const char* szDefault = "" ) const;
 		// 根据列名得到某行某列
-		const char*		GetString( int32 nRow, const char* szColumnName, const char* szDefault = "" ) const;
+		const char*		GetString( int32_t nRow, const char* szColumnName, const char* szDefault = "" ) const;
 		// 根据列号得到某行某列
-		const char*		GetDicString( int32 nRow, int32 nColumn, const char* szDefault = "" ) const;
+		const char*		GetDicString( int32_t nRow, int32_t nColumn, const char* szDefault = "" ) const;
 		// 根据列名得到某行某列
-		const char*		GetDicString( int32 nRow, const char* szColumnName, const char* szDefault = "" ) const;
+		const char*		GetDicString( int32_t nRow, const char* szColumnName, const char* szDefault = "" ) const;
 		// 根据列号得到某行某列
-		int32			GetInteger( int32 nRow, int32 nColumn, int32 defaultvalue = 0  ) const;
+		int32_t			GetInteger( int32_t nRow, int32_t nColumn, int32_t defaultvalue = 0  ) const;
 		// 根据列名得到某行某列
-		int32			GetInteger( int32 nRow, const char* szColumnName, int32 defaultvalue = 0 ) const;
+		int32_t			GetInteger( int32_t nRow, const char* szColumnName, int32_t defaultvalue = 0 ) const;
 		// 根据列号得到某行某列
-		float			GetFloat( int32 nRow, int32 nColumn, float defaultvalue = 0.0f) const;
+		float			GetFloat( int32_t nRow, int32_t nColumn, float defaultvalue = 0.0f) const;
 		// 根据列名得到某行某列
-		float			GetFloat( int32 nRow, const char* szColumnName, float defaultvalue = 0.0f ) const;
+		float			GetFloat( int32_t nRow, const char* szColumnName, float defaultvalue = 0.0f ) const;
 		// 根据列号得到某行某列
-		int64			GetInteger64( int32 nRow, int32 nColumn, int64 defaultvalue = 0 ) const;	
+		int64_t			GetInteger64( int32_t nRow, int32_t nColumn, int64_t defaultvalue = 0 ) const;	
 		// 根据列名得到某行某列
-		int64			GetInteger64( int32 nRow, const char* szColumnName, int64 defaultvalue = 0 ) const;	
+		int64_t			GetInteger64( int32_t nRow, const char* szColumnName, int64_t defaultvalue = 0 ) const;	
 		// 根据列号得到某行某列
-		double			GetDouble( int32 nRow, int32 nColumn, double defaultvalue = 0 ) const;	
+		double			GetDouble( int32_t nRow, int32_t nColumn, double defaultvalue = 0 ) const;	
 		// 根据列名得到某行某列
-		double			GetDouble( int32 nRow, const char* szColumnName, double defaultvalue = 0 ) const;
+		double			GetDouble( int32_t nRow, const char* szColumnName, double defaultvalue = 0 ) const;
 		// 根据列号得到某行某列 日期格式:2015-03-25 00:00:00
-		int64			GetDateSec( int32 nRow, int32 nColumn, int64 defaultvalue = 0 ) const;	
+		int64_t			GetDateSec( int32_t nRow, int32_t nColumn, int64_t defaultvalue = 0 ) const;	
 		// 根据列名得到某行某列 日期格式:2015-03-25 00:00:00
-		int64			GetDateSec( int32 nRow, const char* szColumnName, int64 defaultvalue = 0 ) const;
+		int64_t			GetDateSec( int32_t nRow, const char* szColumnName, int64_t defaultvalue = 0 ) const;
 
 		template<typename T1, typename T2>
-		inline void ReadTableData(T1& rtValue, int32 nRow, T2 Column)
+		inline void ReadTableData(T1& rtValue, int32_t nRow, T2 Column)
 		{
 			GammaAst( nRow != nRow );
 		}
 	};
 
 	template<>
-	inline void CTabFile::ReadTableData<int32, int32>(int32& rtValue, int32 nRow, int32 nColumn)
+	inline void CTabFile::ReadTableData<int32_t, int32_t>(int32_t& rtValue, int32_t nRow, int32_t nColumn)
 	{ rtValue = GetInteger(nRow, nColumn); }
 
 	template<>
-	inline void CTabFile::ReadTableData<uint32, int32>(uint32& rtValue, int32 nRow, int32 nColumn)
-	{ rtValue = (uint32)GetInteger(nRow, nColumn); }
+	inline void CTabFile::ReadTableData<uint32_t, int32_t>(uint32_t& rtValue, int32_t nRow, int32_t nColumn)
+	{ rtValue = (uint32_t)GetInteger(nRow, nColumn); }
 
 	template<>
-	inline void CTabFile::ReadTableData<uint16, int32>(uint16& rtValue, int32 nRow, int32 nColumn)
-	{ rtValue = (uint16)GetInteger(nRow, nColumn); }
+	inline void CTabFile::ReadTableData<uint16_t, int32_t>(uint16_t& rtValue, int32_t nRow, int32_t nColumn)
+	{ rtValue = (uint16_t)GetInteger(nRow, nColumn); }
 
 	template<>
-	inline void CTabFile::ReadTableData<int16, int32>(int16& rtValue, int32 nRow, int32 nColumn)
-	{ rtValue = (int16)GetInteger(nRow, nColumn); }
+	inline void CTabFile::ReadTableData<int16_t, int32_t>(int16_t& rtValue, int32_t nRow, int32_t nColumn)
+	{ rtValue = (int16_t)GetInteger(nRow, nColumn); }
 
 	template<>
-	inline void CTabFile::ReadTableData<float, int32>(float& rtValue, int32 nRow, int32 nColumn)
+	inline void CTabFile::ReadTableData<float, int32_t>(float& rtValue, int32_t nRow, int32_t nColumn)
 	{ rtValue = GetFloat(nRow, nColumn); }
 
 	template<>
-	inline void CTabFile::ReadTableData<const char*, int32>(const char*& rtValue, int32 nRow, int32 nColumn)	
+	inline void CTabFile::ReadTableData<const char*, int32_t>(const char*& rtValue, int32_t nRow, int32_t nColumn)	
 	{ rtValue = GetString(nRow, nColumn); }
 
 	template<>
-	inline void CTabFile::ReadTableData<int32, const char*>(int32& rtValue, int32 nRow, const char* szColumnName)
+	inline void CTabFile::ReadTableData<int32_t, const char*>(int32_t& rtValue, int32_t nRow, const char* szColumnName)
 	{ rtValue = GetInteger(nRow, szColumnName, 0); }
 	
 	template<>
-	inline void CTabFile::ReadTableData<uint32, const char*>(uint32& rtValue, int32 nRow, const char* szColumnName)
-	{ rtValue = (uint32)GetInteger(nRow, szColumnName, 0); }
+	inline void CTabFile::ReadTableData<uint32_t, const char*>(uint32_t& rtValue, int32_t nRow, const char* szColumnName)
+	{ rtValue = (uint32_t)GetInteger(nRow, szColumnName, 0); }
 
 	template<>
-	inline void CTabFile::ReadTableData<uint16, const char*>(uint16& rtValue, int32 nRow, const char* szColumnName)
-	{ rtValue = (uint16)GetInteger(nRow, szColumnName, 0); }
+	inline void CTabFile::ReadTableData<uint16_t, const char*>(uint16_t& rtValue, int32_t nRow, const char* szColumnName)
+	{ rtValue = (uint16_t)GetInteger(nRow, szColumnName, 0); }
 
 	template<>
-	inline void CTabFile::ReadTableData<float, const char*>(float& rtValue, int32 nRow, const char* szColumnName)
+	inline void CTabFile::ReadTableData<float, const char*>(float& rtValue, int32_t nRow, const char* szColumnName)
 	{ rtValue = GetFloat(nRow, szColumnName, 0.0f); }
 
 	template<>
-	inline void CTabFile::ReadTableData<bool, const char*>(bool& rtValue, int32 nRow, const char* szColumnName)
+	inline void CTabFile::ReadTableData<bool, const char*>(bool& rtValue, int32_t nRow, const char* szColumnName)
 	{ rtValue = !!GetInteger(nRow, szColumnName, 0); }
 
 	template<>
-	inline void CTabFile::ReadTableData<const char*, const char*>(const char*& rtValue, int32 nRow, const char* szColumnName)
+	inline void CTabFile::ReadTableData<const char*, const char*>(const char*& rtValue, int32_t nRow, const char* szColumnName)
 	{ rtValue = GetString(nRow, szColumnName); }
 
 	template<>
-	inline void CTabFile::ReadTableData<std::string, const char*>(std::string& rtValue, int32 nRow, const char* szColumnName)
+	inline void CTabFile::ReadTableData<std::string, const char*>(std::string& rtValue, int32_t nRow, const char* szColumnName)
 	{ rtValue = GetString(nRow, szColumnName); }
 
 	template<>
-	inline void CTabFile::ReadTableData<std::string, int32>(std::string& rtValue, int32 nRow, int32 nColumn)
+	inline void CTabFile::ReadTableData<std::string, int32_t>(std::string& rtValue, int32_t nRow, int32_t nColumn)
 	{ rtValue = GetString(nRow, nColumn); }
 
 }

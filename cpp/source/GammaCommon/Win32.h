@@ -13,10 +13,10 @@
 
 namespace Gamma
 {
-	uint32 AnsiToUcs( wchar_t* pUcs, uint32 nSize, const char* pAnsi, uint32 nLen );
-	uint32 UcsToAnsi( char* pAnsi, uint32 nSize, const wchar_t* pUnicode, uint32 nLen = -1 );
-	const std::wstring AnsiToUcs( const char* pUtf8, uint32 nLen = -1 );
-	const std::string UcsToAnsi( const wchar_t* pUnicode, uint32 nLen = -1 );
+	uint32_t AnsiToUcs( wchar_t* pUcs, uint32_t nSize, const char* pAnsi, uint32_t nLen );
+	uint32_t UcsToAnsi( char* pAnsi, uint32_t nSize, const wchar_t* pUnicode, uint32_t nLen = -1 );
+	const std::wstring AnsiToUcs( const char* pUtf8, uint32_t nLen = -1 );
+	const std::string UcsToAnsi( const wchar_t* pUnicode, uint32_t nLen = -1 );
 
 
 	class CWin32App
@@ -28,7 +28,7 @@ namespace Gamma
 			: public CFileOpenContextList::CGammaListNode
 		{
 			bool				m_bList;
-			int32				m_nType;
+			int32_t				m_nType;
 			void*				m_pContext;
 			void*				m_funCallback;
 			CFileNameList		m_vecFileName;
@@ -49,13 +49,13 @@ namespace Gamma
 		static CWin32App&		GetInstance();
 		void*					GetModuleHandle();
 		void					GetHardwareDesc( SHardwareDesc& HardwareDesc );
-		uint64					GetVersion();
+		uint64_t					GetVersion();
 		void					SetPackagePath( const char* szPath );
 		const char*				GetPackagePath();
-		int32					WindowMessagePump();
-		void					SetClipboardContent( int32 nType, const void* pContent, uint32 nSize );
-		void					GetClipboardContent( int32 nType, const void*& pContent, uint32& nSize );
-		bool					GetSystemFile( bool bList, int32 nType, void* pContext, void* funCallback );
+		int32_t					WindowMessagePump();
+		void					SetClipboardContent( int32_t nType, const void* pContent, uint32_t nSize );
+		void					GetClipboardContent( int32_t nType, const void*& pContent, uint32_t& nSize );
+		bool					GetSystemFile( bool bList, int32_t nType, void* pContext, void* funCallback );
 		void*					LoadDynamicLib( const char* szName );
 		void*					GetFunctionAddress( void* pLibContext, const char* szName );
 		void					OpenURL( const char* szUrl );

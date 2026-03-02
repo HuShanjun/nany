@@ -11,7 +11,7 @@ using namespace std;
 
 namespace Gamma
 {
-	CDbConnection::CDbConnection( uint32 nDBId )
+	CDbConnection::CDbConnection( uint32_t nDBId )
 		: m_pDatabase( NULL )
 		, m_pTag( NULL )
 		, m_nTotalStatement( 0 )
@@ -29,7 +29,7 @@ namespace Gamma
 	std::string CDbConnection::Connect(
 		CDatabase* pDatabase,
 		const char* szHost,
-		uint16 uPort,
+		uint16_t uPort,
 		const char* szUser,
 		const char* szPassword,
 		const char* szDatabase,
@@ -38,7 +38,7 @@ namespace Gamma
 		bool bPingReconnect )
 	{
 		m_pDatabase = pDatabase;
-		uint32 nFlag = bFoundAsUpdateRow ? CLIENT_FOUND_ROWS : 0;
+		uint32_t nFlag = bFoundAsUpdateRow ? CLIENT_FOUND_ROWS : 0;
 		nFlag = nFlag | (bMultiStatements ? CLIENT_MULTI_STATEMENTS : 0);
 		my_bool op = true;
 
@@ -79,7 +79,7 @@ namespace Gamma
 		bool bPingReconnect )
 	{
 		m_pDatabase = pDatabase;
-		uint32 nFlag = bFoundAsUpdateRow ? CLIENT_FOUND_ROWS : 0;
+		uint32_t nFlag = bFoundAsUpdateRow ? CLIENT_FOUND_ROWS : 0;
 		nFlag = nFlag | (bMultiStatements ? CLIENT_MULTI_STATEMENTS : 0);
 		my_bool op = true;
 
@@ -109,17 +109,17 @@ namespace Gamma
 		return string();
 	}
 
-	uint64 CDbConnection::LastInsertId() const
+	uint64_t CDbConnection::LastInsertId() const
 	{
 		return mysql_insert_id( m_pMySql );
 	}
 
-	uint64 CDbConnection::LastAffectedRowNum() const
+	uint64_t CDbConnection::LastAffectedRowNum() const
 	{
 		return mysql_affected_rows( m_pMySql );
 	}
 
-	uint32 CDbConnection::CheckMultiExecute() const
+	uint32_t CDbConnection::CheckMultiExecute() const
 	{
 		do
 		{
@@ -136,7 +136,7 @@ namespace Gamma
 		return 0;
 	}
 
-	uint32 CDbConnection::EscapeString( char* szOut, const char* szIn, uint32 uInSize )
+	uint32_t CDbConnection::EscapeString( char* szOut, const char* szIn, uint32_t uInSize )
 	{
 		return mysql_real_escape_string( m_pMySql, szOut, szIn, uInSize );
 	}
@@ -177,13 +177,13 @@ namespace Gamma
 		return GetResult( mysql_query( m_pMySql, szSqlBuffer ) );
 	}
 
-	IDbTextResult* CDbConnection::Execute( const char* szSqlBuffer, uint32 uSize )
+	IDbTextResult* CDbConnection::Execute( const char* szSqlBuffer, uint32_t uSize )
 	{
 		return GetResult( mysql_real_query( m_pMySql, szSqlBuffer, (unsigned long)uSize ) );
 	}
 
 	Gamma::IDbTextResult* CDbConnection::ExecuteProcedure( const char* szSqlProcedureBuffer,
-		uint32 uSize1, const char* szSqlResultBuffer, uint32 uSize2 )
+		uint32_t uSize1, const char* szSqlResultBuffer, uint32_t uSize2 )
 	{
 		int nQueryReturnCode = mysql_real_query( m_pMySql, szSqlProcedureBuffer, uSize1 );
 		if( 0 != nQueryReturnCode )
@@ -201,27 +201,27 @@ namespace Gamma
 		return m_pLog;
 	}
 
-	IDbStatement* CDbConnection::CreateStatement(const char* szSqlBuffer, uint32 uSize)
+	IDbStatement* CDbConnection::CreateStatement(const char* szSqlBuffer, uint32_t uSize)
 	{
 		return new CDbPreCompileStatement( this, szSqlBuffer, uSize );
 	}
 
 	IDbStatement* CDbConnection::CreateStatement( const char* szSqlBuffer )
 	{
-		return CreateStatement( szSqlBuffer, (uint32)strlen( szSqlBuffer ) );
+		return CreateStatement( szSqlBuffer, (uint32_t)strlen( szSqlBuffer ) );
 	}
 
-	IDbStatement* CDbConnection::CreateDynamicStatement( const char* szSqlBuffer, uint32 uSize )
+	IDbStatement* CDbConnection::CreateDynamicStatement( const char* szSqlBuffer, uint32_t uSize )
 	{
 		return new CDbDynamicStatement( this, szSqlBuffer, uSize );
 	}
 
 	IDbStatement* CDbConnection::CreateDynamicStatement( const char* szSqlBuffer )
 	{
-		return CreateDynamicStatement( szSqlBuffer, (uint32)strlen( szSqlBuffer ) );
+		return CreateDynamicStatement( szSqlBuffer, (uint32_t)strlen( szSqlBuffer ) );
 	}
 
-	uint32 CDbConnection::GetTotalStatement() const
+	uint32_t CDbConnection::GetTotalStatement() const
 	{
 		return m_nTotalStatement;
 	}
@@ -245,31 +245,31 @@ namespace Gamma
 	{
 		static const char* szSql = "start transaction";
 		static size_t nStrSize = strlen( szSql );
-		Execute( szSql, (uint32)nStrSize );
+		Execute( szSql, (uint32_t)nStrSize );
 	}
 
 	void CDbConnection::EndTran()
 	{
 		static const char* szSql = "commit";
 		static size_t nStrSize = strlen( szSql );
-		Execute( szSql, (uint32)nStrSize );
+		Execute( szSql, (uint32_t)nStrSize );
 	}
 
 	void CDbConnection::CancelTran()
 	{
 		static const char* szSql = "rollback";
 		static size_t nStrSize = strlen( szSql );
-		Execute( szSql, (uint32)nStrSize );
+		Execute( szSql, (uint32_t)nStrSize );
 	}
 
-	int32 CDbConnection::GetFoundRow()
+	int32_t CDbConnection::GetFoundRow()
 	{
 		static const char* szSql = "select FOUND_ROWS()";
 		static size_t nStrSize = strlen(szSql);
-		IDbTextResult* pResult = Execute(szSql, (uint32)nStrSize);
+		IDbTextResult* pResult = Execute(szSql, (uint32_t)nStrSize);
 		if (!pResult)
 			return 0;
-		uint32 nRow = pResult->GetRowNum();
+		uint32_t nRow = pResult->GetRowNum();
 		if (nRow == 0)
 			return 0;
 		pResult->Locate(0);

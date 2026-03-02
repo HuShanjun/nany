@@ -10,7 +10,7 @@
 
 #define  _LOGTEST
 
-uint32 g_nLogLevel = 0;
+uint32_t g_nLogLevel = 0;
 
 namespace Gamma
 {
@@ -44,7 +44,7 @@ namespace Gamma
 		return m_szLogPath.c_str();
 	}
 
-	CLog* CLogManager::GetLog( const char* szPrefix, uint32 nContext, ELogPathType eType )
+	CLog* CLogManager::GetLog( const char* szPrefix, uint32_t nContext, ELogPathType eType )
 	{		
 		map<std::string,CLog*>::iterator iter = find( szPrefix );
 
@@ -75,23 +75,23 @@ namespace Gamma
 		CLogManager::Instance().GetConsole().Redirect2StdConsole( bEnable );
 	}
 
-	void Redirect2Remote( const char* szIP, uint16 nPort )
+	void Redirect2Remote( const char* szIP, uint16_t nPort )
 	{
 		CLogManager::Instance().GetConsole().Redirect2Remote( szIP, nPort );
 	}
 	
-	int32 ReadFromConsole( char* szBuffer, int32 nCount )
+	int32_t ReadFromConsole( char* szBuffer, int32_t nCount )
 	{
 		return CLogManager::Instance().GetConsole().Read( szBuffer, nCount );
 	}
 
-	int32 ReadFileFromConsole( const char* szFileName, int nStartPos, char* szBuffer, int nSize )
+	int32_t ReadFileFromConsole( const char* szFileName, int nStartPos, char* szBuffer, int nSize )
 	{
 		return CLogManager::Instance().GetConsole().ReadFile( szFileName, nStartPos, szBuffer, nSize );
 	}
 
 
-	GAMMA_COMMON_API void SetLogLevel(uint32 nLevel)
+	GAMMA_COMMON_API void SetLogLevel(uint32_t nLevel)
 	{
 		g_nLogLevel = nLevel;
 	}
@@ -105,8 +105,8 @@ namespace Gamma
 		memset(szbuff, 0, sizeof(szbuff));
 
 		char* pbegin = szbuff;
-		int32 remainlen = sizeof(szbuff);
-		int32 writesize = 0;
+		int32_t remainlen = sizeof(szbuff);
+		int32_t writesize = 0;
 		switch (nLevel)
 		{
 		case eLL_Note: writesize = snprintf(pbegin, remainlen, "%s", "[note]"); break;
@@ -128,7 +128,7 @@ namespace Gamma
 			GetLogStream() << szbuff;*/
 	}
 
-	void SetConsoleSize( int32 x, int32 y )
+	void SetConsoleSize( int32_t x, int32_t y )
 	{
 		CLogManager::Instance().GetConsole().Resize( x, y );
 	}
@@ -137,17 +137,17 @@ namespace Gamma
 	struct SStackLogInfo
 	{
 		const char* szFile;
-		uint32		nLine;
+		uint32_t		nLine;
 		const void* pContext;
 		const void* pStackPoint;
 	} g_aryStackLogBuffer[8192];
-	uint32 g_nProcessIndex = 0;
+	uint32_t g_nProcessIndex = 0;
 
-	void EnterStack( const char* szFile, uint32 nLine, const void* pContext )
+	void EnterStack( const char* szFile, uint32_t nLine, const void* pContext )
 	{
 		if( g_nProcessIndex >= ELEM_COUNT( g_aryStackLogBuffer ) )
 			return;
-		uint32 nDummy = 0;
+		uint32_t nDummy = 0;
 		g_aryStackLogBuffer[g_nProcessIndex].szFile = szFile;
 		g_aryStackLogBuffer[g_nProcessIndex].nLine = nLine;
 		g_aryStackLogBuffer[g_nProcessIndex].pContext = pContext;
@@ -155,7 +155,7 @@ namespace Gamma
 		++g_nProcessIndex;
 	}
 
-	void PollProcess( const char* szFile, uint32 nLine )
+	void PollProcess( const char* szFile, uint32_t nLine )
 	{
 		g_aryStackLogBuffer[g_nProcessIndex].szFile = szFile;
 		g_aryStackLogBuffer[g_nProcessIndex].nLine = nLine;
@@ -172,8 +172,8 @@ namespace Gamma
 			--g_nProcessIndex;
 	}
 #else
-	void EnterStack( const char* szFile, uint32 nLine, const void* pContext ){}
-	void PollProcess( const char* szFile, uint32 nLine ){}
+	void EnterStack( const char* szFile, uint32_t nLine, const void* pContext ){}
+	void PollProcess( const char* szFile, uint32_t nLine ){}
 	void LeaveStack(){}
 #endif
 
@@ -185,7 +185,7 @@ namespace Gamma
 	//================================================================================
 	// log
 	//================================================================================
-	CLog::CLog( const char* szPrefix, uint32 nContext, ELogPathType eType, time_t nCreateTime, uint32 nSerialNum )
+	CLog::CLog( const char* szPrefix, uint32_t nContext, ELogPathType eType, time_t nCreateTime, uint32_t nSerialNum )
 		: m_nLastDay(0)
 		, m_nCreateTime( nCreateTime )
 		, m_szPrefix( szPrefix )
@@ -269,7 +269,7 @@ namespace Gamma
 
 		GammaAst( m_fdLog );
 		fseek( m_fdLog, 0, SEEK_END );
-		m_nBytesWrited = (uint32)ftell( m_fdLog );
+		m_nBytesWrited = (uint32_t)ftell( m_fdLog );
 		m_nMaxBytesWrited = m_nBytesWrited;
 	}
 
@@ -318,22 +318,22 @@ namespace Gamma
 		fflush( m_fdLog );
 	}
 
-	uint32 CLog::Format( const char* szFormat, ... )
+	uint32_t CLog::Format( const char* szFormat, ... )
 	{
 		va_list vlArgs;
 		va_start(vlArgs,szFormat);
-		uint32 uResult = Format( szFormat, vlArgs );
+		uint32_t uResult = Format( szFormat, vlArgs );
 		va_end(vlArgs);
 		return uResult;
 	}
 
-	uint32 CLog::Format( const char* szFormat, va_list vlArgs )
+	uint32_t CLog::Format( const char* szFormat, va_list vlArgs )
 	{
 		char szBuffer[LOG_TOTAL_LENGTH + 100];
 		memset( szBuffer, 0, sizeof( szBuffer ) );
 
 		char* pWritePos = szBuffer;
-		int32 nWritelen = 0;
+		int32_t nWritelen = 0;
 
 		//vsnprintf在windows和linux下行为不一致，当缓冲区不够长时，linux把最后一个字符填写为'\0',windows不会
 		//两者返回的长度在任何情况下都不包含最后的'\0'
@@ -341,7 +341,7 @@ namespace Gamma
 		pWritePos += nWritelen;
 		Write( szBuffer, pWritePos - szBuffer );
 
-		return (int32)( pWritePos - szBuffer );
+		return (int32_t)( pWritePos - szBuffer );
 	}
 
 	void CLog::Reset()
@@ -349,7 +349,7 @@ namespace Gamma
 		char szBuffer[1024];
 		memset( szBuffer, ' ', sizeof(szBuffer) );
 		fseek( m_fdLog, 0, SEEK_SET );
-		for( uint32 i = 0; i < m_nBytesWrited; i += sizeof(szBuffer) )
+		for( uint32_t i = 0; i < m_nBytesWrited; i += sizeof(szBuffer) )
 			fwrite( szBuffer, 1, Min<size_t>( m_nBytesWrited - i, sizeof(szBuffer) ), m_fdLog );
 		fseek( m_fdLog, 0, SEEK_SET );
 		m_nBytesWrited = 0;
@@ -376,7 +376,7 @@ namespace Gamma
 		CLogManager::Instance().Unlock();
 	}
 
-	ILog* GetLogFile( const char* szPrefix, uint32 nContext, ELogPathType eType )
+	ILog* GetLogFile( const char* szPrefix, uint32_t nContext, ELogPathType eType )
 	{
 		CLogManager::Instance().Lock();
 		CLog* pLog = CLogManager::Instance().GetLog( szPrefix, nContext, eType );
@@ -384,7 +384,7 @@ namespace Gamma
 		return pLog;
 	}
 
-	bool WriteLog( const char* szPrefix, uint32 nContext, ELogPathType eType, const char* szBuffer, size_t nlen )
+	bool WriteLog( const char* szPrefix, uint32_t nContext, ELogPathType eType, const char* szBuffer, size_t nlen )
 	{
 		ILog* pLog = GetLogFile( szPrefix, nContext, eType );
 		if( pLog )
@@ -421,7 +421,7 @@ namespace Gamma
 		return _GetGlobLogFun();
 	}
 
-	std::ostream& GetLogStream(uint32 nLevel)
+	std::ostream& GetLogStream(uint32_t nLevel)
 	{
 		static logstream s_inst;
 		s_inst.SetLogLevels(g_nLogLevel, nLevel);

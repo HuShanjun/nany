@@ -24,7 +24,7 @@ namespace Gamma
 
 	typedef std::vector<SPackagePart*> CPackageInfoList;
 	typedef bool  (*EnumFileHandler)( const char* szFileName, void* pContext );
-	typedef void  (*ReadFileHandler)( const char* szFileName, void* pContext, const tbyte* pBuffer, uint32 nSize );
+	typedef void  (*ReadFileHandler)( const char* szFileName, void* pContext, const tbyte* pBuffer, uint32_t nSize );
 
 	//============================================
 	// 一个分包
@@ -47,13 +47,13 @@ namespace Gamma
 		// 0--------------非压缩文件
 		// INVALID_32BITID--未知长度压缩文件
 		// 其他-----------压缩文件原始长度
-		uint32				m_nOrgSize;	
+		uint32_t				m_nOrgSize;	
 
 		// 文件压缩后的大小
-		uint32				m_nPackSize;
+		uint32_t				m_nPackSize;
 
 		// 一个完整包的分包索引，当
-		uint16				m_nPackageIndex;
+		uint16_t				m_nPackageIndex;
 		
 		// 曾经成功加载过
 		bool				m_bLoaded;
@@ -65,7 +65,7 @@ namespace Gamma
 	class CFileContext
 	{
 		SPackagePart*		m_pPackageNode;
-		uint32				m_nIndex;
+		uint32_t				m_nIndex;
 
 	public:
 		friend class CPackage;
@@ -74,14 +74,14 @@ namespace Gamma
 		~CFileContext();
 
 		bool				IsInFileList() const;
-		uint32				Size() const;
+		uint32_t				Size() const;
 		const tbyte*		GetBuffer() const;
 		CPackage*			GetPackage() const;
 	};
 	
 	struct SAddr
 	{
-		int32				nAiFamily;
+		int32_t				nAiFamily;
 		std::string			strAddBuff;
 	};
 
@@ -91,13 +91,13 @@ namespace Gamma
 		std::string			m_strOrg;
 		std::string			m_strHost;
 		HLOCK				m_hLock;
-		uint16				m_nPort;
+		uint16_t				m_nPort;
 		std::vector<SAddr>	m_vecAddrHttp;
 		std::string			m_strMirror;
 	public:
-		CAddressHttp( const std::string& strKey, const std::string& strHost, uint16 nPort );
+		CAddressHttp( const std::string& strKey, const std::string& strHost, uint16_t nPort );
 		~CAddressHttp();	
-		const SAddr*		GetAddr( uint32 nIndex );
+		const SAddr*		GetAddr( uint32_t nIndex );
 		const std::string&	GetOrg() const { return m_strOrg; }
 		const std::string&	GetHost() const { return m_strHost; }
 		const std::string&	GetMirror() const { return m_strMirror; }
@@ -142,22 +142,22 @@ namespace Gamma
 		std::string				m_strBaseWebPath;
 		IGammaFileMgrListener*	m_pFileMgrListener;
 
-		uint32					m_nPreCheckTime;
-		uint32					m_nPreDownloadTime;
+		uint32_t					m_nPreCheckTime;
+		uint32_t					m_nPreDownloadTime;
 		bool					m_bWifiConnected;
 
 		bool					m_bReleaseCache;
 		bool					m_bLocalFiles;
 
-		uint8					m_eLoadContent;
-		uint32					m_nNeedExtractCount;
-		uint32					m_nNeedDownloadCount;
+		uint8_t					m_eLoadContent;
+		uint32_t					m_nNeedExtractCount;
+		uint32_t					m_nNeedDownloadCount;
 
 		bool					HasFileList() const{ return !m_mapFileContext.empty(); }					
 		void					DownLoadPackages();
 
-		void					OnLoadFileList( const char* szFileName, const tbyte* pBuffer, uint32 nSize );
-		void					OnLoadVersionFile( const char* szFileName, const tbyte* pBuffer, uint32 nSize );
+		void					OnLoadFileList( const char* szFileName, const tbyte* pBuffer, uint32_t nSize );
+		void					OnLoadVersionFile( const char* szFileName, const tbyte* pBuffer, uint32_t nSize );
 		void					OnExtractPackage( const char* szFileName, bool bFailed );
 		void					OnDownloadPackage( const char* szFileName, bool bFailed );	
 
@@ -180,7 +180,7 @@ namespace Gamma
 							
 		void					ConvertToAbsolutePath( const char* szPathName, char szAbsolutePath[2048] ) const;
 		const char*				RevertToShortPath( const char* szAbsolutePath ) const;
-		uint32					GetBasePathEnd( const char* szPathName );
+		uint32_t					GetBasePathEnd( const char* szPathName );
 		CAddressHttp*			GetHost( const std::string& strUrl );
 
 		CPackage*				CreatePackage( const char* szFullPathName );
@@ -188,7 +188,7 @@ namespace Gamma
 		CFileContext*			GetFileContext( const char* strPathName );
 
 		bool					FileTreeWalk( const char* szDirName, CPathMgr::FILE_PROC_UTF8 pfnFileProc,
-									void* pContext, uint32 nDepth = -1, bool bFullFilePath = true );
+									void* pContext, uint32_t nDepth = -1, bool bFullFilePath = true );
 		bool					HasFile( const char* szFileName ) const;		
 
 		void					UpdateAllPackage( bool bExtract, bool bDownload );
@@ -200,7 +200,7 @@ namespace Gamma
 		IGammaFileMgrListener*	GetFileMgrListener() const { return m_pFileMgrListener; }
 		void					SetFileMgrListener( IGammaFileMgrListener* pFileMgrListener );
 
-		void					OnLoadedEnd( const char* szFileName, const tbyte* pBuffer, uint32 nSize );
+		void					OnLoadedEnd( const char* szFileName, const tbyte* pBuffer, uint32_t nSize );
 		bool					OnDownloadPackage( CPackage* pPackage );
 
 		bool					IsFileInCurrentPackage( const char* szNameInPackage ) const;

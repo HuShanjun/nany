@@ -102,8 +102,8 @@ namespace Gamma
 		tq[3] = 1 - vXAxis[0] - vYAxis[1] + vZAxis[2];
 
 		// Find the maximum (could also use stacked if's later)
-		int32 j = 0;
-		for( int32 i = 1; i < 4; i++ ) 
+		int32_t j = 0;
+		for( int32_t i = 1; i < 4; i++ ) 
 			j = ( tq[i] > tq[j] ) ? i : j;
 
 		// check the diagonal

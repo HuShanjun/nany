@@ -50,35 +50,35 @@ namespace Gamma
     // 求整数平方根  
     // 比sqrt快  
     //=========================================================================
-    GAMMA_COMMON_API uint16 sqrti( uint32 M );
-    GAMMA_COMMON_API uint32 sqrti64( uint64 M );
+    GAMMA_COMMON_API uint16_t sqrti( uint32_t M );
+    GAMMA_COMMON_API uint32_t sqrti64( uint64_t M );
 
     //========================================================================
     // 不受浮点精度影响转换函数  
     //========================================================================
-    GAMMA_COMMON_API double u2d( uint32 uValue );
+    GAMMA_COMMON_API double u2d( uint32_t uValue );
 
     //========================================================================
     // 极速浮点转整形函数  
     // 比系统提供的快  
     //=========================================================================
-    GAMMA_COMMON_API int32 f2i( float f );
+    GAMMA_COMMON_API int32_t f2i( float f );
 
     //========================================================================
     // 浮点转无符号整形函数  
     //=========================================================================
-	GAMMA_COMMON_API uint32 f2u( float f );
+	GAMMA_COMMON_API uint32_t f2u( float f );
 
 	//========================================================================
 	// 字符串转换为整数  
     ///@return 如果不能转换为数字则返回零  
 	//========================================================================
-	GAMMA_COMMON_API int32 GammaA2I( const wchar_t* szStr );
-	GAMMA_COMMON_API int32 GammaA2I( const char* szStr );
+	GAMMA_COMMON_API int32_t GammaA2I( const wchar_t* szStr );
+	GAMMA_COMMON_API int32_t GammaA2I( const char* szStr );
 
 
-	GAMMA_COMMON_API int64 GammaA2I64( const wchar_t* szStr );
-	GAMMA_COMMON_API int64 GammaA2I64( const char* szStr );
+	GAMMA_COMMON_API int64_t GammaA2I64( const wchar_t* szStr );
+	GAMMA_COMMON_API int64_t GammaA2I64( const char* szStr );
 
 	//========================================================================
 	// 字符串转换为浮点  
@@ -103,13 +103,13 @@ namespace Gamma
 	//========================================================================
 	// 整数常量乘方  
 	//========================================================================
-	template<int32 m, int32 n>
+	template<int32_t m, int32_t n>
 	struct TPower
 	{
 		enum { eValue = TPower< m, n/2 >::eValue*TPower< m, n - n/2 >::eValue };
 	};
 
-	template <int32 m>
+	template <int32_t m>
 	struct TPower< m, 1 >
 	{
 		enum { eValue = m };
@@ -118,10 +118,10 @@ namespace Gamma
 	//========================================================================
 	// 整数常量开方  
 	//========================================================================
-	template<uint32 s>
+	template<uint32_t s>
 	struct TSqrt
 	{
-		template <uint32 m, uint32 n, uint32 t, uint32 i>
+		template <uint32_t m, uint32_t n, uint32_t t, uint32_t i>
 		struct TLoop
 		{
 			enum
@@ -141,7 +141,7 @@ namespace Gamma
 			};
 		};
 
-		template <uint32 m, uint32 n, uint32 t>
+		template <uint32_t m, uint32_t n, uint32_t t>
 		struct TLoop< m, n, t, 0>
 		{
 			enum
@@ -162,9 +162,9 @@ namespace Gamma
 	//========================================================================
 	// 整数对数  
 	//========================================================================
-	inline uint8 GammaLog2( uint32 x )
+	inline uint8_t GammaLog2( uint32_t x )
 	{
-		return uint8(
+		return uint8_t(
 			( ( ( ( x ) & 0xAAAAAAAA ) ? 1 : 0 )      ) |
 			( ( ( ( x ) & 0xCCCCCCCC ) ? 1 : 0 ) << 1 ) |
 			( ( ( ( x ) & 0xF0F0F0F0 ) ? 1 : 0 ) << 2 ) |
@@ -234,9 +234,9 @@ namespace Gamma
     //       █  
     //=================================================================================================================
 	template<typename ILineAction>
-	inline bool	TightLineTo( int32 xSrc, int32 ySrc, int32 xDes, int32 yDes, ILineAction Action );
+	inline bool	TightLineTo( int32_t xSrc, int32_t ySrc, int32_t xDes, int32_t yDes, ILineAction Action );
 	template<typename ILineAction>
-    inline bool	LineTo( int32 xSrc, int32 ySrc, int32 xDes, int32 yDes, ILineAction Action, bool bCheckEnd = false );
+    inline bool	LineTo( int32_t xSrc, int32_t ySrc, int32_t xDes, int32_t yDes, ILineAction Action, bool bCheckEnd = false );
 
 
 	GAMMA_COMMON_API CVector3f	SceneToScreen( const CIRect& rtScreen, const CVector3f& vScene, const CMatrix& matWorldViewProject );
@@ -245,8 +245,8 @@ namespace Gamma
 	//=================================================================================================================
 	// 是否在三角形里 -1:不在; 0:边上; 1:在  
 	//=================================================================================================================
-	GAMMA_COMMON_API int32		IsInTriangle( const CVector2f& v, const CVector2f& v0, const CVector2f& v1, const CVector2f& v2 );
-	GAMMA_COMMON_API int32		IsInTriangle( const CVector3f& v, const CVector3f& v0, const CVector3f& v1, const CVector3f& v2 );
+	GAMMA_COMMON_API int32_t		IsInTriangle( const CVector2f& v, const CVector2f& v0, const CVector2f& v1, const CVector2f& v2 );
+	GAMMA_COMMON_API int32_t		IsInTriangle( const CVector3f& v, const CVector3f& v0, const CVector3f& v1, const CVector3f& v2 );
 
     //=================================================================================================================
     // 3D碰撞测试  
@@ -287,7 +287,7 @@ namespace Gamma
 	inline float SegmentSegmentDist( const Vec& a, const Vec& b, const Vec& c, const Vec& d, float* s, float* t);
 
 	//**************************************************************************************************************
-	/*! \fn     std::pair<uint32,uint32> BuildSphere  
+	/*! \fn     std::pair<uint32_t,uint32_t> BuildSphere  
 	*   \brief  生成球体，椎体，圆柱体mesh  
 	*			pVertex和pIndex任意一个为空则进返回顶点数以及索引数  
 	*
@@ -311,14 +311,14 @@ namespace Gamma
 	*   \param  fSegmentEnd y方向垂直分段方向开始生成mesh的终点  
 	*   \param  nVetexContext 传入顶点构造函数的上下文参数  
 	*
-	*   \return pair<uint32,uint32> 顶点数以及索引数  
+	*   \return pair<uint32_t,uint32_t> 顶点数以及索引数  
 	*   \sa     GetMinAxis
 	***************************************************************************************************************/
 	template<typename _VertexVec>
-	inline std::pair<uint32,uint32> BuildSphere( _VertexVec* pVertex, uint16* pIndex,
-		int32 nCircleDivCount, int32 nHeightDivCount, float fRadiusY, float fUpRadiusXZ, float fDownRadiusXZ = -1, bool bTop = false, bool bBottom = false,
+	inline std::pair<uint32_t,uint32_t> BuildSphere( _VertexVec* pVertex, uint16_t* pIndex,
+		int32_t nCircleDivCount, int32_t nHeightDivCount, float fRadiusY, float fUpRadiusXZ, float fDownRadiusXZ = -1, bool bTop = false, bool bBottom = false,
 		float fUSectorStart = 0.0f, float fUSectorEnd = 1.0f, float fVSegmentStart = 0.0f, float fVSegmentEnd = 1.0f, bool bWrapUV = true,
-		float fSectorStart = 0.0f, float fSectorEnd = 1.0f, float fSegmentStart = 0.0f, float fSegmentEnd = 1.0f, uint32 nVetexContext = 0 );
+		float fSectorStart = 0.0f, float fSectorEnd = 1.0f, float fSegmentStart = 0.0f, float fSegmentEnd = 1.0f, uint32_t nVetexContext = 0 );
 
     /// 测试射线和三角形的相交  
     GAMMA_COMMON_API bool IsLineIntersectTriangle( CVector3f& vIntersect, const CVector3f& vStart, const CVector3f& vDir,

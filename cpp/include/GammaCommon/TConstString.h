@@ -19,7 +19,7 @@ namespace Gamma
 	class TConstString
 	{
 		const _Elem*	m_szString;
-		int32			m_nSize;
+		int32_t			m_nSize;
 
 	public:
 		TConstString() : m_szString(NULL), m_nSize(0)
@@ -33,7 +33,7 @@ namespace Gamma
 			assign( szString, bRefrence );
 		}
 
-		TConstString( const _Elem* szString, uint32 nLen, bool bRefrence = false )
+		TConstString( const _Elem* szString, uint32_t nLen, bool bRefrence = false )
 			: m_nSize( nLen )
 			, m_szString( NULL )
 		{
@@ -46,7 +46,7 @@ namespace Gamma
 		{
 			if( m_nSize >= 0 )
 				return;
-			++( *( ( (uint32*)( m_szString ) ) - 1 ) );
+			++( *( ( (uint32_t*)( m_szString ) ) - 1 ) );
 		}
 
 		~TConstString()
@@ -63,7 +63,7 @@ namespace Gamma
 				return;
 			}
 
-			uint32* pRefCount = ( (uint32*)( m_szString ) ) - 1;
+			uint32_t* pRefCount = ( (uint32_t*)( m_szString ) ) - 1;
 			if( --( *pRefCount ) == 0 )
 				delete [] pRefCount;
 			m_szString = NULL;
@@ -80,8 +80,8 @@ namespace Gamma
 				m_nSize++;
 			if( bRefrence )
 				return;
-			uint32 nBufferSize = ( m_nSize + 1 )*sizeof(_Elem) + sizeof(uint32);
-			uint32* pRefCount = (uint32*)( new tbyte[ nBufferSize ] );
+			uint32_t nBufferSize = ( m_nSize + 1 )*sizeof(_Elem) + sizeof(uint32_t);
+			uint32_t* pRefCount = (uint32_t*)( new tbyte[ nBufferSize ] );
 			memcpy( pRefCount + 1, m_szString, m_nSize*sizeof(_Elem) );
 			( (_Elem*)( pRefCount + 1 ) )[m_nSize] = 0;
 			m_szString = (_Elem*)( pRefCount + 1 );
@@ -89,7 +89,7 @@ namespace Gamma
 			m_nSize = -m_nSize;
 		}
 
-		void assign( const _Elem* szString, uint32 nLen, bool bRefrence = false )
+		void assign( const _Elem* szString, uint32_t nLen, bool bRefrence = false )
 		{
 			clear();
 			bRefrence = !szString || !nLen || bRefrence;
@@ -97,8 +97,8 @@ namespace Gamma
 			m_nSize = m_szString ? nLen : 0;
 			if( bRefrence )
 				return;
-			uint32 nBufferSize = ( m_nSize + 1 )*sizeof(_Elem) + sizeof(uint32);
-			uint32* pRefCount = (uint32*)( new tbyte[ nBufferSize ] );
+			uint32_t nBufferSize = ( m_nSize + 1 )*sizeof(_Elem) + sizeof(uint32_t);
+			uint32_t* pRefCount = (uint32_t*)( new tbyte[ nBufferSize ] );
 			memcpy( pRefCount + 1, m_szString, m_nSize*sizeof(_Elem) );
 			( (_Elem*)( pRefCount + 1 ) )[m_nSize] = 0;
 			m_szString = (_Elem*)( pRefCount + 1 );
@@ -117,7 +117,7 @@ namespace Gamma
 			return m_szString == NULL || m_szString[0] == 0 || m_nSize == 0;
 		}
 
-		uint32 size() const
+		uint32_t size() const
 		{
 			return GammaAbs( m_nSize );
 		}
@@ -129,7 +129,7 @@ namespace Gamma
 			m_szString = str.m_szString;
 			if( m_nSize >= 0 )
 				return *this;
-			++( *( ( (uint32*)( m_szString ) ) - 1 ) );
+			++( *( ( (uint32_t*)( m_szString ) ) - 1 ) );
 			return *this;
 		}
 
@@ -141,12 +141,12 @@ namespace Gamma
 
 		bool operator == ( const TConstString& str ) const
 		{
-			uint32 nLen = size();
+			uint32_t nLen = size();
 			if( nLen != str.size() )
 				return false;
 			const _Elem* src = c_str();
 			const _Elem* dst = str.c_str();
-			for( uint32 i = 0; i < nLen; ++i )
+			for( uint32_t i = 0; i < nLen; ++i )
 				if( src[i] != dst[i] )
 					return false;
 			return true;
@@ -176,10 +176,10 @@ namespace Gamma
 		{
 			const _Elem* src = c_str();
 			const _Elem* dst = str.c_str();
-			uint32 srcLen = size();
-			uint32 dstLen = str.size();
-			uint32 nMinLen = Min( srcLen, dstLen );
-			uint32 i = 0;
+			uint32_t srcLen = size();
+			uint32_t dstLen = str.size();
+			uint32_t nMinLen = Min( srcLen, dstLen );
+			uint32_t i = 0;
 			while( i < nMinLen && src[i] == dst[i] )
 				++i;
 			return ( i < srcLen ? src[i] : 0 ) < ( i < dstLen ? dst[i] : 0 );
@@ -210,23 +210,23 @@ namespace Gamma
 			return ( ( src < end ? *src : 0 ) - *dst ) > 0;
 		}
 
-		uint32 find( const _Elem nChar, const uint32 nOffset = 0 )
+		uint32_t find( const _Elem nChar, const uint32_t nOffset = 0 )
 		{
 			if ( m_szString == NULL )
 				return INVALID_32BITID;
-			uint32 nPos = nOffset;
-			uint32 nLen = size();
+			uint32_t nPos = nOffset;
+			uint32_t nLen = size();
 			while ( nPos < nLen && m_szString[nPos] != nChar )
 				++nPos;
 			return nPos >= nLen ? INVALID_32BITID : nPos;
 		}
 
-		uint32 rfind( const _Elem nChar, const uint32 nOffset = 0 )
+		uint32_t rfind( const _Elem nChar, const uint32_t nOffset = 0 )
 		{
-			uint32 nLen = size();
+			uint32_t nLen = size();
 			if ( m_szString == NULL || nOffset >= nLen )
 				return INVALID_32BITID;
-			int32 nCurPos = (int32)( nLen - nOffset - 1 );
+			int32_t nCurPos = (int32_t)( nLen - nOffset - 1 );
 			while ( nCurPos >= 0 && m_szString[nCurPos] != nChar )
 				--nCurPos;
 			return nCurPos >= 0 ? nCurPos : INVALID_32BITID;

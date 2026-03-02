@@ -8,7 +8,7 @@ namespace Gamma
 {
 	CDatabase::CDatabase()
 	{
-		uint32 nCount = eEC_ErrorCount;
+		uint32_t nCount = eEC_ErrorCount;
 		while( nCount -- )
 		{
 			m_eErrorCode[ nCount ] = eEC_Unkown;
@@ -19,9 +19,9 @@ namespace Gamma
 		m_eErrorCode[0]					= eEC_Succeed;
 	}
 
-	EErrorCodes CDatabase::FormatCode( uint32 nErrorCode )
+	EErrorCodes CDatabase::FormatCode( uint32_t nErrorCode )
 	{
-		return nErrorCode < (uint32)eEC_ErrorCount ? m_eErrorCode[nErrorCode] : eEC_Unkown;
+		return nErrorCode < (uint32_t)eEC_ErrorCount ? m_eErrorCode[nErrorCode] : eEC_Unkown;
 	}
 
     IDatabase* GetDatabase()
@@ -30,8 +30,8 @@ namespace Gamma
         return &s_Instance;
     }
 
-    IDbConnection* CDatabase::CreateConnection( const char* szHost, uint16 uPort,
-        const char* szUser, const char* szPassword, const char* szDatabase, uint32 nDBId,
+    IDbConnection* CDatabase::CreateConnection( const char* szHost, uint16_t uPort,
+        const char* szUser, const char* szPassword, const char* szDatabase, uint32_t nDBId,
         bool bFoundAsUpdateRow, bool bMultiStatements, bool bPingReconnect )
     {
         CDbConnection* pConnect = new CDbConnection(nDBId);
@@ -44,7 +44,7 @@ namespace Gamma
     }
 
     IDbConnection* CDatabase::CreateConnection( const char* szPipe,
-        const char* szUser, const char* szPassword, const char* szDatabase, uint32 nDBId,
+        const char* szUser, const char* szPassword, const char* szDatabase, uint32_t nDBId,
         bool bFoundAsUpdateRow, bool bMultiStatements, bool bPingReconnect )
     {
 		CDbConnection* pConnect = new CDbConnection(nDBId);

@@ -22,12 +22,12 @@ namespace Gamma
 #endif // WIN32
 
 
-	uint32 ConVertAddressToInt32( const char* szAddress )
+	uint32_t ConVertAddressToInt32( const char* szAddress )
 	{
-		return (uint32)inet_addr(szAddress);
+		return (uint32_t)inet_addr(szAddress);
 	}
 
-	const char* ConvertInt32ToAddress( uint32 nIP )
+	const char* ConvertInt32ToAddress( uint32_t nIP )
 	{
 		in_addr ia;
 		ia.s_addr = nIP;
@@ -69,7 +69,7 @@ namespace Gamma
 			tmp++;
 		}
 
-		uint32 nPort = atoi(szPort);
+		uint32_t nPort = atoi(szPort);
 		if (nPort > 0xFFFF)
 			return false;
 
@@ -83,22 +83,22 @@ namespace Gamma
 		memset( m_sAddress, 0, sizeof(m_sAddress) );
 	}
 
-	CAddress::CAddress( const char* szAddress, uint16 nPort ) 
+	CAddress::CAddress( const char* szAddress, uint16_t nPort ) 
 		: m_nPort(nPort)
 	{
 		SetAddress( szAddress );
 	}
 
-	CAddress::CAddress( uint32 nAddress, uint16 nPort ) 
+	CAddress::CAddress( uint32_t nAddress, uint16_t nPort ) 
 		: m_nPort( nPort )
 	{
 		SetAddress( nAddress );
 	}
 
-	CAddress::CAddress( uint64 nPackAddress )
-		: m_nPort( (uint16)nPackAddress )
+	CAddress::CAddress( uint64_t nPackAddress )
+		: m_nPort( (uint16_t)nPackAddress )
 	{
-		SetAddress( (uint32)( nPackAddress>>32 ) );
+		SetAddress( (uint32_t)( nPackAddress>>32 ) );
 	}
 
 	bool CAddress::operator == ( const CAddress& ano )const
@@ -125,7 +125,7 @@ namespace Gamma
 		m_nAddress = ConVertAddressToInt32( szAddress );
 	}
 
-	void CAddress::SetAddress( uint32 nAddress )
+	void CAddress::SetAddress( uint32_t nAddress )
 	{
 		strcpy2array_safe( m_sAddress, ConvertInt32ToAddress( nAddress ) );
 		m_nAddress = ConVertAddressToInt32( m_sAddress );
@@ -136,28 +136,28 @@ namespace Gamma
 		return m_sAddress;
 	}
 
-	void CAddress::SetPort( uint16 nPort )
+	void CAddress::SetPort( uint16_t nPort )
 	{
 		m_nPort = nPort;
 	}
 
-	uint16 CAddress::GetPort()const
+	uint16_t CAddress::GetPort()const
 	{
 		return m_nPort;
 	}
 
-	uint64 CAddress::GetPackAddress() const
+	uint64_t CAddress::GetPackAddress() const
 	{
-		return ( ( (uint64)m_nAddress ) << 32 )|m_nPort;
+		return ( ( (uint64_t)m_nAddress ) << 32 )|m_nPort;
 	}
 
-	uint32 CAddress::GetIP() const
+	uint32_t CAddress::GetIP() const
 	{
 		return m_nAddress;
 	}
 
-	uint8 CAddress::GetAddressSize() const
+	uint8_t CAddress::GetAddressSize() const
 	{
-		return (uint8)strlen(m_sAddress);
+		return (uint8_t)strlen(m_sAddress);
 	}
 }

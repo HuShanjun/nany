@@ -35,10 +35,10 @@ namespace Gamma
 	{
 	public:
 		virtual void*		GetVM() = 0;
-		virtual int32		Input( char* szBuffer, int nCount ) = 0;
-		virtual int32		Output( const char* szBuffer, int nCount, bool bError = false ) = 0;
+		virtual int32_t		Input( char* szBuffer, int nCount ) = 0;
+		virtual int32_t		Output( const char* szBuffer, int nCount, bool bError = false ) = 0;
 		virtual void*		OpenFile( const char* szFileName ) = 0;
-		virtual int32		ReadFile( void* pContext, char* szBuffer, int32 nCount ) = 0;
+		virtual int32_t		ReadFile( void* pContext, char* szBuffer, int32_t nCount ) = 0;
 		virtual void		CloseFile( void* pContext ) = 0;
 		virtual bool		RunFile( const char* szFileName, bool bForce = false ) = 0;
 	};
@@ -57,25 +57,25 @@ namespace Gamma
 			, nIndexValues( 0 )
 			, strValue( szValue ? szValue : "" )
 		{}
-		uint32		nID;
+		uint32_t		nID;
 		std::string strName;
 		std::string strValue; 
-		uint32		nNameValues;
-		uint32		nIndexValues;
+		uint32_t		nNameValues;
+		uint32_t		nIndexValues;
 	};
 
     class CBreakPoint : public gammacstring
 	{
-		uint32				m_nBreakPointID;
-		uint32				m_nFileNameStart;
-		uint32				m_nLineNum;
+		uint32_t				m_nBreakPointID;
+		uint32_t				m_nFileNameStart;
+		uint32_t				m_nLineNum;
 	public:
-        CBreakPoint( uint32 nID, const char* szFileName, bool bRef, uint32 uLineNum );
+        CBreakPoint( uint32_t nID, const char* szFileName, bool bRef, uint32_t uLineNum );
         bool operator < ( const CBreakPoint& ano ) const;
 		bool operator == ( const CBreakPoint& ano ) const;
 		const char* GetModuleName() const { return c_str() + m_nFileNameStart; }
-		uint32 GetBreakPointID() const { return m_nBreakPointID; }
-		uint32 GetLineNum() const { return m_nLineNum; }
+		uint32_t GetBreakPointID() const { return m_nBreakPointID; }
+		uint32_t GetLineNum() const { return m_nLineNum; }
 	};
 
     class GAMMA_SCRIPT_API CDebugBase
@@ -110,13 +110,13 @@ namespace Gamma
 		bool				m_bPrintFrame;
 		bool				m_bEnterDebug;
 		bool				m_bExpectStep;
-		uint32				m_nExceptionID;
+		uint32_t				m_nExceptionID;
 		std::string			m_szException;
 		std::string			m_szStringSend;
 		
-		int32				m_nCurFrame;
-		int32				m_nCurLine;
-		int32				m_nShowLine;
+		int32_t				m_nCurFrame;
+		int32_t				m_nCurLine;
+		int32_t				m_nShowLine;
 		std::string			m_strLastVarName;
 
 		//=================================================================
@@ -124,13 +124,13 @@ namespace Gamma
 		//=================================================================
 		void				ConsoleDebug( SException* pException );
 		const char*			ReadWord( bool bNewLine = false );
-		bool				PrintLine( int32 nFrame, const char* szSource, int32 nLine, bool bIsCurLine );
-		void				PrintFrame( int32 nFrame, const char* szFun, const char* szSource, int32 nLine );
-		const char*			ReadFileLine( const char* szSource, int32 nLine );
+		bool				PrintLine( int32_t nFrame, const char* szSource, int32_t nLine, bool bIsCurLine );
+		void				PrintFrame( int32_t nFrame, const char* szFun, const char* szSource, int32_t nLine );
+		const char*			ReadFileLine( const char* szSource, int32_t nLine );
 
 		void				AddBreakPoint( const char* szBuf );
 		void				PrintBreakInfo();
-		void				ShowFileLines( int32 nLineCount );
+		void				ShowFileLines( int32_t nLineCount );
 
 		//=================================================================
 		// RemoteDebug
@@ -139,7 +139,7 @@ namespace Gamma
 		void				RemoteDebug( SException* pException );
 		void				CmdLock();
 		void				CmdUnLock();
-		void				ListenRemote( const char* strDebugHost, uint16 nDebugPort );
+		void				ListenRemote( const char* strDebugHost, uint16_t nDebugPort );
 		void				TeminateRemote( const char* szSequence );
 		void				Run();
 
@@ -153,43 +153,43 @@ namespace Gamma
 		//=================================================================
 		// Implement other debug protocol by override next two function
 		//=================================================================
-		virtual bool		ReciveRemoteData(char(&szBuffer)[2048], int32 nCurSize);
+		virtual bool		ReciveRemoteData(char(&szBuffer)[2048], int32_t nCurSize);
 		virtual bool		CheckRemoteCmd();
 
 	protected:
 		IDebugHandler*		GetDebugHandler() const { return m_pHandler; }
-		virtual uint32		GenBreakPointID( const char* szFileName, int32 nLine ) = 0;
+		virtual uint32_t		GenBreakPointID( const char* szFileName, int32_t nLine ) = 0;
 		bool				HaveBreakPoint() const { return !m_setBreakPoint.empty(); }
 		std::string			ReadEntirFile( const char* szFileName );
 
     public:
-        CDebugBase( IDebugHandler* pHandler, const char* strDebugHost, uint16 nDebugPort );
+        CDebugBase( IDebugHandler* pHandler, const char* strDebugHost, uint16_t nDebugPort );
 		virtual ~CDebugBase(void);
 
 		void				Debug();
 		bool				Error( const char* szException, bool bBeCaught );
-		void				BTrace( int32 nFrameCount );
+		void				BTrace( int32_t nFrameCount );
 
 		void				AddFileContent( const char* szSource, const char* szData );
 		bool				HasLoadFile(const char* szFile);
 		bool				RemoteDebugEnable() const;
 		bool				RemoteCmdValid() const { return !m_listDebugCmd.IsEmpty(); }
 		bool				CheckEnterRemoteDebug();
-		int32				GetDebuggerState();
+		int32_t				GetDebuggerState();
 
-		virtual uint32		AddBreakPoint( const char* szFileName, int32 nLine );
-		virtual void		DelBreakPoint( uint32 nBreakPointID );
-		const CBreakPoint*	GetBreakPoint( const char* szSource, int32 nLine );
+		virtual uint32_t		AddBreakPoint( const char* szFileName, int32_t nLine );
+		virtual void		DelBreakPoint( uint32_t nBreakPointID );
+		const CBreakPoint*	GetBreakPoint( const char* szSource, int32_t nLine );
 
-		virtual uint32		GetFrameCount() = 0;
-		virtual bool		GetFrameInfo( int32 nFrame, int32* nLine, 
+		virtual uint32_t		GetFrameCount() = 0;
+		virtual bool		GetFrameInfo( int32_t nFrame, int32_t* nLine, 
 								const char** szFunction, const char** szSource ) = 0;
-		virtual int32		SwitchFrame( int32 nCurFrame ) = 0;
-		virtual uint32		EvaluateExpression( int32 nCurFrame, const char* szExpression ) = 0;
-		virtual uint32		GetScopeChainID( int32 nCurFrame ) = 0;
-		virtual uint32		GetChildrenID( uint32 nParentID, bool bIndex, uint32 nStart, 
-								uint32* aryChild = nullptr, uint32 nCount = 0 ) = 0;
-		virtual SValueInfo	GetVariable( uint32 nID ) = 0;
+		virtual int32_t		SwitchFrame( int32_t nCurFrame ) = 0;
+		virtual uint32_t		EvaluateExpression( int32_t nCurFrame, const char* szExpression ) = 0;
+		virtual uint32_t		GetScopeChainID( int32_t nCurFrame ) = 0;
+		virtual uint32_t		GetChildrenID( uint32_t nParentID, bool bIndex, uint32_t nStart, 
+								uint32_t* aryChild = nullptr, uint32_t nCount = 0 ) = 0;
+		virtual SValueInfo	GetVariable( uint32_t nID ) = 0;
 		virtual void		Stop() = 0;
 		virtual void		Continue() = 0;
 		virtual void		StepIn() = 0;

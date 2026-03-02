@@ -14,7 +14,7 @@ namespace Gamma
 	// 脚本调用C++的基本接口
 	//=====================================================================
 	CCallInfo::CCallInfo( IFunctionWrap* funWrap, const STypeInfoArray& aryTypeInfo,
-		uintptr_t funOrg, const char* szTypeInfoName, int32 nFunIndex, const char* szFunName )
+		uintptr_t funOrg, const char* szTypeInfoName, int32_t nFunIndex, const char* szFunName )
 		: m_funWrap( funWrap )
 		, m_funOrg(funOrg)
 		, m_nResult( eDT_void )
@@ -31,11 +31,11 @@ namespace Gamma
 		for (size_t i = 0; i < m_listParam.size(); i++)
 		{
 			m_listParam[i] = ToDataType(aryTypeInfo.aryInfo[i]);
-			m_listParamSize[i] = (uint32)GetAligenSizeOfType(m_listParam[i]);
+			m_listParamSize[i] = (uint32_t)GetAligenSizeOfType(m_listParam[i]);
 			m_nTotalParamSize += m_listParamSize[i];
 		}
 		m_nResult = ToDataType( aryTypeInfo.aryInfo[aryTypeInfo.nSize - 1] );
-		m_nReturnSize = (uint32)GetAligenSizeOfType(m_nResult);
+		m_nReturnSize = (uint32_t)GetAligenSizeOfType(m_nResult);
 	}
 	
 	void CCallInfo::Call(void* pRetBuf, void** pArgArray, CScriptBase& Script) const
@@ -58,7 +58,7 @@ namespace Gamma
 	{
 		DataType nType = ToDataType( aryTypeInfo.aryInfo[1] );
 		m_listParam.push_back( nType );
-		m_listParamSize.push_back((uint32)GetAligenSizeOfType(nType));
+		m_listParamSize.push_back((uint32_t)GetAligenSizeOfType(nType));
 		m_nTotalParamSize += *m_listParamSize.rbegin();
 	}
 
@@ -77,7 +77,7 @@ namespace Gamma
 	//=====================================================================
 	CCallbackInfo::CCallbackInfo( 
 		IFunctionWrap* funWrap, const STypeInfoArray& aryTypeInfo, uintptr_t funBoot,
-		int32 nFunIndex, bool bPureVirtual, const char* szTypeInfoName, const char* szFunName )
+		int32_t nFunIndex, bool bPureVirtual, const char* szTypeInfoName, const char* szFunName )
 		: CCallInfo( funWrap, aryTypeInfo, funBoot, szTypeInfoName, 0, szFunName )
 		, m_bPureVirtual(bPureVirtual)
 	{
@@ -100,7 +100,7 @@ namespace Gamma
 		m_funWrap->Call( pRetBuf, pArgArray, (uintptr_t)pTable->m_pFun[m_nFunIndex] );
 	}
 
-	int32 CCallbackInfo::Destruc( SVirtualObj* pObject, void* pParam, CScriptBase& Script ) const
+	int32_t CCallbackInfo::Destruc( SVirtualObj* pObject, void* pParam, CScriptBase& Script ) const
 	{
 		if( !pObject->m_pTable || !pObject->m_pTable->m_pFun[m_nFunIndex] )
 			return 0;

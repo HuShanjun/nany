@@ -28,7 +28,7 @@
 #define INVALID_SOCKET			-1
 #define closesocket				close
 #define ioctlsocket				ioctl
-typedef int32					SOCKET;
+typedef int32_t					SOCKET;
 typedef struct linger			LINGER;
 #define SOCKET_ERROR			-1
 #define SD_SEND					SHUT_WR
@@ -98,37 +98,37 @@ namespace Gamma
 		std::string				m_strLocalizePath;
 		std::string				m_strCachePath;
 		std::string				m_strMd5;
-		uint32					m_nOrgSize;
+		uint32_t					m_nOrgSize;
 		ELoadState				m_eLoadState;
 		CRefStringPtr			m_ptrFileBuff;
 		CAddressHttp*			m_addrHttp;
 		CHttpRecvState			m_HttpState;
-		uint32					m_nCurSize;
+		uint32_t					m_nCurSize;
 
 	public:
 		CFileReader( CPackage* pPackage, const char* szFileName, 
-			uint32 nOrgSize, const uint8 szMd5[16], bool bCache );
+			uint32_t nOrgSize, const uint8_t szMd5[16], bool bCache );
 		~CFileReader();
 
-		int32					Read( std::string& strReadingBuffer );
-		bool					Flush( uint32 nIdleTime );
-		static void				SaveLocalBuffer( const void* szBuffer, uint32 nSize, 
+		int32_t					Read( std::string& strReadingBuffer );
+		bool					Flush( uint32_t nIdleTime );
+		static void				SaveLocalBuffer( const void* szBuffer, uint32_t nSize, 
 									const std::string& strCachePath, const char* szContext );
 
 		CPackage*				GetPackage() const { return m_pPackage; }
 		const CRefStringPtr&	GetFileBuffer() const { return m_ptrFileBuff; }
 		CRefStringPtr&			GetFileBuffer() { return m_ptrFileBuff; }
 		const std::string&		GetFileName() const { return m_strFileName; }
-		uint32					GetTotalSize() const { return m_HttpState.GetDataSize(); }
-		uint32					GetCurSize() const { return m_nCurSize; }
+		uint32_t					GetTotalSize() const { return m_HttpState.GetDataSize(); }
+		uint32_t					GetCurSize() const { return m_nCurSize; }
 		const std::string&		GetCachePath() const { return m_strCachePath; }
 		Gamma::ELoadState		GetLoadState() const { return m_eLoadState; }
 		void					SetLoadState( Gamma::ELoadState eState ) { m_eLoadState = eState; }
 
 	private:
-		int32					ReadFromDisk( const std::string& szPath, const char* szContext );
-		int32					ReadFromHttp( const std::string& szPath, std::string& strReadingBuffer );
-		int32					CheckLocalBuffer();
+		int32_t					ReadFromDisk( const std::string& szPath, const char* szContext );
+		int32_t					ReadFromHttp( const std::string& szPath, std::string& strReadingBuffer );
+		int32_t					CheckLocalBuffer();
 		void					SaveLocalBuffer( const char* szContext );
 	};
 
@@ -141,8 +141,8 @@ namespace Gamma
 			SFinishListContext& listFinised, HLOCK hLockFinised );
 		~CReadFileThread();
 
-		static uint32			ThreadProc( void* );
-		uint32					Run();
+		static uint32_t			ThreadProc( void* );
+		uint32_t					Run();
 
 	private:
 		HLOCK					m_hLockFinised;
@@ -166,10 +166,10 @@ namespace Gamma
 
 	private:
 		static bool				OnEnumFileHandler( const char* szFileName, void* pContext );
-		static void				OnReadFileHandler( const char* szFileName, void* pContext, const tbyte* pBuffer, uint32 nSize );
-		void					OnRead( const char* szFileName, const tbyte* pBuffer, uint32 nSize );
-		static uint32			ThreadProc( void* );
-		uint32					Run();
+		static void				OnReadFileHandler( const char* szFileName, void* pContext, const tbyte* pBuffer, uint32_t nSize );
+		void					OnRead( const char* szFileName, const tbyte* pBuffer, uint32_t nSize );
+		static uint32_t			ThreadProc( void* );
+		uint32_t					Run();
 
 		bool					m_bAllPackageCommited;
 		CExtractSet				m_setExtract;

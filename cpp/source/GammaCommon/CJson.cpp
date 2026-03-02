@@ -28,7 +28,7 @@ namespace Gamma
 				m_ptrBuffer->append( szContent );
 				m_szName = m_ptrBuffer->c_str();
 				m_szContent = m_szName + nLen;
-				m_nContentLen = (uint32)( m_ptrBuffer->size() - nLen );
+				m_nContentLen = (uint32_t)( m_ptrBuffer->size() - nLen );
 			}
 			else
 			{
@@ -93,12 +93,12 @@ namespace Gamma
 		return Load( (const char*)JsonFile.GetFileBuffer(), JsonFile.Size() );
 	}
 
-	bool CJson::Load( const void* pBuffer, uint32 nCount )
+	bool CJson::Load( const void* pBuffer, uint32_t nCount )
 	{
 		Clear();
 
 		m_ptrBuffer = CRefStringPtr( new CRefString );
-		if( (int32)nCount < 0 )
+		if( (int32_t)nCount < 0 )
 			m_ptrBuffer->assign( (const char*)pBuffer );
 		else
 			m_ptrBuffer->assign( (const char*)pBuffer, nCount );
@@ -129,13 +129,13 @@ namespace Gamma
 		return Save( os, 0 );
 	}
 
-	bool CJson::Save( std::ostream& os, uint32 nStack ) const
+	bool CJson::Save( std::ostream& os, uint32_t nStack ) const
 	{
 		char szBuff[1024];
 
 		if( nStack != INVALID_32BITID )
 		{
-			for( uint32 i = 0; i < nStack; ++i )
+			for( uint32_t i = 0; i < nStack; ++i )
 				szBuff[i] = '\t';
 			szBuff[nStack] = 0;
 			os << szBuff;
@@ -157,8 +157,8 @@ namespace Gamma
 		else
 			OutContent( os );
 
-		uint32 nCount = 0;
-		for( const CJson* pChild = GetChild( (uint32)0 ); 
+		uint32_t nCount = 0;
+		for( const CJson* pChild = GetChild( (uint32_t)0 ); 
 			pChild; pChild = pChild->GetNext(), ++nCount )
 		{
 			if( nStack != INVALID_32BITID )
@@ -197,7 +197,7 @@ namespace Gamma
 	void CJson::OutContent( std::ostream& os ) const
 	{
 		const char* szContent = m_szContent;
-		uint32 nLen = m_nContentLen;
+		uint32_t nLen = m_nContentLen;
 		if( nLen == 0 )
 		{
 			os << ( ( szContent || m_bForceString ) ? "\"\"" : "null" );
@@ -225,7 +225,7 @@ namespace Gamma
 		if( nLen < 30 )
 		{
 			char szBuffer[32];
-			uint32 i = 0;
+			uint32_t i = 0;
 			for( ; i < nLen && IsNumber( szContent[i] ); i++ )
 				szBuffer[i] = szContent[i];
 			szBuffer[i] = 0;
@@ -241,9 +241,9 @@ namespace Gamma
 
 		os << '\"';
 		char c[32];
-		uint32 u = 0;
+		uint32_t u = 0;
 		const char* szNext = NULL;
-		for( uint32 i = 0; i < nLen; i++ )
+		for( uint32_t i = 0; i < nLen; i++ )
 		{
 			c[0] = szContent[i];
 			const char* szCur = szContent + i;
@@ -275,7 +275,7 @@ namespace Gamma
 			else if( ( ( szNext = GetUnicode( u, szCur ) ) != NULL ) && 
 				szNext != szCur + 1 )
 			{
-				i += (uint32)( szNext - szContent - 1 );
+				i += (uint32_t)( szNext - szContent - 1 );
 				gammasstream( c ) << "\\u" << std::hex << u;
 			}
 			else
@@ -334,7 +334,7 @@ namespace Gamma
 		return false;
 	}
 	
-	char CJson::GetString( size_t& nCurPos, bool bBlankEnd, uint32* pLen )
+	char CJson::GetString( size_t& nCurPos, bool bBlankEnd, uint32_t* pLen )
 	{
 		char* szBuffer = &( (*m_ptrBuffer)[0] );
 		size_t nStrPos = nCurPos;
@@ -346,7 +346,7 @@ namespace Gamma
 			char c = szBuffer[nCurPos++];
 			szBuffer[nStrPos] = 0;
 			if( pLen )
-				*pLen = (uint32)( nStrPos - nStrStart );
+				*pLen = (uint32_t)( nStrPos - nStrStart );
 
 			if( !bBlankEnd && c == '\"' )
 				return c;
@@ -377,7 +377,7 @@ namespace Gamma
 				{
 					char szNum[] = { szBuffer[nCurPos], szBuffer[nCurPos + 1], 
 						szBuffer[nCurPos + 2], szBuffer[nCurPos + 3], 0 };
-					wchar_t nChar = (uint16)strtol( szNum, NULL, 16 );
+					wchar_t nChar = (uint16_t)strtol( szNum, NULL, 16 );
 					nStrPos += UcsToUtf8( szBuffer + nStrPos, 4, &nChar, 1 );
 					nCurPos += 4;
 					c = szBuffer[--nStrPos];
@@ -490,7 +490,7 @@ namespace Gamma
 			m_szContent = szBuffer + ( --nCurPos );
 			if( !GetNumber( nCurPos ) )
 				return false;
-			m_nContentLen = (uint32)( szBuffer + nCurPos - m_szContent );
+			m_nContentLen = (uint32_t)( szBuffer + nCurPos - m_szContent );
 			return true;
 		}
 
@@ -521,7 +521,7 @@ namespace Gamma
 		return false;
 	}
 
-	CJson* CJson::GetChild( uint32 nChildIndex )
+	CJson* CJson::GetChild( uint32_t nChildIndex )
 	{
 		if (this == nullptr)
 			return nullptr;
@@ -541,7 +541,7 @@ namespace Gamma
 		return pChild;
 	}
 
-	CJson* CJson::operator[]( uint32 nChildIndex )
+	CJson* CJson::operator[]( uint32_t nChildIndex )
 	{
 		if (this == nullptr)
 			return nullptr;
@@ -561,12 +561,12 @@ namespace Gamma
 		return pChild;
 	}
 
-	uint32 CJson::GetChildCount() const
+	uint32_t CJson::GetChildCount() const
 	{
 		return TGammaList<CJson>::Size();
 	}
 
-	const CJson* CJson::GetChild( uint32 nChildIndex ) const
+	const CJson* CJson::GetChild( uint32_t nChildIndex ) const
 	{
 		if (this == nullptr)
 			return nullptr;
@@ -586,7 +586,7 @@ namespace Gamma
 		return pChild;
 	}
 
-	const CJson* CJson::operator[]( uint32 nChildIndex ) const
+	const CJson* CJson::operator[]( uint32_t nChildIndex ) const
 	{
 		if (this == nullptr)
 			return nullptr;
@@ -626,7 +626,7 @@ namespace Gamma
 		return TGammaList<CJson>::CGammaListNode::GetPre();
 	}
 
-	void CJson::SetLevel( uint32 nLevel )
+	void CJson::SetLevel( uint32_t nLevel )
 	{
 		m_nLevel = nLevel;
 		CJson* pChild = TGammaList<CJson>::GetFirst();
@@ -682,7 +682,7 @@ namespace Gamma
 		return m_szContent;
 	}
 
-	uint32 CJson::GetContentLen() const
+	uint32_t CJson::GetContentLen() const
 	{
 		return m_nContentLen;
 	}

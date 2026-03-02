@@ -30,7 +30,7 @@ namespace Gamma
 	public:
 		static CDictionary& Inst();
 
-		typedef uint32 KeyType;
+		typedef uint32_t KeyType;
 		enum 
 		{ 
 			eInvalidKey     = 0xffffffff,
@@ -61,8 +61,8 @@ namespace Gamma
 			const char* operator = ( const std::string& _Right ){ return *this = _Right.c_str(); }
 			bool operator == ( const std::string& _Right ) const{ return _Right == m_szValue; }
 
-			uint32 GetKey() { return m_nKey; }
-			uint32 SetNewKey( uint32 nNewKey, const char* szNewValue );
+			uint32_t GetKey() { return m_nKey; }
+			uint32_t SetNewKey( uint32_t nNewKey, const char* szNewValue );
 			bool empty() { return !m_szValue; }
 			void clear();			
 		};
@@ -75,9 +75,9 @@ namespace Gamma
 		static bool HasTagHead( const char* szStr )
 		{ 
 			return szStr &&
-				( (uint8)szStr[0] ) == eUtf8HeadTag0 &&
-				( (uint8)szStr[1] ) == eUtf8HeadTag1 &&
-				( (uint8)szStr[2] ) == eUtf8HeadTag2;
+				( (uint8_t)szStr[0] ) == eUtf8HeadTag0 &&
+				( (uint8_t)szStr[1] ) == eUtf8HeadTag1 &&
+				( (uint8_t)szStr[2] ) == eUtf8HeadTag2;
 		}
 
 		bool LoadFromDir( const char* szDir );
@@ -97,11 +97,11 @@ namespace Gamma
 		/** 向字典增加一个value
 		@note 失败时返回eInvalidKey
 		*/
-		KeyType AddValueWithOffset( const wchar_t* szValue, uint32 nKey = eInvalidKey );
-		KeyType AddValueWithOffset( const char* szValue, uint32 nKey = eInvalidKey );
+		KeyType AddValueWithOffset( const wchar_t* szValue, uint32_t nKey = eInvalidKey );
+		KeyType AddValueWithOffset( const char* szValue, uint32_t nKey = eInvalidKey );
 
-		void SetOffset( uint32 nOffset );
-		uint32 GetOffset() const;
+		void SetOffset( uint32_t nOffset );
+		uint32_t GetOffset() const;
 		/**	修改某个key对应的value
 		@remarks 返回true的前提是：key在字典中存在，value在字典中不存在。
 		*/
@@ -142,7 +142,7 @@ namespace Gamma
 
 	protected:
 		KeyType		GetKey();
-		uint8		MakeID( KeyType nValue );
+		uint8_t		MakeID( KeyType nValue );
 	};
 
 	inline void CDictionary::GetValue( CDictionary::KeyType nKey, std::string& strValue )

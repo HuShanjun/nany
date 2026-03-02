@@ -24,17 +24,17 @@ namespace Gamma
 	//========================================================================
 	struct GAMMA_COMMON_API STime 
 	{
-		int32 m_nSecond;	/* seconds after the minute - [0,59] */
-		int32 m_nMinutes;	/* minutes after the hour - [0,59] */
-		int32 m_nHour;		/* hours since midnight - [0,23] */
-		int32 m_nDayOfMonth;/* day of the month - [1,31] */
-		int32 m_nMonth;		/* months since January - [1,12] */
-		int32 m_nYear;		/* years since 0000, >= 1900 */
-		int32 m_nDayofWeek;	/* days since Sunday - [0,6] */
-		int32 m_nDayOfYear;	/* days since January 1 - [0,365] */
-		int32 m_nIsdst;		/* daylight savings time flag */
+		int32_t m_nSecond;	/* seconds after the minute - [0,59] */
+		int32_t m_nMinutes;	/* minutes after the hour - [0,59] */
+		int32_t m_nHour;		/* hours since midnight - [0,23] */
+		int32_t m_nDayOfMonth;/* day of the month - [1,31] */
+		int32_t m_nMonth;		/* months since January - [1,12] */
+		int32_t m_nYear;		/* years since 0000, >= 1900 */
+		int32_t m_nDayofWeek;	/* days since Sunday - [0,6] */
+		int32_t m_nDayOfYear;	/* days since January 1 - [0,365] */
+		int32_t m_nIsdst;		/* daylight savings time flag */
 
-		void Format2Str( char szOut[], uint32 nSize );
+		void Format2Str( char szOut[], uint32_t nSize );
 		bool IsSameDay( const STime& otherTime ) const;
 
 		operator std::string()
@@ -83,83 +83,83 @@ namespace Gamma
     // GetProcessTime()						得到进程启动到当前时刻的毫秒数
     // GetGammaTime()						得到逻辑时间
     // PauseLogicTime( bool bPause )		暂停逻辑时间
-	// SetLogicTime( int64 nLogicTime )		设置逻辑时间（可前进，也可后退）
-	// int64 GetNatureTime();				设置当前格林威治时间（毫秒，从1970年1月1日0时开始计时）
-	// int64 GetNatureTime();				得到自然时间,即格林威治时间（毫秒，从1970年1月1日0时开始计时）
-	// int64 NatureTime2LocalTime();		格林威治时间 -> 当前本地时间
+	// SetLogicTime( int64_t nLogicTime )		设置逻辑时间（可前进，也可后退）
+	// int64_t GetNatureTime();				设置当前格林威治时间（毫秒，从1970年1月1日0时开始计时）
+	// int64_t GetNatureTime();				得到自然时间,即格林威治时间（毫秒，从1970年1月1日0时开始计时）
+	// int64_t NatureTime2LocalTime();		格林威治时间 -> 当前本地时间
     // STime GetFormatTimeSTMFromMillisecond( nMillisecond )  根据指定相对于1970年1月1日0时的毫秒转成日期结构(xophiix)
-	// uint32 Str2Time						将20100831000000（或者2010-08-31 19:55:00）格式的字符串转为格林威治时间（秒）
+	// uint32_t Str2Time						将20100831000000（或者2010-08-31 19:55:00）格式的字符串转为格林威治时间（秒）
     //========================================================================
 
 	// GetProcessTime() 得到进程启动到当前时刻的毫秒数
-	GAMMA_COMMON_API int64	GetProcessTime();
+	GAMMA_COMMON_API int64_t	GetProcessTime();
 	// AddProcessTime() 将系统时间往前或者往后调整一段时间，会影响GammaTime、LocalTime和NatureTime，通常用于时间校正
-	GAMMA_COMMON_API void	AddProcessTime( int64 nDeltaTime );
+	GAMMA_COMMON_API void	AddProcessTime( int64_t nDeltaTime );
 
 	// GetGammaTime() 得到逻辑时间
-	GAMMA_COMMON_API int64	GetGammaTime();
+	GAMMA_COMMON_API int64_t	GetGammaTime();
 	
 	GAMMA_COMMON_API void	PauseGammaTime( bool bPause );
 	GAMMA_COMMON_API bool	IsPauseGammaTime();
-	GAMMA_COMMON_API void	SetGammaTime( int64 nLogicTime );
+	GAMMA_COMMON_API void	SetGammaTime( int64_t nLogicTime );
 	GAMMA_COMMON_API void	SetGammaTimeScale( float fScale );
 	GAMMA_COMMON_API float	GetGammaTimeScale();
-	// int64 GetNatureTime(); 设置当前格林威治时间（毫秒，从1970年1月1日0时开始计时）
-	GAMMA_COMMON_API void	SetNatureTime( int64 nNatureTime, int64 nZoneTime = 0 );
+	// int64_t GetNatureTime(); 设置当前格林威治时间（毫秒，从1970年1月1日0时开始计时）
+	GAMMA_COMMON_API void	SetNatureTime( int64_t nNatureTime, int64_t nZoneTime = 0 );
 
 	//--逻辑上的机器启动时间戳+机器已运行时间
-	GAMMA_COMMON_API int64	GetNatureTime();
-	GAMMA_COMMON_API int64	GetLocalTime();
-	GAMMA_COMMON_API int64	GetZoneTime();
-	GAMMA_COMMON_API int64	GetProcessStartNatureTime();
-	// int64 NatureTime2LocalTime();		格林威治时间 -> 当前本地时间
+	GAMMA_COMMON_API int64_t	GetNatureTime();
+	GAMMA_COMMON_API int64_t	GetLocalTime();
+	GAMMA_COMMON_API int64_t	GetZoneTime();
+	GAMMA_COMMON_API int64_t	GetProcessStartNatureTime();
+	// int64_t NatureTime2LocalTime();		格林威治时间 -> 当前本地时间
 	//--nNatureTime应为格林威治时间
-	GAMMA_COMMON_API int64	NatureTime2LocalTime( int64 nNatureTime );
-	GAMMA_COMMON_API int64	LocalTime2NatureTime( int64 nLocalTime );
+	GAMMA_COMMON_API int64_t	NatureTime2LocalTime( int64_t nNatureTime );
+	GAMMA_COMMON_API int64_t	LocalTime2NatureTime( int64_t nLocalTime );
 	GAMMA_COMMON_API STime	GetFormatTimeSTM();
 	GAMMA_COMMON_API void	GetFormatTimeSTM( STime& stm );
 
 	// 根据指定相对于1970年1月1日0时的毫秒转成日期结构(xophiix)
-    GAMMA_COMMON_API STime	GetFormatTimeSTMFromMillisecond( int64 nMillisecond );
+    GAMMA_COMMON_API STime	GetFormatTimeSTMFromMillisecond( int64_t nMillisecond );
 
 	GAMMA_COMMON_API tm		GetFormatTimeTM();
 	/// 获取指定时刻的格林威治时间(s)
-	GAMMA_COMMON_API int64	Format2NatureTime( uint32 nYear, uint32 nMon, uint32 nDay, 
-								uint32 nHour = 0, uint32 nMin = 0, uint32 nSec = 0, uint32 nMSec = 0 );
+	GAMMA_COMMON_API int64_t	Format2NatureTime( uint32_t nYear, uint32_t nMon, uint32_t nDay, 
+								uint32_t nHour = 0, uint32_t nMin = 0, uint32_t nSec = 0, uint32_t nMSec = 0 );
 	/// 获取指定时刻的当地时间(s)
-	GAMMA_COMMON_API int64	Format2LocalTime( uint32 nYear, uint32 nMon, uint32 nDay, 
-								uint32 nHour = 0, uint32 nMin = 0, uint32 nSec = 0 );
+	GAMMA_COMMON_API int64_t	Format2LocalTime( uint32_t nYear, uint32_t nMon, uint32_t nDay, 
+								uint32_t nHour = 0, uint32_t nMin = 0, uint32_t nSec = 0 );
 
-	// uint32 Str2Time 将20100831000000（或者2010-08-31 19:55:00）格式的本地时间字符串转为格林威治时间（秒）
-	GAMMA_COMMON_API int64 Str2Time( const char* szTime );
-	// uint32 Str2Time 将20100831000000（或者2010-08-31 19:55:00）格式的本地时间字符串转为本地时间（秒）即 格林威治时间+本地时差
-	GAMMA_COMMON_API int64 Str2LocalTime( const char* szTime );
+	// uint32_t Str2Time 将20100831000000（或者2010-08-31 19:55:00）格式的本地时间字符串转为格林威治时间（秒）
+	GAMMA_COMMON_API int64_t Str2Time( const char* szTime );
+	// uint32_t Str2Time 将20100831000000（或者2010-08-31 19:55:00）格式的本地时间字符串转为本地时间（秒）即 格林威治时间+本地时差
+	GAMMA_COMMON_API int64_t Str2LocalTime( const char* szTime );
 
 	//* nNatureTime 需要转换的自然时间，毫秒
 	//* 返回值为偏离周一0点的秒数
-	GAMMA_COMMON_API uint32 GetOffSetTime( uint64 nNatureTime );
+	GAMMA_COMMON_API uint32_t GetOffSetTime( uint64_t nNatureTime );
 
 	// 本地时间转换为本地时间显示（秒2010-08-31 19:55:00）( 或者格林威治时间转换为格林威治时间显示 ）  
-	inline std::string Time2Str( int64 nSeconds ){ return (std::string)GetFormatTimeSTMFromMillisecond( nSeconds*1000 ); }
+	inline std::string Time2Str( int64_t nSeconds ){ return (std::string)GetFormatTimeSTMFromMillisecond( nSeconds*1000 ); }
 
 	// 格林威治时间转换为本地时间显示（秒2010-08-31 19:55:00）  
-	inline std::string NatrueTime2Str( int64 nSeconds ) { return (std::string)GetFormatTimeSTMFromMillisecond( NatureTime2LocalTime( nSeconds*1000 ) ); }
+	inline std::string NatrueTime2Str( int64_t nSeconds ) { return (std::string)GetFormatTimeSTMFromMillisecond( NatureTime2LocalTime( nSeconds*1000 ) ); }
 
     //========================================================================
     // 计时器
     // 用于记录时间流逝
     // void        Restart()        计时开始
-    // uint64    GetStartTime()    计时开始时间
-    // uint64    GetElapse()        计时到当前时刻经过的时间
+    // uint64_t    GetStartTime()    计时开始时间
+    // uint64_t    GetElapse()        计时到当前时刻经过的时间
     //========================================================================
     class GAMMA_COMMON_API CTimer
     {
-        uint64    m_nBaseTime;
+        uint64_t    m_nBaseTime;
     public:
         CTimer(void)                      { Restart(); };
         void      Restart()               { m_nBaseTime = GetGammaTime(); };
-        uint64    GetStartTime()    const { return m_nBaseTime; };
-        uint64    GetElapse()       const { return GetGammaTime() - m_nBaseTime; }
+        uint64_t    GetStartTime()    const { return m_nBaseTime; };
+        uint64_t    GetElapse()       const { return GetGammaTime() - m_nBaseTime; }
     };
 
 
@@ -171,8 +171,8 @@ namespace Gamma
     class GAMMA_COMMON_API CFPS
     {
         float     m_fFPS;
-        uint64    m_nPreTime;
-        uint32    m_nFrameCount;
+        uint64_t    m_nPreTime;
+        uint32_t    m_nFrameCount;
 
     public:
         CFPS();
@@ -202,9 +202,9 @@ namespace Gamma
 		, private TGammaList<CTick>::CGammaListNode
     {
         CTickMgr*		m_pMgr;
-		int64			m_nNextTickTime;
-        uint32			m_nTickInterval;
-		uint16			m_nTickID;	//CTickMgr::AddTick中设置
+		int64_t			m_nNextTickTime;
+        uint32_t			m_nTickInterval;
+		uint16_t			m_nTickID;	//CTickMgr::AddTick中设置
 		bool			m_bCppTickOnly;
 
         friend class CTickMgr;
@@ -218,58 +218,58 @@ namespace Gamma
 		virtual void	OnTick(){};
 		void			Stop();
 
-		int64			GetPassTime()		const;
-		uint16			GetTickID()			const { return m_nTickID; }
-		uint32			GetInteval()		const { return m_nTickInterval; }
-		int64			GetNextTickTime()	const { return m_nNextTickTime; }
+		int64_t			GetPassTime()		const;
+		uint16_t			GetTickID()			const { return m_nTickID; }
+		uint32_t			GetInteval()		const { return m_nTickInterval; }
+		int64_t			GetNextTickTime()	const { return m_nNextTickTime; }
 		CTickMgr*		GetTickMgr()		const { return m_pMgr; }
 		bool			IsRegisted()		const { return m_pMgr != NULL; }
-		int64			GetStartTime()		const { return GetNextTickTime() - GetInteval(); }
+		int64_t			GetStartTime()		const { return GetNextTickTime() - GetInteval(); }
     };
 
 
     //========================================================================
     // 用于管理定时器
     // 时间只可以前进，不可后退
-    // void Update( uint32 nDeltaTime )
+    // void Update( uint32_t nDeltaTime )
     //========================================================================
     class GAMMA_COMMON_API CTickMgr
     {
 	protected:
 		gammacstring	m_strName;
-        int64			m_nPreUpdateTime;		// 上次更新时时间刻度更新到的位置
+        int64_t			m_nPreUpdateTime;		// 上次更新时时间刻度更新到的位置
         CTick*			m_pCurUpdateTick;		// 用于遍历m_TickTimeArray时间刻度数组
 
-		uint8*			m_aryTickEnable;		// 当TickID启用时用于开启关闭某些tick
+		uint8_t*			m_aryTickEnable;		// 当TickID启用时用于开启关闭某些tick
 		TickList*		m_aryTickTime;			// 时间刻度数组
-		uint16			m_nTickArraySize;		// 对其到2的n次方，便于运算
-		uint16			m_nTickMask;			// m_nTickArraySize - 1
+		uint16_t			m_nTickArraySize;		// 对其到2的n次方，便于运算
+		uint16_t			m_nTickMask;			// m_nTickArraySize - 1
 
 #ifdef GAMMA_CHECK_PROFILE
 		CProfile*		m_pTickProfile[65536];	 
 #endif
 		//--以tick的下次tick时间为&0xfff 作为id插入到即将相应的数组中
-		void			InsertTick( CTick* pTick, int64 nTickTime );
+		void			InsertTick( CTick* pTick, int64_t nTickTime );
 
     public:
 		CTickMgr( 
 			gammacstring strName = "", 
-			uint16 nTickArraySize = 4096,
+			uint16_t nTickArraySize = 4096,
 			bool bEnableTickID = true );
         ~CTickMgr();
 
 		void			Reset();
 		void			ClearAllTicks();
-		void			AddTick( CTick* pTick, uint32 nInterval, uint16 nTickID );
-        void			AddTick( CTick* pTick, uint32 nStart, uint32 nInterval, uint16 nTickID );
+		void			AddTick( CTick* pTick, uint32_t nInterval, uint16_t nTickID );
+        void			AddTick( CTick* pTick, uint32_t nStart, uint32_t nInterval, uint16_t nTickID );
         void			DelTick( CTick* pTick );
-        void			Update( uint32 nDeltaTime );
-		bool			EnableTick( uint16 nTickID, bool bEnable );
-		bool			IsTickEnable( uint16 nTickID );
+        void			Update( uint32_t nDeltaTime );
+		bool			EnableTick( uint16_t nTickID, bool bEnable );
+		bool			IsTickEnable( uint16_t nTickID );
 
         /// 当前更新时时间刻度更新到的位置(ms)
-        int64			GetCurUpdateTime() const { return m_nPreUpdateTime; }
-		void			SetCurUpdateTime( int64 nValue );
+        int64_t			GetCurUpdateTime() const { return m_nPreUpdateTime; }
+		void			SetCurUpdateTime( int64_t nValue );
     };
 
 	template<typename Class, bool bCppTick = false>

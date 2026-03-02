@@ -27,7 +27,7 @@
 #define INVALID_SOCKET		-1
 #define closesocket			close
 #define ioctlsocket			ioctl
-typedef int32				SOCKET;
+typedef int32_t				SOCKET;
 typedef struct linger		LINGER;
 #define SOCKET_ERROR		-1
 #define SD_SEND				SHUT_WR
@@ -45,8 +45,8 @@ namespace Gamma
 	//-----------------------------------------------------
 	// CBreakPoint
 	//-----------------------------------------------------
-    CBreakPoint::CBreakPoint( uint32 nID, 
-		const char* szFileName, bool bRef, uint32 nLineNum )
+    CBreakPoint::CBreakPoint( uint32_t nID, 
+		const char* szFileName, bool bRef, uint32_t nLineNum )
 		: gammacstring( szFileName, bRef )
 		, m_nBreakPointID( nID )
 		, m_nLineNum( nLineNum )
@@ -55,7 +55,7 @@ namespace Gamma
 		GammaAst( szFileName );
 		for( const char* pStart = szFileName; *pStart; pStart++ )
 			if( *pStart == '\\' || *pStart == '/' )
-				m_nFileNameStart = (int32)( pStart - szFileName + 1 );
+				m_nFileNameStart = (int32_t)( pStart - szFileName + 1 );
     }
 
     bool CBreakPoint::operator < ( const CBreakPoint& ano )const
@@ -76,7 +76,7 @@ namespace Gamma
 	// CBreakPoint
 	//-----------------------------------------------------
     CDebugBase::CDebugBase( IDebugHandler* pHandler,
-		const char* strDebugHost, uint16 nDebugPort )
+		const char* strDebugHost, uint16_t nDebugPort )
 		: m_pHandler( pHandler )
 		, m_nRemoteListener( INVALID_SOCKET )
 		, m_nRemoteConnecter( INVALID_SOCKET )
@@ -149,13 +149,13 @@ namespace Gamma
 		m_bEnterDebug = false;
 	}
 
-	void CDebugBase::BTrace( int32 nFrameCount )
+	void CDebugBase::BTrace( int32_t nFrameCount )
 	{
-		int32 nCurFrame = 0;
-		int32 nCurLine = 0;
+		int32_t nCurFrame = 0;
+		int32_t nCurLine = 0;
 		const char* szFunction = nullptr;
 		const char* szSource = nullptr;
-		while( (uint32)nCurFrame < (uint32)nFrameCount )
+		while( (uint32_t)nCurFrame < (uint32_t)nFrameCount )
 		{ 
 			if( !GetFrameInfo( nCurFrame, &nCurLine, &szFunction, &szSource ) )
 				break;
@@ -191,14 +191,14 @@ namespace Gamma
 		if( !pContext )
 			return strBuffer;
 		char szBuffer[1024];
-		int32 nReadSize = 0;
+		int32_t nReadSize = 0;
 		while( (nReadSize = m_pHandler->ReadFile( pContext, szBuffer, 1024 )) > 0 )
 			strBuffer.append( szBuffer, nReadSize );
 		m_pHandler->CloseFile( pContext );
 		return strBuffer;
 	}
 
-	const char* CDebugBase::ReadFileLine( const char* szSource, int32 nLine )
+	const char* CDebugBase::ReadFileLine( const char* szSource, int32_t nLine )
 	{
 		CFileMap::iterator it = m_mapFileBuffer.find( szSource );
 		if( m_mapFileBuffer.end() == it || it->second.empty() )
@@ -208,7 +208,7 @@ namespace Gamma
 			it = m_mapFileBuffer.find( szSource );
 		}
 
-		if( nLine <= 0 || nLine > (int32)it->second.size() )
+		if( nLine <= 0 || nLine > (int32_t)it->second.size() )
 			return nullptr;
 		return it->second[nLine - 1].c_str();
 	}
@@ -216,7 +216,7 @@ namespace Gamma
 	//=================================================================
 	// RemoteDebug
 	//=================================================================
-	void CDebugBase::ListenRemote(const char* strDebugHost, uint16 nDebugPort )
+	void CDebugBase::ListenRemote(const char* strDebugHost, uint16_t nDebugPort )
 	{
 #ifdef _WIN32
 		WORD wVersion;
@@ -227,7 +227,7 @@ namespace Gamma
 #endif
 
 		//创建socket
-		m_nRemoteListener = (uint32)socket( AF_INET, SOCK_STREAM, 0 );
+		m_nRemoteListener = (uint32_t)socket( AF_INET, SOCK_STREAM, 0 );
 		if( m_nRemoteListener == INVALID_SOCKET )
 			return;
 
@@ -249,7 +249,7 @@ namespace Gamma
 #endif // !_WIN32
 
 
-		int32 nVal = 1;
+		int32_t nVal = 1;
 		if( SOCKET_ERROR == setsockopt( m_nRemoteListener, SOL_SOCKET, 
 			SO_REUSEADDR, (const char*)(&nVal), sizeof(nVal) ) )
 		{
@@ -262,8 +262,8 @@ namespace Gamma
 		memset( &Address, 0, sizeof( Address ) );
 		Address.sin_addr.s_addr = strDebugHost ? inet_addr( strDebugHost ) : 0;
 
-		uint8 aryNet[2] = { (uint8)(nDebugPort >> 8), (uint8)nDebugPort };
-		Address.sin_port = *(uint16*)aryNet;
+		uint8_t aryNet[2] = { (uint8_t)(nDebugPort >> 8), (uint8_t)nDebugPort };
+		Address.sin_port = *(uint16_t*)aryNet;
 		Address.sin_family = AF_INET;
 
 		if( ::bind( m_nRemoteListener, (sockaddr*)(&Address), sizeof(sockaddr) ) )
@@ -306,7 +306,7 @@ namespace Gamma
 			struct timeval tv;
 			tv.tv_sec = 0;
 			tv.tv_usec = 100000;
-			if( !select( (int32)(m_nRemoteListener + 1), &fdValid, NULL, NULL, &tv ) )
+			if( !select( (int32_t)(m_nRemoteListener + 1), &fdValid, NULL, NULL, &tv ) )
 				continue;
 
 			sockaddr_in Address;
@@ -317,7 +317,7 @@ namespace Gamma
 			m_eAttachType = eAT_Waiting;
 			m_bExpectStep = false;
 			char szBuffer[2048];
-			int32 nResult = (int32)recv(m_nRemoteConnecter, szBuffer, 2048, 0);
+			int32_t nResult = (int32_t)recv(m_nRemoteConnecter, szBuffer, 2048, 0);
 			if (ReciveRemoteData(szBuffer, nResult))
 			{
 				TeminateRemote(nullptr);
@@ -329,7 +329,7 @@ namespace Gamma
 		}
 	}
 
-	bool CDebugBase::ReciveRemoteData(char(&szBuffer)[2048], int32 nCurSize)
+	bool CDebugBase::ReciveRemoteData(char(&szBuffer)[2048], int32_t nCurSize)
 	{
 		std::string strBuffer;
 		while ( m_eAttachType && nCurSize > 0 && !m_bQuit )
@@ -347,7 +347,7 @@ namespace Gamma
 				if (nEndPos == std::string::npos)
 					break;
 				const char* szStr = strBuffer.c_str() + nStartPos + 1;
-				uint32 nDataSize = (uint32)strtol( szStr, NULL, 0 );
+				uint32_t nDataSize = (uint32_t)strtol( szStr, NULL, 0 );
 				if (strBuffer.size() < nEndPos + 4 + nDataSize)
 					break;
 				CDebugCmd* pCmd = new CDebugCmd;
@@ -365,9 +365,9 @@ namespace Gamma
 				struct timeval tv;
 				tv.tv_sec = 0;
 				tv.tv_usec = 100000;
-				if( !select( (int32)(m_nRemoteConnecter + 1), &fdValid, NULL, NULL, &tv ) )
+				if( !select( (int32_t)(m_nRemoteConnecter + 1), &fdValid, NULL, NULL, &tv ) )
 					continue;
-				nCurSize = (int32)recv( m_nRemoteConnecter, szBuffer, 2048, 0 );
+				nCurSize = (int32_t)recv( m_nRemoteConnecter, szBuffer, 2048, 0 );
 				break;
 			}
 		}
@@ -397,7 +397,7 @@ namespace Gamma
 			std::stringstream ss;
 			pJson->Save( ss, INVALID_32BITID );
 			const std::string& strResult = ss.str();
-			uint32 nLength = (uint32)strResult.size();
+			uint32_t nLength = (uint32_t)strResult.size();
 			char szBuffer[256];
 			snprintf( szBuffer, ELEM_COUNT(szBuffer) - 1,"Content-Length:%d\r\n\r\n", nLength);
 			m_szStringSend.append( szBuffer );
@@ -468,7 +468,7 @@ namespace Gamma
 		return true;
 	}
 
-	int32 CDebugBase::GetDebuggerState()
+	int32_t CDebugBase::GetDebuggerState()
 	{
 		if( m_nRemoteListener == INVALID_SOCKET )
 			return 1;
@@ -501,8 +501,8 @@ namespace Gamma
 		if( m_szStringSend.empty() )
 			return bContinue;
 		const char* szData = m_szStringSend.c_str();
-		uint32 nLen = (uint32)m_szStringSend.size();
-		int32 nSend = send( m_nRemoteConnecter, szData, nLen, 0 );
+		uint32_t nLen = (uint32_t)m_szStringSend.size();
+		int32_t nSend = send( m_nRemoteConnecter, szData, nLen, 0 );
 		if( nSend <= 0 )
 			return bContinue;
 		m_szStringSend.erase( 0, nSend );
@@ -579,7 +579,7 @@ namespace Gamma
 			m_eAttachType = eAT_Attach;
 			CJson* pArg = pCmd->GetChild( "arguments" );
 			CJson* pPaths = pArg->GetChild( "sourceMapPathOverrides" );
-			CJson* pPath = pPaths ? pPaths->GetChild( (uint32)0 ) : nullptr;
+			CJson* pPath = pPaths ? pPaths->GetChild( (uint32_t)0 ) : nullptr;
 			while( pPath )
 			{
 				m_mapRedirectPath[pPath->GetName()] = pPath->GetContent();
@@ -620,7 +620,7 @@ namespace Gamma
 		else if( !StrCaseCmp( szCommand, "terminate" ) ||
 			!StrCaseCmp( szCommand, "disconnect" ) )
 		{
-			uint8 nAttachType = m_eAttachType;
+			uint8_t nAttachType = m_eAttachType;
 			TeminateRemote( szSequence );
 			if( nAttachType != eAT_Launch )
 				return true;
@@ -652,11 +652,11 @@ namespace Gamma
 
 			CJson* pBody = new CJson( "body" );
 			CJson* pBreakPointArray = pBody->AddChild( "breakpoints" );
-			CJson* pChild = pBreakpoints->GetChild( (uint32)0 );
+			CJson* pChild = pBreakpoints->GetChild( (uint32_t)0 );
 			while( pChild )
 			{
-				uint32 nLine = pChild->At<uint32>( "line" );
-				uint32 nID = AddBreakPoint( szPath, nLine );
+				uint32_t nLine = pChild->At<uint32_t>( "line" );
+				uint32_t nID = AddBreakPoint( szPath, nLine );
 				pChild = pChild->GetNext();
 
 				CJson* pBody = new CJson( "body" );
@@ -696,7 +696,7 @@ namespace Gamma
 			m_bUncaughtExceptionsBreak = false;
 			CJson* pArg = pCmd->GetChild( "arguments" );
 			CJson* pFilter = pArg->GetChild( "filters" );
-			CJson* pName = pFilter->GetChild( (uint32)0 );
+			CJson* pName = pFilter->GetChild( (uint32_t)0 );
 			while( pName )
 			{
 				const char* szName = pName->As<const char*>();
@@ -726,19 +726,19 @@ namespace Gamma
 		if( !StrCaseCmp( szCommand, "stackTrace" ) )
 		{
 			CJson* pArg = pCmd->GetChild( "arguments" );
-			int32 nStartFrame = pArg->At<int32>( "startFrame", -1 );
-			int32 nFrameCount = pArg->At<int32>( "levels", -1 );
-			int32 nMaxFrameEnd = (int32)GetFrameCount() - 1;
-			int32 nEndFrame = std::min( nStartFrame + nFrameCount, nMaxFrameEnd );
+			int32_t nStartFrame = pArg->At<int32_t>( "startFrame", -1 );
+			int32_t nFrameCount = pArg->At<int32_t>( "levels", -1 );
+			int32_t nMaxFrameEnd = (int32_t)GetFrameCount() - 1;
+			int32_t nEndFrame = std::min( nStartFrame + nFrameCount, nMaxFrameEnd );
 			nStartFrame = std::min( nStartFrame, nMaxFrameEnd );
 			snprintf( szBuf, ELEM_COUNT(szBuf) - 1, "%d", nMaxFrameEnd + 1);
 
 			CJson* pBody = new CJson( "body" );
 			pBody->AddChild( "totalFrames", szBuf );
 			CJson* pFrameArray = pBody->AddChild( "stackFrames" );
-			for( int32 i = nStartFrame; i <= nEndFrame; i++ )
+			for( int32_t i = nStartFrame; i <= nEndFrame; i++ )
 			{
-				int32 nLine;
+				int32_t nLine;
 				const char* szSource = nullptr;
 				const char* szFunction = nullptr;
 				GetFrameInfo( i, &nLine, &szFunction, &szSource );
@@ -774,14 +774,14 @@ namespace Gamma
 		else if( !StrCaseCmp( szCommand, "scopes" ) )
 		{
 			CJson* pArg = pCmd->GetChild( "arguments" );
-			int32 nFrame = pArg->At<int32>( "frameId", 0 );
+			int32_t nFrame = pArg->At<int32_t>( "frameId", 0 );
 			CJson* pBody = new CJson( "body" );
 			CJson* pScopes = pBody->AddChild( "scopes" );
 			SValueInfo Value = GetVariable( GetScopeChainID( nFrame ) );
-			uint32 nCount = Value.nNameValues;
-			uint32* aryChild = (uint32*)alloca(sizeof(uint32) * nCount );
+			uint32_t nCount = Value.nNameValues;
+			uint32_t* aryChild = (uint32_t*)alloca(sizeof(uint32_t) * nCount );
 			GetChildrenID( Value.nID, false, 0, aryChild, nCount );
-			for( uint32 i = 0; i < nCount; i++ )
+			for( uint32_t i = 0; i < nCount; i++ )
 			{
 				SValueInfo Scope = GetVariable( aryChild[i] );
 				CJson* pLocal = pScopes->AddChild( "" );
@@ -797,11 +797,11 @@ namespace Gamma
 		else if( !StrCaseCmp( szCommand, "evaluate" ) )
 		{
 			CJson* pArg = pCmd->GetChild( "arguments" );
-			int32 nFrame = pArg->At<int32>( "frameId", 0 );
+			int32_t nFrame = pArg->At<int32_t>( "frameId", 0 );
 			const char* szExpression = pArg->At<const char*>( "expression" );
 			//CJson* pFormat = pArg->GetChild( "format" );
 			//bool bHex = pFormat && pFormat->At<bool>( "hex" );
-			uint32 nID = EvaluateExpression( nFrame, szExpression );
+			uint32_t nID = EvaluateExpression( nFrame, szExpression );
 			SValueInfo Value = nID == INVALID_32BITID ? SValueInfo() : GetVariable( nID );
 			CJson* pBody = new CJson( "body" );
 			const char* szValue = Value.strValue.c_str();
@@ -818,22 +818,22 @@ namespace Gamma
 		else if( !StrCaseCmp( szCommand, "variables" ) )
 		{
 			CJson* pArg = pCmd->GetChild( "arguments" );
-			uint32 nParentID = pArg->At<uint32>( "variablesReference" );
+			uint32_t nParentID = pArg->At<uint32_t>( "variablesReference" );
 			bool bIndex = pArg->At<std::string>( "filter" ) == "indexed";
-			uint32 nStart = pArg->At<uint32>( "start" );
-			uint32 nCount = pArg->At<uint32>( "count" );
+			uint32_t nStart = pArg->At<uint32_t>( "start" );
+			uint32_t nCount = pArg->At<uint32_t>( "count" );
 			if( nCount == 0 )
 			{
 				SValueInfo Info = GetVariable( nParentID );
 				nCount = bIndex ? Info.nIndexValues : Info.nNameValues;
 			}
 
-			uint32* aryChild = (uint32*)alloca( sizeof(uint32)*nCount );
-			uint32 nResult = GetChildrenID( nParentID, bIndex, nStart, aryChild, nCount );
+			uint32_t* aryChild = (uint32_t*)alloca( sizeof(uint32_t)*nCount );
+			uint32_t nResult = GetChildrenID( nParentID, bIndex, nStart, aryChild, nCount );
 
 			CJson* pBody = new CJson( "body" );
 			CJson* pVariableArray = pBody->AddChild( "variables" );
-			for( uint32 i = 0; i < std::max( nCount, nResult ); i++ )
+			for( uint32_t i = 0; i < std::max( nCount, nResult ); i++ )
 			{
 				SValueInfo Info = GetVariable( i < nResult ? aryChild[i] : 0 );
 				if( !Info.nNameValues && !Info.nIndexValues )
@@ -937,8 +937,8 @@ namespace Gamma
 		return pCur;
 	}
 
-	bool CDebugBase::PrintLine( int32 nFrame, 
-		const char* szSource, int32 nLine, bool bIsCurLine )
+	bool CDebugBase::PrintLine( int32_t nFrame, 
+		const char* szSource, int32_t nLine, bool bIsCurLine )
 	{
 		if( nLine <= 0 || szSource == nullptr )
 		{
@@ -960,8 +960,8 @@ namespace Gamma
 		return true;
 	}
 
-	void CDebugBase::PrintFrame( int32 nFrame, 
-		const char* szFun, const char* szSource, int32 nLine )
+	void CDebugBase::PrintFrame( int32_t nFrame, 
+		const char* szFun, const char* szSource, int32_t nLine )
 	{
 		char szFrameInfo[1024];
 		sprintf( szFrameInfo, "#%d  %s ", nFrame, ( szFun ? szFun : "(unknown)" ) );
@@ -1063,7 +1063,7 @@ namespace Gamma
 			else if( !strcmp( szBuf, "list") || !strcmp( szBuf, "l") )
 			{
 				szBuf = ReadWord();
-				uint32 nLine = szBuf && IsNumber( *szBuf ) ? atoi( szBuf ) : 0;
+				uint32_t nLine = szBuf && IsNumber( *szBuf ) ? atoi( szBuf ) : 0;
 				if( !nLine )
 					nLine = LINE_COUNT_ON_SHOW;
 				ShowFileLines( nLine );
@@ -1075,7 +1075,7 @@ namespace Gamma
 			else if( !strcmp( szBuf, "frame") || !strcmp( szBuf, "f" ) )
 			{
 				szBuf = ReadWord();
-				int32 nFrame = -1;
+				int32_t nFrame = -1;
 				if( !szBuf || !IsNumber( *szBuf ) || 
 					( nFrame = SwitchFrame( atoi( szBuf ) ) ) < 0 )
 				{
@@ -1129,7 +1129,7 @@ namespace Gamma
 
 	void CDebugBase::AddBreakPoint( const char* szBuf )
 	{
-		int32 nBreakLine = m_nCurLine;
+		int32_t nBreakLine = m_nCurLine;
 		const char* szSource = nullptr;
 		char* pColon = nullptr;
 
@@ -1178,17 +1178,17 @@ namespace Gamma
 		}
 	}
 
-	void CDebugBase::ShowFileLines( int32 nLineCount )
+	void CDebugBase::ShowFileLines( int32_t nLineCount )
 	{
 		if( m_nShowLine < 1 )
 			m_nShowLine = 1;
 
-		int32 nLine = 0;
+		int32_t nLine = 0;
 		const char* szCurSource = nullptr;
 		if( !GetFrameInfo( m_nCurFrame, &nLine, nullptr, &szCurSource ) )
 			return;
 
-		int32 nShowEndLine = m_nShowLine + LINE_COUNT_ON_SHOW;
+		int32_t nShowEndLine = m_nShowLine + LINE_COUNT_ON_SHOW;
 		while( m_nShowLine < nShowEndLine &&
 			PrintLine( m_nCurFrame, szCurSource, m_nShowLine, m_nShowLine == nLine ) )
 			m_nShowLine++;
@@ -1197,16 +1197,16 @@ namespace Gamma
 	//===============================================================
 	// 导出的接口
 	//===============================================================
-	uint32 CDebugBase::AddBreakPoint( const char* szFileName, int32 nLine )
+	uint32_t CDebugBase::AddBreakPoint( const char* szFileName, int32_t nLine )
 	{
 		szFileName = GetFileNameFromPath( szFileName );
-		uint32 nID = GenBreakPointID( szFileName, nLine );
+		uint32_t nID = GenBreakPointID( szFileName, nLine );
 		CBreakPoint BreakPoint = CBreakPoint( nID, szFileName, false, nLine );
 		m_setBreakPoint.insert( BreakPoint );
 		return BreakPoint.GetBreakPointID();
 	}
 
-	void CDebugBase::DelBreakPoint( uint32 nBreakPointID )
+	void CDebugBase::DelBreakPoint( uint32_t nBreakPointID )
 	{
 		CBreakPointList::iterator it = m_setBreakPoint.begin();
 		for( ; it != m_setBreakPoint.end(); ++it )
@@ -1219,7 +1219,7 @@ namespace Gamma
 		}
 	}
 
-	const CBreakPoint* CDebugBase::GetBreakPoint( const char* szSource, int32 nLine )
+	const CBreakPoint* CDebugBase::GetBreakPoint( const char* szSource, int32_t nLine )
 	{
 		if( !HaveBreakPoint() )
 			return 0;

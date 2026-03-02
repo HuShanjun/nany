@@ -13,7 +13,7 @@ namespace Gamma
 
 	CTrigFunctionTable::CTrigFunctionTable()
 	{
-		for( int32 i = 0; i < eTableSize; i++ )
+		for( int32_t i = 0; i < eTableSize; i++ )
 		{
 			m_fSinBuf[i] = sin( i*GM_PI_2/eTableSize );
 			m_fASinBuf[i] = asin( float(i)/eTableSize );
@@ -29,7 +29,7 @@ namespace Gamma
     //------------------------------------------------------------
     // 3D碰撞测试
 	//-------------------------------------------------------------
-	int32 IsInTriangle( const CVector2f& v, const CVector2f& v0, const CVector2f& v1, const CVector2f& v2 )
+	int32_t IsInTriangle( const CVector2f& v, const CVector2f& v0, const CVector2f& v1, const CVector2f& v2 )
 	{
 		CVector2f d0 = v0 - v;
 		if( d0 == CVector2f() )
@@ -61,7 +61,7 @@ namespace Gamma
 		return -1;
 	}
 
-    int32 IsInTriangle( const CVector3f& v, const CVector3f& v0, const CVector3f& v1, const CVector3f& v2 )
+    int32_t IsInTriangle( const CVector3f& v, const CVector3f& v0, const CVector3f& v1, const CVector3f& v2 )
     {
         CVector3f d0 = v0 - v;
 		if( d0 == CVector3f() )
@@ -140,7 +140,7 @@ namespace Gamma
         };
 
         //转成屏幕坐标
-        for( int32 i = 0; i < 3; i++ )
+        for( int32_t i = 0; i < 3; i++ )
             if( v[i].z < 0.0f || v[i].z > 1.0f )
                 return false;
 
@@ -206,7 +206,7 @@ namespace Gamma
 
 		////计算是否相交
 		// 因为z值都为零，所以不必要进行完全的叉乘，而且z的正负已经足以判断是否选中，不必单位化
-		static int32 Index[12][3] =  
+		static int32_t Index[12][3] =  
 		{
 			{ 0, 1, 2 },{ 1, 2, 3 },{ 2, 3, 4 },{ 3, 4, 5 },
 			{ 4, 5, 6 },{ 5, 6, 7 },{ 6, 7, 0 },{ 7, 0, 1 },
@@ -238,42 +238,42 @@ namespace Gamma
 		return false;
 	}
 
-	int32 GammaA2I( const wchar_t* szStr )
+	int32_t GammaA2I( const wchar_t* szStr )
 	{
 		if( !szStr )
 			return 0;
 		char szBuf[256];
 		UcsToUtf8( szBuf, 64, szStr );
-		return (int32)strtol( szBuf, NULL, 0 );
+		return (int32_t)strtol( szBuf, NULL, 0 );
 	}
 
-	int32 GammaA2I( const char* szStr )
+	int32_t GammaA2I( const char* szStr )
 	{
 		if( !szStr )
 			return 0;
-		return (int32)strtol( szStr, NULL, 0 );
+		return (int32_t)strtol( szStr, NULL, 0 );
 	}
 
-	int64 GammaA2I64( const wchar_t* szStr )
+	int64_t GammaA2I64( const wchar_t* szStr )
 	{
 		if( !szStr )
 			return 0;
 		char szBuf[256];
-		uint32 i = 0;
+		uint32_t i = 0;
 		while ( i < 128 && szStr[i] )
 			szBuf[i] = (char)szStr[i];
 		szBuf[i] = 0;
 		return GammaA2I64( szBuf );
 	}
 
-	int64 GammaA2I64( const char* szStr )
+	int64_t GammaA2I64( const char* szStr )
 	{
 		if( !szStr )
 			return 0;
 #ifdef _WIN32 
-		int64 nVal = _strtoi64( szStr, NULL, 0 );
+		int64_t nVal = _strtoi64( szStr, NULL, 0 );
 #else
-		int64 nVal = strtoll( szStr, NULL, 0 );		
+		int64_t nVal = strtoll( szStr, NULL, 0 );		
 #endif
 		 return nVal;
 	}
@@ -337,13 +337,13 @@ namespace Gamma
 	// 求整数平方根
 	// 比sqrt快
 	//=========================================================================
-	uint16 sqrti( uint32 M )
+	uint16_t sqrti( uint32_t M )
 	{
 		if( M == 0 )                
 			return 0;
 
-		uint32 N        = 0;
-		uint32 uTemp    = ( M >> 30 );					// 获取最高位：B[m-1]
+		uint32_t N        = 0;
+		uint32_t uTemp    = ( M >> 30 );					// 获取最高位：B[m-1]
 		M               <<= 2;
 		if( uTemp >= 1 )									// 最高位为1
 		{
@@ -351,11 +351,11 @@ namespace Gamma
 			uTemp -= N;
 		}
 
-		for( uint32 i = 15; i > 0; i-- )				// 求剩余的15位
+		for( uint32_t i = 15; i > 0; i-- )				// 求剩余的15位
 		{
 			N            <<= 1;							// 左移一位
 			uTemp        = ( uTemp << 2 ) + ( M >> 30 );
-			uint32 ttp   = ( N<<1 ) + 1;
+			uint32_t ttp   = ( N<<1 ) + 1;
 			M            <<= 2;
 
 			if ( uTemp >= ttp )							// 假设成立
@@ -365,16 +365,16 @@ namespace Gamma
 			}
 		}
 
-		return (uint16)N;
+		return (uint16_t)N;
 	}
 
-	GAMMA_COMMON_API uint32 sqrti64(uint64 M)
+	GAMMA_COMMON_API uint32_t sqrti64(uint64_t M)
 	{
 		if (M == 0)
 			return 0;
 
-		uint64 N = 0;
-		uint64 uTemp = (M >> 62);					// 获取最高位：B[m-1]
+		uint64_t N = 0;
+		uint64_t uTemp = (M >> 62);					// 获取最高位：B[m-1]
 		M <<= 2;
 		if (uTemp >= 1)									// 最高位为1
 		{
@@ -382,11 +382,11 @@ namespace Gamma
 			uTemp -= N;
 		}
 
-		for (uint32 i = 31; i > 0; i--)				// 求剩余的15位
+		for (uint32_t i = 31; i > 0; i--)				// 求剩余的15位
 		{
 			N <<= 1;							// 左移一位
 			uTemp = (uTemp << 2) + (M >> 62);
-			uint64 ttp = (N << 1) + 1;
+			uint64_t ttp = (N << 1) + 1;
 			M <<= 2;
 
 			if (uTemp >= ttp)							// 假设成立
@@ -396,21 +396,21 @@ namespace Gamma
 			}
 		}
 
-		return (uint32)N;
+		return (uint32_t)N;
 	}
 
 	//========================================================================
 	// 不受浮点精度影响转换函数
 	//========================================================================
-	double u2d( uint32 uValue )
+	double u2d( uint32_t uValue )
 	{
 #ifdef _WIN32
 		double d;
-		if( ((int32)uValue) >= 0 )
+		if( ((int32_t)uValue) >= 0 )
 			d = (int)uValue;
 		else
 		{
-			uint32* e = (uint32*)&d;
+			uint32_t* e = (uint32_t*)&d;
 			e[1] = 0x41e00000 + ((uValue&0x7fffffff)>>11);
 			e[0] = uValue<<21;
 		}
@@ -424,20 +424,20 @@ namespace Gamma
 	// 极速浮点转整形函数
 	// 比系统提供的快
 	//=========================================================================
-	int32 f2i( float f )
+	int32_t f2i( float f )
 	{
-		uint32 i = *(uint32*)&f;
-		int32 e = ( (uint8)( i>>23 ) ) - 127 - 23;
+		uint32_t i = *(uint32_t*)&f;
+		int32_t e = ( (uint8_t)( i>>23 ) ) - 127 - 23;
 		if( e < 0 )
-			return (i&0x80000000) ? -(int32)(((i&0x7fffff)|0x800000)>>(-e)) : (int32)(((i&0x7fffff)|0x800000)>>(-e));
-		return (i&0x80000000) ? -(int32)(((i&0x7fffff)|0x800000)<<e) : (int32)(((i&0x7fffff)|0x800000)<<e);
+			return (i&0x80000000) ? -(int32_t)(((i&0x7fffff)|0x800000)>>(-e)) : (int32_t)(((i&0x7fffff)|0x800000)>>(-e));
+		return (i&0x80000000) ? -(int32_t)(((i&0x7fffff)|0x800000)<<e) : (int32_t)(((i&0x7fffff)|0x800000)<<e);
 	}
 
-	uint32 f2u( float f )
+	uint32_t f2u( float f )
 	{
-		uint32 i = *(uint32*)&f;
-		int32 e = ( (uint8)( i>>23 ) ) - 127 - 23;
-		uint32 n = ( e < 0 ) ? (uint32)(((i&0x7fffff)|0x800000)>>(-e)) : (uint32)(((i&0x7fffff)|0x800000)<<e);
-		return ( i&0x80000000 ) ? (uint32)( 0 - n ) : n;
+		uint32_t i = *(uint32_t*)&f;
+		int32_t e = ( (uint8_t)( i>>23 ) ) - 127 - 23;
+		uint32_t n = ( e < 0 ) ? (uint32_t)(((i&0x7fffff)|0x800000)>>(-e)) : (uint32_t)(((i&0x7fffff)|0x800000)<<e);
+		return ( i&0x80000000 ) ? (uint32_t)( 0 - n ) : n;
 	}
 }

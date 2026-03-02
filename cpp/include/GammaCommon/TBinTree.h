@@ -18,7 +18,7 @@ namespace Gamma
     @param MaxElemPerLeaf 叶结点的最大元素数量
     @param ScaleType 数据类型,如float
     */
-    template< class NodeElem, int32 MinSpace, int32 MaxElemPerLeaf, class ScaleType >
+    template< class NodeElem, int32_t MinSpace, int32_t MaxElemPerLeaf, class ScaleType >
     class TBinTree
     {
     public:

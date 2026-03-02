@@ -12,47 +12,47 @@ namespace Gamma
     class CDbDynamicStatement : public CDbStatement
     {
     public:
-        CDbDynamicStatement(CDbConnection* pConn,const char* szSqlBuffer, uint32 uSize);
+        CDbDynamicStatement(CDbConnection* pConn,const char* szSqlBuffer, uint32_t uSize);
         ~CDbDynamicStatement(void);
 
-        void			FetchResultRow( uint32 nIndex );
+        void			FetchResultRow( uint32_t nIndex );
 
-        uint32			GetParamNum() const;
-        uint32			GetResultRowNum() const;
-		uint64			GetInsertID( void ) const;
-		uint32			GetAffectRowNum() const;
+        uint32_t			GetParamNum() const;
+        uint32_t			GetResultRowNum() const;
+		uint64_t			GetInsertID( void ) const;
+		uint32_t			GetAffectRowNum() const;
 
         void			Execute();
-		uint32			ExecuteWithoutException( void );
+		uint32_t			ExecuteWithoutException( void );
 		const char*		GetExecuteError( void );
 
-		void			SetParamNull( uint32 nIndex );
-		void			SetParamInt8( const int8* pBuffer, uint32 nIndex );
-		void			SetParamUint8( const uint8* pBuffer, uint32 nIndex );
-		void			SetParamInt16( const int16* pBuffer, uint32 nIndex );
-		void			SetParamUint16( const uint16* pBuffer, uint32 nIndex );
-		void			SetParamInt32( const int32* pBuffer, uint32 nIndex );
-		void			SetParamUint32( const uint32* pBuffer, uint32 nIndex );
-		void			SetParamInt64( const int64* pBuffer, uint32 nIndex );
-		void			SetParamUint64( const uint64* pBuffer, uint32 nIndex );
-		void			SetParamFloat( const float* pBuffer, uint32 nIndex );
-		void			SetParamDouble( const double* pBuffer, uint32 nIndex );
-		void			SetParamText( const void* pBuffer, uint32 nMaxSize, ulong* pActualSize, uint32 nIndex );
-		void			SetParamBinary( const void* pBuffer, uint32 nMaxSize, ulong* pActualSize, uint32 nIndex );
-		void			SetParamDate( const void* pBuffer, uint32 nIndex );
-		void			SetParamDateTime( const void* pBuffer, uint32 nIndex );
-		void			SetParamTimeStamp( const void* pBuffer, uint32 nIndex );
-		void			SetParamTime( const void* pBuffer, uint32 nIndex );
+		void			SetParamNull( uint32_t nIndex );
+		void			SetParamInt8( const int8_t* pBuffer, uint32_t nIndex );
+		void			SetParamUint8( const uint8_t* pBuffer, uint32_t nIndex );
+		void			SetParamInt16( const int16_t* pBuffer, uint32_t nIndex );
+		void			SetParamUint16( const uint16_t* pBuffer, uint32_t nIndex );
+		void			SetParamInt32( const int32_t* pBuffer, uint32_t nIndex );
+		void			SetParamUint32( const uint32_t* pBuffer, uint32_t nIndex );
+		void			SetParamInt64( const int64_t* pBuffer, uint32_t nIndex );
+		void			SetParamUint64( const uint64_t* pBuffer, uint32_t nIndex );
+		void			SetParamFloat( const float* pBuffer, uint32_t nIndex );
+		void			SetParamDouble( const double* pBuffer, uint32_t nIndex );
+		void			SetParamText( const void* pBuffer, uint32_t nMaxSize, ulong* pActualSize, uint32_t nIndex );
+		void			SetParamBinary( const void* pBuffer, uint32_t nMaxSize, ulong* pActualSize, uint32_t nIndex );
+		void			SetParamDate( const void* pBuffer, uint32_t nIndex );
+		void			SetParamDateTime( const void* pBuffer, uint32_t nIndex );
+		void			SetParamTimeStamp( const void* pBuffer, uint32_t nIndex );
+		void			SetParamTime( const void* pBuffer, uint32_t nIndex );
 
 	private:
         CSQLCommand     m_listCommand;
         CSQLCommand     m_listParams;
 		std::string		m_strCommand;
 		std::string		m_strError;
-		uint32			m_nAffectRows;
+		uint32_t			m_nAffectRows;
 
 		template<typename ValueType>
-		void			SetParamValue( ValueType nValue, uint32 nIndex );
+		void			SetParamValue( ValueType nValue, uint32_t nIndex );
 		void			BuildCommand();
     };
 }

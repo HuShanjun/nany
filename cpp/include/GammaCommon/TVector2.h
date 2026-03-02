@@ -91,7 +91,7 @@ namespace Gamma
 		// 分量相乘  
 		TVector2 Multiply( const TVector2& b ) const;
 		// 返回方向  
-		uint8 GetDir() const;
+		uint8_t GetDir() const;
 		
         // =====================================================================
         // 矢量的运算  
@@ -111,8 +111,8 @@ namespace Gamma
         // =====================================================================
         // 操作符重载  
         // =====================================================================
-        const T& operator [] ( const int32 i ) const;
-        T& operator [] ( const int32 i );
+        const T& operator [] ( const int32_t i ) const;
+        T& operator [] ( const int32_t i );
 
         const TVector2 operator + (const TVector2& b) const;
 		const TVector2 operator - (const TVector2& b) const;
@@ -336,12 +336,12 @@ namespace Gamma
             return TVector2(0, 1);
     }
 
-    template<class T> inline const T& TVector2<T>::operator [] ( const int32 i ) const
+    template<class T> inline const T& TVector2<T>::operator [] ( const int32_t i ) const
     {
         return v[i];
     }
 
-    template<class T> inline T& TVector2<T>::operator [] ( const int32 i )
+    template<class T> inline T& TVector2<T>::operator [] ( const int32_t i )
     {
         return v[i];
     }
@@ -469,17 +469,17 @@ namespace Gamma
         return ((x<=other.x) && (y<=other.y)); 
     }
 
-	typedef TVector2<int32>     CVector2;
+	typedef TVector2<int32_t>     CVector2;
 	typedef TVector2<float>		CVector2f;
 	typedef TVector2<float>     float2;
-	typedef TVector2<int32>		CPos;
-	typedef TVector2<int16>		CPos16;
-	typedef TVector2<int8>		CPos8;
-	typedef TVector2<uint32>	CPos32u;
-	typedef TVector2<uint16>	CPos16u;
-	typedef TVector2<uint8>		CPos8u;
+	typedef TVector2<int32_t>		CPos;
+	typedef TVector2<int16_t>		CPos16;
+	typedef TVector2<int8_t>		CPos8;
+	typedef TVector2<uint32_t>	CPos32u;
+	typedef TVector2<uint16_t>	CPos16u;
+	typedef TVector2<uint8_t>		CPos8u;
 
-	typedef TVector2<uint32>	CSize32;
+	typedef TVector2<uint32_t>	CSize32;
 }
 
 #endif

@@ -51,7 +51,7 @@ namespace Gamma
 		WSADATA wsaData;
 
 		wVersion = MAKEWORD( 2, 2 );
-		int32 nResult = WSAStartup( wVersion, &wsaData );
+		int32_t nResult = WSAStartup( wVersion, &wsaData );
 		if( nResult )
 		{
 			std::stringstream strm;
@@ -79,7 +79,7 @@ namespace Gamma
 		GammaDestroySemaphore( m_hSemLocalWaiting );
 
 #ifdef _WIN32
-		int32 nResult = WSACleanup();
+		int32_t nResult = WSACleanup();
 		if( nResult )
 		{
 			std::stringstream strm;
@@ -158,7 +158,7 @@ namespace Gamma
 		return m_FilePackageManager.CreatePackage( szAbsPathName );
 	}
 
-	bool CGammaFileMgr::GetCacheInfo( const char* szPathName, char* szCacheName, size_t nMaxCount, uint32& offset, uint32& size )
+	bool CGammaFileMgr::GetCacheInfo( const char* szPathName, char* szCacheName, size_t nMaxCount, uint32_t& offset, uint32_t& size )
 	{
 		CPackage* pPackage = CreatePackage( szPathName );
 		if( !pPackage )
@@ -203,7 +203,7 @@ namespace Gamma
 
 		const std::string& strBaseWebPath = m_FilePackageManager.GetBaseWebPathString();
 		SPackagePart* pPkgNode = pPackage->GetLastPkgNode();
-		for( int32 i = pPkgNode->m_nPackageIndex; i >= 0; --i )
+		for( int32_t i = pPkgNode->m_nPackageIndex; i >= 0; --i )
 		{
 			const std::string& strName = pPkgNode->m_strFilePath;
 			const char* szUrl = strName.c_str();
@@ -228,7 +228,7 @@ namespace Gamma
 		// 检查在包里是否存在
 		m_FilePackageManager.ConvertToAbsolutePath( szFileName, szPath );
 		if( szAbsolutePath )
-			strcpy_safe( szAbsolutePath, szPath, (uint32)nMaxSize, INVALID_32BITID );
+			strcpy_safe( szAbsolutePath, szPath, (uint32_t)nMaxSize, INVALID_32BITID );
 
 		const char* szIndexName = m_FilePackageManager.RevertToShortPath( szPath );
 		if( !szIndexName )
@@ -256,15 +256,15 @@ namespace Gamma
 		else if( pResObject->GetLoadState() == eLoadState_Failed )
 		{
 			SFileFailed& FileFailed = m_mapExcludeFile[*pResObject->GetPathName()]; 
-			FileFailed.m_nFailedTime = (uint32)( GetNatureTime()/1000 );
+			FileFailed.m_nFailedTime = (uint32_t)( GetNatureTime()/1000 );
 			FileFailed.m_nFailedCount++;
 		}
 	}
 
-	void CGammaFileMgr::ApplyAllLoaded( uint32 nIdleTime )
+	void CGammaFileMgr::ApplyAllLoaded( uint32_t nIdleTime )
 	{
 		STATCK_LOG( this );
-		uint32 nWaitingObjectCount = m_nWaitingObjectCount;
+		uint32_t nWaitingObjectCount = m_nWaitingObjectCount;
 
 		CTimer timer;
 		while( timer.GetElapse() < nIdleTime )
@@ -352,8 +352,8 @@ namespace Gamma
 			const char* szSize = GetFileNameFromPath( szPathName );
 			if( szSize == NULL || szSize == szPathName + 8 )
 				return false;
-			uint64 nMemoryAddr = GammaA2I64( szPathName + 8 );
-			uint32 nMemorySize = GammaA2I( szSize );
+			uint64_t nMemoryAddr = GammaA2I64( szPathName + 8 );
+			uint32_t nMemorySize = GammaA2I( szSize );
 			pListener->OnLoadedEnd( szPathName, (const tbyte*)(ptrdiff_t)nMemoryAddr, nMemorySize );
 			return true;
 		}
@@ -380,7 +380,7 @@ namespace Gamma
 					{
 						const CRefStringPtr& ptrBuffer = TempReader.GetFileBuffer();
 						const tbyte* szBuffer = (const tbyte*)( ptrBuffer->empty() ? "" : ptrBuffer->c_str() );
-						pListener->OnLoadedEnd( szAbsPathName, szBuffer, (uint32)ptrBuffer->size() );
+						pListener->OnLoadedEnd( szAbsPathName, szBuffer, (uint32_t)ptrBuffer->size() );
 					}
 					return true;
 				}
@@ -399,7 +399,7 @@ namespace Gamma
 				if( listReader.empty() )
 				{
 					pPackage->CreateReaders( bCache );
-					for( uint32 i = 0; i < listReader.size(); i++ )
+					for( uint32_t i = 0; i < listReader.size(); i++ )
 					{
 						listReader[i]->SetLoadState( eLoadState_Failed );
 						if( listReader[i]->Read( m_strTempBuffer ) != eReadOK )
@@ -412,7 +412,7 @@ namespace Gamma
 				while( listReader.size() && bLoading )
 				{ 
 					bLoading = false;
-					for( uint32 i = 0; i < listReader.size(); i++ )
+					for( uint32_t i = 0; i < listReader.size(); i++ )
 					{
 						if( listReader[i]->GetLoadState() >= eLoadState_Failed )
 							continue;
@@ -425,7 +425,7 @@ namespace Gamma
 				}
 
 				GammaLock( m_hLockLoaded );
-				for( uint32 i = 0; i < listReader.size(); i++ )
+				for( uint32_t i = 0; i < listReader.size(); i++ )
 					listReader[i]->Remove();
 				GammaUnlock( m_hLockLoaded );	
 				pPackage->OnLoaded( INVALID_32BITID );
@@ -463,7 +463,7 @@ namespace Gamma
 				pPackage->MarkNotLoad();
 
 			GammaString( szAbsPathName );
-			uint32 nSerialID = bSerial ? m_nCurWaitingSerialID++ : INVALID_32BITID;
+			uint32_t nSerialID = bSerial ? m_nCurWaitingSerialID++ : INVALID_32BITID;
 			CResObject* pResObject = new CResObject( nSerialID, szAbsPathName, pPackage );
 			pResObject->SetListener( m_mapListener.insert( std::make_pair( pListener, pResObject ) ) );
 			if( m_bEnableFileProgress )
@@ -509,7 +509,7 @@ namespace Gamma
 		// 是否网络资源
 		bool bHttpRes = pPackage->IsHttpRes();
 		SPackagePart* pPkgNode = pPackage->GetLastPkgNode();
-		for( int32 i = pPkgNode->m_nPackageIndex; i >= 0; --i )
+		for( int32_t i = pPkgNode->m_nPackageIndex; i >= 0; --i )
 		{
 #ifdef _IOS
 			if( CIOSApp::GetInstance().ReadSystemFile( listReader[0],
@@ -558,12 +558,12 @@ namespace Gamma
 	void CGammaFileMgr::CreateExtractThread( const CPackageInfoList& listPackage )
 	{
 		std::vector<const char*> listPackageName( listPackage.size() );
-		for( uint32 i = 0; i < listPackageName.size(); i++ )
+		for( uint32_t i = 0; i < listPackageName.size(); i++ )
 			listPackageName[i] = listPackage[i]->m_strFilePath.c_str();
 		m_pExtractThread = new CExtractThread( listPackageName, m_listLoaded, m_hLockLoaded );
 	}
 
-	uint32 CGammaFileMgr::LoadDir( const char* szDirName, bool bCache, 
+	uint32_t CGammaFileMgr::LoadDir( const char* szDirName, bool bCache, 
 		bool bSerial, ELoadPriority eLoadPriority, IResListener* pListener )
 	{
 		struct SDirInfo
@@ -588,7 +588,7 @@ namespace Gamma
 			bool			m_bCache;
 			bool			m_bSerial;
 			IResListener*	m_pListener;
-			uint32			m_nCount;
+			uint32_t			m_nCount;
 		};
 
 		SDirInfo DirInfo = { this, eLoadPriority, bCache, bSerial, pListener, 0 };
@@ -596,7 +596,7 @@ namespace Gamma
 		return DirInfo.m_nCount;
 	}
 
-	uint32 CGammaFileMgr::SyncLoad( const char* szPathName, bool bSave2Cache, IResListener* pListener )
+	uint32_t CGammaFileMgr::SyncLoad( const char* szPathName, bool bSave2Cache, IResListener* pListener )
 	{
 		if( *(szPathName + strlen( szPathName ) - 1 ) == L'/' )
 			return LoadDir( szPathName, bSave2Cache, true, eLP_Sync, pListener );
@@ -606,7 +606,7 @@ namespace Gamma
 		return bSuceeded;
 	}
 
-	uint32 CGammaFileMgr::ParallelLoad( const char* szPathName, bool bHighPriority, bool bSave2Cache, IResListener* pListener )
+	uint32_t CGammaFileMgr::ParallelLoad( const char* szPathName, bool bHighPriority, bool bSave2Cache, IResListener* pListener )
 	{
 		if( *(szPathName + strlen( szPathName ) - 1 ) == L'/' )
 			return LoadDir( szPathName, bSave2Cache, false, bHighPriority ? eLP_High : eLP_Low, pListener );
@@ -615,7 +615,7 @@ namespace Gamma
 		return AddObject( szPathName, bSave2Cache, false, bHighPriority ? eLP_High : eLP_Low, pListener );
 	}
 
-	uint32 CGammaFileMgr::Load( const char* szPathName, bool bHighPriority, bool bSave2Cache, IResListener* pListener )
+	uint32_t CGammaFileMgr::Load( const char* szPathName, bool bHighPriority, bool bSave2Cache, IResListener* pListener )
 	{
 		if( szPathName && *(szPathName + strlen( szPathName ) - 1 ) == L'/' && GammaStringCompare( szPathName, "http://", 7 ) )
 			return LoadDir( szPathName, bSave2Cache, true, bHighPriority ? eLP_High : eLP_Low, pListener );
@@ -629,12 +629,12 @@ namespace Gamma
 		m_bEnableFileProgress = bEnable;
 	}
 
-	uint32 CGammaFileMgr::GetResWaitingCount()
+	uint32_t CGammaFileMgr::GetResWaitingCount()
 	{
 		return m_nWaitingObjectCount;
 	}
 
-	uint32 CGammaFileMgr::GetObjectCountInHistory()
+	uint32_t CGammaFileMgr::GetObjectCountInHistory()
 	{
 		return m_objectCountInHistory;
 	}
@@ -648,15 +648,15 @@ namespace Gamma
 	{
 		m_bQuit = true;
 		SAFE_DELETE( m_pExtractThread );
-		for( uint32 i = 0; i < READ_THREAD_COUNT; ++i )
+		for( uint32_t i = 0; i < READ_THREAD_COUNT; ++i )
 			GammaPutSemaphore( i ? m_hSemHttpWaiting : m_hSemLocalWaiting );
-		for( uint32 i = 0; i < READ_THREAD_COUNT; ++i )
+		for( uint32_t i = 0; i < READ_THREAD_COUNT; ++i )
 			SAFE_DELETE( m_vecReadThreadList[i] );
 		Flush( INVALID_32BITID );
 	}
 
 	///< 将读好的文件回调出去
-	void CGammaFileMgr::Flush( uint32 nElapseTime )
+	void CGammaFileMgr::Flush( uint32_t nElapseTime )
 	{
 		STATCK_LOG( this );
 		CTimer TimeCheck;
@@ -667,7 +667,7 @@ namespace Gamma
 		while( TimeCheck.GetElapse() < nElapseTime )
 		{
 			GammaLock( m_hLockLoaded );
-			uint32 nIndex = m_listLoaded.m_bReadParallel;
+			uint32_t nIndex = m_listLoaded.m_bReadParallel;
 			m_listLoaded.m_bReadParallel = !m_listLoaded.m_bReadParallel;
 			CFileReader* pReader = m_listLoaded.m_listFinish[nIndex].GetFirst();
 			if( !pReader )
@@ -682,7 +682,7 @@ namespace Gamma
 			if( !pReader )
 				break;
 
-			uint64 nElapse = TimeCheck.GetElapse();
+			uint64_t nElapse = TimeCheck.GetElapse();
 			if( nElapse >= nElapseTime )
 				break;
 
@@ -699,7 +699,7 @@ namespace Gamma
 				continue;
 			}
 
-			if( pReader->Flush( uint32( nElapseTime - nElapse ) ) )
+			if( pReader->Flush( uint32_t( nElapseTime - nElapse ) ) )
 				continue;
 
 			// Flush超时，需要加回原来的队列
@@ -709,9 +709,9 @@ namespace Gamma
 		}
 
 		PROCESS_LOG;
-		uint64 nElapse = TimeCheck.GetElapse();
+		uint64_t nElapse = TimeCheck.GetElapse();
 		if( TimeCheck.GetElapse() < nElapseTime )
-			ApplyAllLoaded( (uint32)( nElapseTime - nElapse ) );
+			ApplyAllLoaded( (uint32_t)( nElapseTime - nElapse ) );
 
 		PROCESS_LOG;
 		IGammaFileMgrListener* pListener = m_FilePackageManager.GetFileMgrListener();
@@ -723,9 +723,9 @@ namespace Gamma
 				CPackage* pPackage = pResObject->GetFilePackage();
 				CReaderList& listReader = pPackage->GetReaderList();
 				GammaAst( !listReader.empty() );
-				uint32 nTotalSize = 0;
-				uint32 nCurSize = 0;
-				for( uint32 i = 0; i < listReader.size(); i++ )
+				uint32_t nTotalSize = 0;
+				uint32_t nCurSize = 0;
+				for( uint32_t i = 0; i < listReader.size(); i++ )
 				{
 					nTotalSize += listReader[i]->GetTotalSize();
 					nCurSize += listReader[i]->GetCurSize();
@@ -734,9 +734,9 @@ namespace Gamma
 			}
 		}
 
-		for( uint32 i = 0; i < ELEM_COUNT( m_listWaiting ); i++ )
+		for( uint32_t i = 0; i < ELEM_COUNT( m_listWaiting ); i++ )
 		{
-			for( uint32 j = 0; j < ELEM_COUNT( m_listWaiting[i].m_listReader ); j++ )
+			for( uint32_t j = 0; j < ELEM_COUNT( m_listWaiting[i].m_listReader ); j++ )
 			{
 				if( !m_listWaiting[i].m_listReader[j].IsEmpty() )
 					return;
@@ -768,7 +768,7 @@ namespace Gamma
 
 		while( *szDataPath )
 		{
-			uint8 c = (uint8)*szDataPath++;
+			uint8_t c = (uint8_t)*szDataPath++;
 
 			if( IsNumber( c ) || IsLetter( c ) || c == '.' || c == '_' )
 				strFileName.push_back( c );
@@ -781,7 +781,7 @@ namespace Gamma
 		}
 
 		// 如果是压缩文件则保存为原始文件
-		uint32 nLen = (uint32)strFileName.size();
+		uint32_t nLen = (uint32_t)strFileName.size();
 		if( nLen < 2 )
 			return strFileName;
 		if( strFileName[nLen-1] == 'z' && strFileName[nLen-2] == '.' )

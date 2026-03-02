@@ -43,8 +43,8 @@ namespace Gamma
 		};
 
 		std::string			m_strFileName;
-		uint32				m_nBufferSize;
-		uint32				m_nPosition;
+		uint32_t				m_nBufferSize;
+		uint32_t				m_nPosition;
 
 		void Clear()
 		{
@@ -60,7 +60,7 @@ namespace Gamma
 			m_nPosition = INVALID_32BITID;
 		}
 
-		void OnLoadedEnd( const char* szFileName, const tbyte* pBuffer, uint32 nSize )
+		void OnLoadedEnd( const char* szFileName, const tbyte* pBuffer, uint32_t nSize )
 		{
 			if( pBuffer )
 			{
@@ -109,13 +109,13 @@ namespace Gamma
 		m_pFile->Clear();
 	}
 
-	bool CPkgFile::Seek( int32 pos, int32 nSeekType )
+	bool CPkgFile::Seek( int32_t pos, int32_t nSeekType )
 	{
 		if ( !IsValid() )
 			return false;
 
-		int32 nNewPos;
-		int32 nFileSize = (int32)Size();
+		int32_t nNewPos;
+		int32_t nFileSize = (int32_t)Size();
 		switch( nSeekType )
 		{
 		case SEEK_SET:
@@ -138,20 +138,20 @@ namespace Gamma
 		return true;
 	}
 
-	int32 CPkgFile::Read( void* pBuffer, uint32 nLen )
+	int32_t CPkgFile::Read( void* pBuffer, uint32_t nLen )
 	{
 		if( !IsValid() )
 			return -1;
 
-		uint32 nFileSize = Size();
-		uint32 nNewPos = m_pFile->m_nPosition + nLen;
+		uint32_t nFileSize = Size();
+		uint32_t nNewPos = m_pFile->m_nPosition + nLen;
 		if ( nNewPos > nFileSize )
 		{
 			nNewPos = nFileSize;
 			nLen = nNewPos - m_pFile->m_nPosition;
 		}
 
-		if( nNewPos < (uint32)m_pFile->m_nPosition )
+		if( nNewPos < (uint32_t)m_pFile->m_nPosition )
 			return -1;
 
 		nLen = nNewPos - m_pFile->m_nPosition;		
@@ -212,7 +212,7 @@ namespace Gamma
 		return true;
 	}
 
-	int32 CPkgFile::Size() const
+	int32_t CPkgFile::Size() const
 	{
 		if( m_pFile->m_nBufferSize != INVALID_32BITID )
 			return m_pFile->m_nBufferSize;
@@ -230,7 +230,7 @@ namespace Gamma
 		return NULL;
 	}
 
-	int32 CPkgFile::Tell() const
+	int32_t CPkgFile::Tell() const
 	{ 
 		return m_pFile->m_nPosition;		
 	} 

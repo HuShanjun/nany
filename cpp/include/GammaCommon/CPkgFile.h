@@ -23,13 +23,13 @@ namespace Gamma
     {
     protected:
         const tbyte*    m_pBuf;
-		uint32          m_nCurPos;
-		uint32          m_nMaxSize;
-		uint32          m_nMinSize;
+		uint32_t          m_nCurPos;
+		uint32_t          m_nMaxSize;
+		uint32_t          m_nMinSize;
 
         friend class CPkgFile;
     public:
-        CBufFile( const void* pBuf, uint32 nMaxSize, uint32 nMinSize = 0 ) 
+        CBufFile( const void* pBuf, uint32_t nMaxSize, uint32_t nMinSize = 0 ) 
 			: m_pBuf( (const tbyte*)pBuf )
 			, m_nMaxSize( nMaxSize )
 			, m_nMinSize( nMinSize )
@@ -38,13 +38,13 @@ namespace Gamma
 
 		bool			IsEOF() const				{ return m_nCurPos >= m_nMaxSize; }
 		const tbyte*	GetBuf() const				{ return m_pBuf; }
-        uint32			GetBufSize() const			{ return m_nMaxSize; }
-        uint32			GetPos()  const				{ return m_nCurPos; }
-		void            Seek( uint32 nPos )			{ m_nCurPos = nPos; }
-		void            SeekFromCur( int32 nDel )	{ m_nCurPos += nDel; }
+        uint32_t			GetBufSize() const			{ return m_nMaxSize; }
+        uint32_t			GetPos()  const				{ return m_nCurPos; }
+		void            Seek( uint32_t nPos )			{ m_nCurPos = nPos; }
+		void            SeekFromCur( int32_t nDel )	{ m_nCurPos += nDel; }
 		const tbyte*	GetBufByCur() const			{ return m_pBuf + m_nCurPos; }	//请检查 by hqli
 
-        void Read( void* pBuf, uint32 nLen )
+        void Read( void* pBuf, uint32_t nLen )
 		{ 
 			if( m_nCurPos < m_nMinSize || m_nCurPos + nLen > m_nMaxSize )
 			{
@@ -56,23 +56,23 @@ namespace Gamma
             m_nCurPos += nLen;
         }
 
-		int32 SafeRead( void* pBuf, uint32 nLen )
+		int32_t SafeRead( void* pBuf, uint32_t nLen )
 		{
 			if( m_nCurPos < m_nMinSize || m_nCurPos >= m_nMaxSize ) 
 				return -1;
 			if( m_nCurPos + nLen > m_nMaxSize )
 				nLen = m_nMaxSize - m_nCurPos;
 			Read( pBuf, nLen );
-			return (int32)nLen;
+			return (int32_t)nLen;
 		}
 
 		template<typename DataType>
-		const DataType*	PopData( uint32 nSize = sizeof(DataType) )		
+		const DataType*	PopData( uint32_t nSize = sizeof(DataType) )		
 		{ 
 			GammaAst( m_nCurPos >= m_nMinSize );
 			const DataType* pData = (const DataType*)( m_pBuf + GetPos() );
 			GammaAst( m_nCurPos <= m_nMaxSize );
-			SeekFromCur( (int32)nSize );
+			SeekFromCur( (int32_t)nSize );
 			return pData;
 		}
 
@@ -95,10 +95,10 @@ namespace Gamma
 	class CBufFileEx : public CBufFile
 	{
 	public:
-		CBufFileEx( tbyte* pBuf, uint32 nMaxSize, uint32 nMinSize = 0 )
+		CBufFileEx( tbyte* pBuf, uint32_t nMaxSize, uint32_t nMinSize = 0 )
 			: CBufFile( pBuf, nMaxSize, nMinSize ){}
 
-		void Write( const void* pBuf, uint32 nLen )
+		void Write( const void* pBuf, uint32_t nLen )
 		{ 
 			GammaAst( m_nCurPos >= m_nMinSize );
 			GammaAst( m_nCurPos + nLen <= m_nMaxSize );
@@ -107,7 +107,7 @@ namespace Gamma
 		}
 
 		template<typename DataType>
-		CBufFileEx& PushData( const DataType* pData, uint32 nSize = sizeof(DataType) )		
+		CBufFileEx& PushData( const DataType* pData, uint32_t nSize = sizeof(DataType) )		
 		{ 
 			Write( pData, nSize );
 			return *this;
@@ -123,9 +123,9 @@ namespace Gamma
 	class CStringFile
 	{
 		std::string		m_szBuf;
-		uint32          m_nCurPos;
+		uint32_t          m_nCurPos;
 	public:
-		CStringFile( uint32 nReserveSize = 0 ) 
+		CStringFile( uint32_t nReserveSize = 0 ) 
 			: m_nCurPos(0)
 		{
 			if( nReserveSize )
@@ -134,15 +134,15 @@ namespace Gamma
 
 		const tbyte*		GetBuf() const				{ return (const tbyte*)m_szBuf.c_str(); }
 		const std::string&	GetString() const			{ return m_szBuf; }
-		uint32				GetBufSize() const			{ return (uint32)m_szBuf.size(); }
-		uint32				GetPos()  const				{ return m_nCurPos; }
-		uint32				GetCapacity() const			{ return (uint32)m_szBuf.capacity(); }
-		void				Seek( uint32 nPos )			{ m_nCurPos = nPos; }
-		void				SeekFromCur( int32 nDel )	{ m_nCurPos += nDel; }
-		void				Reserve( uint32 nSize )		{ m_szBuf.reserve( nSize ); }
+		uint32_t				GetBufSize() const			{ return (uint32_t)m_szBuf.size(); }
+		uint32_t				GetPos()  const				{ return m_nCurPos; }
+		uint32_t				GetCapacity() const			{ return (uint32_t)m_szBuf.capacity(); }
+		void				Seek( uint32_t nPos )			{ m_nCurPos = nPos; }
+		void				SeekFromCur( int32_t nDel )	{ m_nCurPos += nDel; }
+		void				Reserve( uint32_t nSize )		{ m_szBuf.reserve( nSize ); }
 		void				Clear()						{ m_szBuf.clear(); m_nCurPos = 0; }
 
-		void Write( const void* pBuf, uint32 nLen )
+		void Write( const void* pBuf, uint32_t nLen )
 		{ 
 			if( m_nCurPos + nLen > m_szBuf.capacity() )
 				m_szBuf.reserve( ( GetBufSize() + nLen )*2 );
@@ -169,7 +169,7 @@ namespace Gamma
 		}
 
 		template<typename DataType>
-		CStringFile& PushData( const DataType* pData, uint32 nSize = sizeof(DataType) )		
+		CStringFile& PushData( const DataType* pData, uint32_t nSize = sizeof(DataType) )		
 		{ 
 			Write( pData, nSize );
 			return *this;
@@ -198,15 +198,15 @@ namespace Gamma
 
 		bool			Open( const char *szFileName );
 		bool			Open( const wchar_t *szFileName );
-		bool			Seek( int32 pos, int32 nSeekType = SEEK_SET );	// TODO : add default
-		int32			Read( void *buffer, uint32 len );
+		bool			Seek( int32_t pos, int32_t nSeekType = SEEK_SET );	// TODO : add default
+		int32_t			Read( void *buffer, uint32_t len );
 		void			Close();
 
-		int32			Tell()	const;
+		int32_t			Tell()	const;
 		bool			IsValid() const;
 		const char*		GetFileName() const;
 		const tbyte*	GetFileBuffer() const;
-		int32			Size()		const;
+		int32_t			Size()		const;
 
 		operator bool() const { return IsValid(); }
 	private:
@@ -249,7 +249,7 @@ namespace Gamma
 
         virtual pos_type_t seekpos( pos_type_t _Sp, std::ios_base::openmode /*_Which*/)
         {
-            if( !m_PkFile.Seek( (int32)_Sp, SEEK_SET ) )
+            if( !m_PkFile.Seek( (int32_t)_Sp, SEEK_SET ) )
                 return _Traits::eof();
             return m_PkFile.Tell();
         }
@@ -259,11 +259,11 @@ namespace Gamma
             switch( _Way )
             {
             case std::ios_base::beg:
-                return m_PkFile.Seek( (int32)_Off, SEEK_SET ) ? m_PkFile.Tell() : _Traits::eof();
+                return m_PkFile.Seek( (int32_t)_Off, SEEK_SET ) ? m_PkFile.Tell() : _Traits::eof();
             case std::ios_base::end:
-                return m_PkFile.Seek( (int32)_Off, SEEK_END ) ? m_PkFile.Tell() : _Traits::eof();
+                return m_PkFile.Seek( (int32_t)_Off, SEEK_END ) ? m_PkFile.Tell() : _Traits::eof();
             case std::ios_base::cur:
-                return m_PkFile.Seek( (int32)_Off, SEEK_CUR ) ? m_PkFile.Tell() : _Traits::eof();
+                return m_PkFile.Seek( (int32_t)_Off, SEEK_CUR ) ? m_PkFile.Tell() : _Traits::eof();
             default:
                 GammaThrow( "Invalid seek type!");
             };

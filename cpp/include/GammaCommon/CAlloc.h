@@ -238,7 +238,7 @@ namespace Gamma
 			: m_nFreeCount(0)
 			, m_nPageCount(0)
 			, m_ppPageList(NULL)
-			, m_nBlockSize( AligenUp( Max<uint32>( (uint32)nBlockSize, 1 ), (uint32)sizeof(tbyte*) ) )
+			, m_nBlockSize( AligenUp( Max<uint32_t>( (uint32_t)nBlockSize, 1 ), (uint32_t)sizeof(tbyte*) ) )
 			, m_nBlockPerPage( nBlockPerPage )
 			, m_pPageAllocFun( pPageAllocFun ? pPageAllocFun : &_Alloc )
 			, m_pPageFreeFun( pPageFreeFun ? pPageFreeFun : &_Free )
@@ -283,7 +283,7 @@ namespace Gamma
 			pPage->m_pFirstFreeBlock = *(tbyte**)( pCurBlock + m_nBlockSize - sizeof(tbyte*) );
 
 			ptrdiff_t nDiffAdress = pPage->m_pFirstFreeBlock - (tbyte*)pPage;
-			int32 nPageSize = (int32)( m_nBlockPerPage*m_nBlockSize + sizeof(SPage) );
+			int32_t nPageSize = (int32_t)( m_nBlockPerPage*m_nBlockSize + sizeof(SPage) );
 			if( pPage->m_pFirstFreeBlock && ( nDiffAdress < 0 || nDiffAdress > nPageSize ) )
 			{
 				GammaLog << "Memory overrun!!!!" << std::endl;
@@ -314,7 +314,7 @@ namespace Gamma
 			GammaAst( m_nFreeCount < m_nPageCount*m_nBlockPerPage );
 			tbyte* pCurBlock = (tbyte*)pMem;
 			ptrdiff_t nDiffAdress = pCurBlock - (tbyte*)pPage;
-			int32 nPageSize = (int32)( m_nBlockPerPage*m_nBlockSize + sizeof(SPage) );
+			int32_t nPageSize = (int32_t)( m_nBlockPerPage*m_nBlockSize + sizeof(SPage) );
 			if( nDiffAdress < 0 || nDiffAdress > nPageSize )
 				return false;
 

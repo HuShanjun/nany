@@ -22,7 +22,7 @@ namespace Gamma
 	class CListenHandler; 
 	typedef TGammaList<CConnection> CConnList;
 	typedef TTinyList<CConnection> CConnUpdateList;
-	typedef map<uint32, CConnList*> CConnListMap;
+	typedef map<uint32_t, CConnList*> CConnListMap;
 	typedef TTinyList<CListenHandler> CListenerList;
 	typedef TGammaList<CConnection>::CGammaListNode ConnNode;
 
@@ -33,8 +33,8 @@ namespace Gamma
 	protected:
 		INetwork*			m_pNetWork;
 		bool				m_bStrictMode;
-		uint32				m_nAutoDisconnectTime;
-		int64				m_nCurCheckTime;
+		uint32_t				m_nAutoDisconnectTime;
+		int64_t				m_nCurCheckTime;
 		CListenerList		m_listListener;
 		CConnUpdateList		m_listUpdateConn;
 		CConnListMap		m_mapConnList[eCT_Count];
@@ -42,33 +42,33 @@ namespace Gamma
 
 		void				OnCheckConnecting();
 		void				TryShutDownConn( CConnList& listConn );
-		uint32				GetAllConn( CConnList& listConn, CBaseConn** pConnArray, uint32 nMaxCount );
-		void				OnAccept( Gamma::IConnecter& Connect, uint32 nConnClassID, EConnType eType );
-		CConnection*		CreateConnect( IConnecter* pConnecter, uint32 nConnClassID, 
+		uint32_t				GetAllConn( CConnList& listConn, CBaseConn** pConnArray, uint32_t nMaxCount );
+		void				OnAccept( Gamma::IConnecter& Connect, uint32_t nConnClassID, EConnType eType );
+		CConnection*		CreateConnect( IConnecter* pConnecter, uint32_t nConnClassID, 
 								const char* szConnectAddress, EConnType eType );
 	public:
-		CConnectionMgr( uint32 nAutoDisconnectTime, bool bStrictMode );
+		CConnectionMgr( uint32_t nAutoDisconnectTime, bool bStrictMode );
 		virtual ~CConnectionMgr();
 		friend class CListenHandler;
 
 		/// 框架或shell循环调用
 		/// 检查系统和网络事件,nWaitTimes为事件等待时间.若为网络事件,回由底层回调到响应的连接处理
-		bool				Check( uint32 nWaitTimes );
+		bool				Check( uint32_t nWaitTimes );
 		INetwork*			GetNetwork() { return m_pNetWork; }
 		void				PreResolveDomain( const char* szAddress );
-		int64				GetCurCheckTime() const { return m_nCurCheckTime; }
+		int64_t				GetCurCheckTime() const { return m_nCurCheckTime; }
 		bool				IsStrictMode() const { return m_bStrictMode; }
-		uint32				GetAutoDisconnectTime() const { return m_nAutoDisconnectTime; }
+		uint32_t				GetAutoDisconnectTime() const { return m_nAutoDisconnectTime; }
 		void				AddUpdateConn( CConnection& Conn );
-		void				StopService( const char* szAddres, uint16 nPort, uint32 nConnectClassID );
+		void				StopService( const char* szAddres, uint16_t nPort, uint32_t nConnectClassID );
 		void				StopAllService();
-		bool				StopConnect( uint32 nConnectClassID );
+		bool				StopConnect( uint32_t nConnectClassID );
 		bool				StopAllConnect();
 
-		virtual void		StartService( const char* szAddres, uint16 nPort, uint32 nConnectClassID, 
+		virtual void		StartService( const char* szAddres, uint16_t nPort, uint32_t nConnectClassID, 
 								EConnType eType, const char* pCertificatePath, const char* pPrivateKeyPath );
-		virtual CBaseConn*	Connect( const char* szAddress, uint16 nPort, uint32 nConnectClassID, EConnType eType );
-		virtual uint32		GetAllConn( uint32 nConnectClassID, CBaseConn* aryConn[], uint32 nCount );
+		virtual CBaseConn*	Connect( const char* szAddress, uint16_t nPort, uint32_t nConnectClassID, EConnType eType );
+		virtual uint32_t		GetAllConn( uint32_t nConnectClassID, CBaseConn* aryConn[], uint32_t nCount );
 
 		const SKcpConfig&	KcpConfig() { return m_kcpConfig; }
 		SKcpConfig			GetKcpConfig() { return m_kcpConfig; }

@@ -23,7 +23,7 @@ namespace Gamma
 	class CCallbackInfo;
 	struct SVirtualObj;
 	struct SFunctionTable;
-	typedef std::pair<SFunctionTable*, uint32> CVMObjVTableInfo;
+	typedef std::pair<SFunctionTable*, uint32_t> CVMObjVTableInfo;
 	typedef std::map<const CClassInfo*, CVMObjVTableInfo> CNewFunctionTableMap;
 	typedef std::map<SFunctionTable*, SFunctionTable*> CFunctionTableMap;
 
@@ -42,8 +42,8 @@ namespace Gamma
 		virtual bool			CallVM( const CCallbackInfo* pCallBase, void* pRetBuf, void** pArgArray ) = 0;
 		virtual void			DestrucVM( const CCallbackInfo* pCallBase, SVirtualObj* pObject ) = 0;
 
-		virtual bool			Set( void* pObject, int32 nIndex, void* pArgBuf, const STypeInfo& TypeInfo ) = 0;
-		virtual bool			Get( void* pObject, int32 nIndex, void* pResultBuf, const STypeInfo& TypeInfo ) = 0;
+		virtual bool			Set( void* pObject, int32_t nIndex, void* pArgBuf, const STypeInfo& TypeInfo ) = 0;
+		virtual bool			Get( void* pObject, int32_t nIndex, void* pResultBuf, const STypeInfo& TypeInfo ) = 0;
 		virtual bool			Set( void* pObject, const char* szName, void* pArgBuf, const STypeInfo& TypeInfo ) = 0;
 		virtual bool			Get( void* pObject, const char* szName, void* pResultBuf, const STypeInfo& TypeInfo ) = 0;
 		virtual bool        	Call( const STypeInfoArray& aryTypeInfo, void* pResultBuf, const char* szFunction, void** aryArg ) = 0;
@@ -57,35 +57,35 @@ namespace Gamma
 									const STypeInfoArray& aryTypeInfo, const char* szTypeInfoName, const char* szFunctionName );
 		static bool				RegisterClassFunction( IFunctionWrap* funWrap, uintptr_t funOrg,
 									const STypeInfoArray& aryTypeInfo, const char* szFunctionName );
-		static bool				RegisterClassCallback( IFunctionWrap* funWrap, uintptr_t funBoot, uint32 nFunIndex, 
+		static bool				RegisterClassCallback( IFunctionWrap* funWrap, uintptr_t funBoot, uint32_t nFunIndex, 
 									bool bPureVirtual, const STypeInfoArray& aryTypeInfo, const char* szFunctionName );
 		static bool				RegisterClassMember( IFunctionWrap* funGetSet[2], uintptr_t nOffset,
 									const STypeInfoArray& aryTypeInfo, const char* szMemberName );
 		static bool				RegisterDestructor( IFunctionWrap* funWrap, uintptr_t funBoot, 
-									uint32 nFunIndex, const STypeInfoArray& aryTypeInfo );
+									uint32_t nFunIndex, const STypeInfoArray& aryTypeInfo );
 		static bool				RegisterConstruct( IObjectConstruct* pObjectConstruct, const char* szTypeIDName );
-		static bool				RegisterClass( const char* szClass, uint32 nCount, const char** aryType, const ptrdiff_t* aryValue);
-		static bool				RegisterEnumType( const char* szTypeIDName, const char* szEnumType, int32 nTypeSize );
-		static bool				RegisterEnumValue( const char* szTypeIDName, const char* szEnumValue, int32 nValue );
+		static bool				RegisterClass( const char* szClass, uint32_t nCount, const char** aryType, const ptrdiff_t* aryValue);
+		static bool				RegisterEnumType( const char* szTypeIDName, const char* szEnumType, int32_t nTypeSize );
+		static bool				RegisterEnumValue( const char* szTypeIDName, const char* szEnumValue, int32_t nValue );
 
-		static void				CallBack( int32 nIndex, void* pRetBuf, void** pArgArray );
+		static void				CallBack( int32_t nIndex, void* pRetBuf, void** pArgArray );
 
 		CDebugBase*				GetDebugger() const { return m_pDebugger; }
 		void					CheckDebugCmd();
 		bool					IsVirtualTableValid( SVirtualObj* pVObj );
         SFunctionTable*			GetOrgVirtualTable( void* pObj );
-		SFunctionTable*     	CheckNewVirtualTable( SFunctionTable* pOldFunTable, const CClassInfo* pClassInfo, bool bNewByVM, uint32 nInheritDepth );
+		SFunctionTable*     	CheckNewVirtualTable( SFunctionTable* pOldFunTable, const CClassInfo* pClassInfo, bool bNewByVM, uint32_t nInheritDepth );
         void                	AddSearchPath( const char* szPath );
 
-		virtual int32			Input( char* szBuffer, int nCount );
-		virtual int32			Output( const char* szBuffer, int nCount, bool bError = false );
+		virtual int32_t			Input( char* szBuffer, int nCount );
+		virtual int32_t			Output( const char* szBuffer, int nCount, bool bError = false );
 
 		virtual void*			OpenFile( const char* szFileName );
-		virtual int32			ReadFile( void* pContext, char* szBuffer, int32 nCount );
+		virtual int32_t			ReadFile( void* pContext, char* szBuffer, int32_t nCount );
 		virtual void			CloseFile( void* pContext );
 
-		virtual int32			IncRef( void* pObj ) = 0;
-		virtual int32			DecRef( void* pObj ) = 0;
+		virtual int32_t			IncRef( void* pObj ) = 0;
+		virtual int32_t			DecRef( void* pObj ) = 0;
 		virtual void			UnlinkCppObjFromScript( void* pObj ) = 0;
 		virtual void        	GC() = 0;
 		virtual void        	GCAll() = 0;

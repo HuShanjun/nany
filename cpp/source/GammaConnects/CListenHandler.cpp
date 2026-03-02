@@ -5,7 +5,7 @@
 namespace Gamma
 {
 	CListenHandler::CListenHandler( CConnectionMgr* pMgr, 
-		IListener* pListener, uint32 nClassID, EConnType eType )
+		IListener* pListener, uint32_t nClassID, EConnType eType )
 		: m_pMgr( pMgr )
 		, m_pListener( pListener )
 		, m_nConnClassID( nClassID )
@@ -25,7 +25,7 @@ namespace Gamma
 		m_pMgr->OnAccept( Connect, m_nConnClassID, m_eType );
 	}
 
-	uint32 CListenHandler::GetConnClassID() const
+	uint32_t CListenHandler::GetConnClassID() const
 	{
 		return m_nConnClassID;
 	}
@@ -38,7 +38,7 @@ namespace Gamma
 		return m_pListener->GetLocalAddress();
 	}
 
-	bool CListenHandler::Match( uint32 nClassID, const CAddress& Address )
+	bool CListenHandler::Match( uint32_t nClassID, const CAddress& Address )
 	{
 		if( nClassID != m_nConnClassID )
 			return false;

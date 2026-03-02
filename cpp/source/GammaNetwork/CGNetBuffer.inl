@@ -22,9 +22,9 @@ namespace Gamma
 	{
         if( nSize <= m_nBufSize )
             return;
-		nSize = AligenUp( (uint32)nSize, 8192 );
+		nSize = AligenUp( (uint32_t)nSize, 8192 );
 		void* pBuffer = ReserveMemoryPage( NULL, nSize );
-        uint32 nFlag = VIRTUAL_PAGE_READ | VIRTUAL_PAGE_WRITE;
+        uint32_t nFlag = VIRTUAL_PAGE_READ | VIRTUAL_PAGE_WRITE;
 		CommitMemoryPage( pBuffer, nSize, nFlag );
         if( m_pBuffer )
 		{

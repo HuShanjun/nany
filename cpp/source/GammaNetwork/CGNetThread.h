@@ -51,12 +51,12 @@ namespace Gamma
 #endif
 
 		CSocketList						m_listSockets;
-		uint32							m_nSocketCount;
+		uint32_t							m_nSocketCount;
 
 		CCircleBuffer					m_SendBuffer;
 		CCircleBuffer					m_RecvBuffer;
 
-		static uint32					NT_RunThread( void* pParam );
+		static uint32_t					NT_RunThread( void* pParam );
 
 		void							NT_ThreadCheck();
 		bool							NT_Loop();
@@ -72,11 +72,11 @@ namespace Gamma
 		void							OnConnected( CGSocket* pSocket );
 		void							OnDataRecieve( CGSocket* pSocket, const void* pData, size_t nSize );
 	public:
-		CGNetThread( CGNetwork* pNetwork, uint32 nMaxConnect );
+		CGNetThread( CGNetwork* pNetwork, uint32_t nMaxConnect );
 		virtual ~CGNetThread();
 
 		// 主线程回调
-		uint32							GetSocketCount() { return m_nSocketCount; }
+		uint32_t							GetSocketCount() { return m_nSocketCount; }
 		void							AddSocket( CGSocket* pSocket );
 		void							CloseSocket( CGSocket* pSocket );
 		void							StartSocket( CGSocket* pSocket );
@@ -89,7 +89,7 @@ namespace Gamma
 		void							NT_OnConnected( CGSocket* pSocket );
 		void							NT_RecieveData( CGSocket* pSocket, const void* pData, size_t nSize );
 
-		void                            NT_SetEvent( CGSocket* pSocket, uint32 nEvent );//添加socket以及设置相应的nEvent绑定
+		void                            NT_SetEvent( CGSocket* pSocket, uint32_t nEvent );//添加socket以及设置相应的nEvent绑定
 		void                            NT_DelEvent( CGSocket* pSocket );
 	};
 }

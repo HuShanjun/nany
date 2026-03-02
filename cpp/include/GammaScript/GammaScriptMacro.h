@@ -217,11 +217,11 @@
 #define REGIST_ENUM_BEGIN_IMPLEMENT( EnumType, EnumName ) \
     namespace EnumType##_namespace{ typedef EnumType InternalEnumType;\
 	static Gamma::SGlobalExe EnumType##_register( \
-    Gamma::CScriptBase::RegisterEnumType( typeid( InternalEnumType ).name(), #EnumName, (int32)sizeof(EnumType) ) );
+    Gamma::CScriptBase::RegisterEnumType( typeid( InternalEnumType ).name(), #EnumName, (int32_t)sizeof(EnumType) ) );
 
 #define REGIST_ENUMVALUE( EnumValue ) \
     static Gamma::SGlobalExe EnumValue##_register( \
-    Gamma::CScriptBase::RegisterEnumValue( typeid( InternalEnumType ).name(), #EnumValue, (int32)(InternalEnumType::EnumValue) ) );
+    Gamma::CScriptBase::RegisterEnumValue( typeid( InternalEnumType ).name(), #EnumValue, (int32_t)(InternalEnumType::EnumValue) ) );
 #define REGIST_ENUM_END() }
 
 

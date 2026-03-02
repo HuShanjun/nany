@@ -15,22 +15,22 @@ namespace Gamma
 	struct SDbsThreadParam
 	{
 		std::string				m_szDbsHost;
-		uint16					m_nDbsPort;
+		uint16_t					m_nDbsPort;
 		std::string				m_szDataBase;
 		std::string				m_szUser;
 		std::string				m_szPassword;
-		uint32					m_nDBId;
+		uint32_t					m_nDBId;
 		bool					m_bUpdateAffectRowAsFound;
 	};
 
 	struct SQueryContext
 	{
-		uint32 nQueryID;
-		uint32 nThreadID;
-		uint32 nPushTime;
-		uint32 nPopTime;
-		uint32 nOutDBTime;
-		uint32 nResultTime;
+		uint32_t nQueryID;
+		uint32_t nThreadID;
+		uint32_t nPushTime;
+		uint32_t nPopTime;
+		uint32_t nOutDBTime;
+		uint32_t nResultTime;
 		bool bIsRecord;
 	};
 
@@ -41,9 +41,9 @@ namespace Gamma
 	class CDbsThread : IResultHolder
 	{
 //debug
-		uint32				m_nThreadIndex;
-		uint32				m_nPushNum;
-		uint32				m_nPopNum;
+		uint32_t				m_nThreadIndex;
+		uint32_t				m_nPushNum;
+		uint32_t				m_nPopNum;
 
 		HTHREAD				m_hThread;
 		CThreadParamList	m_listParam;
@@ -59,29 +59,29 @@ namespace Gamma
 		CCircleBuffer		m_ResultBuffer;
 
 		HSEMAPHORE			m_hReadSemaphore;
-		volatile uint32		m_nHungryID;
-		volatile uint32		m_nFeedID;
+		volatile uint32_t		m_nHungryID;
+		volatile uint32_t		m_nFeedID;
 
-		uint32				m_nResultIndex;
+		uint32_t				m_nResultIndex;
 		CResultBufferList	m_aryResultBuffer;
 		bool				m_bIsRecord;
 
-		static uint32		RunThread( void* pParam );
-		uint32				Run();
+		static uint32_t		RunThread( void* pParam );
+		uint32_t				Run();
 		void				Execute();
 		bool				ConnectDbs();
 
 		void				Write( const void* pData, size_t nSize );
 		void				Segment();
 	public:
-		CDbsThread( uint32 nConnClassID, const SDbsCreateParam* aryParam, uint8 nDbsCount, uint32 nThreadIndex, bool bIsRecord = false );
+		CDbsThread( uint32_t nConnClassID, const SDbsCreateParam* aryParam, uint8_t nDbsCount, uint32_t nThreadIndex, bool bIsRecord = false );
 		~CDbsThread(void);
 
-		void				Querry( uint32 nQueryID, const SSendBuf aryBuffer[], uint32 nBufferCount );
-		void				Record( const SSendBuf aryBuffer[], uint32 nBufferCount );
-		bool				GetResult(SQueryContext& context, SSendBuf aryBuffer[], uint32& nBufferCount );
-		uint32				GetWaitingCmdCount() const;
-		uint32				GetWaitingResultCount() const;
+		void				Querry( uint32_t nQueryID, const SSendBuf aryBuffer[], uint32_t nBufferCount );
+		void				Record( const SSendBuf aryBuffer[], uint32_t nBufferCount );
+		bool				GetResult(SQueryContext& context, SSendBuf aryBuffer[], uint32_t& nBufferCount );
+		uint32_t				GetWaitingCmdCount() const;
+		uint32_t				GetWaitingResultCount() const;
 		void				CheckHungry();
 	};
 }

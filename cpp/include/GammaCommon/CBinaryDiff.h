@@ -26,42 +26,42 @@ namespace Gamma
 
 	struct SFileHead
 	{
-		uint32 m_nFlag;
-		uint32 m_nVersion;
-		uint32 m_nDirectoryCount;
-		uint32 m_nFilePatchCount;
-		uint32 m_nOrgSize;
-		uint32 m_nCompressSize;
-		uint32 m_nPropsSize;
+		uint32_t m_nFlag;
+		uint32_t m_nVersion;
+		uint32_t m_nDirectoryCount;
+		uint32_t m_nFilePatchCount;
+		uint32_t m_nOrgSize;
+		uint32_t m_nCompressSize;
+		uint32_t m_nPropsSize;
 	};
 
 	struct SFilePatchHeader
 	{
-		uint32 m_nFileNameLen;	// 文件名长度
-		uint32 m_nChunkCount;	// 文件内部含有多少个数据包的补丁
-		uint32 m_nFileSize;		// 文件总大小
+		uint32_t m_nFileNameLen;	// 文件名长度
+		uint32_t m_nChunkCount;	// 文件内部含有多少个数据包的补丁
+		uint32_t m_nFileSize;		// 文件总大小
 	};
 
 	struct SChunkInfo
 	{
-		uint32 m_nSize;			// 块大小
-		uint32 m_nOffset;		// 块偏移
-		operator uint32() const{ return m_nOffset; }
+		uint32_t m_nSize;			// 块大小
+		uint32_t m_nOffset;		// 块偏移
+		operator uint32_t() const{ return m_nOffset; }
 	};
 
 	class CBinaryDiff
 	{
-		uint32					m_nMaxSize;
+		uint32_t					m_nMaxSize;
 		std::vector<SChunkInfo>	m_vecDiffChunk;
-		std::vector<uint32>		m_vecDiffOffset;	// 块偏移
+		std::vector<uint32_t>		m_vecDiffOffset;	// 块偏移
 		std::vector<tbyte>		m_vecDiffData;
 
 		template< typename File, typename FunRead, typename FunSeek >
 		void ReadDiffDataFromSrc( File& fileRead, FunRead funRead, FunSeek funSeek );
 
-		bool FindNextMerChunk( const std::vector<SChunkInfo>& vecChunk, uint32& nChunkEnd, uint32& nIndex )
+		bool FindNextMerChunk( const std::vector<SChunkInfo>& vecChunk, uint32_t& nChunkEnd, uint32_t& nIndex )
 		{
-			uint32 nStart = nIndex;
+			uint32_t nStart = nIndex;
 			for( ; nIndex < vecChunk.size() && vecChunk[nIndex].m_nOffset < nChunkEnd; nIndex++ )
 				nChunkEnd = vecChunk[nIndex].m_nOffset + vecChunk[nIndex].m_nSize;
 			return nStart != nIndex;
@@ -71,7 +71,7 @@ namespace Gamma
 		CBinaryDiff(void){};
 		~CBinaryDiff(void){};
 
-		uint32 GetMaxSize() const { return m_nMaxSize; }
+		uint32_t GetMaxSize() const { return m_nMaxSize; }
 
 		template< typename File, typename FunRead, typename FunSize, typename FunSeek >
 		void BuildDiff( File& fileRead1, File& fileRead2, FunRead funRead, FunSize funSize, FunSize funSeek );
@@ -83,16 +83,16 @@ namespace Gamma
 		void Merge( const CBinaryDiff& SrcBinaryDiff, File& fileRead, FunRead funRead, FunSeek funSeek );
 
 		template< typename File, typename FunRead >
-		void Load( File& fileRead, FunRead funRead, uint32 nChunk, uint32 nMaxSize );
+		void Load( File& fileRead, FunRead funRead, uint32_t nChunk, uint32_t nMaxSize );
 
 		template< typename File, typename FunWrite >
 		void Save( File& fileRead, FunWrite funWrite );
 
-		void Patch( void* pBuf, uint32 nOffset, uint32 nSize );
+		void Patch( void* pBuf, uint32_t nOffset, uint32_t nSize );
 
-		bool IsNeedPatch( uint32 nOffset, uint32 nSize ) const;
+		bool IsNeedPatch( uint32_t nOffset, uint32_t nSize ) const;
 
-		uint32 Init( uint32 nMaxSize, uint32 nDiffChunkCount, const tbyte* pDiffChunk );
+		uint32_t Init( uint32_t nMaxSize, uint32_t nDiffChunkCount, const tbyte* pDiffChunk );
 	};
 }
 

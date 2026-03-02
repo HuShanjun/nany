@@ -82,11 +82,11 @@ namespace Gamma
 		static void CheckClipCursor( CGammaWindow* pWnd, bool bIsFocus );
 #elif ( defined _ANDROID || defined _IOS )
 		bool IsFocus() { return m_bFocus && m_bActive; }
-        static int32 ProcessInput( CGammaWindow* pWnd, uint32 nInputID, uint32 nMsg, uint32 wParam, uint32 lParam );
+        static int32_t ProcessInput( CGammaWindow* pWnd, uint32_t nInputID, uint32_t nMsg, uint32_t wParam, uint32_t lParam );
 #endif
 	};
 
-	int32 CGammaWindow::MessagePump()
+	int32_t CGammaWindow::MessagePump()
 	{
 #ifdef _WIN32
 		return CWin32App::GetInstance().WindowMessagePump();
@@ -113,7 +113,7 @@ namespace Gamma
 
 #ifdef _WIN32
 	void CGammaWindow::Initialize( void* pContext, void* pParent, 
-		uint32 nWidth, uint32 nHeight, const char* szTitle, uint32 nIconID)
+		uint32_t nWidth, uint32_t nHeight, const char* szTitle, uint32_t nIconID)
 	{
 		HWND hParentWnd = ::IsWindow( (HWND)pParent ) ? (HWND)pParent : (HWND)NULL;
 		DWORD dwStyle		= hParentWnd ? WS_CHILD | WS_VISIBLE : WS_OVERLAPPEDWINDOW;
@@ -135,7 +135,7 @@ namespace Gamma
 
 		RegisterClassEx(&wcex);
 
-		RECT rtClientRect	 = { 0, 0, (int32)nWidth, (int32)nHeight };
+		RECT rtClientRect	 = { 0, 0, (int32_t)nWidth, (int32_t)nHeight };
 		if( hParentWnd )
 			::GetClientRect( hParentWnd, &rtClientRect );
 
@@ -160,13 +160,13 @@ namespace Gamma
 				GetMenu( (HWND)GetHandle() ) != NULL, 
 				(DWORD)GetWindowLong( (HWND)GetHandle(), GWL_EXSTYLE ) );
 
-			int32 cx = GetSystemMetrics( SM_CXFULLSCREEN );
-			int32 cy = GetSystemMetrics( SM_CYFULLSCREEN );
+			int32_t cx = GetSystemMetrics( SM_CXFULLSCREEN );
+			int32_t cy = GetSystemMetrics( SM_CYFULLSCREEN );
 
 			nWidth = rtClientRect.right - rtClientRect.left;
 			nHeight = rtClientRect.bottom - rtClientRect.top;
-			int32 xPos = ( cx - (int32)nWidth ) / 2;
-			int32 yPos = ( cy - (int32)nHeight ) / 2;
+			int32_t xPos = ( cx - (int32_t)nWidth ) / 2;
+			int32_t yPos = ( cy - (int32_t)nHeight ) / 2;
 
 			MoveWindow( (HWND)GetHandle(), xPos, yPos, nWidth, nHeight, FALSE );
 		}
@@ -209,21 +209,21 @@ namespace Gamma
 		if( !pWin )
 			return DefWindowProc( hWnd, nMsg, wParam, lParam );
 		if( pContext->m_bLockCursor && nMsg == WM_MOUSEMOVE && 
-			LOINT16( lParam ) == (int32)pWin->GetClientWidth()/2 &&
-			HIINT16( lParam ) == (int32)pWin->GetClientHeight()/2 )
+			LOINT16( lParam ) == (int32_t)pWin->GetClientWidth()/2 &&
+			HIINT16( lParam ) == (int32_t)pWin->GetClientHeight()/2 )
 			return DefWindowProc( hWnd, nMsg, wParam, lParam );
-		bool bProcessResult = pWin->OnProcessMsg( 0, nMsg, (uint32)wParam, (uint32)lParam );
+		bool bProcessResult = pWin->OnProcessMsg( 0, nMsg, (uint32_t)wParam, (uint32_t)lParam );
 		if( pContext->m_bLockCursor && nMsg == WM_MOUSEMOVE && ::GetFocus() == hWnd )
 		{
-			int32 xPos = pWin->GetClientWidth()/2;
-			int32 yPos = pWin->GetClientHeight()/2;
+			int32_t xPos = pWin->GetClientWidth()/2;
+			int32_t yPos = pWin->GetClientHeight()/2;
 			pWin->SetCursorPos( CPos( xPos, yPos ) );
 		}
 
 		if( bProcessResult )
 			return 0;
 		if( pWin->m_pContext->m_pOrgWndProc )
-			return pWin->m_pContext->m_pOrgWndProc( hWnd, nMsg, (uint32)wParam, (uint32)lParam );
+			return pWin->m_pContext->m_pOrgWndProc( hWnd, nMsg, (uint32_t)wParam, (uint32_t)lParam );
 		return DefWindowProc( hWnd, nMsg, wParam, lParam );
 	}
 
@@ -249,7 +249,7 @@ namespace Gamma
 	}
 
 #elif ( defined _ANDROID )
-	void CGammaWindow::Initialize( void* pContext, void* pParent, uint32 nWidth, uint32 nHeight, const char* szTitle, uint32 nIconID )
+	void CGammaWindow::Initialize( void* pContext, void* pParent, uint32_t nWidth, uint32_t nHeight, const char* szTitle, uint32_t nIconID )
 	{
 		GammaAst( CAndroidApp::GetInstance().GetActivity() );
 		g_mapWindowList.PushFront( *m_pContext );
@@ -262,7 +262,7 @@ namespace Gamma
 	}
 
 	//初始化Native窗口，必须在这里初始化EGL，将OpenGL ES版本指定为2.0
-	int32 SWindowContext::ProcessInput( CGammaWindow* pWnd, uint32 nInputID, uint32 nMsg, uint32 wParam, uint32 lParam )
+	int32_t SWindowContext::ProcessInput( CGammaWindow* pWnd, uint32_t nInputID, uint32_t nMsg, uint32_t wParam, uint32_t lParam )
 	{
 		STATCK_LOG( pWnd );
 		CAndroidApp& App = CAndroidApp::GetInstance();
@@ -331,14 +331,14 @@ namespace Gamma
 		return pWnd->OnProcessMsg( nInputID, nMsg, wParam, lParam );
 	}
 #elif ( defined _IOS )
-    void CGammaWindow::Initialize( void* pContext, void* pParent, uint32 nWidth, uint32 nHeight, const char* szTitle, uint32 nIconID )
+    void CGammaWindow::Initialize( void* pContext, void* pParent, uint32_t nWidth, uint32_t nHeight, const char* szTitle, uint32_t nIconID )
     {
         g_mapWindowList.PushFront( *m_pContext );
         m_pContext->m_pContext = pContext;
         m_pContext->m_pHandler = CIOSApp::GetInstance().CreateIOSGLView( (InputHandler)&SWindowContext::ProcessInput, this );
     }
     
-    int32 SWindowContext::ProcessInput( CGammaWindow* pWnd, uint32 nInputID, uint32 nMsg, uint32 wParam, uint32 lParam )
+    int32_t SWindowContext::ProcessInput( CGammaWindow* pWnd, uint32_t nInputID, uint32_t nMsg, uint32_t wParam, uint32_t lParam )
     {
         STATCK_LOG( pWnd );
 		CIRect rtWnd = pWnd->m_pContext->m_rtWnd;
@@ -403,7 +403,7 @@ namespace Gamma
         return pWnd->OnProcessMsg( nInputID, nMsg, wParam, lParam );
     }
 #else
-	void CGammaWindow::Initialize( void* pContext, void* pParent, uint32 nWidth, uint32 nHeight, const char* szTitle, uint32 nIconID )
+	void CGammaWindow::Initialize( void* pContext, void* pParent, uint32_t nWidth, uint32_t nHeight, const char* szTitle, uint32_t nIconID )
 	{
 		OnCreated();
 	}
@@ -503,14 +503,14 @@ namespace Gamma
 #endif
 	}
 
-	uint32 CGammaWindow::GetClientWidth()
+	uint32_t CGammaWindow::GetClientWidth()
 	{
 		CIRect rtClient;
 		GetClientRect( rtClient );
 		return rtClient.Width();
 	}
 
-	uint32 CGammaWindow::GetClientHeight()
+	uint32_t CGammaWindow::GetClientHeight()
 	{
 		CIRect rtClient;
 		GetClientRect( rtClient );
@@ -602,12 +602,12 @@ namespace Gamma
 
 		CIRect rtWndClient;
 		GetClientRect( rtWndClient );
-		int32 nWidth = rtWndClient.Width();
-		int32 nHeight = rtWndClient.Height();
-		m_pContext->m_rtLock.left = Limit<int32>( rtRange->left, 0, nWidth );
-		m_pContext->m_rtLock.right = Limit<int32>( rtRange->right, 0, nWidth );
-		m_pContext->m_rtLock.top = Limit<int32>( rtRange->top, 0, nHeight );
-		m_pContext->m_rtLock.bottom = Limit<int32>( rtRange->bottom, 0, nHeight );
+		int32_t nWidth = rtWndClient.Width();
+		int32_t nHeight = rtWndClient.Height();
+		m_pContext->m_rtLock.left = Limit<int32_t>( rtRange->left, 0, nWidth );
+		m_pContext->m_rtLock.right = Limit<int32_t>( rtRange->right, 0, nWidth );
+		m_pContext->m_rtLock.top = Limit<int32_t>( rtRange->top, 0, nHeight );
+		m_pContext->m_rtLock.bottom = Limit<int32_t>( rtRange->bottom, 0, nHeight );
 
 		RECT rtScreen;
 		rtScreen.left = rtRange->left;
@@ -671,7 +671,7 @@ namespace Gamma
 #endif
 	}
 
-	bool CGammaWindow::OnProcessMsg( uint32 nInputID, uint32 nMsg, uint32 wParam, uint32 lParam )
+	bool CGammaWindow::OnProcessMsg( uint32_t nInputID, uint32_t nMsg, uint32_t wParam, uint32_t lParam )
 	{
 		bool bBreak = false;
 		for( size_t i = 0; i < m_pContext->m_vecCallbackInfo.size(); i++ )
@@ -736,10 +736,10 @@ namespace Gamma
 		return false;
 	}
 
-	int16 CGammaWindow::GetKeyState( uint8 nKeyCode )
+	int16_t CGammaWindow::GetKeyState( uint8_t nKeyCode )
 	{
 #ifdef _WIN32
-		return (int16)::GetKeyState( nKeyCode ); 
+		return (int16_t)::GetKeyState( nKeyCode ); 
 #else
 		return 0;
 #endif

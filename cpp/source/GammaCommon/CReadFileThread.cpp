@@ -28,7 +28,7 @@ namespace Gamma
 	// 文件异步读取信息
 	//===================================================================================
 	CFileReader::CFileReader( CPackage* pPackage, const char* szFileName, 
-		uint32 nOrgSize, const uint8 szMd5[16], bool bCache )
+		uint32_t nOrgSize, const uint8_t szMd5[16], bool bCache )
 		: m_pPackage( pPackage )
 		, m_strFileName( szFileName )
 		, m_nOrgSize( nOrgSize )
@@ -62,7 +62,7 @@ namespace Gamma
 		SAFE_RELEASE( m_pPackage );
 	}
 
-	bool CFileReader::Flush( uint32 nIdleTime )
+	bool CFileReader::Flush( uint32_t nIdleTime )
 	{
 		GammaAst( m_pPackage );
 		return m_pPackage->OnLoaded( nIdleTime );
@@ -71,13 +71,13 @@ namespace Gamma
 	//=============================================================================
 	// 以下代码在线程中执行
 	//=============================================================================
-	int32 CFileReader::Read( string& strReadingBuffer )
+	int32_t CFileReader::Read( string& strReadingBuffer )
 	{
 		return m_addrHttp ? ReadFromHttp( m_strFileName, strReadingBuffer ) :
 			ReadFromDisk( m_strFileName, "CFileReader::Read" );
 	}
 
-	int32 CFileReader::ReadFromDisk( const string& szPath, const char* szContext )
+	int32_t CFileReader::ReadFromDisk( const string& szPath, const char* szContext )
 	{
 		if( szPath.empty() )
 			return eReadError;
@@ -109,11 +109,11 @@ namespace Gamma
 			if( !szLocalizePath[i][0] )
 				continue;
 
-			uint32 nPkgRootLen = (uint32)strlen( "pkgroot:/" );
+			uint32_t nPkgRootLen = (uint32_t)strlen( "pkgroot:/" );
 			if( !memcmp( szLocalizePath[i], "pkgroot:/", nPkgRootLen ) )
 			{
 				char szFileNameInPkg[1024];
-				uint32 nLen = strcpy2array_safe( szFileNameInPkg, szLocalizePath[i] + nPkgRootLen );
+				uint32_t nLen = strcpy2array_safe( szFileNameInPkg, szLocalizePath[i] + nPkgRootLen );
 				if( szFileNameInPkg[nLen - 1] == 'z' && szFileNameInPkg[nLen - 2] == '.' )
 					szFileNameInPkg[nLen - 1] = 'r';
 				if( PackageMgr.ReadResourcePackageFile( *m_ptrFileBuff, szFileNameInPkg ) )
@@ -127,7 +127,7 @@ namespace Gamma
 #else
 			wchar_t szFileName[2048];
 			wchar_t szPhysicalPath[2048];
-			Utf8ToUcs( szFileName, 2000, szLocalizePath[i], (uint32)nLen[i] );
+			Utf8ToUcs( szFileName, 2000, szLocalizePath[i], (uint32_t)nLen[i] );
 			CPathMgr::ToPhysicalPath( szFileName, szPhysicalPath, ELEM_COUNT( szPhysicalPath ) );
 			hFile = _wfopen( szFileName, L"rb" );
 #endif
@@ -136,7 +136,7 @@ namespace Gamma
 		if( hFile )
 		{
 			fseek( hFile, 0, SEEK_END );
-			uint32 nSize = (uint32)ftell( hFile );
+			uint32_t nSize = (uint32_t)ftell( hFile );
 
 			if( nSize == m_nOrgSize || m_nOrgSize == INVALID_32BITID || m_nOrgSize == 0 )
 			{
@@ -146,12 +146,12 @@ namespace Gamma
 				for( size_t i = 0; i < nSize; i += MAX_LOAD_SPEED )
 				{
 					CTimer Timer;
-					uint32 nRead = Min<uint32>( MAX_LOAD_SPEED, nSize - i );
+					uint32_t nRead = Min<uint32_t>( MAX_LOAD_SPEED, nSize - i );
 					m_bReadOK = fread( &( (*m_ptrOrgBuff)[i] ), 1, nRead, hFile ) == nRead;
-					int64 nSleep = nRead*1000/MAX_LOAD_SPEED - Timer.GetElapse();
+					int64_t nSleep = nRead*1000/MAX_LOAD_SPEED - Timer.GetElapse();
 					if( nSleep < 0 )
 						continue;
-					GammaSleep( (uint32)nSleep );
+					GammaSleep( (uint32_t)nSleep );
 				}
 #else
 				if( fread( &( (*m_ptrFileBuff)[0] ), 1, nSize, hFile ) != nSize )
@@ -170,17 +170,17 @@ namespace Gamma
 		return eReadError;
 	}
 
-	int32 CFileReader::ReadFromHttp( const string& szPath, string& strReadingBuffer )
+	int32_t CFileReader::ReadFromHttp( const string& szPath, string& strReadingBuffer )
 	{	
 		// 尝试从本地读取
 		if( CheckLocalBuffer() == eReadOK )
 			return eReadOK;		
 
-		int32 nResult = SOCKET_ERROR;
+		int32_t nResult = SOCKET_ERROR;
 		SOCKET sk = INVALID_SOCKET;
 		
 		const SAddr* pAddrInfo = m_addrHttp->GetAddr( 0 );
-		for( uint32 i = 0; pAddrInfo; pAddrInfo = m_addrHttp->GetAddr( ++i ) )
+		for( uint32_t i = 0; pAddrInfo; pAddrInfo = m_addrHttp->GetAddr( ++i ) )
 		{
 			const SAddr& AddrInfo = *pAddrInfo;
 			sk = socket( AddrInfo.nAiFamily, SOCK_STREAM, IPPROTO_TCP );
@@ -196,7 +196,7 @@ namespace Gamma
 				continue;
 			}
 #else
-			int32 opts;
+			int32_t opts;
 			opts = fcntl( sk, F_GETFL );
 			if( opts < 0 )
 			{
@@ -214,10 +214,10 @@ namespace Gamma
 			}
 #endif
 			const string& strAddr = AddrInfo.strAddBuff;
-			nResult = connect( sk, (struct sockaddr*)strAddr.c_str(), (uint32)strAddr.size() );
+			nResult = connect( sk, (struct sockaddr*)strAddr.c_str(), (uint32_t)strAddr.size() );
 			if( SOCKET_ERROR == nResult )
 			{
-				uint32 nError = GNWGetLastError();
+				uint32_t nError = GNWGetLastError();
 #ifdef _WIN32
 				if( nError != NE_EWOULDBLOCK )
 #else
@@ -243,22 +243,22 @@ namespace Gamma
 		tv.tv_sec = 10;
 		tv.tv_usec = 0;
 		
-		if( !select( (int32)(sk + 1), NULL, &fdValid, NULL, &tv ) )
+		if( !select( (int32_t)(sk + 1), NULL, &fdValid, NULL, &tv ) )
 		{
 			closesocket(sk);
 			return eReadTimeOut;
 		}
 
 #ifdef MAX_LOAD_SPEED
-		const int32 MAX_BUFF = MAX_LOAD_SPEED;
+		const int32_t MAX_BUFF = MAX_LOAD_SPEED;
 		CTimer Timer;
 #else
-		const int32 MAX_BUFF = 4 * 1024;
+		const int32_t MAX_BUFF = 4 * 1024;
 #endif
 
-		int32 nRet = 0;
-		uint32 nCurPos = 0;
-		uint32 nCurCapacity = (uint32)strReadingBuffer.size();
+		int32_t nRet = 0;
+		uint32_t nCurPos = 0;
+		uint32_t nCurCapacity = (uint32_t)strReadingBuffer.size();
 		if( nCurCapacity < MAX_BUFF )
 		{
 			strReadingBuffer.resize( MAX_BUFF );
@@ -276,42 +276,42 @@ namespace Gamma
 		//	"Connection: Keep-Alive\r\n\r\n";
 
 		char* buff = &strReadingBuffer[0];
-		*(uint32*)buff = *(uint32*)"GET ";
+		*(uint32_t*)buff = *(uint32_t*)"GET ";
 
 		// 跳过 "http://Host:Port"
-		uint32 nSkipCount = 7 + (uint32)m_addrHttp->GetHost().size();
+		uint32_t nSkipCount = 7 + (uint32_t)m_addrHttp->GetHost().size();
 
 		if( m_addrHttp->GetMirror().empty() )
 		{
 			const char* szFilePath = szPath.c_str() + nSkipCount;
             while( szFilePath[0] != '/' && szFilePath[0] != '\\' )
 				++szFilePath;
-			URLEncode( (const uint8*)szFilePath, buff + 4, MAX_BUFF - 1024 );
+			URLEncode( (const uint8_t*)szFilePath, buff + 4, MAX_BUFF - 1024 );
 		}
 		else
 		{
 			// 用strValue替代strKey
-			uint32 nReplaceCount = (uint32)m_addrHttp->GetMirror().size() - nSkipCount;
+			uint32_t nReplaceCount = (uint32_t)m_addrHttp->GetMirror().size() - nSkipCount;
 			memcpy( buff + 4, m_addrHttp->GetMirror().c_str() + nSkipCount, nReplaceCount );
 			
 			// 跳过 strKey 的长度
 			const char* szFilePath = szPath.c_str() + m_addrHttp->GetOrg().size();
-			URLEncode( (const uint8*)szFilePath, buff + 4 + nReplaceCount, MAX_BUFF - 1024 );
+			URLEncode( (const uint8_t*)szFilePath, buff + 4 + nReplaceCount, MAX_BUFF - 1024 );
 		}
 
-		uint32 nLen = (uint32)strlen( buff );
+		uint32_t nLen = (uint32_t)strlen( buff );
 		gammasstream ssURL( buff + nLen, MAX_BUFF - nLen );
 		ssURL << " HTTP/1.1\r\n"
 			"HOST:"<< m_addrHttp->GetHost() <<"\r\n"
 			"Accept:*/*\r\n"
 			"Content-Length: 0\r\n"
 			"Connection: Keep-Alive\r\n\r\n";
-		send( sk, buff, nLen + (uint32)ssURL.length(), 0 );
+		send( sk, buff, nLen + (uint32_t)ssURL.length(), 0 );
 
 		tv.tv_sec = 10;
 		tv.tv_usec = 0;
 
-		while( 1 == ( nRet = select( (int32)(sk + 1), &fdValid, NULL, NULL, &tv ) ) )
+		while( 1 == ( nRet = select( (int32_t)(sk + 1), &fdValid, NULL, NULL, &tv ) ) )
 		{
 			if( nCurCapacity < nCurPos + MAX_BUFF )
 			{
@@ -319,10 +319,10 @@ namespace Gamma
 				nCurCapacity = nCurPos + MAX_BUFF;
 			}
 
-			int32 nLen = (int32)recv( sk, &strReadingBuffer[nCurPos], MAX_BUFF, 0 );
+			int32_t nLen = (int32_t)recv( sk, &strReadingBuffer[nCurPos], MAX_BUFF, 0 );
 			if( SOCKET_ERROR == nLen )
 			{
-				uint32 nError = GNWGetLastError();
+				uint32_t nError = GNWGetLastError();
 #ifdef _WIN32
 				if( nError != NE_EWOULDBLOCK )
 #else
@@ -347,9 +347,9 @@ namespace Gamma
 			if( eState == eHRS_NeedMore )
 			{
 #ifdef MAX_LOAD_SPEED
-				int64 nSleep = nLen*1000/MAX_LOAD_SPEED - Timer.GetElapse();
+				int64_t nSleep = nLen*1000/MAX_LOAD_SPEED - Timer.GetElapse();
 				if( nSleep > 0 )
-					GammaSleep( (uint32)nSleep );
+					GammaSleep( (uint32_t)nSleep );
 				Timer.Restart();
 #endif
 				tv.tv_sec = 10;
@@ -375,7 +375,7 @@ namespace Gamma
 
 		if( !m_strMd5.empty() )
 		{
-			uint8 nMD5[16];
+			uint8_t nMD5[16];
 			MD5( nMD5, strReadingBuffer.c_str(),m_nCurSize );
 			if( memcmp( nMD5, m_strMd5.c_str(), 16 ) )
 				return eReadError;
@@ -399,11 +399,11 @@ namespace Gamma
 			}
 			else
 			{
-				uint32 nReadSize = 0;
+				uint32_t nReadSize = 0;
 				string& strBuffer = *m_ptrFileBuff;
 				while( true )
 				{
-					uint32 nRemain = zip.avail_in;
+					uint32_t nRemain = zip.avail_in;
 					strBuffer.resize( nReadSize + 4096 );
 					zip.next_out = (Bytef*)&strBuffer[nReadSize];
 					zip.avail_out = 4096;
@@ -431,19 +431,19 @@ namespace Gamma
 		return eReadOK;
 	}
 	
-	int32 CFileReader::CheckLocalBuffer()
+	int32_t CFileReader::CheckLocalBuffer()
 	{
 		if( ReadFromDisk( m_strCachePath, "CFileReader::CheckLocalBuffer" ) == eReadOK )
 			return eReadOK;		
 
 		CGammaFileMgr& FileMgr = CGammaFileMgr::Instance();
 		CPackageMgr& PackageMgr = FileMgr.GetFilePackageManager();
-		uint32 nLen = (uint32)m_strFileName.size();
+		uint32_t nLen = (uint32_t)m_strFileName.size();
 		char cExtern = 0;
 		if( nLen >= 2 && m_strFileName[nLen-1] == 'z' && m_strFileName[nLen-2] == '.' )
 			m_strFileName[nLen-1] = cExtern = 'r';
 
-		uint32 nBasePathEnd = PackageMgr.GetBasePathEnd( m_strFileName.c_str() );
+		uint32_t nBasePathEnd = PackageMgr.GetBasePathEnd( m_strFileName.c_str() );
 		const char* szNameInPackage = m_strFileName.c_str() + nBasePathEnd;
 		bool bReadOK = PackageMgr.ReadResourcePackageFile( *m_ptrFileBuff, szNameInPackage );
 		if( cExtern )
@@ -473,11 +473,11 @@ namespace Gamma
 		}
 
 		const char* szBuffer = m_ptrFileBuff ? m_ptrFileBuff->c_str() : "";
-		uint32 nSize = m_ptrFileBuff ? (uint32)m_ptrFileBuff->size() : 0;
+		uint32_t nSize = m_ptrFileBuff ? (uint32_t)m_ptrFileBuff->size() : 0;
 		SaveLocalBuffer( szBuffer, nSize, m_strCachePath, szContext );
 	}
 
-	void CFileReader::SaveLocalBuffer( const void* szBuffer, uint32 nSize, 
+	void CFileReader::SaveLocalBuffer( const void* szBuffer, uint32_t nSize, 
 					const string& strCachePath, const char* szContext )
 	{
 		if( strCachePath.empty() )
@@ -491,7 +491,7 @@ namespace Gamma
 		wchar_t szPathName[2048];
 		wchar_t szPhysicalPath[2048];
 		wchar_t szPhysicalPathTemp[2048];
-		Utf8ToUcs( szPathName, 2000, strCachePath.c_str(), (uint32)strCachePath.size() );
+		Utf8ToUcs( szPathName, 2000, strCachePath.c_str(), (uint32_t)strCachePath.size() );
 		CPathMgr::ToPhysicalPath( szPathName, szPhysicalPath, ELEM_COUNT( szPhysicalPath ) );
 		wcscpy( szPhysicalPathTemp, szPhysicalPath );
 		wcscat( szPhysicalPathTemp, L".tmp" );
@@ -559,13 +559,13 @@ namespace Gamma
 	//-------------------------------
 	// 线程运行函数
 	//-------------------------------
-	uint32 CReadFileThread::ThreadProc( void* pContext )
+	uint32_t CReadFileThread::ThreadProc( void* pContext )
 	{
 		GammaSetThreadName( "ReadFileThread" );
 		return ( (CReadFileThread*)pContext )->Run();
 	}
 
-	uint32 CReadFileThread::Run()
+	uint32_t CReadFileThread::Run()
 	{
 		while( !m_bQuit )
 		{
@@ -576,9 +576,9 @@ namespace Gamma
 			SReadCache* pReadCache = NULL;
 
 			GammaLock( m_hLockReader );
-			uint32 nStartIndex = m_listReader.m_bReadParallel;
+			uint32_t nStartIndex = m_listReader.m_bReadParallel;
 			m_listReader.m_bReadParallel = !m_listReader.m_bReadParallel;
-			uint32 nIndex = 0;
+			uint32_t nIndex = 0;
 			for( int i = 0; !pInfo && i < eLT_Count; i++ )
 			{
 				nIndex = ( i + nStartIndex ) %eLT_Count;
@@ -604,7 +604,7 @@ namespace Gamma
 				pReadCache = new SReadCache;
 
 			pInfo->SetLoadState( eLoadState_Loading );
-			int32 nResult = pInfo->Read( *pReadCache );
+			int32_t nResult = pInfo->Read( *pReadCache );
 
 			GammaLock( m_hLockFinised );
 			m_listFinised.m_listFinish[nIndex != eLT_Serial].PushBack( *pInfo );
@@ -621,7 +621,7 @@ namespace Gamma
 			GammaUnlock( m_hLockReader );
 		}
 
-		for( uint32 i = 0; i < eLT_Count; i++)
+		for( uint32_t i = 0; i < eLT_Count; i++)
 		{
 			while( m_listReader.m_listReader[i].GetFirst() )
 			{
@@ -645,10 +645,10 @@ namespace Gamma
 		, m_hReadThread( NULL )
 	{
 		string strFileName;
-		for( uint32 i = 0; i < aryPackage.size(); i++ )
+		for( uint32_t i = 0; i < aryPackage.size(); i++ )
 		{
 			strFileName = aryPackage[i];
-			uint32 nLen = (uint32)strFileName.size();
+			uint32_t nLen = (uint32_t)strFileName.size();
 			if( nLen >= 2 && strFileName[nLen-1] == 'z' && strFileName[nLen-2] == '.' )
 				strFileName[nLen-1] = 'r';
 			m_setExtract.insert( gammacstring( strFileName.c_str() ) );
@@ -666,13 +666,13 @@ namespace Gamma
 	//-------------------------------
 	// 线程运行函数
 	//-------------------------------
-	uint32 CExtractThread::ThreadProc( void* pContext )
+	uint32_t CExtractThread::ThreadProc( void* pContext )
 	{
 		GammaSetThreadName( "CExtractThread" );
 		return ( (CExtractThread*)pContext )->Run();
 	}
 
-	uint32 CExtractThread::Run()
+	uint32_t CExtractThread::Run()
 	{
 		CGammaFileMgr& FileMgr = CGammaFileMgr::Instance();
 		CPackageMgr& PackMgr = FileMgr.GetFilePackageManager();
@@ -690,12 +690,12 @@ namespace Gamma
 		return pThis->m_setExtract.find( gammacstring( szFileName, true ) ) != pThis->m_setExtract.end();
 	}
 
-	void CExtractThread::OnReadFileHandler( const char* szFileName, void* pContext, const tbyte* pBuffer, uint32 nSize )
+	void CExtractThread::OnReadFileHandler( const char* szFileName, void* pContext, const tbyte* pBuffer, uint32_t nSize )
 	{
 		( (CExtractThread*)pContext )->OnRead( szFileName, pBuffer, nSize );
 	}
 
-	void CExtractThread::OnRead( const char* szFileName, const tbyte* pBuffer, uint32 nSize )
+	void CExtractThread::OnRead( const char* szFileName, const tbyte* pBuffer, uint32_t nSize )
 	{
 		CExtractSet::iterator it = m_setExtract.find( gammacstring( szFileName, true ) );
 		GammaAst( it != m_setExtract.end() );

@@ -42,15 +42,15 @@ namespace Gamma
         /// anih块的固定内容
         struct SAniHeader
         {
-            uint32 m_nHeaderSize;
-            uint32 m_nFrameCount;
-            uint32 m_nStepOfAni;	/// 完成一次动画过程要显示的图象数
-            uint32 m_nImgWidth;
-            uint32 m_nImgHeight;
-            uint32 m_nImgBitCount;  /// 颜色位数
-            uint32 m_nImgPlanes;	/// 颜色位面数
-            uint32 m_nJIFRate;		/// JIF速率（1JIF = 1/60秒）
-            uint32 m_nFlag;			/// AF_ICON/AF_SEQUENCE设置标记
+            uint32_t m_nHeaderSize;
+            uint32_t m_nFrameCount;
+            uint32_t m_nStepOfAni;	/// 完成一次动画过程要显示的图象数
+            uint32_t m_nImgWidth;
+            uint32_t m_nImgHeight;
+            uint32_t m_nImgBitCount;  /// 颜色位数
+            uint32_t m_nImgPlanes;	/// 颜色位面数
+            uint32_t m_nJIFRate;		/// JIF速率（1JIF = 1/60秒）
+            uint32_t m_nFlag;			/// AF_ICON/AF_SEQUENCE设置标记
             /*
             如果fl中AF_ICON被设置，
             则cFrame=cSteps,cx,cy以及cBitCount和cPlanes将被忽略,
@@ -79,7 +79,7 @@ namespace Gamma
 		struct SChunckHeader
 		{
 			ChunkID m_nID;
-			uint32 m_nSize;
+			uint32_t m_nSize;
 		};
 #pragma pack(pop)
 
@@ -122,10 +122,10 @@ namespace Gamma
 
 		gammacstring				m_strFileName;
 		SAniHeader					m_aniHeader;
-		std::vector<uint32>			m_vecSequence;
-		std::vector<uint32>			m_vecFrameDurations;
+		std::vector<uint32_t>			m_vecSequence;
+		std::vector<uint32_t>			m_vecFrameDurations;
 		std::vector<SCursorData>	m_vecFrameDatas;	/// 每帧数据
-		mutable uint32				m_nTotalTime;
+		mutable uint32_t				m_nTotalTime;
 
     public:
         CAniCursorFile( const char* szFileName );
@@ -135,9 +135,9 @@ namespace Gamma
 
 		static CAniCursorFile*		GetCursor( const char* szCursorName );
 		const SAniHeader&			GetAniHeader() const { return m_aniHeader; }
-        uint32						GetFrameCount() const;
-        uint32						GetFrameDuration( uint32 nFrame ) const;
-		uint32						GetTotalTime() const;
+        uint32_t						GetFrameCount() const;
+        uint32_t						GetFrameDuration( uint32_t nFrame ) const;
+		uint32_t						GetTotalTime() const;
 		void						Update();
 
 
@@ -151,6 +151,6 @@ namespace Gamma
 
 		void						ClearData();
 		bool						Load( const char* szCursorFile );
-		void						OnLoadedEnd( const char* szFileName, const tbyte* pBuffer, uint32 nSize );
+		void						OnLoadedEnd( const char* szFileName, const tbyte* pBuffer, uint32_t nSize );
     };
 }

@@ -23,9 +23,9 @@ namespace Gamma
 		CPos16	m_PathBuf[BUFSIZE];
 		CPos16	m_LeftBuf[BUFSIZE/2 + 2];
 		CPos16	m_RightBuf[BUFSIZE/2 + 2];
-		int32	m_nNearest;
-		int32	m_nNrstJugde;
-		int32	m_nBufSize;
+		int32_t	m_nNearest;
+		int32_t	m_nNrstJugde;
+		int32_t	m_nBufSize;
 
 		struct ____
 		{
@@ -34,16 +34,16 @@ namespace Gamma
 			int*		m_pStep;
 			CPos16*   m_pBarrier;
 
-			bool Do( int32 x, int32 y )
+			bool Do( int32_t x, int32_t y )
 			{
 				if( m_MapMask->IsBarrier( x, y ) ) 
 				{
-					*m_pBarrier = CPos16( (int16)x, (int16)y );
+					*m_pBarrier = CPos16( (int16_t)x, (int16_t)y );
 					return false;
 				}
 				else if( m_pPath )
 				{
-					m_pPath[(*m_pStep)++] = CPos16( (int16)x, (int16)y );
+					m_pPath[(*m_pStep)++] = CPos16( (int16_t)x, (int16_t)y );
 				}
 				return true;
 			}
@@ -279,13 +279,13 @@ namespace Gamma
 	public:
 		CSearcher() : m_nBufSize(BUFSIZE){};
 
-		void SetMaxBufSize( int32 nBufSize )
+		void SetMaxBufSize( int32_t nBufSize )
 		{
 			m_nBufSize = Limit( nBufSize, 0, BUFSIZE );				
 		}
 
 		const CPos16* SearchRoad( T* pMapMask, CPos16 StartPos, CPos16 EndPos, 
-			int32& StepNum, EOptimizeLevel eOptimize)
+			int32_t& StepNum, EOptimizeLevel eOptimize)
 		{
 			m_MapMask	  = pMapMask;
 			m_EndPos      = EndPos;

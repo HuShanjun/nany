@@ -26,7 +26,7 @@ namespace Gamma
 		return zipStream;
 	}
 
-	GAMMA_COMMON_API uint32 FlushZLibWriter( HZLIB zip, tbyte* pBuffer, uint32 nBufferSize, const void* pSrc, uint32 nSize )
+	GAMMA_COMMON_API uint32_t FlushZLibWriter( HZLIB zip, tbyte* pBuffer, uint32_t nBufferSize, const void* pSrc, uint32_t nSize )
 	{
 		z_stream* zipStream = (z_stream*)zip;
 		if( pSrc && nSize )
@@ -38,10 +38,10 @@ namespace Gamma
 		zipStream->avail_out = nBufferSize;
 		zipStream->total_out = 0;
 		deflate( zipStream, Z_SYNC_FLUSH );
-		return (uint32)zipStream->total_out;
+		return (uint32_t)zipStream->total_out;
 	}
 
-	GAMMA_COMMON_API uint32 DestroyZLibWriter( HZLIB zip, tbyte* pBuffer, uint32 nBufferSize )
+	GAMMA_COMMON_API uint32_t DestroyZLibWriter( HZLIB zip, tbyte* pBuffer, uint32_t nBufferSize )
 	{
 		z_stream* zipStream = (z_stream*)zip;
 		zipStream->next_out = pBuffer;
@@ -49,7 +49,7 @@ namespace Gamma
 		zipStream->total_out = 0;
 		deflate( zipStream, Z_FINISH );
 		deflateEnd( zipStream );
-		uint32 nOut = (uint32)zipStream->total_out;
+		uint32_t nOut = (uint32_t)zipStream->total_out;
 		delete zipStream;
 		return nOut;
 	}
@@ -64,7 +64,7 @@ namespace Gamma
 		return zipStream;
 	}
 
-	GAMMA_COMMON_API uint32 FlushZLibReader( HZLIB zip, const tbyte* pBuffer, uint32 nBufferSize, void* pTarget, uint32& nSize )
+	GAMMA_COMMON_API uint32_t FlushZLibReader( HZLIB zip, const tbyte* pBuffer, uint32_t nBufferSize, void* pTarget, uint32_t& nSize )
 	{
 		z_stream* zipStream = (z_stream*)zip;
 		if( pTarget )
@@ -77,8 +77,8 @@ namespace Gamma
 		zipStream->avail_in = nBufferSize;
 		zipStream->total_in = 0;
 		inflate( zipStream, Z_SYNC_FLUSH );
-		nSize = (uint32)zipStream->total_out;
-		return (uint32)zipStream->total_in;
+		nSize = (uint32_t)zipStream->total_out;
+		return (uint32_t)zipStream->total_in;
 	}
 
 	GAMMA_COMMON_API void DestroyZLibReader( HZLIB zip )

@@ -34,12 +34,12 @@
 #pragma warning( error: 4553 )
 #pragma warning( error: 4715 )
 
+#include <stdint.h>
 #ifdef _WIN32
 	#define		chdir				_chdir
 	#define		itoa				_itoa
 #else
 	#include <sys/types.h>
-	#include <stdint.h>
 	#include <stddef.h>
 #ifdef _ANDROID
 	#include <jni.h>
@@ -53,15 +53,15 @@
 
 #endif
 
-	typedef		signed char			int8;
-	typedef		signed short		int16;
-	typedef		signed int			int32;
-	typedef		signed long long	int64;
+	// typedef		signed char			int8;
+	// typedef		signed short		int16;
+	// typedef		signed int			int32;
+	// typedef		signed long long	int64;
 
-	typedef		unsigned char		uint8;
-	typedef		unsigned short		uint16;
-	typedef		unsigned int		uint32;
-	typedef		unsigned long long	uint64;
+	// typedef		unsigned char		uint8;
+	// typedef		unsigned short		uint16;
+	// typedef		unsigned int		uint32;
+	// typedef		unsigned long long	uint64;
 
 	typedef		unsigned long		ulong;
 	typedef		unsigned char		tbyte;

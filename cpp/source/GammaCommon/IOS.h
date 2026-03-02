@@ -25,7 +25,7 @@ namespace Gamma
     // IOS 窗口类，用于连接GammaWindow和ios窗口的中间层
     //==================================================
     class SIOSWnd;
-    typedef int32 (*InputHandler)( void*, uint32, uint32, uint32, uint32 );
+    typedef int32_t (*InputHandler)( void*, uint32_t, uint32_t, uint32_t, uint32_t );
 	#define WM_LOW_MEMORY ( WM_USER + 0x504 )
     
     //==================================================
@@ -33,21 +33,21 @@ namespace Gamma
     //==================================================
     class CIOSApp
     {
-		typedef std::map<uint32, SIOSWnd> CWindowsMap;
+		typedef std::map<uint32_t, SIOSWnd> CWindowsMap;
 		
-		uint64				m_nVersion;
+		uint64_t				m_nVersion;
 		SHardwareDesc		m_HardwareDesc;
         AppEntryFunction    m_funEntry;
-        int32               m_nArg;
+        int32_t               m_nArg;
         const char**        m_szArg;
         
-        uint32              m_nWindowID;
+        uint32_t              m_nWindowID;
         CWindowsMap         m_mapWindows;
         std::string			m_strPackage;
         std::string			m_strCache;
 		
-		int64				m_nPreLocationTime;
-		uint32				m_nLocationInterval;
+		int64_t				m_nPreLocationTime;
+		uint32_t				m_nLocationInterval;
 		double				m_fLongitude;
 		double				m_fLatitude;
 		double				m_fAltitude;
@@ -62,22 +62,22 @@ namespace Gamma
         static CIOSApp&     GetInstance();
         static void*        GetNativeHandler( SIOSWnd* pWnd );
 		
-		uint64				GetVersion();
+		uint64_t				GetVersion();
 		void*				GetApplicationHandle();
 		void				GetHardwareDesc( SHardwareDesc& HardwareDesc );
 		void				OpenURL( const char* szUrl );
 		bool				IsWifiConnect();
-		void 				SetClipboardContent( int32 nType, const void* pContent, uint32 nSize );
-		void 				GetClipboardContent( int32 nType, const void*& pContent, uint32& nSize );
-		bool 				GetSystemFile( int32 nType, void* pContext, SystemFileCallback funCallback );
-		bool 				GetSystemFileList( int32 nType, void* pContext, SystemFileListCallback funCallback );
+		void 				SetClipboardContent( int32_t nType, const void* pContent, uint32_t nSize );
+		void 				GetClipboardContent( int32_t nType, const void*& pContent, uint32_t& nSize );
+		bool 				GetSystemFile( int32_t nType, void* pContext, SystemFileCallback funCallback );
+		bool 				GetSystemFileList( int32_t nType, void* pContext, SystemFileListCallback funCallback );
 		
-		void 				StartLocation( uint32 nLocationInterval );
+		void 				StartLocation( uint32_t nLocationInterval );
 		void				SetLocation( double fLongitude, double fLatitude, double fAltitude );
 		bool 				GetLocation( double& fLongitude, double& fLatitude, double& fAltitude );
 		
-        int32               MainThread();
-        int32               StartApp( AppEntryFunction funEntry, int nArg, const char* szArg[] );
+        int32_t               MainThread();
+        int32_t               StartApp( AppEntryFunction funEntry, int nArg, const char* szArg[] );
         
         SIOSWnd*            CreateIOSGLView( InputHandler funHandler, void* pContext );
         void                DestroyIOSGLView( SIOSWnd* pWnd );
@@ -89,7 +89,7 @@ namespace Gamma
 		void*				LoadDynamicLib( const char* szName ) { return NULL; }
 		void*				GetFunctionAddress( void* pLibContext, const char* szName ) { return NULL; }
         
-        uint32              IOSMessagePump();
+        uint32_t              IOSMessagePump();
         void                OnIOSMessage( void* msg );
     };
 }

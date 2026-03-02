@@ -5,17 +5,17 @@
 
 namespace Gamma
 {
-	GAMMA_MTDBS_API IDbsThreadMgr* CreateDbsThreadMgr( uint32 nThreadCount, 
-		uint32 nDbsConnClassID, const SDbsCreateParam* aryParam, uint8 nDbsCount,
-		uint32 nRecordThreadCount, const Gamma::SDbsCreateParam* _aryRecordParam, uint8 _nRecordDbsCount)
+	GAMMA_MTDBS_API IDbsThreadMgr* CreateDbsThreadMgr( uint32_t nThreadCount, 
+		uint32_t nDbsConnClassID, const SDbsCreateParam* aryParam, uint8_t nDbsCount,
+		uint32_t nRecordThreadCount, const Gamma::SDbsCreateParam* _aryRecordParam, uint8_t _nRecordDbsCount)
 	{
 		GammaAst( nDbsCount );
 		return new CDbsThreadMgr( nThreadCount, nDbsConnClassID, aryParam, nDbsCount, nRecordThreadCount, _aryRecordParam, _nRecordDbsCount);
 	}
 
 	GAMMA_MTDBS_API IDbsThreadMgr* CreateDbsThreadMgr( 
-		uint32 nThreadCount, uint32 nDbsConnClassID, 
-		const char* szDbsHost, uint16 nDbsPort, const char* szDatabase, 
+		uint32_t nThreadCount, uint32_t nDbsConnClassID, 
+		const char* szDbsHost, uint16_t nDbsPort, const char* szDatabase, 
 		const char* szUser, const char* szPassword, bool bFoundAsUpdateRow )
 	{
 		SDbsCreateParam Param;
@@ -28,9 +28,9 @@ namespace Gamma
 		return new CDbsThreadMgr( nThreadCount, nDbsConnClassID, &Param, 1, 0, nullptr, 0 );
 	}
 
-	CDbsThreadMgr::CDbsThreadMgr( uint32 nThreadCount, 
-		uint32 nDbsConnClassID, const SDbsCreateParam* aryParam, uint8 nDbsCount,
-		uint32 nRecordThreadCount, const Gamma::SDbsCreateParam* _aryRecordParam, uint8 _nRecordDbsCount)
+	CDbsThreadMgr::CDbsThreadMgr( uint32_t nThreadCount, 
+		uint32_t nDbsConnClassID, const SDbsCreateParam* aryParam, uint8_t nDbsCount,
+		uint32_t nRecordThreadCount, const Gamma::SDbsCreateParam* _aryRecordParam, uint8_t _nRecordDbsCount)
 		: m_pFreeQueryBuffer( NULL )
 		, m_nRef( 1 )
 		, m_nQueryID( 1 )
@@ -47,48 +47,48 @@ namespace Gamma
 	CDbsThreadMgr::~CDbsThreadMgr(void)
 	{
 		Check();
-		for( uint32 i = 0; i < (uint32)m_vecThread.size(); i++ )
+		for( uint32_t i = 0; i < (uint32_t)m_vecThread.size(); i++ )
 			delete m_vecThread[i];
 		m_vecThread.clear();
-		for (uint32 i = 0; i < (uint32)m_vecRecordThread.size(); i++)
+		for (uint32_t i = 0; i < (uint32_t)m_vecRecordThread.size(); i++)
 			delete m_vecRecordThread[i];
 		m_vecRecordThread.clear();
 	}
 	
-	CDbsQuery* CDbsThreadMgr::GetQueryHandler( uint32 nID )
+	CDbsQuery* CDbsThreadMgr::GetQueryHandler( uint32_t nID )
 	{
 		return m_listQueryList.Find( nID );
 	}
 
-	void CDbsThreadMgr::Query( uint32 nQueryID, uint32 nChannel, 
-		const SSendBuf aryBuffer[], uint32 nBufferCount )
+	void CDbsThreadMgr::Query( uint32_t nQueryID, uint32_t nChannel, 
+		const SSendBuf aryBuffer[], uint32_t nBufferCount )
 	{
 		nChannel = nChannel%m_vecThread.size();
 		m_vecThread[nChannel]->Querry( nQueryID, aryBuffer, nBufferCount );
 	}
 
-	void CDbsThreadMgr::Record(const SSendBuf aryBuffer[], uint32 nBufferCount)
+	void CDbsThreadMgr::Record(const SSendBuf aryBuffer[], uint32_t nBufferCount)
 	{
 		m_vecRecordThread[CGammaRand::Rand(size_t(0), m_vecRecordThread.size())]->Record(aryBuffer, nBufferCount);
 	}
 
 	void CDbsThreadMgr::Check()
 	{
-		for( uint32 i = 0; i < (uint32)m_vecThread.size(); i++ )
+		for( uint32_t i = 0; i < (uint32_t)m_vecThread.size(); i++ )
 		{
 			CDbsThread* pThread = m_vecThread[i];
 			pThread->CheckHungry();
 
 			while( true )
 			{
-				uint32 nResultCount = ELEM_COUNT( m_aryResult );
+				uint32_t nResultCount = ELEM_COUNT( m_aryResult );
 				SQueryContext context;
 				if( !pThread->GetResult(context, m_aryResult, nResultCount ) )
 					break;
 				context.nResultTime = GetProcessTime();
 				if( !nResultCount )
 					continue;
-				uint32 nCheck = context.nResultTime - context.nPushTime;
+				uint32_t nCheck = context.nResultTime - context.nPushTime;
 				if(nCheck > 2000 )
 					GammaLog << "[CCharDataMgr] todo:" << nCheck << std::endl;
 
@@ -96,7 +96,7 @@ namespace Gamma
 				if( pQuery )
 				{
 					IDbsQueryHandler* pHandler = pQuery->GetHandler();
-					for( uint32 i = 0; i < nResultCount && pHandler; ++i )
+					for( uint32_t i = 0; i < nResultCount && pHandler; ++i )
 					{
 						if( m_aryResult[i].second == 0 )
 							continue;
@@ -109,9 +109,9 @@ namespace Gamma
 
 	IDbsQuery* CDbsThreadMgr::CreateDbsQuery( IDbsQueryHandler* pHandler )
 	{
-		uint32 nCurID = m_nQueryID++;
+		uint32_t nCurID = m_nQueryID++;
 		void* pBuffer = m_pFreeQueryBuffer;
-		uint32 nSize = TAligenUp<sizeof( CDbsQuery ), sizeof(void*)>::eValue;
+		uint32_t nSize = TAligenUp<sizeof( CDbsQuery ), sizeof(void*)>::eValue;
 		if( pBuffer )
 			m_pFreeQueryBuffer = *(tbyte**)( m_pFreeQueryBuffer + nSize - sizeof(void*) );
 		else
@@ -125,35 +125,35 @@ namespace Gamma
 	void CDbsThreadMgr::FreeDbsQuery( CDbsQuery* pDbQuery )
 	{
 		pDbQuery->~CDbsQuery();
-		uint32 nSize = TAligenUp<sizeof( CDbsQuery ), sizeof(void*)>::eValue;
+		uint32_t nSize = TAligenUp<sizeof( CDbsQuery ), sizeof(void*)>::eValue;
 		*(tbyte**)( ( (tbyte*)pDbQuery ) + nSize - sizeof(void*) ) = m_pFreeQueryBuffer;
 		m_pFreeQueryBuffer = (tbyte*)pDbQuery;
 	}
 
-	uint32 CDbsThreadMgr::GetChannelCmdWaitingCount( uint32 nChannel )
+	uint32_t CDbsThreadMgr::GetChannelCmdWaitingCount( uint32_t nChannel )
 	{
 		nChannel = nChannel%m_vecThread.size();
 		return m_vecThread[nChannel]->GetWaitingCmdCount();
 	}
 
-	uint32 CDbsThreadMgr::GetAllCmdWaitingCount()
+	uint32_t CDbsThreadMgr::GetAllCmdWaitingCount()
 	{
-		uint32 nCount = 0;
-		for( uint32 i = 0; i < m_vecThread.size(); i++ )
+		uint32_t nCount = 0;
+		for( uint32_t i = 0; i < m_vecThread.size(); i++ )
 			nCount += m_vecThread[i]->GetWaitingCmdCount();
 		return nCount;
 	}
 
-	uint32 CDbsThreadMgr::GetChannelResultWaitingCount( uint32 nChannel )
+	uint32_t CDbsThreadMgr::GetChannelResultWaitingCount( uint32_t nChannel )
 	{
 		nChannel = nChannel%m_vecThread.size();
 		return m_vecThread[nChannel]->GetWaitingResultCount();
 	}
 
-	uint32 CDbsThreadMgr::GetAllResultWaitingCount()
+	uint32_t CDbsThreadMgr::GetAllResultWaitingCount()
 	{
-		uint32 nCount = 0;
-		for( uint32 i = 0; i < m_vecThread.size(); i++ )
+		uint32_t nCount = 0;
+		for( uint32_t i = 0; i < m_vecThread.size(); i++ )
 			nCount += m_vecThread[i]->GetWaitingResultCount();
 		return nCount;
 	}

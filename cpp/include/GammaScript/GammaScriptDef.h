@@ -32,7 +32,7 @@ namespace Gamma
 	struct STypeInfoArray
 	{
 		STypeInfo*	aryInfo;
-		uint32		nSize;
+		uint32_t		nSize;
 	};
 
 	class IObjectConstruct

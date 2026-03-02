@@ -28,16 +28,16 @@ namespace Gamma
 		const char*		m_szFile;
 		const char*		m_szFunction;
 		const char*		m_szLabel;
-		uint32			m_nLine;
-		uint64			m_nPreCheckCpuTick;
-		int64			m_nCurDelta;
-		uint32			m_nContext;
+		uint32_t			m_nLine;
+		uint64_t			m_nPreCheckCpuTick;
+		int64_t			m_nCurDelta;
+		uint32_t			m_nContext;
 
-		uint32			m_nLogCount;
-		uint32			m_nCurFrame;
-		uint32			m_nCurFrameInfoIndex;
+		uint32_t			m_nLogCount;
+		uint32_t			m_nCurFrame;
+		uint32_t			m_nCurFrameInfoIndex;
 
-		CProfile( const char* szFile, uint32 nLine, 
+		CProfile( const char* szFile, uint32_t nLine, 
 			const char* szFunction, const char* szLabel );
 		~CProfile();
 		friend class CProfileMgr;
@@ -45,12 +45,12 @@ namespace Gamma
 	public:
 		const char*		GetFileName()				{ return m_szFile;					}
 		const char*		GetFunctionName()			{ return m_szFunction;				}
-		uint32			GetLine()					{ return m_nLine;					}
+		uint32_t			GetLine()					{ return m_nLine;					}
 		const char*		GetLabel()					{ return m_szLabel;					}
-		int64			GetCurDelta()				{ return m_nCurDelta;				}
-		uint32			GetContext()				{ return m_nContext;				}
-		uint32			GetLogCount()				{ return m_nLogCount;				}
-		void			SetContext( uint32 n )		{ m_nContext = n;					}
+		int64_t			GetCurDelta()				{ return m_nCurDelta;				}
+		uint32_t			GetContext()				{ return m_nContext;				}
+		uint32_t			GetLogCount()				{ return m_nLogCount;				}
+		void			SetContext( uint32_t n )		{ m_nContext = n;					}
 		operator		gammacstring() const		{ return str( m_szLabel, true );	}	 
 
 		bool			operator < ( const gammacstring& strLabl ) const;
@@ -83,20 +83,20 @@ namespace Gamma
 	class IProfileMgr
 	{
 	public:
-		virtual CProfile* CreateProfile( const char* szFile, uint32 nLine, const char* szFunction, const char* szLabel ) = 0;
+		virtual CProfile* CreateProfile( const char* szFile, uint32_t nLine, const char* szFunction, const char* szLabel ) = 0;
 		virtual CProfile* GetFirstProfile() = 0;
 		virtual CProfile* GetNextProfile( CProfile* pProfile ) = 0;
 		virtual CProfile* GetProfile( const char* szLabel ) = 0;
 		virtual void	  FrameMove() = 0;
-		virtual uint32	  GetCurFrame() = 0;
-		virtual void	  GetFrameRange( uint32& nStart, uint32& nEnd ) = 0;
-		virtual uint32	  GetFrameProfileCount( uint32 nFrame ) = 0;
-		virtual uint32	  GetFrameMaxCost( uint32 nFrame ) = 0;
-		virtual CProfile* GetFrameProfile( uint32 nFrame, uint32 nIndex, uint32& nCostTime, uint32& nHitCount ) = 0;
+		virtual uint32_t	  GetCurFrame() = 0;
+		virtual void	  GetFrameRange( uint32_t& nStart, uint32_t& nEnd ) = 0;
+		virtual uint32_t	  GetFrameProfileCount( uint32_t nFrame ) = 0;
+		virtual uint32_t	  GetFrameMaxCost( uint32_t nFrame ) = 0;
+		virtual CProfile* GetFrameProfile( uint32_t nFrame, uint32_t nIndex, uint32_t& nCostTime, uint32_t& nHitCount ) = 0;
 	};
 
 	GAMMA_COMMON_API IProfileMgr& GetProfileMgr();
-	GAMMA_COMMON_API uint64 GetProfileTickCount();
+	GAMMA_COMMON_API uint64_t GetProfileTickCount();
 };
 
 //#define GAMMA_CHECK_PROFILE

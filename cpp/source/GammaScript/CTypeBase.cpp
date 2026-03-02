@@ -6,15 +6,15 @@ namespace Gamma
 {
 	DataType ToDataType( const STypeInfo& argTypeInfo )
 	{
-		uint32 n = 5;
+		uint32_t n = 5;
 		STypeInfo argInfo = argTypeInfo;
 		while( n && !( ( argInfo.m_nType >> ( n * 4 ) ) & 0xf ) )
 			n--;
 
-		uint32 nPointCount = 0;
-		for( uint32 i = 0; i <= n; i++ )
+		uint32_t nPointCount = 0;
+		for( uint32_t i = 0; i <= n; i++ )
 			nPointCount += ( ( argInfo.m_nType >> ( i * 4 ) ) & 0xf ) >= eDTE_Pointer;
-		uint32 nType = argInfo.m_nType >> 24;
+		uint32_t nType = argInfo.m_nType >> 24;
 
 		if( nPointCount == 0 )
 		{
@@ -56,15 +56,15 @@ namespace Gamma
 		{
 			0,
 			sizeof(char),
-			sizeof(int8),
-			sizeof(int16),
-			sizeof(int32),
-			sizeof(int64),
+			sizeof(int8_t),
+			sizeof(int16_t),
+			sizeof(int32_t),
+			sizeof(int64_t),
 			sizeof(long),
-			sizeof(uint8),
-			sizeof(uint16),
-			sizeof(uint32),
-			sizeof(uint64),
+			sizeof(uint8_t),
+			sizeof(uint16_t),
+			sizeof(uint32_t),
+			sizeof(uint64_t),
 			sizeof(ulong),
 			sizeof(wchar_t),
 			sizeof(bool),
@@ -88,15 +88,15 @@ namespace Gamma
 		{
 			0,
 			AligenUp(sizeof(char), sizeof(void*)),
-			AligenUp(sizeof(int8), sizeof(void*)),
-			AligenUp(sizeof(int16), sizeof(void*)),
-			AligenUp(sizeof(int32), sizeof(void*)),
-			AligenUp(sizeof(int64), sizeof(void*)),
+			AligenUp(sizeof(int8_t), sizeof(void*)),
+			AligenUp(sizeof(int16_t), sizeof(void*)),
+			AligenUp(sizeof(int32_t), sizeof(void*)),
+			AligenUp(sizeof(int64_t), sizeof(void*)),
 			AligenUp(sizeof(long), sizeof(void*)),
-			AligenUp(sizeof(uint8), sizeof(void*)),
-			AligenUp(sizeof(uint16), sizeof(void*)),
-			AligenUp(sizeof(uint32), sizeof(void*)),
-			AligenUp(sizeof(uint64), sizeof(void*)),
+			AligenUp(sizeof(uint8_t), sizeof(void*)),
+			AligenUp(sizeof(uint16_t), sizeof(void*)),
+			AligenUp(sizeof(uint32_t), sizeof(void*)),
+			AligenUp(sizeof(uint64_t), sizeof(void*)),
 			AligenUp(sizeof(ulong), sizeof(void*)),
 			AligenUp(sizeof(wchar_t), sizeof(void*)),
 			AligenUp(sizeof(bool), sizeof(void*)),

@@ -21,7 +21,7 @@ namespace Gamma
 	typedef TTinyObjectPool<CGConnecterTCP> CGConnecterTCPPool;
 	typedef TTinyObjectPool<CGListener> CGListenerPool;
 
-	CGNetwork::CGNetwork( uint32 nMaxConnect, uint32 nNetworkThread )
+	CGNetwork::CGNetwork( uint32_t nMaxConnect, uint32_t nNetworkThread )
 		: m_hLockResolution( GammaCreateLock() )
 		, m_sslServerMethod( NULL )
 		, m_sslClientMethod( NULL )
@@ -33,7 +33,7 @@ namespace Gamma
 		WSADATA wsaData;
 
 		wVersion = MAKEWORD( 2, 2 );
-		int32 nResult = WSAStartup( wVersion, &wsaData );
+		int32_t nResult = WSAStartup( wVersion, &wsaData );
 		if( nResult )
 		{
 			stringstream strm;
@@ -69,7 +69,7 @@ namespace Gamma
 		m_hLockResolution = NULL;
 
 #ifdef _WIN32
-		int32 nResult = WSACleanup();
+		int32_t nResult = WSACleanup();
 		if( nResult )
 		{
 			stringstream strm;
@@ -89,7 +89,7 @@ namespace Gamma
 		m_listDisConnSocket.PushBack( *pDisConnSocket );
 	}
 
-	bool CGNetwork::Check( uint32 nTimeOut )
+	bool CGNetwork::Check( uint32_t nTimeOut )
 	{
 		STATCK_LOG( this );
 		while( m_listFinished.GetFirst() )
@@ -123,7 +123,7 @@ namespace Gamma
 		return true;
 	}
 
-	bool CGNetwork::PreResolveDomain( const char* szAddress, uint32 nValidSeconds )
+	bool CGNetwork::PreResolveDomain( const char* szAddress, uint32_t nValidSeconds )
 	{
 		CAddrResolutionDelegate* pResolustion = GetAddressReslv( szAddress );
 		pResolustion->SetIPValidTime( nValidSeconds );
@@ -131,7 +131,7 @@ namespace Gamma
 	}
 
 	IListener* CGNetwork::StartListener( 
-		const char* szAddres, uint16 nPort, EConnecterType eType,
+		const char* szAddres, uint16_t nPort, EConnecterType eType,
 		const char* pCertificatePath, const char* pPrivateKeyPath )
 	{
 		CGSocket* pSocket = nullptr;
@@ -172,7 +172,7 @@ namespace Gamma
 	}
 
 	IConnecter* CGNetwork::Connect( 
-		const char* szAddres, uint16 nPort, EConnecterType eType )
+		const char* szAddres, uint16_t nPort, EConnecterType eType )
 	{
 		CGSocket* pSocket = nullptr;
 		if( eType == eConnecterType_UDP )
@@ -205,9 +205,9 @@ namespace Gamma
 
 	CGNetThread* CGNetwork::GetMinSocketThread()
 	{
-		uint32 nSocketCount = INVALID_32BITID;
+		uint32_t nSocketCount = INVALID_32BITID;
 		CGNetThread* pMinSocketThread = nullptr;
-		for( uint32 i = 0; i < m_vecNetThread.size(); i++ )
+		for( uint32_t i = 0; i < m_vecNetThread.size(); i++ )
 		{
 			if( m_vecNetThread[i]->GetSocketCount() >= nSocketCount )
 				continue;
@@ -260,7 +260,7 @@ namespace Gamma
 		m_pFreeBuffer = pData;
 	}
 
-	INetwork* CreateNetWork( uint32 nMaxConnect, uint32 nNetworkThread )
+	INetwork* CreateNetWork( uint32_t nMaxConnect, uint32_t nNetworkThread )
 	{
 		return new CGNetwork( nMaxConnect, nNetworkThread );
 	}

@@ -56,7 +56,7 @@ namespace Gamma
 	}
 
 #ifdef USE_DEBUGHELP
-	bool CGammaDebug::AddModule( uint64 nModuleBase )
+	bool CGammaDebug::AddModule( uint64_t nModuleBase )
 	{
 		for( size_t i = 0; i < m_nMoudleCount; i++ )
 			if( m_pModuleBase[i] == nModuleBase )
@@ -64,8 +64,8 @@ namespace Gamma
 		if( m_nMoudleCount == m_nMoudleMaxCount )
 		{
 			m_nMoudleMaxCount += 32;
-			uint64* pNewBuf = (uint64*)malloc( m_nMoudleMaxCount*sizeof(uint64) );
-			memcpy( pNewBuf, m_pModuleBase, m_nMoudleCount*sizeof(uint64) );
+			uint64_t* pNewBuf = (uint64_t*)malloc( m_nMoudleMaxCount*sizeof(uint64_t) );
+			memcpy( pNewBuf, m_pModuleBase, m_nMoudleCount*sizeof(uint64_t) );
 			if( m_pModuleBase )
 				free( m_pModuleBase );
 			m_pModuleBase = pNewBuf;
@@ -89,7 +89,7 @@ namespace Gamma
 		}
 	}
 
-	BOOL CALLBACK CGammaDebug::EnumModuleCallback( char* sModuleName, uint64 nModuleBase, uint32, void* pArg )
+	BOOL CALLBACK CGammaDebug::EnumModuleCallback( char* sModuleName, uint64_t nModuleBase, uint32_t, void* pArg )
 	{
 		if( static_cast<CGammaDebug*>( pArg )->AddModule( nModuleBase ) )
 			SymLoadModule64( GetCurrentProcess(), NULL, sModuleName, sModuleName, nModuleBase, NULL );
@@ -98,7 +98,7 @@ namespace Gamma
 	}
 #endif
 
-	void CGammaDebug::DebugAddress2Symbol( void* pAddress, char* szSymbolBuf, uint32 nSize )
+	void CGammaDebug::DebugAddress2Symbol( void* pAddress, char* szSymbolBuf, uint32_t nSize )
 	{
 #ifdef _WIN32
 #ifdef USE_DEBUGHELP
@@ -221,12 +221,12 @@ namespace Gamma
 		const char* szAddress = (const char*)pException->ExceptionRecord->ExceptionAddress;
 		try
 		{
-			for( int32 i = -100; i < 100; i++ )
+			for( int32_t i = -100; i < 100; i++ )
 			{
-				uint32 nCurAddr = (uint32)( szAddress + i );
-				if( nCurAddr > (uint32)( szAddress + 100 ) )
+				uint32_t nCurAddr = (uint32_t)( szAddress + i );
+				if( nCurAddr > (uint32_t)( szAddress + 100 ) )
 					continue;
-				sprintf( szBuf, "%08x:\t%02x\t(%d)\r\n", nCurAddr, (uint8)szAddress[i], (uint8)szAddress[i] );
+				sprintf( szBuf, "%08x:\t%02x\t(%d)\r\n", nCurAddr, (uint8_t)szAddress[i], (uint8_t)szAddress[i] );
 				WriteFile( hReportFile, szBuf, strlen( szBuf ), &nWriten, NULL );
 			}
 		}
@@ -238,7 +238,7 @@ namespace Gamma
 	}
 #endif
 
-	size_t CGammaDebug::GetStack( void** pStack, uint16 nBegin, uint16 nEnd, void* pMinStack )
+	size_t CGammaDebug::GetStack( void** pStack, uint16_t nBegin, uint16_t nEnd, void* pMinStack )
 	{
 #ifdef _WIN32
 #ifdef USE_DEBUGHELP
@@ -268,14 +268,14 @@ namespace Gamma
 
 		void** pStackStart = (void**)( pMinStack ? pMinStack : &pStack );
 		void** pMaxStack = CAndroidApp::GetInstance().GetMaxMainStack();
-		uint32 nMaxCount = CAndroidApp::GetInstance().GetMainStackSize()/(sizeof(void*));
+		uint32_t nMaxCount = CAndroidApp::GetInstance().GetMainStackSize()/(sizeof(void*));
 		if( pStackStart > pMaxStack || pMaxStack - pStackStart > nMaxCount )
 		{
 			nMaxCount = 1024;
 			pMaxStack = pStackStart + nMaxCount;
 		}
 
-		uint32 nCount = 0;
+		uint32_t nCount = 0;
 		for( int i = 0; pStackStart < pMaxStack && nCount < nEnd; i++, pStackStart++ )
 		{
 			backtrace_symbol_t symbols;  
@@ -290,7 +290,7 @@ namespace Gamma
 		return nCount > nBegin ? nCount - nBegin : 0;
 
 		//backtrace_frame_t StackFrame[1024];  
-		//uint32 nCount = m_unwind_backtrace( StackFrame, nBegin, nEnd );  
+		//uint32_t nCount = m_unwind_backtrace( StackFrame, nBegin, nEnd );  
 		//for( int i = 0; i < nCount; i++ )
 		//	pStack[i] = (void*)(ptrdiff_t)StackFrame[i].absolute_pc;
 		//return nCount;

@@ -49,7 +49,7 @@ namespace Gamma
 		return ::GetModuleHandle( NULL );
 	}
 
-	uint64 CWin32App::GetVersion()
+	uint64_t CWin32App::GetVersion()
 	{
 		wchar_t szBuffer[2048];
 		::GetModuleFileNameW( NULL, szBuffer, ELEM_COUNT( szBuffer ) );
@@ -68,7 +68,7 @@ namespace Gamma
 		}  
 
 		VS_FIXEDFILEINFO* pVersion = NULL;  
-		uint32 nLen;  
+		uint32_t nLen;  
 		if( !VerQueryValueW( pVersionInfo, L"\\", (void**)&pVersion, &nLen ) )  
 		{  
 			delete[] pVersionInfo;  
@@ -76,11 +76,11 @@ namespace Gamma
 		}  
 
 		CVersion Version( 
-			(uint8)( pVersion->dwFileVersionMS >> 24 ),
-			(uint8)( pVersion->dwFileVersionMS >> 16 ),
-			(uint16)( pVersion->dwFileVersionMS ),
-			(uint16)( pVersion->dwFileVersionLS >> 16 ),
-			(uint16)( pVersion->dwFileVersionLS ) );  
+			(uint8_t)( pVersion->dwFileVersionMS >> 24 ),
+			(uint8_t)( pVersion->dwFileVersionMS >> 16 ),
+			(uint16_t)( pVersion->dwFileVersionMS ),
+			(uint16_t)( pVersion->dwFileVersionLS >> 16 ),
+			(uint16_t)( pVersion->dwFileVersionLS ) );  
 		delete[] pVersionInfo;
 		return Version;
 	}
@@ -92,12 +92,12 @@ namespace Gamma
 		char	m_szCpuType[CPUTYPE_LEN]*;
 		char	m_szOSDesc[OSDESC_LEN]*;
 		char	m_szLanguage[LANGUAGE_LEN]*;
-		uint64	m_nMac*;
-		uint32	m_nCpuFrequery*;
-		uint32	m_nCpuCount*;
-		uint32	m_nMemSize;
-		uint16  m_nScreen_X;
-		uint16	m_nScreen_Y;
+		uint64_t	m_nMac*;
+		uint32_t	m_nCpuFrequery*;
+		uint32_t	m_nCpuCount*;
+		uint32_t	m_nMemSize;
+		uint16_t  m_nScreen_X;
+		uint16_t	m_nScreen_Y;
 		*/
 		DWORD nLen = DEVICEDESC_LEN;
 		wchar_t szComputerName[DEVICEDESC_LEN];
@@ -125,10 +125,10 @@ namespace Gamma
 			ssOSDesc << "Windows 2000"; 
 
 		char* szCpuType = m_HardwareDesc.m_szCpuType;
-		__cpuid( (int32*)&szCpuType[0x00], 0x80000002 );
-		__cpuid( (int32*)&szCpuType[0x10], 0x80000003 );
-		__cpuid( (int32*)&szCpuType[0x20], 0x80000004 );
-		int32 nStart = 0;
+		__cpuid( (int32_t*)&szCpuType[0x00], 0x80000002 );
+		__cpuid( (int32_t*)&szCpuType[0x10], 0x80000003 );
+		__cpuid( (int32_t*)&szCpuType[0x20], 0x80000004 );
+		int32_t nStart = 0;
 		while( IsBlank( szCpuType[nStart] ) )
 			nStart++;
 		memmove( szCpuType, szCpuType + nStart, CPUTYPE_LEN - nStart );
@@ -139,8 +139,8 @@ namespace Gamma
 		if( GetAdaptersInfo( (IP_ADAPTER_INFO*)&strBuffer[0], &nBufLen ) == ERROR_BUFFER_OVERFLOW )
 			strBuffer.resize( nBufLen );
 		if ( GetAdaptersInfo( (IP_ADAPTER_INFO*)&strBuffer[0], &nBufLen ) == NO_ERROR )
-			m_HardwareDesc.m_nMac = *(uint64*)( (IP_ADAPTER_INFO*)&strBuffer[0] )->Address;
-		uint8* nMac = (uint8*)&m_HardwareDesc.m_nMac;
+			m_HardwareDesc.m_nMac = *(uint64_t*)( (IP_ADAPTER_INFO*)&strBuffer[0] )->Address;
+		uint8_t* nMac = (uint8_t*)&m_HardwareDesc.m_nMac;
 		sprintf( m_HardwareDesc.m_szUUID, "%02x-%02x-%02x-%02x-%02x-%02x", 
 			nMac[0], nMac[1], nMac[2], nMac[3], nMac[4], nMac[5] );
 
@@ -266,14 +266,14 @@ namespace Gamma
 
 		LARGE_INTEGER freq;
 		QueryPerformanceFrequency( &freq );	///< cpu 主频
-		m_HardwareDesc.m_nCpuFrequery = (uint32)( freq.QuadPart / ( 1000 )  );
+		m_HardwareDesc.m_nCpuFrequery = (uint32_t)( freq.QuadPart / ( 1000 )  );
 
 		MEMORYSTATUS mem;
 		GlobalMemoryStatus( &mem );			///< 内存容量
-		m_HardwareDesc.m_nMemSize = (uint32)mem.dwTotalPhys / ( 1024 * 1024 );
+		m_HardwareDesc.m_nMemSize = (uint32_t)mem.dwTotalPhys / ( 1024 * 1024 );
 
-		m_HardwareDesc.m_nScreen_X = (uint16)GetSystemMetrics(SM_CXSCREEN);
-		m_HardwareDesc.m_nScreen_Y = (uint16)GetSystemMetrics(SM_CYSCREEN);
+		m_HardwareDesc.m_nScreen_X = (uint16_t)GetSystemMetrics(SM_CXSCREEN);
+		m_HardwareDesc.m_nScreen_Y = (uint16_t)GetSystemMetrics(SM_CYSCREEN);
 	}
 
 	void CWin32App::GetHardwareDesc( SHardwareDesc& HardwareDesc )
@@ -293,9 +293,9 @@ namespace Gamma
 		return m_strPackagePath.c_str();
 	}
 
-	int32 CWin32App::WindowMessagePump()
+	int32_t CWin32App::WindowMessagePump()
 	{
-		int32 nMsgCount = 0;
+		int32_t nMsgCount = 0;
 #if !( defined _DEBUG )
 		__try
 		{
@@ -321,7 +321,7 @@ namespace Gamma
 		return nMsgCount;
 	}
 
-	void CWin32App::SetClipboardContent( int32 nType, const void* pContent, uint32 nSize )
+	void CWin32App::SetClipboardContent( int32_t nType, const void* pContent, uint32_t nSize )
 	{
 		if( !pContent )
 			return;
@@ -329,7 +329,7 @@ namespace Gamma
 		if( !OpenClipboard( NULL ) )
 			return;
 		EmptyClipboard();
-		uint32 nBufferSize = (uint32)( ( nSize + 1 ) * sizeof(wchar_t) );
+		uint32_t nBufferSize = (uint32_t)( ( nSize + 1 ) * sizeof(wchar_t) );
 		HANDLE hMem = GlobalAlloc( GMEM_MOVEABLE|GMEM_DDESHARE, nBufferSize );
 		if( !hMem )
 			return;
@@ -353,7 +353,7 @@ namespace Gamma
 		GlobalFree( hMem );	
 	}
 
-	void CWin32App::GetClipboardContent( int32 nType, const void*& pContent, uint32& nSize )
+	void CWin32App::GetClipboardContent( int32_t nType, const void*& pContent, uint32_t& nSize )
 	{
 		if( !OpenClipboard( NULL ) )
 			return;
@@ -362,14 +362,14 @@ namespace Gamma
 		{
 			static string s_ClipString;
 			s_ClipString = UcsToUtf8( (const wchar_t*)GetClipboardData( CF_UNICODETEXT ) );
-			nSize = (uint32)s_ClipString.size();
+			nSize = (uint32_t)s_ClipString.size();
 			pContent = s_ClipString.c_str();
 		}
 
 		CloseClipboard();		
 	}
 
-	bool CWin32App::GetSystemFile( bool bList, int32 nType, void* pContext, void* funCallback )
+	bool CWin32App::GetSystemFile( bool bList, int32_t nType, void* pContext, void* funCallback )
 	{
 		if( funCallback == NULL )
 			return false;
@@ -383,7 +383,7 @@ namespace Gamma
 		{
 			static void Open( SFileOpenContext* pContext )
 			{
-				int32 arySysType[CONTENT_TYPE_COUNT] =
+				int32_t arySysType[CONTENT_TYPE_COUNT] =
 				{
 					CSIDL_COMMON_DOCUMENTS,
 					CSIDL_COMMON_PICTURES,
@@ -521,11 +521,11 @@ namespace Gamma
 				if( pContext->m_bList )
 				{
 					vector<const char*> vecPath;
-					for( uint32 i = 0; i < pContext->m_vecFileName.size(); i++ )
+					for( uint32_t i = 0; i < pContext->m_vecFileName.size(); i++ )
 						vecPath.push_back( pContext->m_vecFileName[i].c_str() );
 					const char** aryPath = vecPath.empty() ? NULL : &vecPath[0];
 					( (SystemFileListCallback)pContext->m_funCallback )( 
-						pContext->m_pContext, aryPath, (uint32)vecPath.size() );
+						pContext->m_pContext, aryPath, (uint32_t)vecPath.size() );
 				}
 				else
 				{
@@ -559,37 +559,37 @@ namespace Gamma
 		return GetProcAddress( (HMODULE)pLibContext, szName );
 	}
 
-	uint32 AnsiToUcs( wchar_t* pUcs, uint32 nSize, const char* pAnsi, uint32 nLen )
+	uint32_t AnsiToUcs( wchar_t* pUcs, uint32_t nSize, const char* pAnsi, uint32_t nLen )
 	{
 		return MultiByteToWideChar( CP_ACP, 0, pAnsi, nSize, pUcs, nLen );
 	}
 
-	const std::wstring AnsiToUcs( const char* pUtf8, uint32 nLen /*= -1 */ )
+	const std::wstring AnsiToUcs( const char* pUtf8, uint32_t nLen /*= -1 */ )
 	{
 		std::wstring sTemp;
 		if( !pUtf8 )
 			return sTemp;
 		if( nLen == -1 )
-			nLen = (uint32)strlen( pUtf8 );
+			nLen = (uint32_t)strlen( pUtf8 );
 		sTemp.resize( nLen );
-		AnsiToUcs( &sTemp[0], (uint32)sTemp.size(), pUtf8, nLen );
+		AnsiToUcs( &sTemp[0], (uint32_t)sTemp.size(), pUtf8, nLen );
 		return sTemp.c_str();
 	}
 
-	uint32 UcsToAnsi( char* pAnsi, uint32 nSize, const wchar_t* pUnicode, uint32 nLen /*= -1 */ )
+	uint32_t UcsToAnsi( char* pAnsi, uint32_t nSize, const wchar_t* pUnicode, uint32_t nLen /*= -1 */ )
 	{
 		return WideCharToMultiByte( CP_ACP, 0, pUnicode, nLen, pAnsi, nSize, NULL, NULL );
 	}
 
-	const std::string UcsToAnsi( const wchar_t* pUnicode, uint32 nLen /*= -1 */ )
+	const std::string UcsToAnsi( const wchar_t* pUnicode, uint32_t nLen /*= -1 */ )
 	{
 		std::string sTemp;
 		if( !pUnicode )
 			return sTemp;
 		if( nLen == -1 )
-			nLen = (uint32)wcslen( pUnicode );
+			nLen = (uint32_t)wcslen( pUnicode );
 		sTemp.resize( nLen * 3 );
-		UcsToAnsi( &sTemp[0], (uint32)sTemp.size(), pUnicode, nLen );
+		UcsToAnsi( &sTemp[0], (uint32_t)sTemp.size(), pUnicode, nLen );
 		return sTemp.c_str();
 	}
 

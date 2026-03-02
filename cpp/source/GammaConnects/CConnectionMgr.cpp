@@ -12,13 +12,13 @@
 namespace Gamma
 {
 	IConnectionMgr* CreateConnMgr(
-		uint32 nAutoDisconnectTime, bool bStrictMode )
+		uint32_t nAutoDisconnectTime, bool bStrictMode )
 	{
 		return new CConnectionMgr( nAutoDisconnectTime, bStrictMode );
 	}
 
 	CConnectionMgr::CConnectionMgr( 
-		uint32 nAutoDisconnectTime,	bool bStrictMode )
+		uint32_t nAutoDisconnectTime,	bool bStrictMode )
 		: m_pNetWork( CreateNetWork() )
 		, m_nAutoDisconnectTime( nAutoDisconnectTime )
 		, m_bStrictMode( bStrictMode )
@@ -39,7 +39,7 @@ namespace Gamma
 
 	CConnectionMgr::~CConnectionMgr()
 	{
-		for( uint32 i = 0; i < eCT_Count; i++ )
+		for( uint32_t i = 0; i < eCT_Count; i++ )
 		{
 			for( CConnListMap::iterator it = m_mapConnList[i].begin(); 
 				it != m_mapConnList[i].end(); it++ )
@@ -62,10 +62,10 @@ namespace Gamma
 		m_listUpdateConn.PushFront( Conn );
 	}
 
-	bool CConnectionMgr::Check( uint32 nWaitTimes )
+	bool CConnectionMgr::Check( uint32_t nWaitTimes )
 	{
 		STATCK_LOG( this );
-		int64 nCurTime = GetGammaTime();
+		int64_t nCurTime = GetGammaTime();
 		if( nCurTime - m_nCurCheckTime > CONNECTING_CHECK_TIME )
 		{
 			m_nCurCheckTime = nCurTime;
@@ -87,7 +87,7 @@ namespace Gamma
 
 	void CConnectionMgr::OnCheckConnecting()
 	{
-		int64 nMinCreateTime = m_nCurCheckTime - DISCONNECT_TIME;
+		int64_t nMinCreateTime = m_nCurCheckTime - DISCONNECT_TIME;
 		CConnListMap& mapClientConn = m_mapConnList[eCT_Client];
 		for( CConnListMap::iterator it = mapClientConn.begin(); 
 			it != mapClientConn.end(); it++ )
@@ -106,7 +106,7 @@ namespace Gamma
 			}
 		}
 
-		for( int32 i = 0; i < eCT_Count; i++ )
+		for( int32_t i = 0; i < eCT_Count; i++ )
 		{	
 			for( CConnListMap::iterator it = m_mapConnList[i].begin(); 
 				it != m_mapConnList[i].end(); it++ )
@@ -141,7 +141,7 @@ namespace Gamma
 		}
 	}
 
-	void CConnectionMgr::StartService( const char* szAddres, uint16 nPort, uint32 nConnectClassID, 
+	void CConnectionMgr::StartService( const char* szAddres, uint16_t nPort, uint32_t nConnectClassID, 
 		EConnType eType, const char* pCertificatePath, const char* pPrivateKeyPath )
 	{
 		if( m_mapConnList[eCT_Server].find( nConnectClassID ) == m_mapConnList[eCT_Server].end() )
@@ -159,7 +159,7 @@ namespace Gamma
 	}
 
 	CConnection * CConnectionMgr::CreateConnect( IConnecter* pConnecter, 
-		uint32 nConnClassID, const char* szConnectAddress, EConnType eType )
+		uint32_t nConnClassID, const char* szConnectAddress, EConnType eType )
 	{
 		CBaseConn* pHandler = static_cast<CBaseConn*>( CDynamicObject::CreateInstance( nConnClassID ) );
 		if( eType == eConnType_UDP_Raw )
@@ -176,7 +176,7 @@ namespace Gamma
 	}
 
 	void CConnectionMgr::OnAccept( Gamma::IConnecter& Connect, 
-		uint32 nConnClassID, EConnType eType )
+		uint32_t nConnClassID, EConnType eType )
 	{
 		CConnection* pConnect = CreateConnect( &Connect, nConnClassID, NULL, eType );
 		CConnList* pConnList = m_mapConnList[eCT_Server][nConnClassID];
@@ -185,7 +185,7 @@ namespace Gamma
 	}
 
 	CBaseConn* CConnectionMgr::Connect( const char* szAddress, 
-		uint16 nPort, uint32 nConnectClassID, EConnType eType )
+		uint16_t nPort, uint32_t nConnectClassID, EConnType eType )
 	{
 		IConnecter* pConn = NULL;
 		EConnecterType eConnType = eConnecterType_TCP;
@@ -204,9 +204,9 @@ namespace Gamma
 		return pConnect->GetHandler();
 	}
 
-	uint32 CConnectionMgr::GetAllConn( CConnList& listConn, CBaseConn** pConnArray, uint32 nMaxCount )
+	uint32_t CConnectionMgr::GetAllConn( CConnList& listConn, CBaseConn** pConnArray, uint32_t nMaxCount )
 	{
-		uint32 nCount = 0;
+		uint32_t nCount = 0;
 		CConnection* pConnecting = listConn.GetFirst();
 		while( pConnecting && nCount < nMaxCount )
 		{
@@ -218,7 +218,7 @@ namespace Gamma
 		return nCount;
 	}
 
-	uint32 CConnectionMgr::GetAllConn( uint32 nConnectClassID, CBaseConn* aryConn[], uint32 nCount )
+	uint32_t CConnectionMgr::GetAllConn( uint32_t nConnectClassID, CBaseConn* aryConn[], uint32_t nCount )
 	{
 		CConnListMap::iterator it;
 		it = m_mapConnList[eCT_Server].find( nConnectClassID );
@@ -230,7 +230,7 @@ namespace Gamma
 		return GetAllConn( *it->second, aryConn, nCount );
 	}
 
-	void CConnectionMgr::StopService( const char* szAddres, uint16 nPort, uint32 nConnectClassID )
+	void CConnectionMgr::StopService( const char* szAddres, uint16_t nPort, uint32_t nConnectClassID )
 	{
 		CAddress Address = CAddress( szAddres, nPort );
 		CListenHandler* pHandler = m_listListener.GetFirst();
@@ -250,12 +250,12 @@ namespace Gamma
 		{
 			CListenHandler* pHandler = m_listListener.GetFirst();
 			const CAddress& addrListen = pHandler->GetAddress();
-			uint32 nClassID = pHandler->GetConnClassID();
+			uint32_t nClassID = pHandler->GetConnClassID();
 			StopService( addrListen.GetAddress(), addrListen.GetPort(), nClassID );
 		}
 	}
 
-	bool CConnectionMgr::StopConnect( uint32 nConnectClassID )
+	bool CConnectionMgr::StopConnect( uint32_t nConnectClassID )
 	{
 		CConnListMap::iterator it = m_mapConnList[eCT_Client].find( nConnectClassID );
 		if( it == m_mapConnList[eCT_Client].end() )

@@ -23,7 +23,7 @@
 
 namespace Gamma
 {
-    template<int32 n>
+    template<int32_t n>
     class TTinyNormal
     {
         enum EConstant
@@ -68,7 +68,7 @@ namespace Gamma
         //            16 17 18 19 20 21 22 23 24
         //         25 26 27 28 29 30 31 32 33 34 35
 
-        static uint32 Compress1( const CVector3f& vecNormal )
+        static uint32_t Compress1( const CVector3f& vecNormal )
         {
             if( vecNormal.x == 0.0f && vecNormal.z == 0.0f )
                 return vecNormal.y < 0 ? eYSignedMask : 0; 
@@ -78,24 +78,24 @@ namespace Gamma
             float fYAngle		= acos( vec.y < 0 ? -vec.y : vec.y );					//计算Y方向角度
             float fXZ			= sqrt( vec.x*vec.x + vec.z*vec.z );        //计算XZ平面长度
             float fXZAngle		= acos( vec.z/fXZ );                        //计算XZ平面角度
-            int32 nYaw			= (int32)( fYAngle/fDel + 0.5 );            //计算行号
-            int32 nLineLen		= nYaw << 1;                                //计算当前行分割的段数
-            int32 nPitch        = (int32)( fXZAngle*nLineLen/GM_PI + 0.5 );	//计算当前行位置
-            int32 nIndex        = nYaw*nYaw + nPitch;						//合成Index
+            int32_t nYaw			= (int32_t)( fYAngle/fDel + 0.5 );            //计算行号
+            int32_t nLineLen		= nYaw << 1;                                //计算当前行分割的段数
+            int32_t nPitch        = (int32_t)( fXZAngle*nLineLen/GM_PI + 0.5 );	//计算当前行位置
+            int32_t nIndex        = nYaw*nYaw + nPitch;						//合成Index
 
             return nIndex|( vecNormal.x < 0 ? eXSignedMask : 0 ) | ( vecNormal.y < 0 ? eYSignedMask : 0 );
         }
 
-        static CVector3f Decompress1( uint32 uNormal )
+        static CVector3f Decompress1( uint32_t uNormal )
         {
-            int32 nIndex        = (int32)( uNormal&eIndexMask );            //取得Index
+            int32_t nIndex        = (int32_t)( uNormal&eIndexMask );            //取得Index
             if( nIndex == 0 )
                 return CVector3f( 0.0f, eYSignedMask&uNormal ? -1.0f : 1.0f, 0.0f );
 
             const float fDel    = GM_PI_2/( eLineCount - 1 );				//纵向PI/2分段，每段角度大小
-            int32 nYaw			= (int32)sqrt( (double)nIndex );					//取得行号
-            int32 nLineLen		= nYaw << 1;                                //取得当前行分割的段数
-            int32 nPitch        = nIndex - nYaw*nYaw;						//取得当前行位置
+            int32_t nYaw			= (int32_t)sqrt( (double)nIndex );					//取得行号
+            int32_t nLineLen		= nYaw << 1;                                //取得当前行分割的段数
+            int32_t nPitch        = nIndex - nYaw*nYaw;						//取得当前行位置
             float fYAngle		= nYaw*fDel;                                //计算Y方向角度
             float fXZAngle		= nPitch*GM_PI/nLineLen;                    //计算XZ平面角度
             float xz            = sin( fYAngle );
@@ -107,13 +107,13 @@ namespace Gamma
                 );
         }
 
-        static uint32 Compress2( const CVector3f& vecNormal )
+        static uint32_t Compress2( const CVector3f& vecNormal )
         {
             if( vecNormal.x == 0.0f && vecNormal.z == 0.0f )
                 return vecNormal.y < 0 ? eYSignedMask : 0; 
             CVector3f vec    = vecNormal.Unit();    
 
-            uint32 uMaxAxis = eMaxAxisIsZ;
+            uint32_t uMaxAxis = eMaxAxisIsZ;
             CVector3f v		= vec;
 			v.x				= v.x < 0 ? -v.x : v.x;
 			v.y				= v.y < 0 ? -v.y : v.y;
@@ -132,14 +132,14 @@ namespace Gamma
 
             // 浮点格式
             // ＝ (-1)^s  * (1.d) * 2^(e - 127)
-            struct _FLOAT  { uint32 d:23; uint32 e:8; uint32 s:1; };
+            struct _FLOAT  { uint32_t d:23; uint32_t e:8; uint32_t s:1; };
 
             _FLOAT& fX		= *(_FLOAT*)&vec.x;
-            uint32  nX		= *(uint32*)&vec.x ? ( ( ( fX.d|eFloatDefaul ) >> ( eFloatEBase - fX.e ) ) >> eXDelBitCount ) << eYBitCount : 0;
+            uint32_t  nX		= *(uint32_t*)&vec.x ? ( ( ( fX.d|eFloatDefaul ) >> ( eFloatEBase - fX.e ) ) >> eXDelBitCount ) << eYBitCount : 0;
             _FLOAT& fY		= *(_FLOAT*)&vec.y;
-            uint32  nY		= *(uint32*)&vec.y ? ( fY.d|eFloatDefaul ) >> ( eFloatEBase - fY.e + eYDelBitCount ) : 0;
+            uint32_t  nY		= *(uint32_t*)&vec.y ? ( fY.d|eFloatDefaul ) >> ( eFloatEBase - fY.e + eYDelBitCount ) : 0;
 
-            uint32  uIndex    = nX|nY|uMaxAxis;
+            uint32_t  uIndex    = nX|nY|uMaxAxis;
             if( vecNormal.x < 0 )
                 uIndex |= eXSignedMask;
             if( vecNormal.y < 0 )
@@ -150,20 +150,20 @@ namespace Gamma
             return uIndex;
         }
 
-        static CVector3f Decompress2( uint32 uNormal )
+        static CVector3f Decompress2( uint32_t uNormal )
         {
             if( !uNormal )
                 return CVector3f( 0.0f, eYSignedMask&uNormal ? -1.0f : 1.0f, 0.0f );
 
-            uint32 uXMask	= uNormal&eXBitMask;
-            uint32 uYMask	= uNormal&eYBitMask;
+            uint32_t uXMask	= uNormal&eXBitMask;
+            uint32_t uYMask	= uNormal&eYBitMask;
             float fX        = 0;
             float fY        = 0;
 
             if( uXMask )
             {
-                uint32 uDX	= eYBitCount > eXDelBitCount ? uXMask >> eXMaskShift : uXMask << eXMaskShift;
-                uint32 uX	= uDX|eFloatEDefault;
+                uint32_t uDX	= eYBitCount > eXDelBitCount ? uXMask >> eXMaskShift : uXMask << eXMaskShift;
+                uint32_t uX	= uDX|eFloatEDefault;
                 fX			= *(float*)&uX;
                 if( uDX != eFloatDefaul )
                     fX       -= 1.0;
@@ -171,8 +171,8 @@ namespace Gamma
 
             if( uYMask )
             {
-                uint32 uDY	= uYMask << eYDelBitCount;
-                uint32 uY	= uDY|eFloatEDefault;
+                uint32_t uDY	= uYMask << eYDelBitCount;
+                uint32_t uY	= uDY|eFloatEDefault;
                 fY			= *(float*)&uY;
                 if( uDY != eFloatDefaul )
                     fY		-= 1.0;

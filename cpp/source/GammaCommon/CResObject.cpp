@@ -3,7 +3,7 @@
 
 namespace Gamma
 {
-	CResObject::CResObject( uint32 nSerialID, 
+	CResObject::CResObject( uint32_t nSerialID, 
 		const std::string& strPathName, CPackage* pPackage )
 		: m_pFilePackage( pPackage )
 		, m_nSerialID( nSerialID )
@@ -37,7 +37,7 @@ namespace Gamma
 		return m_strPathName;
 	}
 
-	uint32 CResObject::GetSerialID() const
+	uint32_t CResObject::GetSerialID() const
 	{
 		return m_nSerialID;
 	}

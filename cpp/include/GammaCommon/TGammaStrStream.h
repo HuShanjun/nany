@@ -81,16 +81,16 @@ namespace Gamma
 			{
 				SValueFormat& operator = ( SValueFormat& );
 				public:
-				SValueFormat( const Type& Val, uint32 flag, size_t nMinCount, _Elem cSpace )
+				SValueFormat( const Type& Val, uint32_t flag, size_t nMinCount, _Elem cSpace )
 					: m_Val( Val ), m_nFlag( flag ), m_nMinCount( nMinCount ), m_cSpace( cSpace ){}
 				const Type&	m_Val;
-				uint32		m_nFlag;
+				uint32_t		m_nFlag;
 				size_t		m_nMinCount;
 				_Elem		m_cSpace;
 			};
 
 		template<class Type>
-			static SValueFormat<Type> GenFormat( const Type& Val, uint32 flag = 0, size_t nMinCount = 0, _Elem cSpace = ' ' )
+			static SValueFormat<Type> GenFormat( const Type& Val, uint32_t flag = 0, size_t nMinCount = 0, _Elem cSpace = ' ' )
 			{
 				return SValueFormat<Type>( Val, flag, nMinCount, cSpace );
 			}
@@ -145,17 +145,17 @@ namespace Gamma
 			return *this;
 		}
 
-		TGammaStrStream<_Elem>& operator << ( const int8& _Val )
+		TGammaStrStream<_Elem>& operator << ( const int8_t& _Val )
 		{
 			std::basic_ostream<_Elem, _Traits >& _this = *this;
-			_this << (int32)_Val;
+			_this << (int32_t)_Val;
 			return *this;
 		}
 
-		TGammaStrStream<_Elem>& operator << ( const uint8& _Val )
+		TGammaStrStream<_Elem>& operator << ( const uint8_t& _Val )
 		{
 			std::basic_ostream<_Elem, _Traits >& _this = *this;
-			_this << (int32)_Val;
+			_this << (int32_t)_Val;
 			return *this;
 		}
 
@@ -222,7 +222,7 @@ namespace Gamma
 		TGammaStrStream<_Elem>& operator << ( TConstString<_Elem>&& _Val )
 		{
 			const _Elem* szString = _Val.c_str();
-			uint32 nSize = _Val.size();
+			uint32_t nSize = _Val.size();
 			Flush(szString, nSize);
 			if (m_charTag)
 				Flush(&m_charTag, sizeof(m_charTag));
@@ -232,7 +232,7 @@ namespace Gamma
 		TGammaStrStream<_Elem>& operator << ( const TConstString<_Elem>& _Val )
 		{
 			const _Elem* szString = _Val.c_str();
-			uint32 nSize = _Val.size();
+			uint32_t nSize = _Val.size();
 			Flush( szString, nSize );
 			if( m_charTag )
 				Flush( &m_charTag, sizeof(m_charTag) );

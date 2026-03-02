@@ -42,16 +42,16 @@ namespace Gamma
 	};
 
 	template<> struct ArgFetcher<const char		&> : public ArgFetcher<char		> {};
-	template<> struct ArgFetcher<const int8		&> : public ArgFetcher<int8		> {};
-	template<> struct ArgFetcher<const int16	&> : public ArgFetcher<int16	> {};
-	template<> struct ArgFetcher<const int32	&> : public ArgFetcher<int32	> {};
-	template<> struct ArgFetcher<const int64	&> : public ArgFetcher<int64	> {};
+	template<> struct ArgFetcher<const int8_t		&> : public ArgFetcher<int8_t		> {};
+	template<> struct ArgFetcher<const int16_t	&> : public ArgFetcher<int16_t	> {};
+	template<> struct ArgFetcher<const int32_t	&> : public ArgFetcher<int32_t	> {};
+	template<> struct ArgFetcher<const int64_t	&> : public ArgFetcher<int64_t	> {};
 	template<> struct ArgFetcher<const long		&> : public ArgFetcher<long		> {};
 	template<> struct ArgFetcher<const wchar_t	&> : public ArgFetcher<wchar_t	> {};
-	template<> struct ArgFetcher<const uint8	&> : public ArgFetcher<uint8	> {};
-	template<> struct ArgFetcher<const uint16	&> : public ArgFetcher<uint16	> {};
-	template<> struct ArgFetcher<const uint32	&> : public ArgFetcher<uint32	> {};
-	template<> struct ArgFetcher<const uint64	&> : public ArgFetcher<uint64	> {};
+	template<> struct ArgFetcher<const uint8_t	&> : public ArgFetcher<uint8_t	> {};
+	template<> struct ArgFetcher<const uint16_t	&> : public ArgFetcher<uint16_t	> {};
+	template<> struct ArgFetcher<const uint32_t	&> : public ArgFetcher<uint32_t	> {};
+	template<> struct ArgFetcher<const uint64_t	&> : public ArgFetcher<uint64_t	> {};
 	template<> struct ArgFetcher<const ulong	&> : public ArgFetcher<ulong	> {};
 	template<> struct ArgFetcher<const float	&> : public ArgFetcher<float	> {};
 	template<> struct ArgFetcher<const double	&> : public ArgFetcher<double	> {};
@@ -398,7 +398,7 @@ namespace Gamma
 	template< typename T >
 	struct TCallBack
 	{
-		static T OnCall( uint32 nCallBackIndex, void** pArgArray )
+		static T OnCall( uint32_t nCallBackIndex, void** pArgArray )
 		{
 			T ReturnValue;
 			CScriptBase::CallBack( nCallBackIndex, &ReturnValue, pArgArray );
@@ -409,7 +409,7 @@ namespace Gamma
 	template<typename T>
 	struct TCallBack<T&>
 	{
-		static T& OnCall( uint32 nCallBackIndex, void** pArgArray )
+		static T& OnCall( uint32_t nCallBackIndex, void** pArgArray )
 		{
 			T* pReturnValue;
 			CScriptBase::CallBack( nCallBackIndex, &pReturnValue, pArgArray );
@@ -420,7 +420,7 @@ namespace Gamma
 	template<>
 	struct TCallBack<void>
 	{
-		static void OnCall( uint32 nCallBackIndex, void** pArgArray )
+		static void OnCall( uint32_t nCallBackIndex, void** pArgArray )
 		{
 			CScriptBase::CallBack( nCallBackIndex, nullptr, pArgArray );
 		}
@@ -510,9 +510,9 @@ namespace Gamma
 		class TCallBackWrap : public IFunctionWrap
 		{
 		public:
-			static int32& GetCallBackIndex()
+			static int32_t& GetCallBackIndex()
 			{
-				static int32 s_nCallBackIndex = -1;
+				static int32_t s_nCallBackIndex = -1;
 				return s_nCallBackIndex;
 			}
 
@@ -586,9 +586,9 @@ namespace Gamma
 	template< typename ClassType >
 	class TDestructorWrap : public IFunctionWrap
 	{
-		static int32& GetCallBackIndex()
+		static int32_t& GetCallBackIndex()
 		{
-			static int32 s_nCallBackIndex = -1;
+			static int32_t s_nCallBackIndex = -1;
 			return s_nCallBackIndex;
 		}
 
@@ -598,7 +598,7 @@ namespace Gamma
 			( ( *(Derive**)pArgArray[0] ) )->~Derive();
 		}
 
-		void Wrap(uint32 p0)
+		void Wrap(uint32_t p0)
 		{
 			void* pArg[] = { this, &p0 };
 			CScriptBase::CallBack( GetCallBackIndex(), nullptr, pArg );

@@ -18,15 +18,15 @@ namespace Gamma
 		CMapListener::iterator	m_itListener;
 		CPackage*				m_pFilePackage;
 		CRefStringPtr			m_strPathName;
-		uint32					m_nSerialID;
+		uint32_t					m_nSerialID;
 
 	public:
-		CResObject( uint32 nSerialID, const std::string& strPathName, CPackage* pPackage );
+		CResObject( uint32_t nSerialID, const std::string& strPathName, CPackage* pPackage );
 		~CResObject();
 
 		void					SetListener( CMapListener::iterator	itListener );
 		CMapListener::iterator	GetListener() const;
-		uint32					GetSerialID() const;
+		uint32_t					GetSerialID() const;
 		const CRefStringPtr&	GetPathName() const;
 		ELoadState				GetLoadState() const;
 		SFileBuffer				GetBuffer() const;

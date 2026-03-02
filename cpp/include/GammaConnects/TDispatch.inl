@@ -35,14 +35,14 @@ namespace Gamma
 
 			if( pDispatchClass->GetMsgFunctionCount() <= pMsg->GetId() )
 			{
-				GammaLog << "Dispatch error:Unknow the message id," << (uint32)pMsg->GetId() << std::endl;
+				GammaLog << "Dispatch error:Unknow the message id," << (uint32_t)pMsg->GetId() << std::endl;
 				GammaThrow( "Unknow the message id!" );
 			}
 
 			MsgCheckFun_t pCheckFun = pDispatchClass->GetCheckFun( pMsg->GetId() );
 			if( pCheckFun == NULL )
 			{
-				GammaLog << "Dispatch error:Not find CheckFunction:" << (uint32)pMsg->GetId() << std::endl;
+				GammaLog << "Dispatch error:Not find CheckFunction:" << (uint32_t)pMsg->GetId() << std::endl;
 				GammaThrow ( "Not find CheckFunction!" );
 			}
 
@@ -52,13 +52,13 @@ namespace Gamma
 
 			if( nCheckSize == eCR_Error )
 			{
-				GammaLog << "Dispatch error:The net package error:" << (uint32)pMsg->GetId() << std::endl;
+				GammaLog << "Dispatch error:The net package error:" << (uint32_t)pMsg->GetId() << std::endl;
 				GammaThrow ( "The net package error!" );
 			}
 
-			if( (uint32)nCheckSize > m_nMaxLen )
+			if( (uint32_t)nCheckSize > m_nMaxLen )
 			{
-				GammaLog << "Dispatch error:The msg require len too long:" << (uint32)pMsg->GetId() << "," << nCheckSize << std::endl;
+				GammaLog << "Dispatch error:The msg require len too long:" << (uint32_t)pMsg->GetId() << "," << nCheckSize << std::endl;
 				GammaThrow ( "The msg require len too long !" );
 			}
 
@@ -89,7 +89,7 @@ namespace Gamma
 	}
 
 	template<typename DispatchClass, typename IdType_t, typename SubClass, typename MsgBaseType>
-	Gamma::TDispatch<DispatchClass, IdType_t, SubClass, MsgBaseType>::TDispatch( uint32 nMaxLen /*= INVALID_32BITID */ )
+	Gamma::TDispatch<DispatchClass, IdType_t, SubClass, MsgBaseType>::TDispatch( uint32_t nMaxLen /*= INVALID_32BITID */ )
 	{
 		m_nMaxLen = nMaxLen;
 	}

@@ -35,7 +35,7 @@ namespace Gamma
 	{
 	}
 
-	uint32 CFileContext::Size() const
+	uint32_t CFileContext::Size() const
 	{
 		CPackage* pPackage = GetPackage();
 		if( !pPackage )
@@ -72,7 +72,7 @@ namespace Gamma
 	//=============================================================
 	// CAddressHttp
 	//=============================================================
-	CAddressHttp::CAddressHttp( const string& strKey, const string& strHost, uint16 nPort )
+	CAddressHttp::CAddressHttp( const string& strKey, const string& strHost, uint16_t nPort )
 		: m_strOrg( strKey )
 		, m_strHost( strHost )
 		, m_nPort( nPort )
@@ -85,7 +85,7 @@ namespace Gamma
 		GammaDestroyLock( m_hLock );
 	}
 
-	const SAddr* CAddressHttp::GetAddr( uint32 nIndex )
+	const SAddr* CAddressHttp::GetAddr( uint32_t nIndex )
 	{
 		const SAddr* pAddr = NULL;
 		GammaLock( m_hLock );
@@ -151,7 +151,7 @@ namespace Gamma
 		, m_bReleaseCache( true )
 		, m_pFileMgrListener( NULL )
 		, m_bLocalFiles( true )
-		, m_Version( INVALID_64BITID )
+		, m_Version( (uint64_t)INVALID_64BITID )
 		, m_eLoadContent( eLoadContent_Nothing )
 		, m_nNeedExtractCount( 0 )
 		, m_nNeedDownloadCount( 0 )
@@ -253,7 +253,7 @@ namespace Gamma
         if( hFile == NULL )
             return false;
         fseek( hFile, 0, SEEK_END );
-        uint32 nSize = (uint32)ftell( hFile );
+        uint32_t nSize = (uint32_t)ftell( hFile );
         fseek( hFile, 0, SEEK_SET );
         strBuffer.resize( nSize );
         bool bReadOK = fread( &strBuffer[0], 1, nSize, hFile ) == nSize;
@@ -296,7 +296,7 @@ namespace Gamma
 			unzGetCurrentFileInfo( hZip, &unzFile, strInnerName, 
 				sizeof(strInnerName), NULL, 0, strComment, sizeof(strComment) );
 			static const char* szAssets = "assets/";
-			static const uint32 nLen = strlen( szAssets );
+			static const uint32_t nLen = strlen( szAssets );
 			if( memcmp( strInnerName, szAssets, nLen ) )
 				continue;
 
@@ -348,7 +348,7 @@ namespace Gamma
 					if( hFile == NULL )
 						return CPathMgr::eFTW_RESULT_STOP;
 					fseek( hFile, 0, SEEK_END );
-					uint32 nSize = (uint32)ftell( hFile );
+					uint32_t nSize = (uint32_t)ftell( hFile );
 					fseek( hFile, 0, SEEK_SET );
 					Info.m_strData.resize( nSize );
 					if( fread( &Info.m_strData[0], 1, nSize, hFile ) != nSize )
@@ -517,10 +517,10 @@ namespace Gamma
 		return szAbsolutePath;
 	}
 
-	uint32 CPackageMgr::GetBasePathEnd( const char* szPathName )
+	uint32_t CPackageMgr::GetBasePathEnd( const char* szPathName )
 	{
 		if( !memcmp( szPathName, m_strBaseWebPath.c_str(), m_strBaseWebPath.size() ) )
-			return (uint32)m_strBaseWebPath.size();
+			return (uint32_t)m_strBaseWebPath.size();
 		return 0;
 	}
 
@@ -529,11 +529,11 @@ namespace Gamma
 		CAddressHttp* pAddress = m_mapHost.Find( strKey );
 		if( pAddress == NULL )
 		{			
-			uint16 nPort = 80;
+			uint16_t nPort = 80;
 			string::size_type nPos = strHost.find_first_of( ":", 0 );
 			if( nPos != string::npos )
 			{
-				nPort = (uint16)GammaA2I( strHost.c_str() + nPos + 1 );
+				nPort = (uint16_t)GammaA2I( strHost.c_str() + nPos + 1 );
 				strHost.erase( nPos );
 			}
 
@@ -610,7 +610,7 @@ namespace Gamma
 	}
 
 	bool CPackageMgr::FileTreeWalk( const char* szDirName, CPathMgr::FILE_PROC_UTF8 pfnFileProc, 
-		void* pContext, uint32 nDepth /*= -1*/, bool bFullFilePath /*= true */ )
+		void* pContext, uint32_t nDepth /*= -1*/, bool bFullFilePath /*= true */ )
 	{
 		typedef map<string, CPathMgr::FTW_FLAG> CFileMap;
 		typedef CFileMap::iterator iterator;
@@ -622,12 +622,12 @@ namespace Gamma
 			strcpy2array_safe( szAbsolutePath, ( m_strBaseWebPath + szDirName ).c_str() );
 		else
 			strcpy2array_safe( szAbsolutePath, szDirName );
-		uint32 nLen = (uint32)strlen( szAbsolutePath );
+		uint32_t nLen = (uint32_t)strlen( szAbsolutePath );
 		if( szAbsolutePath[ nLen - 1 ] != '/' && szAbsolutePath[ nLen - 1 ] != '\\' )
 			szAbsolutePath[ nLen++ ] =  '/';		
 
 		if( !GammaStringCompare( szAbsolutePath, 
-			m_strBaseWebPath.c_str(), (uint32)m_strBaseWebPath.size() ) )
+			m_strBaseWebPath.c_str(), (uint32_t)m_strBaseWebPath.size() ) )
 		{
 			string strDirName = szAbsolutePath + m_strBaseWebPath.size();
 			MapFileContextType::iterator itBegin = m_mapFileContext.upper_bound( strDirName );
@@ -639,7 +639,7 @@ namespace Gamma
 				if( it->second.m_nIndex == INVALID_32BITID )
 					continue;
 
-				uint32 nCurDepth = 0;
+				uint32_t nCurDepth = 0;
 				const char* szRelativePath = it->first.c_str() + strDirName.size();
 				for( ; *szRelativePath && nCurDepth <= nDepth; szRelativePath++ )
 					nCurDepth += *szRelativePath == '/' || *szRelativePath == '\\';
@@ -654,7 +654,7 @@ namespace Gamma
 				listPackFile.push_back( setPackFile.insert( pairFile ).first );
 			}
 
-			uint32 nLen = (uint32)strlen( szAbsolutePath );
+			uint32_t nLen = (uint32_t)strlen( szAbsolutePath );
 			if( szAbsolutePath[1] == ':' || szAbsolutePath[0] == '/' ||
 				!memcmp( "external:/", szAbsolutePath, 10 ) )
 			{
@@ -695,7 +695,7 @@ namespace Gamma
 				if( memcmp( strDirName.c_str(), it->c_str(), strDirName.size() ) )
 					break;
 
-				uint32 nCurDepth = 0;
+				uint32_t nCurDepth = 0;
 				const char* szRelativePath = it->c_str() + strDirName.size();
 				for( ; *szRelativePath && nCurDepth <= nDepth; szRelativePath++ )
 					nCurDepth += *szRelativePath == '/' || *szRelativePath == '\\';
@@ -757,7 +757,7 @@ namespace Gamma
 		m_pFileMgrListener = pFileMgrListener;
 	}
 
-	void CPackageMgr::OnLoadedEnd( const char* szFileName, const tbyte* pBuffer, uint32 nSize )
+	void CPackageMgr::OnLoadedEnd( const char* szFileName, const tbyte* pBuffer, uint32_t nSize )
 	{
 		if( m_eLoadContent == eLoadContent_Version )
 			return OnLoadVersionFile( szFileName, pBuffer, nSize );
@@ -769,14 +769,14 @@ namespace Gamma
 			return OnDownloadPackage( szFileName, !pBuffer );
 	}
 
-	void CPackageMgr::OnLoadVersionFile( const char* szFileName, const tbyte* pBuffer, uint32 nSize )
+	void CPackageMgr::OnLoadVersionFile( const char* szFileName, const tbyte* pBuffer, uint32_t nSize )
 	{
 		CIniFile VersionInf;
 
 		if( pBuffer == NULL || !VersionInf.Init( pBuffer, nSize ) )
 		{
 			CTabFile tabFile;
-			m_Version = CVersion( (uint64)0 );
+			m_Version = CVersion( (uint64_t)0 );
 			if( !m_bLocalFiles )
 			{
 				if( m_pFileMgrListener )
@@ -815,7 +815,7 @@ namespace Gamma
 		char szFileListName[256];
 		gammasstream name( szFileListName, 256 );
 		name << "filelist";
-		if( (uint64)m_Version )
+		if( (uint64_t)m_Version )
 			name << "_" << (string)m_Version;
 		name << ( m_bLocalFiles ? ".r" : ".z" );
 
@@ -842,7 +842,7 @@ namespace Gamma
 		GammaLog << "Load filelist:" << szFileListPath << endl;
 	}
 
-	void CPackageMgr::OnLoadFileList( const char* szFileListName, const tbyte* pBuffer, uint32 nSize )
+	void CPackageMgr::OnLoadFileList( const char* szFileListName, const tbyte* pBuffer, uint32_t nSize )
 	{
 		if( !pBuffer )
 		{
@@ -856,28 +856,28 @@ namespace Gamma
 		tabFile.Init( pBuffer, nSize );
 		SPackagePart* pCurNode = NULL;
 		string strNodePath;
-		uint32 nCurIndex = INVALID_32BITID;
+		uint32_t nCurIndex = INVALID_32BITID;
 		
-		for( int32 i = 0; i < tabFile.GetHeight(); i++ )
+		for( int32_t i = 0; i < tabFile.GetHeight(); i++ )
 		{
-			int32 nOrgSize = tabFile.GetInteger( i, 1, -1 );
+			int32_t nOrgSize = tabFile.GetInteger( i, 1, -1 );
 			if( nOrgSize >= 0 )
 			{
 				// 非压缩文件不需要原始大小 
 				const char* szFileName = tabFile.GetString( i, 0 );
-				uint32 nLen = (uint32)strlen( szFileName );
+				uint32_t nLen = (uint32_t)strlen( szFileName );
 				bool bCompressed = szFileName[nLen - 2] == L'.' && szFileName[nLen - 1] == L'z';
 
 				m_listPackageParts.push_back( SPackagePart() );
 				SPackagePart& PkgPart = *m_listPackageParts.rbegin();
 
 				PkgPart.m_strFilePath = szFileName;
-				PkgPart.m_nPackSize = (uint32)tabFile.GetInteger( i, 2, 0 );
+				PkgPart.m_nPackSize = (uint32_t)tabFile.GetInteger( i, 2, 0 );
 				PkgPart.m_bLoaded = false;
 				PkgPart.m_bCached = false;
 				PkgPart.m_pPrePart = nCurIndex ? NULL : pCurNode;
 				PkgPart.m_nPackageIndex = nCurIndex ? 0 : pCurNode->m_nPackageIndex + 1;
-				PkgPart.m_nOrgSize = bCompressed ? (uint32)nOrgSize : 0;
+				PkgPart.m_nOrgSize = bCompressed ? (uint32_t)nOrgSize : 0;
 
 				string::size_type nPos = PkgPart.m_strFilePath.find_last_of( L'/' );
 				strNodePath = PkgPart.m_strFilePath.substr( 0, nPos + 1 );
@@ -907,7 +907,7 @@ namespace Gamma
 
 		memcpy( szFilePathUtf8, m_strBaseWebPath.c_str(), m_strBaseWebPath.size() );
 		char* szFileName = szFilePathUtf8 + m_strBaseWebPath.size();
-		uint32 nFileNameSize = ELEM_COUNT( szFilePathUtf8 ) - (uint32)m_strBaseWebPath.size();
+		uint32_t nFileNameSize = ELEM_COUNT( szFilePathUtf8 ) - (uint32_t)m_strBaseWebPath.size();
 
 		// 扫描包里已有的文件，
 #ifdef _ANDROID
@@ -928,7 +928,7 @@ namespace Gamma
 			strcpy_safe( szFileName, szFileInApk, nFileNameSize, INVALID_32BITID );
 			strCachePath = m_pFileMgr->MakeCachePath( szFilePathUtf8 );
 			strCachePath.erase( 0, strLocalCachePath.size() );
-			uint32 nLen = (uint32)strCachePath.size();
+			uint32_t nLen = (uint32_t)strCachePath.size();
 			if( nLen > 2 && strCachePath[nLen - 2] == '.' && strCachePath[nLen - 1] == 'z' )
 				strCachePath[nLen - 1] = 'r';
 			setPkgCacheFiles.insert( strCachePath );
@@ -951,8 +951,8 @@ namespace Gamma
 		CPathMgr::FileTreeWalk( strLocalCachePath.c_str(), 
 			&SCacheInfo::SearchCache, &CacheInfo, INVALID_32BITID, false );
 
-		uint32 nDownLoadSize = 0;
-		uint32 nExtractSize = 0;
+		uint32_t nDownLoadSize = 0;
+		uint32_t nExtractSize = 0;
 		m_nNeedDownloadCount = 0;
 		m_nNeedExtractCount = 0;
 
@@ -962,7 +962,7 @@ namespace Gamma
 			strcpy_safe( szFileName, PackNode.m_strFilePath.c_str(), nFileNameSize, INVALID_32BITID );
 			strCachePath = m_pFileMgr->MakeCachePath( szFilePathUtf8 );
 			strCachePath.erase( 0, strLocalCachePath.size() );
-			uint32 nLen = (uint32)strCachePath.size();
+			uint32_t nLen = (uint32_t)strCachePath.size();
 			if( nLen > 2 && strCachePath[nLen - 2] == '.' && strCachePath[nLen - 1] == 'z' )
 				strCachePath[nLen - 1] = 'r';
 
@@ -1082,10 +1082,10 @@ namespace Gamma
 		if( m_itPackageCheck == m_listPackageParts.end() )
 			return;
 
-		int64 nCurTime = GetGammaTime();
+		int64_t nCurTime = GetGammaTime();
 		if( nCurTime - m_nPreCheckTime > 10000 )
 		{
-			m_nPreCheckTime = (uint32)nCurTime;
+			m_nPreCheckTime = (uint32_t)nCurTime;
 			m_bWifiConnected = IsWifiConnect();
 		}
 
@@ -1093,7 +1093,7 @@ namespace Gamma
 			return;
 
 		if( m_nPreDownloadTime == INVALID_32BITID )
-			m_nPreDownloadTime = (uint32)nCurTime;
+			m_nPreDownloadTime = (uint32_t)nCurTime;
 		if( m_nPreDownloadTime + 500 > nCurTime )
 			return;
 		m_nPreDownloadTime = INVALID_32BITID;
@@ -1130,8 +1130,8 @@ namespace Gamma
 
 	void CPackageMgr::DownLoadPackages()
 	{
-		int32 nCount = (int32)m_vecNeedDownloadPackage.size();
-		for( int32 i = nCount - 1, j = 0; i >= 0 && j < 20; i--, j++ )
+		int32_t nCount = (int32_t)m_vecNeedDownloadPackage.size();
+		for( int32_t i = nCount - 1, j = 0; i >= 0 && j < 20; i--, j++ )
 		{
 			SPackagePart& PackNode = *m_vecNeedDownloadPackage[i];
 			string strPath = m_strBaseWebPath + PackNode.m_strFilePath;
@@ -1142,7 +1142,7 @@ namespace Gamma
 
 	void CPackageMgr::DumpCurrentPackage()
 	{
-		uint32 nTotalSize = 0;
+		uint32_t nTotalSize = 0;
 		for( ListPackageType::iterator it = m_listPackageParts.begin(); it != m_listPackageParts.end(); it++ )
 		{
 			if( it->m_nPackageIndex != 0 || it->m_pPackage == NULL )
@@ -1157,12 +1157,12 @@ namespace Gamma
 	{
 		strBuffer.clear();
 		string strTemp;
-		vector<uint32> vecOffset;
+		vector<uint32_t> vecOffset;
 
 		if( ReadResourcePackageFile( strTemp, "version.inf" ) )
 		{
 			CIniFile VersionInf;
-			VersionInf.Init( (const tbyte*)strTemp.c_str(), (uint32)strTemp.size() );
+			VersionInf.Init( (const tbyte*)strTemp.c_str(), (uint32_t)strTemp.size() );
 			const char* szVersion = VersionInf.GetString( "Data", "Version" );
 			char szFileListName[256];
 			gammasstream( szFileListName, 256 ) << "filelist_" << szVersion << ".r";
@@ -1170,15 +1170,15 @@ namespace Gamma
 			if( ReadResourcePackageFile( strTemp, szFileListName ) )
 			{
 				CTabFile tabFile;
-				tabFile.Init( (const tbyte*)strTemp.c_str() + 4, (uint32)strTemp.size() - 4 );
+				tabFile.Init( (const tbyte*)strTemp.c_str() + 4, (uint32_t)strTemp.size() - 4 );
 				strTemp.clear();
 
-				for( int32 i = 0; i < tabFile.GetHeight(); i++ )
+				for( int32_t i = 0; i < tabFile.GetHeight(); i++ )
 				{
 					if( tabFile.GetInteger( i, 1, -1 ) < 0 )
 						continue;
 					const char* szFileName = tabFile.GetString( i, 0 );
-					vecOffset.push_back( (uint32)strTemp.size() );
+					vecOffset.push_back( (uint32_t)strTemp.size() );
 					strTemp.append( szFileName );
 					strTemp.push_back( 0 );				
 				}
@@ -1212,7 +1212,7 @@ namespace Gamma
 					unzGetCurrentFileInfo( hZip, &unzFile, strInnerName, 
 						sizeof(strInnerName), NULL, 0, strComment, sizeof(strComment) );
 					static const char* szAssets = "assets/";
-					static const uint32 nLen = strlen( szAssets );
+					static const uint32_t nLen = strlen( szAssets );
 					if( memcmp( strInnerName, szAssets, nLen ) )
 						continue;
 

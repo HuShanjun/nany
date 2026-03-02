@@ -14,7 +14,7 @@
 
 namespace Gamma
 {
-	GAMMA_COMMON_API uint64 GetNativeModuleVersion()
+	GAMMA_COMMON_API uint64_t GetNativeModuleVersion()
 	{
 #ifdef _WIN32 
 		return CWin32App::GetInstance().GetVersion();
@@ -74,7 +74,7 @@ namespace Gamma
         return true;
 	}
 
-	GAMMA_COMMON_API void StartLocation( uint32 nLocationInterval )
+	GAMMA_COMMON_API void StartLocation( uint32_t nLocationInterval )
 	{
 #ifdef _WIN32
 		return;
@@ -108,7 +108,7 @@ namespace Gamma
 #endif
 	}
 
-	GAMMA_COMMON_API void SetClipboardContent( int32 nType, const void* pContent, uint32 nSize )
+	GAMMA_COMMON_API void SetClipboardContent( int32_t nType, const void* pContent, uint32_t nSize )
 	{
 		if( !pContent )
 			return;
@@ -121,7 +121,7 @@ namespace Gamma
 #endif
 	}
 
-	GAMMA_COMMON_API void GetClipboardContent( int32 nType, const void*& pContent, uint32& nSize )
+	GAMMA_COMMON_API void GetClipboardContent( int32_t nType, const void*& pContent, uint32_t& nSize )
 	{
 #ifdef _WIN32 
 		CWin32App::GetInstance().GetClipboardContent( nType, pContent, nSize );
@@ -132,7 +132,7 @@ namespace Gamma
 #endif
 	}
 
-	GAMMA_COMMON_API bool GetSystemFile( int32 nType, void* pContext, SystemFileCallback funCallback )
+	GAMMA_COMMON_API bool GetSystemFile( int32_t nType, void* pContext, SystemFileCallback funCallback )
 	{
 		if( nType >= CONTENT_TYPE_COUNT )
 			return false;
@@ -146,7 +146,7 @@ namespace Gamma
         return true;
 	}
 
-	GAMMA_COMMON_API bool GetSystemFileList( int32 nType, void* pContext, SystemFileListCallback funCallback )
+	GAMMA_COMMON_API bool GetSystemFileList( int32_t nType, void* pContext, SystemFileListCallback funCallback )
 	{
 		if( nType >= CONTENT_TYPE_COUNT )
 			return false;
@@ -192,10 +192,10 @@ namespace Gamma
 		CWin32App::GetInstance().SetPackagePath( szPackagePath );
 	}
 
-	static void ConvertArg( const wchar_t** szArg, int32 nArg, const char**& aryArg )
+	static void ConvertArg( const wchar_t** szArg, int32_t nArg, const char**& aryArg )
 	{
 		aryArg = new const char*[nArg];
-		for( int32 i = 0; i < nArg; i++ )
+		for( int32_t i = 0; i < nArg; i++ )
 		{
 			std::string strArg = UcsToUtf8( szArg[i] );
 			char* szArg = new char[ strArg.size() + 1 ];
@@ -204,25 +204,25 @@ namespace Gamma
 		}
 	}
 
-	GAMMA_COMMON_API int32 StartApp( AppEntryFunction funEntry, int nArg, const wchar_t* szArg[] )
+	GAMMA_COMMON_API int32_t StartApp( AppEntryFunction funEntry, int nArg, const wchar_t* szArg[] )
 	{
 		const char** aryArg = NULL;
 		ConvertArg( szArg, nArg, aryArg );
-		int32 nRet = funEntry( nArg, aryArg );
-		for( int32 i = 0; i < nArg; i++ )
+		int32_t nRet = funEntry( nArg, aryArg );
+		for( int32_t i = 0; i < nArg; i++ )
 			SAFE_DEL_GROUP( aryArg[i] );
 		SAFE_DEL_GROUP( aryArg );
 		return nRet;
 	}
 
-	static void ConvertArg( wchar_t* szCmdLine, int32& nArg, const char**& aryArg )
+	static void ConvertArg( wchar_t* szCmdLine, int32_t& nArg, const char**& aryArg )
 	{
 		std::vector<std::wstring> vecArg = CmdParser( szCmdLine ); 
-		nArg = (int32)vecArg.size() + 1;
+		nArg = (int32_t)vecArg.size() + 1;
 		aryArg = new const char*[nArg];
 		aryArg[0] = new char(0);
 
-		for( uint32 i = 0; i < vecArg.size(); i++ )
+		for( uint32_t i = 0; i < vecArg.size(); i++ )
 		{
 			std::string strArg = UcsToUtf8( vecArg[i] );
 			char* szArg = new char[ strArg.size() + 1 ];
@@ -231,19 +231,19 @@ namespace Gamma
 		}
 	}
 
-	GAMMA_COMMON_API int32 StartApp( AppEntryFunction funEntry, void* pApp, wchar_t* szCmdLine )
+	GAMMA_COMMON_API int32_t StartApp( AppEntryFunction funEntry, void* pApp, wchar_t* szCmdLine )
 	{
-		int32 nArg = 0;
+		int32_t nArg = 0;
 		const char** aryArg = NULL;
 		ConvertArg( szCmdLine, nArg, aryArg );
-		int32 nRet = funEntry( nArg, aryArg );
-		for( int32 i = 0; i < nArg; i++ )
+		int32_t nRet = funEntry( nArg, aryArg );
+		for( int32_t i = 0; i < nArg; i++ )
 			SAFE_DEL_GROUP( aryArg[i] );
 		SAFE_DEL_GROUP( aryArg );
 		return nRet;
 	}
 #else
-	GAMMA_COMMON_API int32 StartApp( AppEntryFunction funEntry, int nArg, const char* szArg[] )
+	GAMMA_COMMON_API int32_t StartApp( AppEntryFunction funEntry, int nArg, const char* szArg[] )
 	{
 #ifdef _IOS
         return CIOSApp::GetInstance().StartApp( funEntry, nArg, szArg );

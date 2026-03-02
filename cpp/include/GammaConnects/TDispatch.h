@@ -14,7 +14,7 @@ namespace Gamma
 		typename MsgBaseType = TBasePrtlMsg<IdType_t> >
 	class TDispatch
 	{
-		uint32	m_nMaxLen;
+		uint32_t	m_nMaxLen;
 
 	protected:
 		typedef size_t (*MsgCheckFun_t)( DispatchClass* pClass, const void*, size_t );
@@ -51,7 +51,7 @@ namespace Gamma
 	public:
 		enum { eMaxRecivesize = 4 * 4096 * 4096 };
 
-		TDispatch( uint32 nMaxLen = INVALID_32BITID );
+		TDispatch( uint32_t nMaxLen = INVALID_32BITID );
 		template<typename ClassType, typename MsgType>
 		static void	RegistProcessFun( void (ClassType::*pMsgProcessFun)( const MsgType*, size_t ) );
 		size_t		Dispatch( const void* pData, size_t nSize );

@@ -52,8 +52,8 @@ namespace Gamma
 
 		CDir GetDir() const
 		{
-			int32 nDir = (int32)( 256*a/GM_2PI + 0.5 );
-			return CDir( (uint8)nDir );
+			int32_t nDir = (int32_t)( 256*a/GM_2PI + 0.5 );
+			return CDir( (uint8_t)nDir );
 		}
 
 		void SetAngle( CVector2f vecDir )

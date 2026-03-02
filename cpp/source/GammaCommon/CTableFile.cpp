@@ -22,11 +22,11 @@ namespace Gamma
 	struct SFieldInfo
 	{
 		enum { eNone, eString, eInteger, eDouble, eDateStamp, eDictString };
-		uint32						m_nOffset		: 29;
-		uint32						m_nValueType	: 3;
+		uint32_t						m_nOffset		: 29;
+		uint32_t						m_nValueType	: 3;
 		union 
 		{
-			int64					m_nInteger;
+			int64_t					m_nInteger;
 			double					m_fDouble;
 			const char*				m_szString;
 		};
@@ -35,36 +35,36 @@ namespace Gamma
 	struct STableFile
 	{
 		string						m_strBuf;
-		vector<uint32>				m_arySortColumn;
+		vector<uint32_t>				m_arySortColumn;
 		vector<SFieldInfo>			m_aryFieldInfo;
-		uint32						m_nRowCount;
+		uint32_t						m_nRowCount;
 	};
 
 	struct STableFileCompare
 	{
-		inline bool operator() ( uint32 nColumnIndex, const char* szStr )	const 
+		inline bool operator() ( uint32_t nColumnIndex, const char* szStr )	const 
 		{ 
-			uint32 nOffset = m_pFile->m_aryFieldInfo[nColumnIndex].m_nOffset;
+			uint32_t nOffset = m_pFile->m_aryFieldInfo[nColumnIndex].m_nOffset;
 			return strcmp( &m_pFile->m_strBuf[nOffset], szStr ) < 0; 
 		}
 
-		inline bool operator() ( const char* szStr, uint32 nColumnIndex ) const 
+		inline bool operator() ( const char* szStr, uint32_t nColumnIndex ) const 
 		{ 
-			uint32 nOffset = m_pFile->m_aryFieldInfo[nColumnIndex].m_nOffset;
+			uint32_t nOffset = m_pFile->m_aryFieldInfo[nColumnIndex].m_nOffset;
 			return strcmp( szStr, &m_pFile->m_strBuf[nOffset] ) < 0; 
 		}
 
-		inline bool operator() ( uint32 nLeftColumn, uint32 nRightColumn )	const 
+		inline bool operator() ( uint32_t nLeftColumn, uint32_t nRightColumn )	const 
 		{ 
-			uint32 nLeftOffset = m_pFile->m_aryFieldInfo[nLeftColumn].m_nOffset;
-			uint32 nRightOffset = m_pFile->m_aryFieldInfo[nRightColumn].m_nOffset;
+			uint32_t nLeftOffset = m_pFile->m_aryFieldInfo[nLeftColumn].m_nOffset;
+			uint32_t nRightOffset = m_pFile->m_aryFieldInfo[nRightColumn].m_nOffset;
 			return strcmp( &m_pFile->m_strBuf[nLeftOffset], &m_pFile->m_strBuf[nRightOffset] ) < 0; 
 		}
 
 		STableFile* m_pFile;
 	};
 
-	inline void Covert2Type( STableFile& TableFile, SFieldInfo& Info, uint32 nType )
+	inline void Covert2Type( STableFile& TableFile, SFieldInfo& Info, uint32_t nType )
 	{
 		if( Info.m_nValueType == nType )
 			return;
@@ -72,9 +72,9 @@ namespace Gamma
 		if( nType == SFieldInfo::eDictString )
 		{
 			const char* szString = &TableFile.m_strBuf[Info.m_nOffset];
-			if( ( (uint8)szString[0] ) == CDictionary::eUtf8HeadTag0 &&
-				( (uint8)szString[1] ) == CDictionary::eUtf8HeadTag1 &&
-				( (uint8)szString[2] ) == CDictionary::eUtf8HeadTag2  )
+			if( ( (uint8_t)szString[0] ) == CDictionary::eUtf8HeadTag0 &&
+				( (uint8_t)szString[1] ) == CDictionary::eUtf8HeadTag1 &&
+				( (uint8_t)szString[2] ) == CDictionary::eUtf8HeadTag2  )
 				szString = szString + 3;
 			szString = CDictionary::Inst().GetValue( szString );
 			Info.m_szString = szString && szString[0] ? szString : NULL;
@@ -85,9 +85,9 @@ namespace Gamma
 		if( nType == SFieldInfo::eString )
 		{
 			const char* szString = &TableFile.m_strBuf[Info.m_nOffset];
-			if( ( (uint8)szString[0] ) == CDictionary::eUtf8HeadTag0 &&
-				( (uint8)szString[1] ) == CDictionary::eUtf8HeadTag1 &&
-				( (uint8)szString[2] ) == CDictionary::eUtf8HeadTag2  )
+			if( ( (uint8_t)szString[0] ) == CDictionary::eUtf8HeadTag0 &&
+				( (uint8_t)szString[1] ) == CDictionary::eUtf8HeadTag1 &&
+				( (uint8_t)szString[2] ) == CDictionary::eUtf8HeadTag2  )
 				szString = CDictionary::Inst().GetValue( CDictionary::StrToKey( szString + 3 ) );
 			Info.m_szString = szString && szString[0] ? szString : NULL;
 			Info.m_nValueType = SFieldInfo::eString;
@@ -97,9 +97,9 @@ namespace Gamma
 		if( Info.m_nValueType != SFieldInfo::eString )
 		{
 			Info.m_szString = &TableFile.m_strBuf[Info.m_nOffset];
-			if( ( (uint8)Info.m_szString[0] ) == CDictionary::eUtf8HeadTag0 &&
-				( (uint8)Info.m_szString[1] ) == CDictionary::eUtf8HeadTag1 &&
-				( (uint8)Info.m_szString[2] ) == CDictionary::eUtf8HeadTag2  )
+			if( ( (uint8_t)Info.m_szString[0] ) == CDictionary::eUtf8HeadTag0 &&
+				( (uint8_t)Info.m_szString[1] ) == CDictionary::eUtf8HeadTag1 &&
+				( (uint8_t)Info.m_szString[2] ) == CDictionary::eUtf8HeadTag2  )
 				Info.m_szString = CDictionary::Inst().GetValue( CDictionary::StrToKey( Info.m_szString + 3 ) );
 			Info.m_szString = Info.m_szString && Info.m_szString[0] ? Info.m_szString : NULL;
 			Info.m_nValueType = SFieldInfo::eString;
@@ -153,7 +153,7 @@ namespace Gamma
 		return Init( TabFile.GetFileBuffer(), TabFile.Size(), cSeperator );
 	}
 
-	bool CTabFile::Init( const tbyte* pBuffer, uint32 nSize, char cSeperator )
+	bool CTabFile::Init( const tbyte* pBuffer, uint32_t nSize, char cSeperator )
 	{
 		Clear();
 
@@ -170,10 +170,10 @@ namespace Gamma
 			pBuffer[0] == 0xff && 
 			pBuffer[1] == 0xfe )
 		{
-			const uint16* pUcs2 = (const uint16*)( pBuffer + 2 );
-			uint32 nLen = Ucs2ToUtf8( NULL, 0, pUcs2, nSize/sizeof(uint16) - 1 );
+			const uint16_t* pUcs2 = (const uint16_t*)( pBuffer + 2 );
+			uint32_t nLen = Ucs2ToUtf8( NULL, 0, pUcs2, nSize/sizeof(uint16_t) - 1 );
 			m_pFile->m_strBuf.resize( nLen + 1 );
-			Ucs2ToUtf8( &m_pFile->m_strBuf[0], nLen + 1, pUcs2, nSize/sizeof(uint16) - 1 );
+			Ucs2ToUtf8( &m_pFile->m_strBuf[0], nLen + 1, pUcs2, nSize/sizeof(uint16_t) - 1 );
 		}
 		else
 		{
@@ -197,33 +197,33 @@ namespace Gamma
 	}	
 
 	// 得到行数
-	int32 CTabFile::GetHeight() const
+	int32_t CTabFile::GetHeight() const
 	{
-		return (int32)m_pFile->m_nRowCount;
+		return (int32_t)m_pFile->m_nRowCount;
 	}
 
 	// 得到列数
-	int32 CTabFile::GetWidth() const
+	int32_t CTabFile::GetWidth() const
 	{
-		return (int32)m_pFile->m_arySortColumn.size();
+		return (int32_t)m_pFile->m_arySortColumn.size();
 	}
 
 	// 得到列名
-	int32 CTabFile::GetCloumn( const char* szColumnName ) const
+	int32_t CTabFile::GetCloumn( const char* szColumnName ) const
 	{
 		STableFileCompare Compare = { m_pFile };
-		int32 nIndex = Find( m_pFile->m_arySortColumn, m_pFile->m_arySortColumn.size(), szColumnName, Compare );
-		return nIndex < 0 ? -1 : (int32)m_pFile->m_arySortColumn[nIndex];
+		int32_t nIndex = Find( m_pFile->m_arySortColumn, m_pFile->m_arySortColumn.size(), szColumnName, Compare );
+		return nIndex < 0 ? -1 : (int32_t)m_pFile->m_arySortColumn[nIndex];
 	}
 
 	// 根据列号得到某行某列
-	const char* CTabFile::GetString( int32 nRow, int32 nColumn, const char* szDefault ) const
+	const char* CTabFile::GetString( int32_t nRow, int32_t nColumn, const char* szDefault ) const
 	{
-		if( (uint32)nColumn >= m_pFile->m_arySortColumn.size() )
+		if( (uint32_t)nColumn >= m_pFile->m_arySortColumn.size() )
 			return szDefault;
 
-		int32 nIndex = nRow*(int32)m_pFile->m_arySortColumn.size() + nColumn;
-		if( (uint32)nIndex >= m_pFile->m_aryFieldInfo.size() )
+		int32_t nIndex = nRow*(int32_t)m_pFile->m_arySortColumn.size() + nColumn;
+		if( (uint32_t)nIndex >= m_pFile->m_aryFieldInfo.size() )
 			return szDefault;
 
 		SFieldInfo& Info = m_pFile->m_aryFieldInfo[nIndex];
@@ -232,20 +232,20 @@ namespace Gamma
 	}
 
 	// 根据列名得到某行某列
-	const char* CTabFile::GetString( int32 nRow, const char* szColumnName, const char* szDefault ) const
+	const char* CTabFile::GetString( int32_t nRow, const char* szColumnName, const char* szDefault ) const
 	{
-		int32 nColume = GetCloumn( szColumnName );
+		int32_t nColume = GetCloumn( szColumnName );
 		return nColume < 0 ? szDefault : GetString( nRow, nColume, szDefault );
 	}
 
 	// 根据列号得到某行某列
-	const char* CTabFile::GetDicString( int32 nRow, int32 nColumn, const char* szDefault ) const
+	const char* CTabFile::GetDicString( int32_t nRow, int32_t nColumn, const char* szDefault ) const
 	{
-		if( (uint32)nColumn >= m_pFile->m_arySortColumn.size() )
+		if( (uint32_t)nColumn >= m_pFile->m_arySortColumn.size() )
 			return szDefault;
 
-		int32 nIndex = nRow*(int32)m_pFile->m_arySortColumn.size() + nColumn;
-		if( (uint32)nIndex >= m_pFile->m_aryFieldInfo.size() )
+		int32_t nIndex = nRow*(int32_t)m_pFile->m_arySortColumn.size() + nColumn;
+		if( (uint32_t)nIndex >= m_pFile->m_aryFieldInfo.size() )
 			return szDefault;
 
 		SFieldInfo& Info = m_pFile->m_aryFieldInfo[nIndex];
@@ -254,42 +254,42 @@ namespace Gamma
 	}
 
 	// 根据列名得到某行某列
-	const char* CTabFile::GetDicString( int32 nRow, const char* szColumnName, const char* szDefault ) const
+	const char* CTabFile::GetDicString( int32_t nRow, const char* szColumnName, const char* szDefault ) const
 	{
-		int32 nColume = GetCloumn( szColumnName );
+		int32_t nColume = GetCloumn( szColumnName );
 		return nColume < 0 ? szDefault : GetDicString( nRow, nColume, szDefault );
 	}
 
 	// 根据列号得到某行某列
-	int32 CTabFile::GetInteger( int32 nRow, int32 nColumn, int32 defaultvalue ) const
+	int32_t CTabFile::GetInteger( int32_t nRow, int32_t nColumn, int32_t defaultvalue ) const
 	{
-		if( (uint32)nColumn >= m_pFile->m_arySortColumn.size() )
+		if( (uint32_t)nColumn >= m_pFile->m_arySortColumn.size() )
 			return defaultvalue;
 
-		int32 nIndex = nRow*(int32)m_pFile->m_arySortColumn.size() + nColumn;
-		if( (uint32)nIndex >= m_pFile->m_aryFieldInfo.size() )
+		int32_t nIndex = nRow*(int32_t)m_pFile->m_arySortColumn.size() + nColumn;
+		if( (uint32_t)nIndex >= m_pFile->m_aryFieldInfo.size() )
 			return defaultvalue;
 
 		SFieldInfo& Info = m_pFile->m_aryFieldInfo[nIndex];
 		Covert2Type( *m_pFile, Info, SFieldInfo::eInteger );		
-		return Info.m_nValueType == SFieldInfo::eInteger ? (int32)Info.m_nInteger : defaultvalue;
+		return Info.m_nValueType == SFieldInfo::eInteger ? (int32_t)Info.m_nInteger : defaultvalue;
 	}
 
 	// 根据列名得到某行某列
-	int32 CTabFile::GetInteger( int32 nRow, const char* szColumnName, int32 defaultvalue ) const
+	int32_t CTabFile::GetInteger( int32_t nRow, const char* szColumnName, int32_t defaultvalue ) const
 	{
-		int32 nColume = GetCloumn( szColumnName );
+		int32_t nColume = GetCloumn( szColumnName );
 		return nColume < 0 ? defaultvalue : GetInteger( nRow, nColume, defaultvalue );
 	}
 
 	// 根据列号得到某行某列
-	float CTabFile::GetFloat( int32 nRow, int32 nColumn, float defaultvalue ) const
+	float CTabFile::GetFloat( int32_t nRow, int32_t nColumn, float defaultvalue ) const
 	{
-		if( (uint32)nColumn >= m_pFile->m_arySortColumn.size() )
+		if( (uint32_t)nColumn >= m_pFile->m_arySortColumn.size() )
 			return defaultvalue;
 
-		int32 nIndex = nRow*(int32)m_pFile->m_arySortColumn.size() + nColumn;
-		if( (uint32)nIndex >= m_pFile->m_aryFieldInfo.size() )
+		int32_t nIndex = nRow*(int32_t)m_pFile->m_arySortColumn.size() + nColumn;
+		if( (uint32_t)nIndex >= m_pFile->m_aryFieldInfo.size() )
 			return defaultvalue;
 
 		SFieldInfo& Info = m_pFile->m_aryFieldInfo[nIndex];
@@ -298,19 +298,19 @@ namespace Gamma
 	}
 
 	// 根据列名得到某行某列
-	float CTabFile::GetFloat( int32 nRow, const char* szColumnName, float defaultvalue ) const
+	float CTabFile::GetFloat( int32_t nRow, const char* szColumnName, float defaultvalue ) const
 	{
-		int32 nColume = GetCloumn( szColumnName );
+		int32_t nColume = GetCloumn( szColumnName );
 		return nColume < 0 ? defaultvalue : GetFloat( nRow, nColume, defaultvalue );
 	}
 
-	int64 CTabFile::GetInteger64( int32 nRow, int32 nColumn, int64 defaultvalue /*= 0 */ ) const
+	int64_t CTabFile::GetInteger64( int32_t nRow, int32_t nColumn, int64_t defaultvalue /*= 0 */ ) const
 	{
-		if( (uint32)nColumn >= m_pFile->m_arySortColumn.size() )
+		if( (uint32_t)nColumn >= m_pFile->m_arySortColumn.size() )
 			return defaultvalue;
 
-		int32 nIndex = nRow*(int32)m_pFile->m_arySortColumn.size() + nColumn;
-		if( (uint32)nIndex >= m_pFile->m_aryFieldInfo.size() )
+		int32_t nIndex = nRow*(int32_t)m_pFile->m_arySortColumn.size() + nColumn;
+		if( (uint32_t)nIndex >= m_pFile->m_aryFieldInfo.size() )
 			return defaultvalue;
 
 		SFieldInfo& Info = m_pFile->m_aryFieldInfo[nIndex];
@@ -318,19 +318,19 @@ namespace Gamma
 		return Info.m_nValueType == SFieldInfo::eInteger ? Info.m_nInteger : defaultvalue;
 	}
 
-	int64 CTabFile::GetInteger64( int32 nRow, const char* szColumnName, int64 defaultvalue ) const
+	int64_t CTabFile::GetInteger64( int32_t nRow, const char* szColumnName, int64_t defaultvalue ) const
 	{
-		int32 nColume = GetCloumn( szColumnName );
+		int32_t nColume = GetCloumn( szColumnName );
 		return nColume < 0 ? defaultvalue : GetInteger64( nRow, nColume, defaultvalue );
 	}	
 
-	double CTabFile::GetDouble( int32 nRow, int32 nColumn, double defaultvalue /*= 0 */ ) const
+	double CTabFile::GetDouble( int32_t nRow, int32_t nColumn, double defaultvalue /*= 0 */ ) const
 	{
-		if( (uint32)nColumn >= m_pFile->m_arySortColumn.size() )
+		if( (uint32_t)nColumn >= m_pFile->m_arySortColumn.size() )
 			return defaultvalue;
 
-		int32 nIndex = nRow*(int32)m_pFile->m_arySortColumn.size() + nColumn;
-		if( (uint32)nIndex >= m_pFile->m_aryFieldInfo.size() )
+		int32_t nIndex = nRow*(int32_t)m_pFile->m_arySortColumn.size() + nColumn;
+		if( (uint32_t)nIndex >= m_pFile->m_aryFieldInfo.size() )
 			return defaultvalue;
 
 		SFieldInfo& Info = m_pFile->m_aryFieldInfo[nIndex];
@@ -338,19 +338,19 @@ namespace Gamma
 		return Info.m_nValueType == SFieldInfo::eDouble ? Info.m_fDouble : defaultvalue;
 	}
 
-	double CTabFile::GetDouble( int32 nRow, const char* szColumnName, double defaultvalue ) const
+	double CTabFile::GetDouble( int32_t nRow, const char* szColumnName, double defaultvalue ) const
 	{
-		int32 nColume = GetCloumn( szColumnName );
+		int32_t nColume = GetCloumn( szColumnName );
 		return nColume < 0 ? defaultvalue : GetDouble( nRow, nColume, defaultvalue );
 	}
 
-	int64 CTabFile::GetDateSec( int32 nRow, int32 nColumn, int64 defaultvalue /*= 0 */ ) const
+	int64_t CTabFile::GetDateSec( int32_t nRow, int32_t nColumn, int64_t defaultvalue /*= 0 */ ) const
 	{
-		if( (uint32)nColumn >= m_pFile->m_arySortColumn.size() )
+		if( (uint32_t)nColumn >= m_pFile->m_arySortColumn.size() )
 			return defaultvalue;
 
-		int32 nIndex = nRow*(int32)m_pFile->m_arySortColumn.size() + nColumn;
-		if( (uint32)nIndex >= m_pFile->m_aryFieldInfo.size() )
+		int32_t nIndex = nRow*(int32_t)m_pFile->m_arySortColumn.size() + nColumn;
+		if( (uint32_t)nIndex >= m_pFile->m_aryFieldInfo.size() )
 			return defaultvalue;
 
 		SFieldInfo& Info = m_pFile->m_aryFieldInfo[nIndex];
@@ -358,18 +358,18 @@ namespace Gamma
 		return Info.m_nValueType == SFieldInfo::eDateStamp ? Info.m_nInteger : defaultvalue;
 	}
 
-	int64 CTabFile::GetDateSec( int32 nRow, const char* szColumnName, int64 defaultvalue /*= 0 */ ) const
+	int64_t CTabFile::GetDateSec( int32_t nRow, const char* szColumnName, int64_t defaultvalue /*= 0 */ ) const
 	{
-		int32 nColume = GetCloumn( szColumnName );
+		int32_t nColume = GetCloumn( szColumnName );
 		return nColume < 0 ? defaultvalue : GetDateSec( nRow, nColume, defaultvalue );
 	}
 
 	bool CTabFile::MakeOffset( char cSeperator )
 	{
-		uint32 nIndex = 0;
-		uint32 nColumnCount = 1;
+		uint32_t nIndex = 0;
+		uint32_t nColumnCount = 1;
 		char* pBuffer = &m_pFile->m_strBuf[0];
-		uint32 nBuffEnd = (uint32)m_pFile->m_strBuf.size() - 1;
+		uint32_t nBuffEnd = (uint32_t)m_pFile->m_strBuf.size() - 1;
 		while( nBuffEnd && ( pBuffer[ nBuffEnd - 1 ] == '\r' || pBuffer[ nBuffEnd - 1 ] == '\n' ) )
 			pBuffer[--nBuffEnd] = 0;
 
@@ -388,10 +388,10 @@ namespace Gamma
 		SFieldInfo Info = { nBuffEnd, SFieldInfo::eNone };
 		m_pFile->m_aryFieldInfo.resize( nColumnCount*m_pFile->m_nRowCount, Info );
 
-		for( uint32 i = 0, n = 0; i < m_pFile->m_nRowCount; i++ )
+		for( uint32_t i = 0, n = 0; i < m_pFile->m_nRowCount; i++ )
 		{
 			char c = 0;
-			for( uint32 j = 0, m = i*nColumnCount; j < nColumnCount; j++, m++ )
+			for( uint32_t j = 0, m = i*nColumnCount; j < nColumnCount; j++, m++ )
 			{
 				m_pFile->m_aryFieldInfo[m].m_nOffset = n;
 				while( pBuffer[n] && pBuffer[n] != cSeperator && pBuffer[n] != '\n' )
@@ -415,7 +415,7 @@ namespace Gamma
 		}
 
 		m_pFile->m_arySortColumn.resize( nColumnCount );
-		for( uint32 i = 0; i < nColumnCount; i++ )
+		for( uint32_t i = 0; i < nColumnCount; i++ )
 			m_pFile->m_arySortColumn[i] = i;
 
 		STableFileCompare Compare = { m_pFile };

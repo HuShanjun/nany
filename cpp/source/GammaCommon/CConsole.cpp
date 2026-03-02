@@ -28,7 +28,7 @@
 	#define INVALID_SOCKET		-1
 	#define closesocket			close
 	#define ioctlsocket			ioctl
-	typedef int32				SOCKET;
+	typedef int32_t				SOCKET;
 	typedef struct linger		LINGER;
 	#define SOCKET_ERROR		-1
 	#define SD_SEND				SHUT_WR
@@ -127,13 +127,13 @@ namespace Gamma
 			}
 		};
 		
-		uint32 hStandar[eCount] = { STD_INPUT_HANDLE, STD_OUTPUT_HANDLE, STD_ERROR_HANDLE };
+		uint32_t hStandar[eCount] = { STD_INPUT_HANDLE, STD_OUTPUT_HANDLE, STD_ERROR_HANDLE };
 		const char* aryFlag[eCount] = { "r", "w", "w" };
 
 		for( size_t i = 0; i < eCount; i++ )
 		{
 			m_hConsole[i] = ::GetStdHandle( hStandar[i] );
-			int32 handler = _open_osfhandle( (ptrdiff_t)m_hConsole[i], _O_TEXT );
+			int32_t handler = _open_osfhandle( (ptrdiff_t)m_hConsole[i], _O_TEXT );
 			m_fdAllocNew[i] = _fdopen( handler, aryFlag[i] );
 		}
 
@@ -156,7 +156,7 @@ namespace Gamma
 		Resize( 80, 5000 );
 	}
 
-	void CConsole::Redirect2Remote( const char* szHost, uint16 nPort )
+	void CConsole::Redirect2Remote( const char* szHost, uint16_t nPort )
 	{
 		if( m_nRemoteDebugConsole != INVALID_SOCKET )
 			closesocket( m_nRemoteDebugConsole );
@@ -167,32 +167,32 @@ namespace Gamma
 		addrHttp.sin_addr.s_addr = inet_addr( szHost );
 		addrHttp.sin_family = AF_INET;
 
-		m_nRemoteDebugConsole = (int32)socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
+		m_nRemoteDebugConsole = (int32_t)socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
 		if( m_nRemoteDebugConsole == INVALID_SOCKET )
 			return;
 
 		if( !connect( m_nRemoteDebugConsole,(struct sockaddr*)&addrHttp, sizeof(addrHttp) ) )
 			return;
 		closesocket( m_nRemoteDebugConsole );
-		m_nRemoteDebugConsole = (int32)INVALID_SOCKET;
+		m_nRemoteDebugConsole = (int32_t)INVALID_SOCKET;
 	}
 
-	void CConsole::Resize( int32 x, int32 y )
+	void CConsole::Resize( int32_t x, int32_t y )
 	{
 #ifdef _WIN32
 		if( !m_hConsole[eOutput] )
 			return;
 
 		GammaLock( m_hLockConsole );
-		COORD crd = { (int16)x, (int16)y };
+		COORD crd = { (int16_t)x, (int16_t)y };
 		SetConsoleScreenBufferSize( m_hConsole[eOutput], crd );
-		SMALL_RECT rc = { 0, 0, (int16)( x - 1 ), 25 };
+		SMALL_RECT rc = { 0, 0, (int16_t)( x - 1 ), 25 };
 		SetConsoleWindowInfo( m_hConsole[eOutput], true, &rc );
 		GammaUnlock( m_hLockConsole );
 #endif
 	}
 
-	void CConsole::Write( const char* szOut, uint32 nSize, uint32 nLevel)
+	void CConsole::Write( const char* szOut, uint32_t nSize, uint32_t nLevel)
 	{
 		SSendBuf SendBuff( szOut, nSize );
 		m_OutputBuffer.PushBuffer(nLevel, &SendBuff, 1, false );
@@ -263,9 +263,9 @@ namespace Gamma
 
 	void CConsole::Write2Console()
 	{
-		uint32 nLevel;
+		uint32_t nLevel;
 		SSendBuf SendBuff;
-		uint32 nBufferCount = 1;
+		uint32_t nBufferCount = 1;
 		if( !m_OutputBuffer.PopBuffer(nLevel, &SendBuff, nBufferCount ) )
 			return;
 
@@ -273,7 +273,7 @@ namespace Gamma
 			FlushUserLog(nLevel);
 
 		const char* szLog = (const char*)SendBuff.first;
-		uint32 nSize = (uint32)SendBuff.second;
+		uint32_t nSize = (uint32_t)SendBuff.second;
 		m_strUserLog.append( szLog, nSize );
 
 		if( nSize && szLog[nSize - 1] == '\n' )
@@ -291,7 +291,7 @@ namespace Gamma
 				m_nLogLevel = nLevel;
 			}
 
-			uint32 nLen = Utf8ToUcs( szBuffer, nSize, szLog, nSize );
+			uint32_t nLen = Utf8ToUcs( szBuffer, nSize, szLog, nSize );
 			WriteConsoleW( m_hConsole[eOutput], szBuffer, nLen, &dwOut, NULL );
 		}
 		GammaUnlock( m_hLockConsole );
@@ -314,7 +314,7 @@ namespace Gamma
 		send( m_nRemoteDebugConsole, szLog, nSize, 0 );
 	}
 
-	void CConsole::FlushUserLog( uint32 nLevel )
+	void CConsole::FlushUserLog( uint32_t nLevel )
 	{
 		if(GetGlobLogFun())
 			GetGlobLogFun()(m_strUserLog.c_str(), m_strUserLog.size(), nLevel);
@@ -332,23 +332,23 @@ namespace Gamma
 			fflush( stdout );
 #ifndef _WIN32
 			fgets( m_szReadBuffer, m_nSize, stdin );
-			m_nSize = (int32)strnlen( m_szReadBuffer, m_nSize );
+			m_nSize = (int32_t)strnlen( m_szReadBuffer, m_nSize );
 #else
 			char szUtf8[8];
-			uint32 nWritePos = 0;
+			uint32_t nWritePos = 0;
 			bool bFinished = false;
 			while( !bFinished )
 			{
-				uint32 nReadPos = 0;
+				uint32_t nReadPos = 0;
 				if( !m_nCurCount )
 				{
 					HANDLE hInput = m_hConsole[eInput];
 					DWORD dwIn = ELEM_COUNT(m_aryReadCount);
 					ReadConsoleW( hInput, m_aryReadCount, dwIn, &dwIn, NULL );
-					m_nCurCount = (uint32)dwIn;
+					m_nCurCount = (uint32_t)dwIn;
 				}
 
-				while( nReadPos < m_nCurCount && nWritePos < (uint32)( m_nSize - 1 ) )
+				while( nReadPos < m_nCurCount && nWritePos < (uint32_t)( m_nSize - 1 ) )
 				{
 					wchar_t cRead = m_aryReadCount[nReadPos];
 					if( cRead == '\r' )
@@ -357,7 +357,7 @@ namespace Gamma
 						continue;
 					}
 
-					uint32 nLen = UcsToUtf8( szUtf8, 8, &cRead, 1 );
+					uint32_t nLen = UcsToUtf8( szUtf8, 8, &cRead, 1 );
 					if( m_nSize - 1 - nWritePos < nLen || cRead == '\n' )
 					{
 						if( cRead == '\n' )
@@ -383,7 +383,7 @@ namespace Gamma
 		{
 			send( m_nRemoteDebugConsole, "\x01", 1, 0 );
 			send( m_nRemoteDebugConsole, "\x00\x00\x00\x00", 4, 0 );
-			int32 i = 0;
+			int32_t i = 0;
 			while( i < m_nSize )
 			{
 				recv( m_nRemoteDebugConsole, &m_szReadBuffer[i], 1, 0 );
@@ -416,9 +416,9 @@ namespace Gamma
 			}
 			else
 			{
-				int32 nSendSize = Min<int32>( m_nSize, File.Size() - m_nStartPos );
+				int32_t nSendSize = Min<int32_t>( m_nSize, File.Size() - m_nStartPos );
 				memcpy( m_szReadBuffer, File.GetFileBuffer() + m_nStartPos, nSendSize );	
-				m_nSize = Max<int32>( nSendSize, 1 );
+				m_nSize = Max<int32_t>( nSendSize, 1 );
 				m_szReadBuffer[m_nSize - 1] = 0;
 			}
 		}
@@ -431,11 +431,11 @@ namespace Gamma
 			send( m_nRemoteDebugConsole, (const char*)&m_nSize, sizeof(m_nSize), 0 );
 			send( m_nRemoteDebugConsole, m_szFileName, nLen - 8, 0 );
 
-			int32 i = 0;
+			int32_t i = 0;
 			while( i < m_nSize )
 			{
 				int nRecv = m_nSize - i;
-				int n = (int32)recv( m_nRemoteDebugConsole, &m_szReadBuffer[i], nRecv, 0 );
+				int n = (int32_t)recv( m_nRemoteDebugConsole, &m_szReadBuffer[i], nRecv, 0 );
 				if( nRecv == n )
 					break;;
 				if( m_szReadBuffer[i + n - 1] == 0 )

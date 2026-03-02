@@ -24,7 +24,7 @@ namespace Gamma
 		CVector3f	m_vCameraUp;
 		CVector3f	m_vCameraPos;
 		CVector3f	m_vCameraDir;
-		int32		m_nNormalViewIndex;
+		int32_t		m_nNormalViewIndex;
 
 	public:
 		CGamma3DViewOperator();

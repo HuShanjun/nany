@@ -8,7 +8,7 @@ using namespace std;
 
 namespace Gamma
 {
-	CDbStatement::CDbStatement( CDbConnection* pConn, const char* szSqlBuffer, uint32 uSize )
+	CDbStatement::CDbStatement( CDbConnection* pConn, const char* szSqlBuffer, uint32_t uSize )
 		: m_pConn( pConn )
 		, m_pTag( nullptr )
 		, m_pRes( nullptr )
@@ -46,75 +46,75 @@ namespace Gamma
 		return m_pTag;
 	}
 
-	uint32 CDbStatement::GetResultColNum() const
+	uint32_t CDbStatement::GetResultColNum() const
 	{
 		return m_nResultColNum;
 	}
 
-	void CDbStatement::SetResultInt8( int8* pBuffer, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultInt8( int8_t* pBuffer, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultIntegerSeries( static_cast<void*>(pBuffer), pIsNull, pError, uColIndex, MYSQL_TYPE_TINY, false );
 	}
 
-	void CDbStatement::SetResultUint8( uint8* pBuffer, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultUint8( uint8_t* pBuffer, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultIntegerSeries( static_cast<void*>(pBuffer), pIsNull, pError, uColIndex, MYSQL_TYPE_TINY, true );
 	}
 
-	void CDbStatement::SetResultInt16( int16* pBuffer, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultInt16( int16_t* pBuffer, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultIntegerSeries( static_cast<void*>(pBuffer), pIsNull, pError, uColIndex, MYSQL_TYPE_SHORT, false );
 	}
 
-	void CDbStatement::SetResultUint16( uint16* pBuffer, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultUint16( uint16_t* pBuffer, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultIntegerSeries( static_cast<void*>(pBuffer), pIsNull, pError, uColIndex, MYSQL_TYPE_SHORT, true );
 	}
 
-	void CDbStatement::SetResultInt32( int32* pBuffer, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultInt32( int32_t* pBuffer, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultIntegerSeries( static_cast<void*>(pBuffer), pIsNull, pError, uColIndex, MYSQL_TYPE_LONG, false );
 	}
 
-	void CDbStatement::SetResultUint32( uint32* pBuffer, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultUint32( uint32_t* pBuffer, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultIntegerSeries( static_cast<void*>(pBuffer), pIsNull, pError, uColIndex, MYSQL_TYPE_LONG, true );
 	}
 
-	void CDbStatement::SetResultInt64( int64* pBuffer, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultInt64( int64_t* pBuffer, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultIntegerSeries( static_cast<void*>(pBuffer), pIsNull, pError, uColIndex, MYSQL_TYPE_LONGLONG, false );
 	}
 
-	void CDbStatement::SetResultUint64( uint64* pBuffer, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultUint64( uint64_t* pBuffer, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultIntegerSeries( static_cast<void*>(pBuffer), pIsNull, pError, uColIndex, MYSQL_TYPE_LONGLONG, true );
 	}
 
-	void CDbStatement::SetResultFloat( float* pBuffer, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultFloat( float* pBuffer, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultRealSeries( static_cast<void*>(pBuffer), pIsNull, pError, uColIndex, MYSQL_TYPE_FLOAT );
 	}
 
-	void CDbStatement::SetResultDouble( double* pBuffer, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultDouble( double* pBuffer, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultRealSeries( static_cast<void*>(pBuffer), pIsNull, pError, uColIndex, MYSQL_TYPE_DOUBLE );
 	}
 
-	void CDbStatement::SetResultText( void* pBuffer, uint32 uBufferSize,
-		ulong* uDataSize, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultText( void* pBuffer, uint32_t uBufferSize,
+		ulong* uDataSize, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultBufferSeries( pBuffer, uBufferSize, uDataSize, pIsNull, pError, uColIndex, MYSQL_TYPE_STRING );
 	}
 
-	void CDbStatement::SetResultBinary( void* pBuffer, uint32 uBufferSize,
-		ulong* uDataSize, bool* pIsNull, bool* pError, uint32 uColIndex )
+	void CDbStatement::SetResultBinary( void* pBuffer, uint32_t uBufferSize,
+		ulong* uDataSize, bool* pIsNull, bool* pError, uint32_t uColIndex )
 	{
 		SetResultBufferSeries( pBuffer, uBufferSize, uDataSize, pIsNull, pError, uColIndex, MYSQL_TYPE_BLOB );
 	}
 
 	void CDbStatement::SetResultIntegerSeries( void* pBuffer, bool* pIsNull, bool* pError,
-		uint32 uColIndex, enum_field_types eBufferType, bool bIsUnsigned )
+		uint32_t uColIndex, enum_field_types eBufferType, bool bIsUnsigned )
 	{
 		GammaAst( uColIndex < GetResultColNum() );
 
@@ -131,7 +131,7 @@ namespace Gamma
 
 
 	void CDbStatement::SetResultRealSeries( void* pBuffer, bool* pIsNull, bool* pError,
-		uint32 uColIndex, enum_field_types eBufferType )
+		uint32_t uColIndex, enum_field_types eBufferType )
 	{
 		GammaAst( uColIndex < GetResultColNum() );
 
@@ -146,8 +146,8 @@ namespace Gamma
 	}
 
 
-	void CDbStatement::SetResultBufferSeries( void* pBuffer, uint32 uBufferSize,
-		ulong* uDataSize, bool* pIsNull, bool* pError, uint32 uColIndex, enum_field_types eBufferType )
+	void CDbStatement::SetResultBufferSeries( void* pBuffer, uint32_t uBufferSize,
+		ulong* uDataSize, bool* pIsNull, bool* pError, uint32_t uColIndex, enum_field_types eBufferType )
 	{
 		GammaAst( uColIndex < GetResultColNum() );
 

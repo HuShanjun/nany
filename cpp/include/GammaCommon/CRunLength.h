@@ -27,15 +27,15 @@ namespace Gamma
 		// 行程压缩
 		//==============================================================
 		template< class OutFile, class OutFun, class InFile, class InFun >
-		static void Compress( OutFile& fileWrite, OutFun funWrite, InFile& fileRead, InFun funRead, uint32 nUnitSize )
+		static void Compress( OutFile& fileWrite, OutFun funWrite, InFile& fileRead, InFun funRead, uint32_t nUnitSize )
 		{
 			tbyte		nRefBuf[256];
 			tbyte		nCurBuf[256];
-			uint32		nSameCount = 0;
+			uint32_t		nSameCount = 0;
 			std::string	szRunDiffBuf;
 
 			//先读一个数据块作为参考数据
-			int32		nRead  = ( fileRead.*funRead )( (char*)nRefBuf, nUnitSize );
+			int32_t		nRead  = ( fileRead.*funRead )( (char*)nRefBuf, nUnitSize );
 
 			while( nRead > 0 )
 			{
@@ -85,10 +85,10 @@ namespace Gamma
 				{
 					if( ( nSameCount && ( nRead <= 0 || !bSame ) ) || ( !nSameCount && szRunDiffBuf.empty() ) )
 					{
-						uint32 nUnitCount = Max<uint32>( nSameCount, 1 );
-						for( uint32 i = 0; i < nUnitCount; i += eMaxLength )
+						uint32_t nUnitCount = Max<uint32_t>( nSameCount, 1 );
+						for( uint32_t i = 0; i < nUnitCount; i += eMaxLength )
 						{
-							FlagType nRunFlag = (FlagType)Min<uint32>( nUnitCount - i, eMaxLength );
+							FlagType nRunFlag = (FlagType)Min<uint32_t>( nUnitCount - i, eMaxLength );
 							( fileWrite.*funWrite )( (const char*)&nRunFlag, sizeof(nRunFlag) );
 							( fileWrite.*funWrite )( nRefBuf, nUnitSize );
 						}
@@ -97,10 +97,10 @@ namespace Gamma
 					
 					if( szRunDiffBuf.size() && ( nRead <= 0 || bSame ) )
 					{
-						uint32 nUnitCount = (uint32)( szRunDiffBuf.size()/nUnitSize );
-						for( uint32 i = 0; i < nUnitCount; i += eMaxLength )
+						uint32_t nUnitCount = (uint32_t)( szRunDiffBuf.size()/nUnitSize );
+						for( uint32_t i = 0; i < nUnitCount; i += eMaxLength )
 						{
-							FlagType nRunFlag = (FlagType)( Min<uint32>( nUnitCount - i, eMaxLength )|eDiffFlag );
+							FlagType nRunFlag = (FlagType)( Min<uint32_t>( nUnitCount - i, eMaxLength )|eDiffFlag );
 							( fileWrite.*funWrite )( (const char*)&nRunFlag, sizeof(nRunFlag) );
 							( fileWrite.*funWrite )( szRunDiffBuf.c_str() + i*nUnitSize, ( nRunFlag&eMaxLength )*nUnitSize );
 						}
@@ -117,11 +117,11 @@ namespace Gamma
 		// 特化，当InFile为BufferFile时不需要szRunDiffBuf
 		//==============================================================
 		template< class OutFile, class OutFun, class InFun >
-		static void Compress( OutFile& fileWrite, OutFun funWrite, CBufFile& fileRead, InFun /*funRead*/, uint32 nUnitSize )
+		static void Compress( OutFile& fileWrite, OutFun funWrite, CBufFile& fileRead, InFun /*funRead*/, uint32_t nUnitSize )
 		{
-			uint32			nSameCount = 0;
+			uint32_t			nSameCount = 0;
 			const tbyte*	pDiffStart = NULL;
-			uint32			nDiffCount = 0;
+			uint32_t			nDiffCount = 0;
 
 			//先读一个数据块作为参考数据
 			const tbyte*	pPreUnitStart = fileRead.GetBuf();
@@ -182,10 +182,10 @@ namespace Gamma
 				{
 					if( ( nSameCount && ( !bRemainData || !bSame ) ) || ( !nSameCount && nDiffCount == 0 ) )
 					{
-						uint32 nUnitCount = Max<uint32>( nSameCount, (uint32)1 );
-						for( uint32 i = 0; i < nUnitCount; i += eMaxLength )
+						uint32_t nUnitCount = Max<uint32_t>( nSameCount, (uint32_t)1 );
+						for( uint32_t i = 0; i < nUnitCount; i += eMaxLength )
 						{
-							FlagType nRunFlag = (FlagType)Min<uint32>( nUnitCount - i, eMaxLength );
+							FlagType nRunFlag = (FlagType)Min<uint32_t>( nUnitCount - i, eMaxLength );
 							( fileWrite.*funWrite )( (const char*)&nRunFlag, sizeof(nRunFlag) );
 							( fileWrite.*funWrite )( pPreUnitStart, nUnitSize );
 						}
@@ -194,10 +194,10 @@ namespace Gamma
 
 					if( nDiffCount && ( !bRemainData || bSame ) )
 					{
-						uint32 nUnitCount = nDiffCount/nUnitSize;
-						for( uint32 i = 0; i < nUnitCount; i += eMaxLength )
+						uint32_t nUnitCount = nDiffCount/nUnitSize;
+						for( uint32_t i = 0; i < nUnitCount; i += eMaxLength )
 						{
-							FlagType nRunFlag = (FlagType)( Min<uint32>( nUnitCount - i, eMaxLength )|eDiffFlag );
+							FlagType nRunFlag = (FlagType)( Min<uint32_t>( nUnitCount - i, eMaxLength )|eDiffFlag );
 							( fileWrite.*funWrite )( (const char*)&nRunFlag, sizeof(nRunFlag) );
 							( fileWrite.*funWrite )( pDiffStart + i*nUnitSize, ( nRunFlag&eMaxLength )*nUnitSize );
 						}
@@ -211,7 +211,7 @@ namespace Gamma
 		}
 
 		template< class OutFile, class OutFun, class InFun >
-		static void Compress( OutFile& fileWrite, OutFun funWrite, CBufFileEx& fileRead, InFun /*funRead*/, uint32 nUnitSize )
+		static void Compress( OutFile& fileWrite, OutFun funWrite, CBufFileEx& fileRead, InFun /*funRead*/, uint32_t nUnitSize )
 		{
 			return Compress( fileWrite, funWrite, (CBufFile&)fileRead, 0, nUnitSize );
 		}
@@ -220,7 +220,7 @@ namespace Gamma
 		// 行程解压
 		//==============================================================
 		template< class OutFile, class OutFun, class InFile, class InFun >
-		static void Decompress( OutFile& fileWrite, OutFun funWrite, InFile& fileRead, InFun funRead, uint32 nUnitSize )
+		static void Decompress( OutFile& fileWrite, OutFun funWrite, InFile& fileRead, InFun funRead, uint32_t nUnitSize )
 		{
 			FlagType nRunFlag;
 			tbyte nBuf[256];
@@ -248,8 +248,8 @@ namespace Gamma
 		}
 	};
 
-	typedef TRunLength<uint16>	CRunLength16;
-	typedef TRunLength<uint8>	CRunLength08;
+	typedef TRunLength<uint16_t>	CRunLength16;
+	typedef TRunLength<uint8_t>	CRunLength08;
 }
 
 #endif

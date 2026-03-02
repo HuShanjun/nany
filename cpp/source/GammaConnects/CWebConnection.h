@@ -20,7 +20,7 @@ namespace Gamma
 	class CConnectionMgr;
 	class CWebConnection;
 	struct SWebSocketMsg;
-	typedef TDispatch<CWebConnection, uint16, void, SWebSocketMsg> CWebConnBase;
+	typedef TDispatch<CWebConnection, uint16_t, void, SWebSocketMsg> CWebConnBase;
 
 	class CWebConnection
 		: public CConnection
@@ -30,16 +30,16 @@ namespace Gamma
 		string					m_strHostName;
 		string					m_szAligenBuf;
 		string					m_szSendBuff;
-		uint32					m_nBufferID;
+		uint32_t					m_nBufferID;
 
-		uint32					m_nPreUpdateTime;
+		uint32_t					m_nPreUpdateTime;
 
-		uint32					m_nRecvCount;
-		uint32					m_nSendCount;
+		uint32_t					m_nRecvCount;
+		uint32_t					m_nSendCount;
 
-		int64					m_nPreSendTime;
-		uint32					m_nPingDelay;
-		uint32					m_nHeartBeatInterval;
+		int64_t					m_nPreSendTime;
+		uint32_t					m_nPingDelay;
+		uint32_t					m_nHeartBeatInterval;
 
 		void					SendHeartBeatMsg();
 
@@ -47,7 +47,7 @@ namespace Gamma
 		virtual size_t			Dispatch( const char* pBuf, size_t nSize );
 		size_t					CheckShakeHand( const size_t nSize, const char* pBuf );
 		void					SendFrameData( SWebSocketMsg MsgHead, bool bShell,
-									const SSendBuf* aryBuffer, uint32 nBufferCount );
+									const SSendBuf* aryBuffer, uint32_t nBufferCount );
 
 		void					OnConnected();
 		void					OnCheckTimeOut();
@@ -63,12 +63,12 @@ namespace Gamma
 		MsgCheckFun_t			GetCheckFun( size_t nIndex );
 		static void				RegisterMsgHandler();
 
-		uint32					GetPingDelay() const;
-		void					SetHeartBeatInterval( uint32 nSeconds );
-		uint32					GetHeartBeatInterval() { return m_nHeartBeatInterval; }
+		uint32_t					GetPingDelay() const;
+		void					SetHeartBeatInterval( uint32_t nSeconds );
+		uint32_t					GetHeartBeatInterval() { return m_nHeartBeatInterval; }
 
 		virtual void			SendShellMsg( bool bReliable, 
-									const SSendBuf aryBuffer[], uint32 nBufferCount );
+									const SSendBuf aryBuffer[], uint32_t nBufferCount );
 
 	};
 }

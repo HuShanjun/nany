@@ -48,7 +48,7 @@ namespace Gamma
 #endif
 	}
 
-	inline int32 DestroyLock( SLock& Lock )
+	inline int32_t DestroyLock( SLock& Lock )
 	{
 #ifdef _WIN32
 		DeleteCriticalSection( &Lock ); return 0;

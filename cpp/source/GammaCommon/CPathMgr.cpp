@@ -304,7 +304,7 @@ namespace Gamma
 #endif
 	}
 	
-	void CPathMgr::GetPathSpaceInfo( const wchar_t* szPath, uint64* pAvailableSize, uint64* pFreeSize, uint64* pTotalSize )
+	void CPathMgr::GetPathSpaceInfo( const wchar_t* szPath, uint64_t* pAvailableSize, uint64_t* pFreeSize, uint64_t* pTotalSize )
 	{
 		wchar_t szAbsolutePath[2048];
 		szPath = ToPhysicalPath( szPath, szAbsolutePath, ELEM_COUNT( szAbsolutePath ) );
@@ -318,13 +318,13 @@ namespace Gamma
 #else
 		struct statfs FileStat;
 		statfs( UcsToUtf8( szPath ).c_str(), &FileStat );
-		if( pFreeSize ) *pFreeSize = uint64( FileStat.f_bavail )*uint64( FileStat.f_bsize );
-		if( pTotalSize ) *pTotalSize = uint64( FileStat.f_blocks )*uint64( FileStat.f_bsize );
-		if( pAvailableSize ) *pAvailableSize = uint64( FileStat.f_bfree )*uint64( FileStat.f_bsize );
+		if( pFreeSize ) *pFreeSize = uint64_t( FileStat.f_bavail )*uint64_t( FileStat.f_bsize );
+		if( pTotalSize ) *pTotalSize = uint64_t( FileStat.f_blocks )*uint64_t( FileStat.f_bsize );
+		if( pAvailableSize ) *pAvailableSize = uint64_t( FileStat.f_bfree )*uint64_t( FileStat.f_bsize );
 #endif
 	}
 
-	void CPathMgr::GetPathSpaceInfo( const char* szPath, uint64* pAvailableSize, uint64* pFreeSize, uint64* pTotalSize )
+	void CPathMgr::GetPathSpaceInfo( const char* szPath, uint64_t* pAvailableSize, uint64_t* pFreeSize, uint64_t* pTotalSize )
 	{
 		char szAbsolutePath[2048];
 		szPath = ToPhysicalPath( szPath, szAbsolutePath, ELEM_COUNT( szAbsolutePath ) );
@@ -338,9 +338,9 @@ namespace Gamma
 #else
 		struct statfs FileStat;
 		statfs( szPath, &FileStat );
-		if( pFreeSize ) *pFreeSize = uint64( FileStat.f_bavail )*uint64( FileStat.f_bsize );
-		if( pTotalSize ) *pTotalSize = uint64( FileStat.f_blocks )*uint64( FileStat.f_bsize );
-		if( pAvailableSize ) *pAvailableSize = uint64( FileStat.f_bfree )*uint64( FileStat.f_bsize );
+		if( pFreeSize ) *pFreeSize = uint64_t( FileStat.f_bavail )*uint64_t( FileStat.f_bsize );
+		if( pTotalSize ) *pTotalSize = uint64_t( FileStat.f_blocks )*uint64_t( FileStat.f_bsize );
+		if( pAvailableSize ) *pAvailableSize = uint64_t( FileStat.f_bfree )*uint64_t( FileStat.f_bsize );
 #endif
 	}
 

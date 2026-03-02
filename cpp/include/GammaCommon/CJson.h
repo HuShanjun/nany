@@ -39,18 +39,18 @@ namespace Gamma
 		CRefStringPtr		m_ptrBuffer;
 		const char*			m_szName;
 		const char*			m_szContent;
-		uint32				m_nContentLen;
-		uint32				m_nLevel;
-		uint32				m_nChildCount;
+		uint32_t				m_nContentLen;
+		uint32_t				m_nLevel;
+		uint32_t				m_nChildCount;
 		bool				m_bForceString;
 
 		friend class TGammaList<CJson>;
 
 		bool NextNode( size_t& nCurPos, bool bWithName );
-		char GetString( size_t& nCurPos, bool bBlankEnd, uint32* pLen );
+		char GetString( size_t& nCurPos, bool bBlankEnd, uint32_t* pLen );
 		bool GetNumber( size_t& nCurPos );
 		void OutContent( std::ostream& os ) const;
-		void SetLevel( uint32 nLevel );
+		void SetLevel( uint32_t nLevel );
 
 		bool ParseArray( CRefStringPtr& DomXmlBuffer, size_t& nCurPos );
 		bool ParseObject( CRefStringPtr& DomXmlBuffer, size_t& nCurPos );
@@ -62,12 +62,12 @@ namespace Gamma
 
 		const CJson& operator= ( const CJson& rhs );
 
-		bool Load( const void* szBuffer, uint32 nSize );
+		bool Load( const void* szBuffer, uint32_t nSize );
 		bool Load( const wchar_t* szFileName );
 		bool Load( const char* szFileName );
 		bool Save( const wchar_t* szFileName ) const;
 		bool Save( const char* szFileName ) const;
-		bool Save( std::ostream& os, uint32 nStack = 0 ) const;
+		bool Save( std::ostream& os, uint32_t nStack = 0 ) const;
 		void Clear();
 
 		CJson* AddChild( CJson* pChild, CJson* pBefore = NULL );
@@ -75,17 +75,17 @@ namespace Gamma
 		template <typename ValueType>
 		CJson* AddChild( const char* szName, ValueType Value, CJson* pBefore = NULL );
 
-		CJson* GetChild( uint32 nChildIndex );
+		CJson* GetChild( uint32_t nChildIndex );
 		CJson* GetChild( const char* szChildName );
-		CJson* operator[]( uint32 nChildIndex );
+		CJson* operator[]( uint32_t nChildIndex );
 		CJson* operator[]( const char* szChildName );
 		CJson* GetNext();
 		CJson* GetPre();
 
-		uint32 GetChildCount() const;
-		const CJson* GetChild( uint32 nChildIndex ) const;
+		uint32_t GetChildCount() const;
+		const CJson* GetChild( uint32_t nChildIndex ) const;
 		const CJson* GetChild( const char* szChildName ) const;
-		const CJson* operator[]( uint32 nChildIndex ) const;
+		const CJson* operator[]( uint32_t nChildIndex ) const;
 		const CJson* operator[]( const char* szChildName ) const;
 		const CJson* GetNext() const;
 		const CJson* GetPre() const;
@@ -93,7 +93,7 @@ namespace Gamma
 		const char* GetName() const;
 		const char* GetValue() const;
 		const char* GetContent() const;
-		uint32 GetContentLen() const;
+		uint32_t GetContentLen() const;
 		bool IsForceString() const;
 		void ForceString( bool bForce );
 
@@ -104,7 +104,7 @@ namespace Gamma
 		ValueType At( const char* szChildName, ValueType eDefaultValue = ValueType() ) const;
 
 		template <typename ValueType>
-		ValueType At( uint32 nChildIndex, ValueType eDefaultValue = ValueType() ) const;
+		ValueType At( uint32_t nChildIndex, ValueType eDefaultValue = ValueType() ) const;
 	};
 
 	template <typename ValueType>
@@ -115,7 +115,7 @@ namespace Gamma
 	}
 
 	template <typename ValueType>
-	inline ValueType CJson::At( uint32 nChildIndex, ValueType eDefaultValue ) const
+	inline ValueType CJson::At( uint32_t nChildIndex, ValueType eDefaultValue ) const
 	{
 		const CJson* pChild = GetChild( nChildIndex );
 		return pChild ? pChild->As<ValueType>() : eDefaultValue;
@@ -130,47 +130,47 @@ namespace Gamma
 	}
 
 	template<>
-	inline uint8 CJson::As<uint8>(uint8 Value) const
+	inline uint8_t CJson::As<uint8_t>(uint8_t Value) const
 	{
 		if (this == m_pInvalid)
 			return Value;
-		return (uint8)GammaA2I( m_szContent );
+		return (uint8_t)GammaA2I( m_szContent );
 	}
 
 	template<>
-	inline int8 CJson::As<int8>(int8 Value) const
+	inline int8_t CJson::As<int8_t>(int8_t Value) const
 	{
 		if (this == m_pInvalid)
 			return Value;
-		return (int8)GammaA2I( m_szContent );
+		return (int8_t)GammaA2I( m_szContent );
 	}
 
 	template<>
-	inline uint16 CJson::As<uint16>(uint16 Value) const
+	inline uint16_t CJson::As<uint16_t>(uint16_t Value) const
 	{
 		if (this == m_pInvalid)
 			return Value;
-		return (uint16)GammaA2I( m_szContent );
+		return (uint16_t)GammaA2I( m_szContent );
 	}
 
 	template<>
-	inline int16 CJson::As<int16>(int16 Value) const
+	inline int16_t CJson::As<int16_t>(int16_t Value) const
 	{
 		if (this == m_pInvalid)
 			return Value;
-		return (int16)GammaA2I( m_szContent );
+		return (int16_t)GammaA2I( m_szContent );
 	}
 
 	template<>
-	inline uint32 CJson::As<uint32>(uint32 Value) const
+	inline uint32_t CJson::As<uint32_t>(uint32_t Value) const
 	{
 		if (this == m_pInvalid)
 			return Value;
-		return (uint32)GammaA2I( m_szContent );
+		return (uint32_t)GammaA2I( m_szContent );
 	}
 
 	template<>
-	inline int32 CJson::As<int32>(int32 Value) const
+	inline int32_t CJson::As<int32_t>(int32_t Value) const
 	{
 		if (this == m_pInvalid)
 			return Value;
@@ -186,19 +186,19 @@ namespace Gamma
 	}
 
 	template<>
-	inline uint64 CJson::As<uint64>(uint64 Value) const
+	inline uint64_t CJson::As<uint64_t>(uint64_t Value) const
 	{
 		if (this == m_pInvalid)
 			return Value;
-		return (uint64)GammaA2I64( m_szContent );
+		return (uint64_t)GammaA2I64( m_szContent );
 	}
 
 	template<>
-	inline int64 CJson::As<int64>(int64 Value) const
+	inline int64_t CJson::As<int64_t>(int64_t Value) const
 	{
 		if (this == m_pInvalid)
 			return Value;
-		return (int64)GammaA2I64( m_szContent );
+		return (int64_t)GammaA2I64( m_szContent );
 	}
 
 	template<>
@@ -212,7 +212,7 @@ namespace Gamma
 			(m_szContent[2]=='u' || m_szContent[2]=='U')  &&
 			(m_szContent[3]=='e' || m_szContent[3]=='E') )
 			return true;
-		return As<int32>() != 0;
+		return As<int32_t>() != 0;
 	}
 
 	template<>

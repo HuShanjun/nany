@@ -27,58 +27,58 @@ namespace Gamma
 		struct SFieldInfo : public CFieldMap::CGammaRBTreeNode
 		{
 			gammacstring	m_strField;
-			uint32			m_nRegisterID;
+			uint32_t			m_nRegisterID;
 			operator const gammacstring&( ) const { return m_strField; }
 			bool operator < ( const gammacstring& strKey ) { return m_strField < strKey; }
 		};
 
 		struct SVariableInfo : public CVariableMap::CGammaRBTreeNode
 		{
-			uint32			m_nParentID;
-			uint32			m_nVariableID;
+			uint32_t			m_nParentID;
+			uint32_t			m_nVariableID;
 			CFieldMap		m_mapFields[2];
-			operator const uint32( ) const { return m_nVariableID; }
-			bool operator < ( uint32 nKey ) { return (uint32)*this < nKey; }
+			operator const uint32_t( ) const { return m_nVariableID; }
+			bool operator < ( uint32_t nKey ) { return (uint32_t)*this < nKey; }
 		};
 
 		struct SVariableNode : public SFieldInfo, public SVariableInfo {};
 
         lua_State*			m_pState;
 		lua_State*			m_pPreState;
-        int32				m_nBreakFrame;
+        int32_t				m_nBreakFrame;
 
-		uint32				m_nValueID;
+		uint32_t				m_nValueID;
 		CVariableMap		m_mapVariable;
 		std::string			m_szFunctionName;
 		std::string			m_strLastSorece;
-		int32				m_nLastLine;
+		int32_t				m_nLastLine;
 
         static void			DebugHook( lua_State *pState, lua_Debug* pDebug );
 		static CDebugLua*	GetDebugger( lua_State* pState );
 		void				Debug( lua_State* pState );
 
 		void				ClearVariables();
-		uint32				TouchVariable( const char* szField, uint32 nParentID );
-		virtual uint32		GenBreakPointID( const char* szFileName, int32 nLine );
+		uint32_t				TouchVariable( const char* szField, uint32_t nParentID );
+		virtual uint32_t		GenBreakPointID( const char* szFileName, int32_t nLine );
 		const char*			PresentValue( void* pValue );
 
     public:
-        CDebugLua( IDebugHandler* pHandler, const char* strDebugHost, uint16 nDebugPort );
+        CDebugLua( IDebugHandler* pHandler, const char* strDebugHost, uint16_t nDebugPort );
         ~CDebugLua(void);
 
 		void				SetCurState( lua_State* pL );
 		
-		virtual uint32		AddBreakPoint( const char* szFileName, int32 nLine );
-		virtual void		DelBreakPoint( uint32 nBreakPointID );
-		virtual uint32		GetFrameCount();
-		virtual bool		GetFrameInfo( int32 nFrame, int32* nLine, 
+		virtual uint32_t		AddBreakPoint( const char* szFileName, int32_t nLine );
+		virtual void		DelBreakPoint( uint32_t nBreakPointID );
+		virtual uint32_t		GetFrameCount();
+		virtual bool		GetFrameInfo( int32_t nFrame, int32_t* nLine, 
 								const char** szFunction, const char** szSource );
-		virtual int32		SwitchFrame( int32 nCurFrame );
-		virtual uint32		EvaluateExpression( int32 nCurFrame, const char* szExpression );
-		virtual uint32		GetScopeChainID( int32 nCurFrame );
-		virtual uint32		GetChildrenID( uint32 nParentID, bool bIndex, uint32 nStart, 
-								uint32* aryChild = nullptr, uint32 nCount = INVALID_32BITID );
-		virtual SValueInfo	GetVariable( uint32 nID );
+		virtual int32_t		SwitchFrame( int32_t nCurFrame );
+		virtual uint32_t		EvaluateExpression( int32_t nCurFrame, const char* szExpression );
+		virtual uint32_t		GetScopeChainID( int32_t nCurFrame );
+		virtual uint32_t		GetChildrenID( uint32_t nParentID, bool bIndex, uint32_t nStart, 
+								uint32_t* aryChild = nullptr, uint32_t nCount = INVALID_32BITID );
+		virtual SValueInfo	GetVariable( uint32_t nID );
 		virtual void		Stop();
 		virtual void		Continue();
 		virtual void		StepIn();

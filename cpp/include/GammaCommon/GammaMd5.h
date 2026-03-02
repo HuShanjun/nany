@@ -12,7 +12,7 @@
 namespace Gamma 
 {
 	// 计算MD5码时用于读取数据
-	class IMD5Read { public: virtual int32 Read( void* pData, size_t nSize ) = 0; };
+	class IMD5Read { public: virtual int32_t Read( void* pData, size_t nSize ) = 0; };
 
 	/////////////////////////////////////////////////////////////////
 	//
@@ -28,8 +28,8 @@ namespace Gamma
 	// MD5 context.
 	struct MD5_CTX
 	{
-		uint32 state[4];             // state (ABCD) 
-		uint32 count[2];             // number of bits, modulo 2^64 (lsb first) 
+		uint32_t state[4];             // state (ABCD) 
+		uint32_t count[2];             // number of bits, modulo 2^64 (lsb first) 
 		unsigned char buffer[64];   // input buffer
 	};
 
@@ -66,22 +66,22 @@ namespace Gamma
 				// FF, GG, HH, and II transformations for rounds 1, 2, 3, and 4.
 				//Rotation is separate from addition to prevent recomputation.
 		#define FF(a, b, c, d, x, s, ac) { \
-			(a) += MD5_BASE_F ((b), (c), (d)) + (x) + (uint32)(ac); \
+			(a) += MD5_BASE_F ((b), (c), (d)) + (x) + (uint32_t)(ac); \
 			(a) = ROTATE_LEFT ((a), (s)); \
 			(a) += (b); \
 			}
 		#define GG(a, b, c, d, x, s, ac) { \
-			(a) += MD5_BASE_G ((b), (c), (d)) + (x) + (uint32)(ac); \
+			(a) += MD5_BASE_G ((b), (c), (d)) + (x) + (uint32_t)(ac); \
 			(a) = ROTATE_LEFT ((a), (s)); \
 			(a) += (b); \
 			}
 		#define HH(a, b, c, d, x, s, ac) { \
-			(a) += MD5_BASE_H ((b), (c), (d)) + (x) + (uint32)(ac); \
+			(a) += MD5_BASE_H ((b), (c), (d)) + (x) + (uint32_t)(ac); \
 			(a) = ROTATE_LEFT ((a), (s)); \
 			(a) += (b); \
 			}
 		#define II(a, b, c, d, x, s, ac) { \
-			(a) += MD5_BASE_I ((b), (c), (d)) + (x) + (uint32)(ac); \
+			(a) += MD5_BASE_I ((b), (c), (d)) + (x) + (uint32_t)(ac); \
 			(a) = ROTATE_LEFT ((a), (s)); \
 			(a) += (b); \
 			}
@@ -91,9 +91,9 @@ namespace Gamma
 		static inline void MD5Update (MD5_CTX *, const unsigned char *, unsigned int);
 		static inline void MD5Final (unsigned char [16], MD5_CTX *);
 	private:
-		static inline void MD5Transform (uint32 [4], const unsigned char [64]);
-		static inline void Encode (unsigned char *, uint32 *, unsigned int);
-		static inline void Decode (uint32 *, const unsigned char *, unsigned int);
+		static inline void MD5Transform (uint32_t [4], const unsigned char [64]);
+		static inline void Encode (unsigned char *, uint32_t *, unsigned int);
+		static inline void Decode (uint32_t *, const unsigned char *, unsigned int);
 		static inline void MD5_memcpy (unsigned char*, unsigned char*, unsigned int);
 		static inline void MD5_memset (unsigned char*, int, unsigned int);
 	};
@@ -121,10 +121,10 @@ namespace Gamma
 		index = (unsigned int)((context->count[0] >> 3) & 0x3F);
 
 		// Update number of bits
-		if ((context->count[0] += ((uint32)inputLen << 3))
-			< ((uint32)inputLen << 3))
+		if ((context->count[0] += ((uint32_t)inputLen << 3))
+			< ((uint32_t)inputLen << 3))
 			context->count[1]++;
-		context->count[1] += ((uint32)inputLen >> 29);
+		context->count[1] += ((uint32_t)inputLen >> 29);
 
 		partLen = 64 - index;
 
@@ -179,9 +179,9 @@ namespace Gamma
 
 	/////////////////////////////////////////////
 	// MD5 basic transformation. Transforms state based on block.
-	inline void MD5::MD5Transform (uint32 state[4], const unsigned char block[64])
+	inline void MD5::MD5Transform (uint32_t state[4], const unsigned char block[64])
 	{
-		uint32 a = state[0], b = state[1], c = state[2], d = state[3], x[16];
+		uint32_t a = state[0], b = state[1], c = state[2], d = state[3], x[16];
 
 		Decode (x, block, 64);
 
@@ -266,9 +266,9 @@ namespace Gamma
 		MD5_memset ((unsigned char*)x, 0, sizeof (x));
 	}
 
-	// Encodes input (uint32) into output (unsigned char). Assumes len is
+	// Encodes input (uint32_t) into output (unsigned char). Assumes len is
 	//a multiple of 4.
-	inline void MD5::Encode (unsigned char *output, uint32 *input, unsigned int len)
+	inline void MD5::Encode (unsigned char *output, uint32_t *input, unsigned int len)
 	{
 		unsigned int i, j;
 
@@ -280,15 +280,15 @@ namespace Gamma
 		}
 	}
 
-	// Decodes input (unsigned char) into output (uint32). Assumes len is
+	// Decodes input (unsigned char) into output (uint32_t). Assumes len is
 	//a multiple of 4.
-	inline void MD5::Decode (uint32 *output, const unsigned char *input, unsigned int len)
+	inline void MD5::Decode (uint32_t *output, const unsigned char *input, unsigned int len)
 	{
 		unsigned int i, j;
 
 		for (i = 0, j = 0; j < len; i++, j += 4)
-			output[i] = ((uint32)input[j]) | (((uint32)input[j+1]) << 8) |
-			(((uint32)input[j+2]) << 16) | (((uint32)input[j+3]) << 24);
+			output[i] = ((uint32_t)input[j]) | (((uint32_t)input[j+1]) << 8) |
+			(((uint32_t)input[j+2]) << 16) | (((uint32_t)input[j+3]) << 24);
 	}
 
 	// Note: Replace "for loop" with standard memcpy if possible.
@@ -309,7 +309,7 @@ namespace Gamma
 			((char *)output)[i] = (char)value;
 	}
 
-	inline void MD5( uint8 szResult[16], const void* pData, size_t nSize )
+	inline void MD5( uint8_t szResult[16], const void* pData, size_t nSize )
 	{
 		MD5_CTX context;
 		MD5::MD5Init( &context );
@@ -317,12 +317,12 @@ namespace Gamma
 		MD5::MD5Final( szResult, &context );
 	}
 
-	inline void MD5Ex( uint8 szResult[32], const void* pData, size_t nSize )
+	inline void MD5Ex( uint8_t szResult[32], const void* pData, size_t nSize )
 	{
-		uint8 _temp[16];
+		uint8_t _temp[16];
 		MD5( _temp, pData, nSize );
 
-		for( int32 i=0; i<16; i++ )
+		for( int32_t i=0; i<16; i++ )
 		{
 			char c = ( _temp[i]>>4 ) & 0xF;
 			szResult[ i*2 ] = c > 9 ? c + 0x57 : c + 0x30;
@@ -331,12 +331,12 @@ namespace Gamma
 		}
 	}
 
-	inline void MD5( uint8 szResult[16], IMD5Read& DataReader )
+	inline void MD5( uint8_t szResult[16], IMD5Read& DataReader )
 	{
 		char szBuf[1024];
 		MD5_CTX context;
 		MD5::MD5Init( &context );
-		int32 nReadSize;
+		int32_t nReadSize;
 		while( ( nReadSize = DataReader.Read( szBuf, sizeof( szBuf ) ) ) > 0 )
 			MD5::MD5Update( &context, (const unsigned char*)szBuf, nReadSize );
 		MD5::MD5Final( szResult, &context );

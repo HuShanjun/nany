@@ -17,19 +17,19 @@ namespace Gamma
 	class TQuickCompressZero
 	{
 	public:
-		typedef		void (OutFile::*OutFun)( const void*, uint32 );
+		typedef		void (OutFile::*OutFun)( const void*, uint32_t );
 
 		template<typename OutFunction>
 		TQuickCompressZero( OutFile& fileOut, OutFunction funOut )
 			: m_fileOut( &fileOut ), m_funOut( (OutFun)funOut )
 			, m_nBuffer(0), m_nPos(0), m_nPreZero(false){}
 
-		int32 Write( const void* pData, size_t nSize )
+		int32_t Write( const void* pData, size_t nSize )
 		{
 			const tbyte* pBuffer = (const tbyte*)pData;
-			for( int32 i = 0; i < (int32)nSize; i++ )
+			for( int32_t i = 0; i < (int32_t)nSize; i++ )
 			{
-				uint32 nTemp = pBuffer[i];
+				uint32_t nTemp = pBuffer[i];
 				if( m_nPreZero )
 				{
 					nTemp = 0;
@@ -45,10 +45,10 @@ namespace Gamma
 				}
 				else
 				{
-					if( i + 1 >= (int32)nSize )
+					if( i + 1 >= (int32_t)nSize )
 					{
 						m_nPreZero = true;
-						return (int32)nSize;
+						return (int32_t)nSize;
 					}
 
 					if( pBuffer[ i + 1 ] )
@@ -66,14 +66,14 @@ namespace Gamma
 						continue;
 				}
 
-				int8 nByte = m_nPos >> 3;
+				int8_t nByte = m_nPos >> 3;
 				( m_fileOut->*m_funOut )( (const char*)&m_nBuffer, nByte );
-				int8 nBit = nByte << 3;
+				int8_t nBit = nByte << 3;
 				m_nBuffer = m_nBuffer >> nBit;
-				m_nPos = (int8)( m_nPos - nBit );
+				m_nPos = (int8_t)( m_nPos - nBit );
 			}
 
-			return (int32)nSize;
+			return (int32_t)nSize;
 		}
 
 		void Flush()
@@ -107,8 +107,8 @@ namespace Gamma
 	private:
 		OutFile*	m_fileOut;
 		OutFun		m_funOut;
-		uint32		m_nBuffer;
-		int8		m_nPos;
+		uint32_t		m_nBuffer;
+		int8_t		m_nPos;
 		bool		m_nPreZero;
 	};
 
@@ -119,27 +119,27 @@ namespace Gamma
 	class TQuickDecompressZero
 	{
 	public:
-		typedef		int32 (InFile::*InFun)( const void*, uint32 );
+		typedef		int32_t (InFile::*InFun)( const void*, uint32_t );
 
 		template<typename InFunction>
 		TQuickDecompressZero( InFile& fileIn, InFunction funIn )
 			: m_fileIn( &fileIn ), m_funIn( (InFun)funIn )
 			, m_nBuffer(0), m_nBitCount(0), m_bDoubleZero( false ){}
 
-		int32 Read( void* pData, size_t nSize )
+		int32_t Read( void* pData, size_t nSize )
 		{
 			tbyte* pBuffer = (tbyte*)pData;
-			int32 nCount = 2;
-			for( int32 i = 0; i < (int32)nSize; i++ )
+			int32_t nCount = 2;
+			for( int32_t i = 0; i < (int32_t)nSize; i++ )
 			{
 				if( m_nBitCount < 10 && nCount == 2 )
 				{
-					uint16 nTemp = 0;
+					uint16_t nTemp = 0;
 					nCount = ( m_fileIn->*m_funIn )( (char*)&nTemp, 2 );
 					if( nCount > 0 )
 					{
 						m_nBuffer = m_nBuffer|( nTemp << m_nBitCount );
-						m_nBitCount = (uint8)( ( nCount << 3 ) + m_nBitCount );
+						m_nBitCount = (uint8_t)( ( nCount << 3 ) + m_nBitCount );
 					}
 				}
 
@@ -160,7 +160,7 @@ namespace Gamma
 
 						m_nBuffer = m_nBuffer >> 2;
 						m_nBitCount -= 10;
-						pBuffer[i] = (uint8)m_nBuffer;
+						pBuffer[i] = (uint8_t)m_nBuffer;
 						m_nBuffer = m_nBuffer >> 8;
 					}
 					else
@@ -177,8 +177,8 @@ namespace Gamma
 							if( m_nBitCount < 3 )
 								return i;
 
-							uint32 nTempBuffer = m_nBuffer >> 2;
-							uint8 nTempBitCount = m_nBitCount - 2;
+							uint32_t nTempBuffer = m_nBuffer >> 2;
+							uint8_t nTempBitCount = m_nBitCount - 2;
 
 							while( ( nTempBuffer&0x1 ) == 0 )
 							{
@@ -204,14 +204,14 @@ namespace Gamma
 				}
 			}
 
-			return (int32)nSize;
+			return (int32_t)nSize;
 		}
 
 	private:
 		InFile*		m_fileIn;
 		InFun		m_funIn;
-		uint32		m_nBuffer;
-		uint8		m_nBitCount;
+		uint32_t		m_nBuffer;
+		uint8_t		m_nBitCount;
 		bool		m_bDoubleZero;
 	};
 }

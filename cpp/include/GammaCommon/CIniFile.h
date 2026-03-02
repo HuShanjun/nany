@@ -22,7 +22,7 @@ namespace Gamma
 
 		const char*		GetFileName();
 		// 从缓冲区初始化		
-		bool			Init( const tbyte* pBuffer, uint32 nSize );		
+		bool			Init( const tbyte* pBuffer, uint32_t nSize );		
 		// 打开文件，扫描一遍，为以后的读操作做好准备(Get...)		
 		bool			Open( const char* szFileName );		
 		// 打开文件，扫描一遍，为以后的读操作做好准备(Get...)		
@@ -44,9 +44,9 @@ namespace Gamma
 		// 得到某个Section下的Key的值		
 		const char*		GetString( const char* lpSection, const char* lpKeyName, const char* szDefault = NULL );	
 		// 得到某个Section下的整数Key的值
-		int32			GetInteger( const char* lpSection, const char* lpKeyName, int32 nDefault = 0 );
+		int32_t			GetInteger( const char* lpSection, const char* lpKeyName, int32_t nDefault = 0 );
 		// 得到某个Section下的整数Key的值
-		int64			GetInteger64( const char* lpSection, const char* lpKeyName, int64 nDefault = 0 );
+		int64_t			GetInteger64( const char* lpSection, const char* lpKeyName, int64_t nDefault = 0 );
 		// 得到某个Section下的浮点Key的值
 		float			GetFloat( const char* lpSection, const char* lpKeyName, float fDefault = 0.0f );
 		// 得到某个Section下的字符Key的值
@@ -54,9 +54,9 @@ namespace Gamma
 		// 写入某个Section下的Key的值，字符串
 		void 			WriteString( const char* lpSection, const char* lpKeyName, const char* lpString );
 		// 写入某个Section下的Key的值，字符串
-		void			WriteInteger( const char* lpSection, const char* lpKeyName, int32 nValue );
+		void			WriteInteger( const char* lpSection, const char* lpKeyName, int32_t nValue );
 		// 写入某个Section下的Key的值，字符串
-		void			WriteInteger64( const char* lpSection, const char* lpKeyName, int64 nValue );
+		void			WriteInteger64( const char* lpSection, const char* lpKeyName, int64_t nValue );
 		// 写入某个Section下的Key的值，字符串
 		void			WriteFloat( const char* lpSection, const char* lpKeyName, float fValue );
 	};

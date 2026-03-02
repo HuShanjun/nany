@@ -2,15 +2,15 @@
 namespace Gamma
 {
 	template< typename File, typename FunRead >
-	inline void CBinaryDiff::Load( File& fileRead, FunRead funRead, uint32 nChunk, uint32 nMaxSize )
+	inline void CBinaryDiff::Load( File& fileRead, FunRead funRead, uint32_t nChunk, uint32_t nMaxSize )
 	{
 		m_nMaxSize = nMaxSize;
 		m_vecDiffChunk.resize( nChunk );
 		m_vecDiffOffset.resize( nChunk );
 		std::vector<tbyte> vecBuf;
-		for( uint32 i = 0; i < m_vecDiffChunk.size(); i++ )
+		for( uint32_t i = 0; i < m_vecDiffChunk.size(); i++ )
 		{
-			m_vecDiffOffset[i] = (uint32)vecBuf.size();
+			m_vecDiffOffset[i] = (uint32_t)vecBuf.size();
 			( fileRead.*funRead )( (char*)&m_vecDiffChunk[i], sizeof(SChunkInfo) );
 			vecBuf.resize( vecBuf.size() + m_vecDiffChunk[i].m_nSize );
 			( fileRead.*funRead )( (char*)&vecBuf[m_vecDiffOffset[i]], m_vecDiffChunk[i].m_nSize );
@@ -23,7 +23,7 @@ namespace Gamma
 	template< typename File, typename FunWrite >
 	inline void CBinaryDiff::Save( File& fileRead, FunWrite funWrite )
 	{
-		for( uint32 i = 0; i < m_vecDiffChunk.size(); i++ )
+		for( uint32_t i = 0; i < m_vecDiffChunk.size(); i++ )
 		{
 			( fileRead.*funWrite )( (const char*)&m_vecDiffChunk[i], sizeof(SChunkInfo) );
 			( fileRead.*funWrite )( (const char*)&m_vecDiffData[m_vecDiffOffset[i]], m_vecDiffChunk[i].m_nSize );
@@ -41,10 +41,10 @@ namespace Gamma
 		bool		bDone		= false;    // 是否完成文件比较
 		bool		bEntry		= true;     // 状态变量，指出当前状态是否为入口，这里的入口指的是相异字节的起始点
 		SChunkInfo	ChunkInfo	= { 0 };    // 记录相异块的信息
-		uint32		nNewSize	= 0;
-		int32		nOld		= 0;
-		int32		nNew		= 0;
-		uint32		nReadCount	= 0;
+		uint32_t		nNewSize	= 0;
+		int32_t		nOld		= 0;
+		int32_t		nNew		= 0;
+		uint32_t		nReadCount	= 0;
 
 		m_vecDiffChunk.clear();
 
@@ -100,7 +100,7 @@ namespace Gamma
 		if( nOld <= 0 && nNew > 0 )
 		{
 			ChunkInfo.m_nOffset	= nNewSize;
-			ChunkInfo.m_nSize	= (uint32)( ( fileRead2.*funSize )() - ( fileRead1.*funSize )() );    // 计算新数据包多出来的那一部份的大小
+			ChunkInfo.m_nSize	= (uint32_t)( ( fileRead2.*funSize )() - ( fileRead1.*funSize )() );    // 计算新数据包多出来的那一部份的大小
 			m_vecDiffChunk.push_back( ChunkInfo );
 		}
 
@@ -117,7 +117,7 @@ namespace Gamma
 		std::vector<SChunkInfo> vOldChunkInfo = m_vecDiffChunk;
 		m_vecDiffChunk.clear();
 		m_vecDiffOffset.clear();
-		uint32 nNewSize = 0;
+		uint32_t nNewSize = 0;
 
 		for( size_t i = 0; i < vOldChunkInfo.size(); )
 		{
@@ -148,9 +148,9 @@ namespace Gamma
 
 		std::vector<SChunkInfo> vOldChunkInfo = m_vecDiffChunk;
 		m_vecDiffChunk.clear();
-		uint32 nNewSize = 0;
-		uint32 nSrc = 0;
-		uint32 nDes = 0;
+		uint32_t nNewSize = 0;
+		uint32_t nSrc = 0;
+		uint32_t nDes = 0;
 		while( nSrc < SrcBinaryDiff.m_vecDiffChunk.size() && nDes < vOldChunkInfo.size() )
 		{
 			SChunkInfo CurChunk;
@@ -159,7 +159,7 @@ namespace Gamma
 			else
 				CurChunk = vOldChunkInfo[nDes];
 
-			uint32 nChunkEnd = CurChunk.m_nOffset + CurChunk.m_nSize;
+			uint32_t nChunkEnd = CurChunk.m_nOffset + CurChunk.m_nSize;
 			while( 
 				FindNextMerChunk( vOldChunkInfo, nChunkEnd, nDes ) || 
 				FindNextMerChunk( SrcBinaryDiff.m_vecDiffChunk, nChunkEnd, nSrc ) );
@@ -193,9 +193,9 @@ namespace Gamma
 		}
 	}
 
-	inline bool CBinaryDiff::IsNeedPatch( uint32 nOffset, uint32 nSize ) const
+	inline bool CBinaryDiff::IsNeedPatch( uint32_t nOffset, uint32_t nSize ) const
 	{
-		uint32 nBegin, nEnd;
+		uint32_t nBegin, nEnd;
 		GetBound( m_vecDiffChunk, m_vecDiffChunk.size(), nOffset, nBegin, nEnd );
 		if( nBegin < m_vecDiffChunk.size() && m_vecDiffChunk[nBegin].m_nOffset + m_vecDiffChunk[nBegin].m_nSize > nOffset )
 			return true;
@@ -204,18 +204,18 @@ namespace Gamma
 		return false;
 	}
 
-	inline void CBinaryDiff::Patch( void* pBuf, uint32 nOffset, uint32 nSize )
+	inline void CBinaryDiff::Patch( void* pBuf, uint32_t nOffset, uint32_t nSize )
 	{
-		uint32 nBegin, nEnd;
+		uint32_t nBegin, nEnd;
 		GetBound( m_vecDiffChunk, m_vecDiffChunk.size(), nOffset, nBegin, nEnd );
 
-		uint32 nDataEnd = nOffset + nSize;
+		uint32_t nDataEnd = nOffset + nSize;
 		while( nBegin < m_vecDiffChunk.size() && m_vecDiffChunk[nBegin].m_nOffset < nDataEnd )
 		{
 			tbyte* pChunkData	= &m_vecDiffData[ m_vecDiffOffset[nBegin] ];
-			uint32 nChunkEnd	= m_vecDiffChunk[nBegin].m_nOffset + m_vecDiffChunk[nBegin].m_nSize;
-			uint32 nMin			= (uint32)Max<uint32>( nOffset, m_vecDiffChunk[nBegin].m_nOffset );
-			uint32 nMax			= (uint32)Min<uint32>( nDataEnd, nChunkEnd );
+			uint32_t nChunkEnd	= m_vecDiffChunk[nBegin].m_nOffset + m_vecDiffChunk[nBegin].m_nSize;
+			uint32_t nMin			= (uint32_t)Max<uint32_t>( nOffset, m_vecDiffChunk[nBegin].m_nOffset );
+			uint32_t nMax			= (uint32_t)Min<uint32_t>( nDataEnd, nChunkEnd );
 			if( nMax > nMin )
 			{
 				tbyte* pDes		= ( (tbyte*)pBuf ) + nMin - nOffset;
@@ -226,10 +226,10 @@ namespace Gamma
 		}
 	}
 
-	inline uint32 CBinaryDiff::Init( uint32 nMaxSize, uint32 nChunkCount, const tbyte* pDiffChunk )
+	inline uint32_t CBinaryDiff::Init( uint32_t nMaxSize, uint32_t nChunkCount, const tbyte* pDiffChunk )
 	{
 		CBufFile File( (const tbyte*)pDiffChunk, 0xffffffff );
 		Load( File, &CBufFile::Read, nChunkCount, nMaxSize );
-		return (uint32)File.GetPos();
+		return (uint32_t)File.GetPos();
 	}
 }

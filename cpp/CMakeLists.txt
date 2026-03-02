@@ -4,7 +4,31 @@ project(${ProjectName})
 
 # 设置编译选项
 set(CMAKE_CXX_FLAGS   "-no-pie")  
-set(CMAKE_C_FLAGS   "-no-pie")  
+set(CMAKE_C_FLAGS   "-no-pie")
+# 设置 C++ 标准为 C++20
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)  # 必须支持指定的标准
+set(CMAKE_CXX_EXTENSIONS OFF)        # 禁用编译器特定扩展
+
+# 设置编译选项
+if(WIN32)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE -D_SCL_SECURE_NO_WARNINGS -DWIN32_LEAN_AND_MEAN -D_WIN32 -DPLATFORM_WIN32 -DNOMINMAX)
+	add_definitions(/we"4715")
+	add_definitions(/MP)
+	add_definitions(-D_HAS_STD_BYTE=0)
+	add_definitions(-DNOMINMAX)
+	add_definitions(-DSTRICT)
+
+    set(CMAKE_CXX_FLAGS_DEBUG	"${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG -DENABLE_LUADEBUG /bigobj")
+    set(CMAKE_CXX_FLAGS_RELEASE	"${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG /bigobj")
+else(WIN32)
+	#add_definitions(-fvisibility=hidden)
+	add_definitions(-Wno-terminate)
+	add_definitions(-D_PORT_VERSION -Wno-deprecated -fPIC -std=c++17)
+    set(CMAKE_CXX_FLAGS_DEBUG	"${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG -ggdb")
+    set(CMAKE_CXX_FLAGS_RELEASE	"${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -O2 -ggdb")
+endif(WIN32)
+
 
 # 设置变量
 set(THIRD_PARTY_PATH ${CMAKE_SOURCE_DIR}/3rd-src)

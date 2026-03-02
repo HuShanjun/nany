@@ -144,9 +144,9 @@ namespace Gamma
 			return m_NodeHead.m_pNextNode == &m_NodeTail;
 		}
 
-		uint32 Size() const
+		uint32_t Size() const
 		{
-			uint32 nSize = 0;
+			uint32_t nSize = 0;
 			for( CGammaListNode* pNode = GetFirst(); pNode; pNode = pNode->GetNext() )
 				nSize++;
 			return nSize;

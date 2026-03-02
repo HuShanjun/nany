@@ -22,8 +22,8 @@ namespace Gamma
 		typedef TFixedPageAlloc<ePageSize> CPageAlloc;
 		struct SFreeNode { SFreeNode* pNextFree; };
 		SFreeNode* m_pFreeNode;
-		uint32 m_nTotalCount;
-		uint32 m_nUseCount;
+		uint32_t m_nTotalCount;
+		uint32_t m_nUseCount;
 
 	public:
 		TTinyObjectPool() 

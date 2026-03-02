@@ -120,8 +120,8 @@ namespace Gamma
         // =====================================================================
         // 操作符重载  
         // =====================================================================
-        const T& operator [] ( const int32 i ) const;
-        T& operator [] ( const int32 i );
+        const T& operator [] ( const int32_t i ) const;
+        T& operator [] ( const int32_t i );
 
         const TVector3 operator + (const TVector3& b) const;
 		const TVector3 operator - (const TVector3& b) const;
@@ -373,12 +373,12 @@ namespace Gamma
 			return y < z ? TVector3( 0, 1, 0 ) : TVector3( 0, 0, 1 );
     }
 
-    template<class T> inline const T& TVector3<T>::operator [] ( const int32 i ) const
+    template<class T> inline const T& TVector3<T>::operator [] ( const int32_t i ) const
     {
         return v[i];
     }
 
-    template<class T> inline T& TVector3<T>::operator [] ( const int32 i )
+    template<class T> inline T& TVector3<T>::operator [] ( const int32_t i )
     {
         return v[i];
     }
@@ -505,14 +505,14 @@ namespace Gamma
         return TVector3( -x, -y, -z );
     }
 
-	typedef TVector3<int32>     CVector3;
+	typedef TVector3<int32_t>     CVector3;
 	typedef TVector3<float>     CVector3f;
 	typedef TVector3<float>     float3;
 	typedef TVector3<double>    CVector3d;
-	typedef TVector3<uint8>		CVector3u8;
-	typedef TVector3<uint16>	CVector3u16;
-	typedef TVector3<int8>		CVector3s8;
-	typedef TVector3<int16>		CVector3s16;
+	typedef TVector3<uint8_t>		CVector3u8;
+	typedef TVector3<uint16_t>	CVector3u16;
+	typedef TVector3<int8_t>		CVector3s8;
+	typedef TVector3<int16_t>		CVector3s16;
 } 
 
 #endif

@@ -29,7 +29,7 @@
 #define SAFE_DEL_GROUP( p )				{ delete[] (p); (p) = NULL; }
 #define SUCCEEDED(hr)					( (long)(hr) >= 0 )
 #define FAILED(hr)						( (long)(hr) < 0 )
-#define ELEM_COUNT( _array )			( (uint32)( sizeof( _array )/sizeof( _array[0] ) ) )
+#define ELEM_COUNT( _array )			( (uint32_t)( sizeof( _array )/sizeof( _array[0] ) ) )
 
 #define CURRENT_CONTEXT					__FILE__, __DATE__, __TIME__, __LINE__, __FUNCTION__
 #define GammaThrow( n )					{ GammaErr << ( n ) << std::endl; Gamma::PrintStack( 256, 0, Gamma::GetErrStream() ); throw( n ); }
@@ -47,8 +47,8 @@
 #endif
 
 #if defined PROCESS_DEBUG
-struct SStackLog { SStackLog( const char* szFile, uint32 nLine, const void* pContext ){ EnterStack( szFile, nLine, pContext ); } ~SStackLog(){ LeaveStack(); } };
-struct SProcessLog { SProcessLog( const char* szFile, uint32 nLine ){ PollProcess( szFile, nLine ); } };
+struct SStackLog { SStackLog( const char* szFile, uint32_t nLine, const void* pContext ){ EnterStack( szFile, nLine, pContext ); } ~SStackLog(){ LeaveStack(); } };
+struct SProcessLog { SProcessLog( const char* szFile, uint32_t nLine ){ PollProcess( szFile, nLine ); } };
 #define STATCK_LOG( Context )	SStackLog __StackLog__( __FILE__, __LINE__, Context )
 #define PROCESS_LOG	SProcessLog( __FILE__, __LINE__ )
 #else
@@ -78,36 +78,36 @@ struct _EXCEPTION_POINTERS;
 #define INVALID_16BITID		0xffff
 #define INVALID_8BITID		0xff
 
-#define MAX_INT64			((int64)0x7fffffffffffffffLL)
-#define MIN_INT64			((int64)0x8000000000000000LL)
-#define MAX_INT32			((int32)0x7fffffff)
-#define MIN_INT32			((int32)0x80000000)
-#define MAX_INT16			((int16)0x7fff)
-#define MIN_INT16			((int16)0x8000)
-#define MAX_INT8			((int8)0x7f)
-#define MIN_INT8			((int8)0x80)
+#define MAX_INT64			((int64_t)0x7fffffffffffffffLL)
+#define MIN_INT64			((int64_t)0x8000000000000000LL)
+#define MAX_INT32			((int32_t)0x7fffffff)
+#define MIN_INT32			((int32_t)0x80000000)
+#define MAX_INT16			((int16_t)0x7fff)
+#define MIN_INT16			((int16_t)0x8000)
+#define MAX_INT8			((int8_t)0x7f)
+#define MIN_INT8			((int8_t)0x80)
 
 // 由4个字符组成一个DWORD
 #define MAKE_DWORD(ch0, ch1, ch2, ch3)                            \
-	((uint32)(uint8)(int8)(ch0) | ((uint32)(uint8)(int8)(ch1) << 8) |       \
-	((uint32)(uint8)(int8)(ch2) << 16) | ((uint32)(uint8)(int8)(ch3) << 24 ))
+	((uint32_t)(uint8_t)(int8_t)(ch0) | ((uint32_t)(uint8_t)(int8_t)(ch1) << 8) |       \
+	((uint32_t)(uint8_t)(int8_t)(ch2) << 16) | ((uint32_t)(uint8_t)(int8_t)(ch3) << 24 ))
 
-#define MAKE_UINT64( ch0, ch1 ) ((uint64)(uint32)(int32)(ch0) | ((uint64)(uint32)(int32)(ch1) << 32) )
-#define MAKE_UINT32( ch0, ch1 ) ((uint32)(uint16)(int16)(ch0) | ((uint32)(uint16)(int16)(ch1) << 16) )
-#define MAKE_UINT16( ch0, ch1 ) ((uint16)(uint8)(int8)(ch0) | ((uint16)(uint8)(int8)(ch1) << 8) )
+#define MAKE_UINT64( ch0, ch1 ) ((uint64_t)(uint32_t)(int32_t)(ch0) | ((uint64_t)(uint32_t)(int32_t)(ch1) << 32) )
+#define MAKE_UINT32( ch0, ch1 ) ((uint32_t)(uint16_t)(int16_t)(ch0) | ((uint32_t)(uint16_t)(int16_t)(ch1) << 16) )
+#define MAKE_UINT16( ch0, ch1 ) ((uint16_t)(uint8_t)(int8_t)(ch0) | ((uint16_t)(uint8_t)(int8_t)(ch1) << 8) )
 
-#define HIUINT32(l)	((uint32)((uint64)((int64)(l)) >> 32))
-#define LOUINT32(l)	((uint32)((uint64)((int64)(l)) & 0xffffffff))
-#define HIUINT16(l)	((uint16)((uint32)((int32)(l)) >> 16))
-#define LOUINT16(l)	((uint16)((uint32)((int32)(l)) & 0xffff))
-#define HIUINT8(w)	((uint8)((uint16)((int16)(w)) >> 8))
-#define LOUINT8(w)	((uint8)((uint16)((int16)(w)) & 0xff))	
-#define HIINT32(l)	((int32)((uint64)((int64)(l)) >> 32))
-#define LOINT32(l)	((int32)((uint64)((int64)(l)) & 0xffffffff))
-#define HIINT16(l)	((int16)((uint32)((int32)(l)) >> 16))
-#define LOINT16(l)	((int16)((uint32)((int32)(l)) & 0xffff))
-#define HIINT8(w)	((int8)((uint16)((int16)(w)) >> 8))
-#define LOINT8(w)	((int8)((uint16)((int16)(w)) & 0xff))
+#define HIUINT32(l)	((uint32_t)((uint64_t)((int64_t)(l)) >> 32))
+#define LOUINT32(l)	((uint32_t)((uint64_t)((int64_t)(l)) & 0xffffffff))
+#define HIUINT16(l)	((uint16_t)((uint32_t)((int32_t)(l)) >> 16))
+#define LOUINT16(l)	((uint16_t)((uint32_t)((int32_t)(l)) & 0xffff))
+#define HIUINT8(w)	((uint8_t)((uint16_t)((int16_t)(w)) >> 8))
+#define LOUINT8(w)	((uint8_t)((uint16_t)((int16_t)(w)) & 0xff))	
+#define HIINT32(l)	((int32_t)((uint64_t)((int64_t)(l)) >> 32))
+#define LOINT32(l)	((int32_t)((uint64_t)((int64_t)(l)) & 0xffffffff))
+#define HIINT16(l)	((int16_t)((uint32_t)((int32_t)(l)) >> 16))
+#define LOINT16(l)	((int16_t)((uint32_t)((int32_t)(l)) & 0xffff))
+#define HIINT8(w)	((int8_t)((uint16_t)((int16_t)(w)) >> 8))
+#define LOINT8(w)	((int8_t)((uint16_t)((int16_t)(w)) & 0xff))
 
 #define HOUR_OF_DAY	24
 #define SECONDS_OF_MINUTE	60
@@ -124,13 +124,13 @@ namespace Gamma
 {
 	typedef std::pair<const void*, size_t> SSendBuf;
 
-	typedef void (*GlobalAssertFun)		( const char* , const char*, uint32 );
+	typedef void (*GlobalAssertFun)		( const char* , const char*, uint32_t );
 	GAMMA_COMMON_API void				SetGlobAssertFun( GlobalAssertFun funGlobalLog );
 	GAMMA_COMMON_API GlobalAssertFun	GetGlobAssertFun();
 
 
 	GAMMA_COMMON_API void GammaException( const char* szMsg, const char* szFile, const char* szDate, 
-		const char* szTime, uint32 nLine, const char* szFunction, bool bForceAbort = false );
+		const char* szTime, uint32_t nLine, const char* szFunction, bool bForceAbort = false );
 
 	//========================================================================
 	// 产生dump文件
@@ -140,24 +140,24 @@ namespace Gamma
 	//========================================================================
 	// 代码地址到标识符的转换
 	//========================================================================
-	GAMMA_COMMON_API void DebugAddress2Symbol( void* pAddress, char* szSymbolBuf, uint32 nSize );
+	GAMMA_COMMON_API void DebugAddress2Symbol( void* pAddress, char* szSymbolBuf, uint32_t nSize );
 
 	//========================================================================
 	// 得到堆栈从nBegin层到nEnd层的堆栈，保存在pStack，
 	// pStack 返回nBegin层到nEnd层的堆栈，由函数外部分配空间
 	// pStack[0]为nBegin层堆栈， pStack[nEnd-nBegin]为nEnd层堆栈
 	//========================================================================
-	GAMMA_COMMON_API size_t GetStack( void** pStack, uint16 nBegin, uint16 nEnd );
+	GAMMA_COMMON_API size_t GetStack( void** pStack, uint16_t nBegin, uint16_t nEnd );
 
 	//========================================================================
 	// 打印从nBegin层到nEnd层的堆栈
 	//========================================================================
-	GAMMA_COMMON_API size_t PrintStack( uint16 nMax, int32 nLine, std::ostream& Stream );
+	GAMMA_COMMON_API size_t PrintStack( uint16_t nMax, int32_t nLine, std::ostream& Stream );
 
 	//========================================================================
 	// 打印指定堆栈
 	//========================================================================
-	GAMMA_COMMON_API size_t PrintStack( void** pStack, size_t nSize, int32 nLine, std::ostream& Stream );
+	GAMMA_COMMON_API size_t PrintStack( void** pStack, size_t nSize, int32_t nLine, std::ostream& Stream );
 
 	//========================================================================
 	// 指定堆栈输出到指定文件 
@@ -168,12 +168,12 @@ namespace Gamma
 	// CPU是否支持SSE
 	//========================================================================
 	enum ECpuSuport{ eMMX = 0x00800000, eSSE = 0x02000000, eSSE2 = 0x04000000, e3DNOW = 0x80000000 };
-	GAMMA_COMMON_API uint32 GetCpuSuport();
+	GAMMA_COMMON_API uint32_t GetCpuSuport();
 	
 	//========================================================================
 	// 整数向上对其
 	//========================================================================
-	inline uint32 AligenUp( uint32 n, uint32 nAligen )
+	inline uint32_t AligenUp( uint32_t n, uint32_t nAligen )
 	{
 		return n ? ( ( n - 1 )/nAligen + 1 )*nAligen : 0;
 	}
@@ -181,7 +181,7 @@ namespace Gamma
 	//========================================================================
 	// 整数向上对其
 	//========================================================================
-	inline uint32 AligenDown( uint32 n, uint32 nAligen )
+	inline uint32_t AligenDown( uint32_t n, uint32_t nAligen )
 	{
 		return ( n / nAligen )*nAligen;
 	}
@@ -189,11 +189,11 @@ namespace Gamma
 	//========================================================================
 	// 整数向上对其
 	//========================================================================
-	inline uint32 AligenUpTo2Power( uint32 n )
+	inline uint32_t AligenUpTo2Power( uint32_t n )
 	{
 		if( n == 0 )
 			return 1;
-		uint32 p = 1;
+		uint32_t p = 1;
 		for( n = n - 1; n; n = n >> 1 )
 			p = p << 1;
 		return p;
@@ -202,11 +202,11 @@ namespace Gamma
 	//========================================================================
 	// 整数向上对其
 	//========================================================================
-	inline uint32 AligenDownTo2Power( uint32 n )
+	inline uint32_t AligenDownTo2Power( uint32_t n )
 	{
 		if( n == 0 )
 			return 1;
-		uint32 p = 1;
+		uint32_t p = 1;
 		for( ; n; n = n >> 1 )
 			p = p << 1;
 		return p >> 1;
@@ -290,11 +290,11 @@ namespace Gamma
 	//========================================================================
 	// 求常数的2的幂对齐
 	//========================================================================
-	template<uint32 n>
+	template<uint32_t n>
 	class TAligenUpTo2Power
 	{
-		template<uint32 v,uint32 l>	struct _A{ enum{ eValue = _A< v*2, l/2 >::eValue }; };
-		template<uint32 v>			struct _A<v, 0>{ enum{ eValue = v }; };
+		template<uint32_t v,uint32_t l>	struct _A{ enum{ eValue = _A< v*2, l/2 >::eValue }; };
+		template<uint32_t v>			struct _A<v, 0>{ enum{ eValue = v }; };
 	public:
 		enum { eValue = _A< 1, n - 1 >::eValue };
 	};
@@ -303,7 +303,7 @@ namespace Gamma
 	//========================================================================
 	// 求常数的向上对齐
 	//========================================================================
-	template<uint32 n, uint32 nAligen>
+	template<uint32_t n, uint32_t nAligen>
 	class TAligenUp
 	{
 	public:
@@ -313,7 +313,7 @@ namespace Gamma
 	//========================================================================
 	// 求常数的向下对齐
 	//========================================================================
-	template<uint32 n, uint32 nAligen>
+	template<uint32_t n, uint32_t nAligen>
 	class TAligenDown
 	{
 	public:
@@ -323,7 +323,7 @@ namespace Gamma
 	//========================================================================
 	// 求常数的的对数
 	//========================================================================
-	template<uint32 n>
+	template<uint32_t n>
 	class TLog2
 	{
 	public:
@@ -346,7 +346,7 @@ namespace Gamma
 	template<class CharType>
 	inline bool IsWordChar( CharType c )
 	{
-		return IsLetter( c ) || ( (uint32)c ) > 127;
+		return IsLetter( c ) || ( (uint32_t)c ) > 127;
 	}
 
 	//========================================================================
@@ -420,8 +420,8 @@ namespace Gamma
 	template< class File, class Fun >
 	inline void ReadString( File& fileRead, Fun funRead, std::basic_string<char>& sRead )
 	{
-		uint32 uStringLen;
-		( fileRead.*funRead )( (char*)&uStringLen, sizeof( uint32 ) );
+		uint32_t uStringLen;
+		( fileRead.*funRead )( (char*)&uStringLen, sizeof( uint32_t ) );
 		if( !uStringLen )
 			return sRead.clear();
 		sRead.resize( uStringLen );
@@ -432,13 +432,13 @@ namespace Gamma
 	template< class File, class Fun >
 	inline void ReadString( File& fileRead, Fun funRead, std::basic_string<wchar_t>& sRead )
 	{
-		uint32 uStringLen;
-		( fileRead.*funRead )( (char*)&uStringLen, sizeof( uint32 ) );
+		uint32_t uStringLen;
+		( fileRead.*funRead )( (char*)&uStringLen, sizeof( uint32_t ) );
 		if( !uStringLen )
 			return sRead.clear();
 		sRead.resize( uStringLen );
-		for( uint32 i = 0; i < uStringLen; i++ )
-			( fileRead.*funRead )( (char*)&sRead[i], sizeof(uint16) );
+		for( uint32_t i = 0; i < uStringLen; i++ )
+			( fileRead.*funRead )( (char*)&sRead[i], sizeof(uint16_t) );
 	}
 
 	//========================================================================
@@ -447,8 +447,8 @@ namespace Gamma
 	template< class File, class Fun >
 	inline void WriteString( File& fileWrite, Fun funWrite, const std::basic_string<char>& sWrite )
 	{
-		uint32 uStringLen = (uint32)sWrite.size();
-		( fileWrite.*funWrite )( (const char*)&uStringLen, sizeof( uint32 ) );
+		uint32_t uStringLen = (uint32_t)sWrite.size();
+		( fileWrite.*funWrite )( (const char*)&uStringLen, sizeof( uint32_t ) );
 		if( !uStringLen )
 			return;
 		( fileWrite.*funWrite )( (const char*)sWrite.c_str(), uStringLen*sizeof(char) );
@@ -457,23 +457,23 @@ namespace Gamma
 	template< class File, class Fun>
 	inline void WriteString( File& fileWrite, Fun funWrite, const std::basic_string<wchar_t>& sWrite )
 	{
-		uint32 uStringLen = (uint32)sWrite.size();
-		( fileWrite.*funWrite )( (const char*)&uStringLen, sizeof( uint32 ) );
+		uint32_t uStringLen = (uint32_t)sWrite.size();
+		( fileWrite.*funWrite )( (const char*)&uStringLen, sizeof( uint32_t ) );
 		if( !uStringLen )
 			return;
-		for( uint32 i = 0; i < uStringLen; i++ )
-			( fileWrite.*funWrite )( (const char*)&sWrite[i], sizeof(uint16) );
+		for( uint32_t i = 0; i < uStringLen; i++ )
+			( fileWrite.*funWrite )( (const char*)&sWrite[i], sizeof(uint16_t) );
 	}
 
 	//========================================================================
 	// 将字符串进行异或
 	//========================================================================
-	inline void BufferXor( tbyte* pDes, uint32 nSize, const uint8(&nKey)[16], 
-		uint32 nOffset = 0, const tbyte* pSrc = NULL )
+	inline void BufferXor( tbyte* pDes, uint32_t nSize, const uint8_t(&nKey)[16], 
+		uint32_t nOffset = 0, const tbyte* pSrc = NULL )
 	{
 		if( !pSrc )
 			pSrc = pDes;
-		for( uint32 i = 0; i < nSize; i++, nOffset++ )
+		for( uint32_t i = 0; i < nSize; i++, nOffset++ )
 			pDes[i] = pSrc[i] ^ nKey[ nOffset & 0xF ];
 	}
 
@@ -508,9 +508,9 @@ namespace Gamma
 	}
 
 	template<class CharType>
-	inline int32 GammaStringCompare( const CharType* p1, const CharType* p2, uint32 nLen = INVALID_32BITID )
+	inline int32_t GammaStringCompare( const CharType* p1, const CharType* p2, uint32_t nLen = INVALID_32BITID )
 	{
-		for( uint32 i = 0; i < nLen; i++ )
+		for( uint32_t i = 0; i < nLen; i++ )
 		{
 			CharType c1 = GammaChar( p1[i] );
 			CharType c2 = GammaChar( p2[i] );
@@ -543,7 +543,7 @@ namespace Gamma
 	}
 
 	template<class CharType>
-	inline int32 CompareGammaString( const CharType* p1, const CharType* p2 )
+	inline int32_t CompareGammaString( const CharType* p1, const CharType* p2 )
 	{
 		if( p1 == p2 )
 			return 0;
@@ -566,14 +566,14 @@ namespace Gamma
 	// 将GammaString 转化为数字ID
 	//========================================================================
 	template<class CharType>
-	inline uint32 GammaString2ID( const CharType* szStr )
+	inline uint32_t GammaString2ID( const CharType* szStr )
 	{
 		CharType szBuf[1024];
 		size_t i = 0;
 		for( ; i < 1023 && szStr[i]; i++ )
 			szBuf[i] = szStr[i];
 		szBuf[i] = 0;
-		return (uint32)GammaHash( GammaString( szBuf ), i*sizeof(CharType) );
+		return (uint32_t)GammaHash( GammaString( szBuf ), i*sizeof(CharType) );
 	} 
 
 	//========================================================================
@@ -626,8 +626,8 @@ namespace Gamma
 	template<class CharType>
 	const CharType* GetFileExtend( const CharType* szPath )
 	{
-		uint32 nPos = INVALID_32BITID;
-		for( uint32 i = 0; szPath[i]; i++ )
+		uint32_t nPos = INVALID_32BITID;
+		for( uint32_t i = 0; szPath[i]; i++ )
 			if( szPath[i] == '.' )
 				nPos = i + 1;
 		return nPos == INVALID_32BITID ? NULL : szPath + nPos;
@@ -643,13 +643,13 @@ namespace Gamma
 		std::vector< std::basic_string<_Elem> > vecStr;
 
 		size_t nSize = 1;
-		for( int32 i = 0; szSrc[i]; i++ )
+		for( int32_t i = 0; szSrc[i]; i++ )
 			if( szSrc[i] == nSeparator )
 				nSize++;
 
 		vecStr.resize( nSize );
-		int32 nPreItem = 0;
-		for( int32 i = 0, n = 0; ; i++ )
+		int32_t nPreItem = 0;
+		for( int32_t i = 0, n = 0; ; i++ )
 		{
 			if( szSrc[i] == nSeparator )
 			{
@@ -664,10 +664,10 @@ namespace Gamma
 		}
 		return vecStr;
 	}
-	GAMMA_COMMON_API int32 GammaA2I(const wchar_t* szStr);
-	GAMMA_COMMON_API int32 GammaA2I(const char* szStr);	
-	GAMMA_COMMON_API int64 GammaA2I64( const wchar_t* szStr );
-	GAMMA_COMMON_API int64 GammaA2I64( const char* szStr );
+	GAMMA_COMMON_API int32_t GammaA2I(const wchar_t* szStr);
+	GAMMA_COMMON_API int32_t GammaA2I(const char* szStr);	
+	GAMMA_COMMON_API int64_t GammaA2I64( const wchar_t* szStr );
+	GAMMA_COMMON_API int64_t GammaA2I64( const char* szStr );
 	GAMMA_COMMON_API double GammaA2F( const wchar_t* szStr );
 	GAMMA_COMMON_API double GammaA2F( const char* szStr );
     template< class _CharType, class _intType >
@@ -675,7 +675,7 @@ namespace Gamma
     {        
         std::vector< _intType > results;
 		_CharType szBuffer[64];		
-		uint32 n = 0;
+		uint32_t n = 0;
 		bool bDot = false;
         while( *szSrc )
         {
@@ -710,8 +710,8 @@ namespace Gamma
 		std::pair<_CharType*, _IntType>* vecResult, size_t nMaxSize )
 	{        
 		size_t nCount = 0;
-		int32 nPreItem = 0;
-		for( int32 i = 0; ; i++ )
+		int32_t nPreItem = 0;
+		for( int32_t i = 0; ; i++ )
 		{
 			if( nCount >= nMaxSize )
 				return nCount;
@@ -832,7 +832,7 @@ namespace Gamma
 	//========================================================================
 	// 检查标志是否存在
 	//========================================================================
-	inline bool IsHasFlag( uint32 nStyle, uint32 nFlag )
+	inline bool IsHasFlag( uint32_t nStyle, uint32_t nFlag )
 	{
 		return (nStyle&nFlag) != 0; 
 	}
@@ -840,7 +840,7 @@ namespace Gamma
 	//========================================================================
 	// 设定标志
 	//========================================================================
-	inline uint32 SetFlag( uint32 nStyle, uint32 nFlag, int32 bValue )
+	inline uint32_t SetFlag( uint32_t nStyle, uint32_t nFlag, int32_t bValue )
 	{
 		if( bValue )
 			return nStyle|nFlag;
@@ -881,7 +881,7 @@ namespace Gamma
 	_Type toupper( _Type c ){ return c >= 'a' && c <= 'z' ? c - 'a' + 'A' : c; }
 
 	template<class _Type>
-	int32 stricmp( const _Type* src, const _Type* dst )
+	int32_t stricmp( const _Type* src, const _Type* dst )
 	{
 		int ret = 0 ;
 
@@ -897,7 +897,7 @@ namespace Gamma
 	}
 
 	template<class _Type>
-	int32 strnicmp( const _Type* src, const _Type* dst, size_t nMaxLen )
+	int32_t strnicmp( const _Type* src, const _Type* dst, size_t nMaxLen )
 	{
 		int ret = 0;
 		size_t n = 0;
@@ -920,7 +920,7 @@ namespace Gamma
 	}
 
 	template<typename _Type>
-	uint32 strcpy_safe( _Type* pDes, const _Type* pSrc, uint32 nSize, uint32 nMaxSrcLen )
+	uint32_t strcpy_safe( _Type* pDes, const _Type* pSrc, uint32_t nSize, uint32_t nMaxSrcLen )
 	{		
 		GammaAst( nSize );
 		if( !pSrc )
@@ -929,7 +929,7 @@ namespace Gamma
 			return 0;
 		}
 
-		uint32 i = 0;
+		uint32_t i = 0;
 		--nSize;
 		while( i < nSize && i < nMaxSrcLen && *pSrc )
 			pDes[i++] = *pSrc++;
@@ -938,17 +938,17 @@ namespace Gamma
 	}
 
 	template<typename _Type>
-	uint32 strcat_safe( _Type* pDes, const _Type* pSrc, uint32 nSize, uint32 nMaxSrcLen )
+	uint32_t strcat_safe( _Type* pDes, const _Type* pSrc, uint32_t nSize, uint32_t nMaxSrcLen )
 	{		
 		if( !pSrc )
 			return 0;
 		GammaAst( nSize );
-		uint32 i = 0;
+		uint32_t i = 0;
 		--nSize;
 		while( i < nSize && pDes[i] )
 			i++;
 
-		uint32 j = 0;
+		uint32_t j = 0;
 		while( i < nSize && j < nMaxSrcLen && pSrc[j] )
 			pDes[i++] = pSrc[j++];
 		pDes[i] = 0;
@@ -957,7 +957,7 @@ namespace Gamma
 
 
 	template<typename _Type>
-	int32 strcmp_safe( const _Type* pDes, const _Type* pSrc, uint32 nSize, uint32 nMaxSrcLen )
+	int32_t strcmp_safe( const _Type* pDes, const _Type* pSrc, uint32_t nSize, uint32_t nMaxSrcLen )
 	{ 
 		if( !pSrc && !pDes )
 			return 0;
@@ -965,52 +965,52 @@ namespace Gamma
 			return -1;
 		if( !pSrc )
 			return 1;
-		uint32 nCount = Min( nSize, nMaxSrcLen );
-		for( uint32 i = 0; i < nCount; ++i )
+		uint32_t nCount = Min( nSize, nMaxSrcLen );
+		for( uint32_t i = 0; i < nCount; ++i )
 		{
 			if( pDes[i] != pSrc[i] )
-				return (int32)pDes[i] - (int32)pSrc[i];
+				return (int32_t)pDes[i] - (int32_t)pSrc[i];
 			if( !pDes[i] )
 				return 0;
 		}
 
-		int32 nDesEnd = nCount == nSize ? 0 : pDes[nCount];
-		int32 nSrcEnd = nCount == nMaxSrcLen ? 0 : pSrc[nCount];
+		int32_t nDesEnd = nCount == nSize ? 0 : pDes[nCount];
+		int32_t nSrcEnd = nCount == nMaxSrcLen ? 0 : pSrc[nCount];
 		return nDesEnd - nSrcEnd;
 	}
 
-	template<typename _Type, uint32 n> 
-	uint32 strcpy2array_safe( _Type(&array_pointer)[n], const _Type* pSrc )
+	template<typename _Type, uint32_t n> 
+	uint32_t strcpy2array_safe( _Type(&array_pointer)[n], const _Type* pSrc )
 	{ 
 		return strcpy_safe( array_pointer, pSrc, n, INVALID_32BITID );
 	}
 
-	template<typename _Type, uint32 n> 
-	uint32 strcat2array_safe( _Type(&array_pointer)[n], const _Type* pSrc )
+	template<typename _Type, uint32_t n> 
+	uint32_t strcat2array_safe( _Type(&array_pointer)[n], const _Type* pSrc )
 	{ 
 		return strcat_safe( array_pointer, pSrc, n, INVALID_32BITID );
 	}
 
-	template<typename _Type, uint32 n> 
-	int32 strcmp2array_safe( const _Type(&array_pointer)[n], const _Type* pSrc )
+	template<typename _Type, uint32_t n> 
+	int32_t strcmp2array_safe( const _Type(&array_pointer)[n], const _Type* pSrc )
 	{ 
 		return strcmp_safe( array_pointer, pSrc, n, INVALID_32BITID );
 	}
 
-	template<typename _Type, uint32 n> 
-	uint32 strncpy2array_safe( _Type(&array_pointer)[n], const _Type* pSrc, uint32 nMaxSrcLen )
+	template<typename _Type, uint32_t n> 
+	uint32_t strncpy2array_safe( _Type(&array_pointer)[n], const _Type* pSrc, uint32_t nMaxSrcLen )
 	{ 
 		return strcpy_safe( array_pointer, pSrc, n, nMaxSrcLen );
 	}
 
-	template<typename _Type, uint32 n> 
-	uint32 strncat2array_safe( _Type(&array_pointer)[n], const _Type* pSrc, uint32 nMaxSrcLen )
+	template<typename _Type, uint32_t n> 
+	uint32_t strncat2array_safe( _Type(&array_pointer)[n], const _Type* pSrc, uint32_t nMaxSrcLen )
 	{ 
 		return strcat_safe( array_pointer, pSrc, n, nMaxSrcLen );
 	}
 
-	template<typename _Type, uint32 n> 
-	int32 strncmp2array_safe( const _Type(&array_pointer)[n], const _Type* pSrc, uint32 nMaxSrcLen )
+	template<typename _Type, uint32_t n> 
+	int32_t strncmp2array_safe( const _Type(&array_pointer)[n], const _Type* pSrc, uint32_t nMaxSrcLen )
 	{ 
 		return strcmp_safe( array_pointer, pSrc, n, nMaxSrcLen );
 	}

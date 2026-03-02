@@ -12,28 +12,28 @@ using namespace Gamma;
 //*          不用
 class SnowFlake {
 private:
-	static const uint64 start_stmp_ = 1598889600000;
-	static const uint64 sequence_bit_ = 10;
-	static const uint64 machine_bit_ = 7;
-	static const uint64 datacenter_bit_ = 5;
+	static const uint64_t start_stmp_ = 1598889600000;
+	static const uint64_t sequence_bit_ = 10;
+	static const uint64_t machine_bit_ = 7;
+	static const uint64_t datacenter_bit_ = 5;
 
-	static const uint64 max_datacenter_num_ = -1 ^ (uint64(-1) << datacenter_bit_);
-	static const uint64 max_machine_num_ = -1 ^ (uint64(-1) << machine_bit_);
-	static const uint64 max_sequence_num_ = -1 ^ (uint64(-1) << sequence_bit_);
+	static const uint64_t max_datacenter_num_ = -1 ^ (uint64_t(-1) << datacenter_bit_);
+	static const uint64_t max_machine_num_ = -1 ^ (uint64_t(-1) << machine_bit_);
+	static const uint64_t max_sequence_num_ = -1 ^ (uint64_t(-1) << sequence_bit_);
 
-	static const uint64 machine_left = sequence_bit_;
-	static const uint64 datacenter_left = sequence_bit_ + machine_bit_;
-	static const uint64 timestmp_left = sequence_bit_ + machine_bit_ + datacenter_bit_;
+	static const uint64_t machine_left = sequence_bit_;
+	static const uint64_t datacenter_left = sequence_bit_ + machine_bit_;
+	static const uint64_t timestmp_left = sequence_bit_ + machine_bit_ + datacenter_bit_;
 
-	uint64 datacenterId;
-	uint64 machineId;
-	uint64 sequence;
-	uint64 lastStmp;
+	uint64_t datacenterId;
+	uint64_t machineId;
+	uint64_t sequence;
+	uint64_t lastStmp;
 
 	std::mutex mutex_;
 
-	uint64 getNextMill() {
-		uint64 mill = Gamma::GetNatureTime();
+	uint64_t getNextMill() {
+		uint64_t mill = Gamma::GetNatureTime();
 		while (mill <= lastStmp) {
 			mill = Gamma::GetNatureTime();
 		}
@@ -42,7 +42,7 @@ private:
 
 public:
 	bool Init(int datacenter_Id, int machine_Id) {
-		if ((uint64)datacenter_Id > max_datacenter_num_ || datacenter_Id < 0) {
+		if ((uint64_t)datacenter_Id > max_datacenter_num_ || datacenter_Id < 0) {
 			return false;
 		}
 		if ((uint64_t)machine_Id > max_machine_num_ || machine_Id < 0) {

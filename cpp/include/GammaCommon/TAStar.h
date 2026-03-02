@@ -40,7 +40,7 @@ namespace Gamma
 			void SetData(size_t n, const SHeapSortNode& e)
 			{
 				THeapSortVector<SHeapSortNode>::SetData(n, e);
-				e.m_pNode->Open((uint32)n);
+				e.m_pNode->Open((uint32_t)n);
 			}
 		};
 
@@ -101,7 +101,7 @@ namespace Gamma
 				return true;
 
 			IndexType nodeOpen;
-			for (int32 i = 0; (i = m_pMask->GetNextNode(pCurNode->GetNode(), i, nodeOpen)) >= 0; i++)
+			for (int32_t i = 0; (i = m_pMask->GetNextNode(pCurNode->GetNode(), i, nodeOpen)) >= 0; i++)
 			{
 				MaskNode* pOpenNode = m_pMask->GetNode(nodeOpen);
 				if (!pOpenNode->IsClosed())
@@ -119,7 +119,7 @@ namespace Gamma
 		//==================================
 		// 启动A*搜索
 		//==================================
-		MaskNode* Search(const IndexType& nodeStart, const IndexType& nodeEnd, DataStruct* pMask, uint32 nSearchDepth = 100000)
+		MaskNode* Search(const IndexType& nodeStart, const IndexType& nodeEnd, DataStruct* pMask, uint32_t nSearchDepth = 100000)
 		{
 			m_vecOpen.GetArrayData().Clear();
 
@@ -141,7 +141,7 @@ namespace Gamma
 	// A*核心算法用到的格子地图搜索路径的的数据结构
 	// 符合上面A*核心算法的数据结构需要包某些特定函数
 	//===================================================
-	template<typename BarrierChecker, typename DistanceType = int32>
+	template<typename BarrierChecker, typename DistanceType = int32_t>
 	class TGridData
 	{
 		enum { eRegionWidth = 16 };
@@ -152,22 +152,22 @@ namespace Gamma
 		struct Node
 		{
 			enum EState { eNew = -2, eClosed = -1 };
-			uint8			m_xOffset;
-			uint8			m_yOffset;
+			uint8_t			m_xOffset;
+			uint8_t			m_yOffset;
 			CostType		m_nCostFromBegin;
 			CostType		m_nCostTotal;
 			Node*			m_pParent;
-			uint32			m_nOpenIndex;
-			uint32			m_nSearchID;
+			uint32_t			m_nOpenIndex;
+			uint32_t			m_nSearchID;
 
 		public:
-			Node() : m_nOpenIndex((uint32)eNew), m_nSearchID(0), m_pParent(NULL) {}
+			Node() : m_nOpenIndex((uint32_t)eNew), m_nSearchID(0), m_pParent(NULL) {}
 			operator CostType() const { return m_nCostTotal; }
-			bool			IsClosed() const { return m_nOpenIndex == (uint32)eClosed; }
-			bool			IsNew()	const { return m_nOpenIndex == (uint32)eNew; }
-			uint32			GetOpenIndex() const { return m_nOpenIndex; }
-			void			Open( uint32 nIndex ) { m_nOpenIndex = nIndex; }
-			void			Close() { m_nOpenIndex = (uint32)eClosed; }
+			bool			IsClosed() const { return m_nOpenIndex == (uint32_t)eClosed; }
+			bool			IsNew()	const { return m_nOpenIndex == (uint32_t)eNew; }
+			uint32_t			GetOpenIndex() const { return m_nOpenIndex; }
+			void			Open( uint32_t nIndex ) { m_nOpenIndex = nIndex; }
+			void			Close() { m_nOpenIndex = (uint32_t)eClosed; }
 
 			//==================================
 			// 代价判断，重要的函数之一
@@ -241,7 +241,7 @@ namespace Gamma
 		{
 			Region() : m_pNextRegion(nullptr)
 			{
-				for( uint32 i = 0; i < eRegionWidth * eRegionWidth; i++ )
+				for( uint32_t i = 0; i < eRegionWidth * eRegionWidth; i++ )
 				{
 					m_aryNode[i].m_xOffset = i % eRegionWidth;
 					m_aryNode[i].m_yOffset = i / eRegionWidth;
@@ -252,10 +252,10 @@ namespace Gamma
 			Region*			m_pNextRegion;
 		};
 
-		uint32					m_nWidth;
-		uint32					m_nDepth;
-		uint32					m_nWidthInRegion;
-		uint32					m_nCurSearchID;
+		uint32_t					m_nWidth;
+		uint32_t					m_nDepth;
+		uint32_t					m_nWidthInRegion;
+		uint32_t					m_nCurSearchID;
 		BarrierChecker			m_BarrierChecker;
 		Region*					m_pFreeRegion;
 		Region*					m_pUsingRegion;
@@ -312,7 +312,7 @@ namespace Gamma
 			if (pNode->m_nSearchID == m_nCurSearchID)
 				return pNode;
 			pNode->m_nSearchID = m_nCurSearchID;
-			pNode->m_nOpenIndex = (uint32)Node::eNew;
+			pNode->m_nOpenIndex = (uint32_t)Node::eNew;
 			pNode->m_pParent = NULL;
 			return pNode;
 		}
@@ -322,7 +322,7 @@ namespace Gamma
 		// 返回子节点的索引，
 		// 没有子节点返回-1
 		//==================================
-		int32 GetNextNode(const IndexType& nodeParent, int32 nChildIndex, IndexType& nodeChild)
+		int32_t GetNextNode(const IndexType& nodeParent, int32_t nChildIndex, IndexType& nodeChild)
 		{
 			static const IndexType nodeNext[8] =
 			{
@@ -334,8 +334,8 @@ namespace Gamma
 			for (; nChildIndex < 8; nChildIndex++)
 			{
 				nodeChild = nodeParent + nodeNext[nChildIndex];
-				if ((uint32)nodeChild.x < m_nWidth &&
-					(uint32)nodeChild.y < m_nDepth &&
+				if ((uint32_t)nodeChild.x < m_nWidth &&
+					(uint32_t)nodeChild.y < m_nDepth &&
 					m_BarrierChecker(nodeChild.x, nodeChild.y) == false)
 					return nChildIndex;
 			}
@@ -350,7 +350,7 @@ namespace Gamma
 		Node* SearchEndNode( 
 			AStarAlgorithm& AStar, BarrierChecker funCheckBarrier,
 			const IndexType& nodeStart, const IndexType& nodeEnd,
-			uint32 nWidth, uint32 nDepth, uint32 nSearchDepth = 100000)
+			uint32_t nWidth, uint32_t nDepth, uint32_t nSearchDepth = 100000)
 		{
 			m_nCurSearchID++;
 			m_BarrierChecker = funCheckBarrier;
@@ -393,10 +393,10 @@ namespace Gamma
 		// 调用A*核心算法在格子结构的地图上搜索路径
 		//==========================================
 		template<typename AStarAlgorithm>
-		uint32 Search( AStarAlgorithm& AStar, BarrierChecker funCheckBarrier,
-			std::function<void( uint32 nIndex, const IndexType& )> funAddPathNode,
+		uint32_t Search( AStarAlgorithm& AStar, BarrierChecker funCheckBarrier,
+			std::function<void( uint32_t nIndex, const IndexType& )> funAddPathNode,
 			const IndexType& nodeStart, const IndexType& nodeEnd,
-			uint32 nWidth, uint32 nDepth, uint32 nSearchDepth = 100000)
+			uint32_t nWidth, uint32_t nDepth, uint32_t nSearchDepth = 100000)
 		{
 			// 1、搜索路径
 			Node* pEndNode = SearchEndNode( AStar, funCheckBarrier, 
@@ -428,7 +428,7 @@ namespace Gamma
 #endif
 
 			// 3、回调
-			uint32 nCount = 0;
+			uint32_t nCount = 0;
 			while( pCurNode )
 			{
 #ifdef DEBUG_AStar
@@ -451,7 +451,7 @@ namespace Gamma
 		IndexType SearchNearDest( 
 			AStarAlgorithm& AStar, BarrierChecker funCheckBarrier,
 			const IndexType& nodeStart, const IndexType& nodeEnd,
-			uint32 nWidth, uint32 nDepth, uint32 nSearchDepth = 100000)
+			uint32_t nWidth, uint32_t nDepth, uint32_t nSearchDepth = 100000)
 		{
 			Node* pEndNode = SearchEndNode( AStar, funCheckBarrier, 
 				nodeStart, nodeEnd, nWidth, nDepth, nSearchDepth);

@@ -19,8 +19,8 @@ namespace Gamma
 	{
 		union
 		{
-			uint32   dwColor;
-			uint8    byColor[4];
+			uint32_t   dwColor;
+			uint8_t    byColor[4];
 		};
 
 		CColor()
@@ -28,12 +28,12 @@ namespace Gamma
 			dwColor = 0;
 		}
 
-		CColor( uint32 c )
+		CColor( uint32_t c )
 		{
 			dwColor = c;
 		}
 
-		CColor( uint8 a, uint8 r, uint8 g, uint8 b )
+		CColor( uint8_t a, uint8_t r, uint8_t g, uint8_t b )
 		{
 			byColor[0] = b;
 			byColor[1] = g;
@@ -43,31 +43,31 @@ namespace Gamma
 
 		CColor( float a, float r, float g, float b )
 		{
-			byColor[0] = (uint8)( Limit( b*255.0f, 0.0f, 255.0f ) + 0.5f );
-			byColor[1] = (uint8)( Limit( g*255.0f, 0.0f, 255.0f ) + 0.5f );
-			byColor[2] = (uint8)( Limit( r*255.0f, 0.0f, 255.0f ) + 0.5f );
-			byColor[3] = (uint8)( Limit( a*255.0f, 0.0f, 255.0f ) + 0.5f );
+			byColor[0] = (uint8_t)( Limit( b*255.0f, 0.0f, 255.0f ) + 0.5f );
+			byColor[1] = (uint8_t)( Limit( g*255.0f, 0.0f, 255.0f ) + 0.5f );
+			byColor[2] = (uint8_t)( Limit( r*255.0f, 0.0f, 255.0f ) + 0.5f );
+			byColor[3] = (uint8_t)( Limit( a*255.0f, 0.0f, 255.0f ) + 0.5f );
 		}
 
 		CColor( CVector4f vColor )
 		{
-			byColor[0] = (uint8)( Limit( vColor.z*255.0f, 0.0f, 255.0f ) + 0.5f );
-			byColor[1] = (uint8)( Limit( vColor.y*255.0f, 0.0f, 255.0f ) + 0.5f );
-			byColor[2] = (uint8)( Limit( vColor.x*255.0f, 0.0f, 255.0f ) + 0.5f );
-			byColor[3] = (uint8)( Limit( vColor.w*255.0f, 0.0f, 255.0f ) + 0.5f );
+			byColor[0] = (uint8_t)( Limit( vColor.z*255.0f, 0.0f, 255.0f ) + 0.5f );
+			byColor[1] = (uint8_t)( Limit( vColor.y*255.0f, 0.0f, 255.0f ) + 0.5f );
+			byColor[2] = (uint8_t)( Limit( vColor.x*255.0f, 0.0f, 255.0f ) + 0.5f );
+			byColor[3] = (uint8_t)( Limit( vColor.w*255.0f, 0.0f, 255.0f ) + 0.5f );
 		}
 
-		uint8 operator[] ( size_t nIndex ) const
+		uint8_t operator[] ( size_t nIndex ) const
 		{
 			return byColor[nIndex];
 		}
 
-		uint8& operator[]( size_t nIndex )
+		uint8_t& operator[]( size_t nIndex )
 		{
 			return byColor[nIndex];
 		}
 
-		operator uint32() const
+		operator uint32_t() const
 		{
 			return dwColor;
 		}
@@ -77,12 +77,12 @@ namespace Gamma
 			return CVector4f( r(), g(), b(), a() )/255.0f;
 		}
 
-		operator TVector4<uint8>() const
+		operator TVector4<uint8_t>() const
 		{
-			return TVector4<uint8>( r(), g(), b(), a() );
+			return TVector4<uint8_t>( r(), g(), b(), a() );
 		}
 
-		const CColor& operator= ( const uint32& arg )
+		const CColor& operator= ( const uint32_t& arg )
 		{
 			dwColor = arg;
 			return *this;
@@ -94,26 +94,26 @@ namespace Gamma
 			return *this;
 		}
 
-		CColor FormatFrom565( uint16 nR5G6B5 )
+		CColor FormatFrom565( uint16_t nR5G6B5 )
 		{
-			byColor[0] = uint8( ( nR5G6B5&0x001f ) << 3 ); byColor[0] |= byColor[0] ? 0x7 : 0;
-			byColor[1] = uint8( ( nR5G6B5&0x07e0 ) >> 3 ); byColor[1] |= byColor[1] ? 0x3 : 0;
-			byColor[2] = uint8( ( nR5G6B5&0xf800 ) >> 8 ); byColor[2] |= byColor[2] ? 0x7 : 0;
+			byColor[0] = uint8_t( ( nR5G6B5&0x001f ) << 3 ); byColor[0] |= byColor[0] ? 0x7 : 0;
+			byColor[1] = uint8_t( ( nR5G6B5&0x07e0 ) >> 3 ); byColor[1] |= byColor[1] ? 0x3 : 0;
+			byColor[2] = uint8_t( ( nR5G6B5&0xf800 ) >> 8 ); byColor[2] |= byColor[2] ? 0x7 : 0;
 			byColor[3] = 255;
 			return *this;
 		}
 
-		uint16 FormatTo565() const
+		uint16_t FormatTo565() const
 		{
-			return (uint16)( 
-				( uint32( byColor[2] >> 3 )<<11 ) | 
-				( uint32( byColor[1] >> 2 )<<5 ) | 
-				( uint32( byColor[0] >> 3 ) ) );
+			return (uint16_t)( 
+				( uint32_t( byColor[2] >> 3 )<<11 ) | 
+				( uint32_t( byColor[1] >> 2 )<<5 ) | 
+				( uint32_t( byColor[0] >> 3 ) ) );
 		}
 
-		CColor FormatFrom4444( uint16 n4444 )
+		CColor FormatFrom4444( uint16_t n4444 )
 		{
-			uint8* pBuf = (uint8*)&n4444;
+			uint8_t* pBuf = (uint8_t*)&n4444;
 			byColor[0] = ( pBuf[0]&0x0f ) << 4;			byColor[0] |= byColor[0] ? 0xf : 0;
 			byColor[1] = pBuf[0]&0xf0;					byColor[1] |= byColor[1] ? 0xf : 0;
 			byColor[2] = ( pBuf[1]&0x0f ) << 4;			byColor[2] |= byColor[2] ? 0xf : 0;
@@ -121,47 +121,47 @@ namespace Gamma
 			return *this;
 		}
 
-		uint16 FormatTo4444() const
+		uint16_t FormatTo4444() const
 		{
 			if( !dwColor )
 				return 0;
-			return (uint16)( 
-				( uint32( byColor[3] >> 4 ) << 12 ) | 
-				( uint32( byColor[2] >> 4 ) << 8 ) | 
-				( uint32( byColor[1] >> 4 ) << 4 ) | 
-				( uint32( byColor[0] >> 4 ) ) );
+			return (uint16_t)( 
+				( uint32_t( byColor[3] >> 4 ) << 12 ) | 
+				( uint32_t( byColor[2] >> 4 ) << 8 ) | 
+				( uint32_t( byColor[1] >> 4 ) << 4 ) | 
+				( uint32_t( byColor[0] >> 4 ) ) );
 		}
 
 		CColor Interpolate( const CColor& c, float fPercent ) const
 		{
-			int32& i = *(int32*)&fPercent;
+			int32_t& i = *(int32_t*)&fPercent;
 			if( i <= 0 )
 				return c;
-			int32 e = 127 + 23 - 8 - ( i>>23 );
+			int32_t e = 127 + 23 - 8 - ( i>>23 );
 			if( e >= 24 )
 				return c;
-			int32 nPercent1 = (int32)( ( (i&0x7fffff)|0x800000 ) >> e );
-			int32 nPercent2 = 256 - nPercent1;
+			int32_t nPercent1 = (int32_t)( ( (i&0x7fffff)|0x800000 ) >> e );
+			int32_t nPercent2 = 256 - nPercent1;
 
 			if( nPercent2 < 2 )
 				return *this;
 
-			uint16 nColor1[4] = {   byColor[0],   byColor[1],   byColor[2],   byColor[3] };
-			uint16 nColor2[4] = { c.byColor[0], c.byColor[1], c.byColor[2], c.byColor[3] };
-			uint64 nColor     = ( ( *(uint64*)( nColor1 ) )*nPercent1 + ( *(uint64*)( nColor2 ) )*nPercent2 ) >> 8;
-			uint16* pColor    = (uint16*)&nColor;
-			return CColor( (uint8)pColor[3], (uint8)pColor[2], (uint8)pColor[1], (uint8)pColor[0] );
+			uint16_t nColor1[4] = {   byColor[0],   byColor[1],   byColor[2],   byColor[3] };
+			uint16_t nColor2[4] = { c.byColor[0], c.byColor[1], c.byColor[2], c.byColor[3] };
+			uint64_t nColor     = ( ( *(uint64_t*)( nColor1 ) )*nPercent1 + ( *(uint64_t*)( nColor2 ) )*nPercent2 ) >> 8;
+			uint16_t* pColor    = (uint16_t*)&nColor;
+			return CColor( (uint8_t)pColor[3], (uint8_t)pColor[2], (uint8_t)pColor[1], (uint8_t)pColor[0] );
 		}
 
 		const CColor operator* ( float arg ) const
 		{
-			int32& i = *(int32*)&arg;
+			int32_t& i = *(int32_t*)&arg;
 			if( i <= 0 )
 				return 0;
-			int32 e = 127 + 23 - 9 - ( i>>23 );
+			int32_t e = 127 + 23 - 9 - ( i>>23 );
 			if( e >= 24 )
 				return 0;
-			int32 nPercent = (int32)( ( (i&0x7fffff)|0x800000 ) >> e );
+			int32_t nPercent = (int32_t)( ( (i&0x7fffff)|0x800000 ) >> e );
 			nPercent = ( nPercent >> 1 ) + ( nPercent&1 );
 
 			if( nPercent == 0 )
@@ -176,20 +176,20 @@ namespace Gamma
 
 		const CColor operator* (const CColor& arg) const
 		{
-			return CColor( (uint8)(byColor[3]* arg.byColor[3]/255.0f), (uint8)(byColor[2]* arg.byColor[2]/255.0f),
-				(uint8)(byColor[1]* arg.byColor[1]/255.0f), (uint8)(byColor[0]* arg.byColor[0]/255.0f) );
+			return CColor( (uint8_t)(byColor[3]* arg.byColor[3]/255.0f), (uint8_t)(byColor[2]* arg.byColor[2]/255.0f),
+				(uint8_t)(byColor[1]* arg.byColor[1]/255.0f), (uint8_t)(byColor[0]* arg.byColor[0]/255.0f) );
 		};
 
 		const CColor operator+ ( const CColor& arg ) const
 		{
-			return CColor( (uint8)Min( 255, (int)byColor[3] + arg.byColor[3] ), (uint8)Min( 255, (int)byColor[2] + arg.byColor[2] ),
-				(uint8)Min( 255, (int)byColor[1] + arg.byColor[1] ), (uint8)Min( 255, (int)byColor[0] + arg.byColor[0] ) );
+			return CColor( (uint8_t)Min( 255, (int)byColor[3] + arg.byColor[3] ), (uint8_t)Min( 255, (int)byColor[2] + arg.byColor[2] ),
+				(uint8_t)Min( 255, (int)byColor[1] + arg.byColor[1] ), (uint8_t)Min( 255, (int)byColor[0] + arg.byColor[0] ) );
 		}
 
 		const CColor operator- ( const CColor& arg ) const
 		{
-			return CColor( (uint8)Max( 0, (int)byColor[3] - arg.byColor[3] ), (uint8)Max( 0, (int)byColor[2] - arg.byColor[2] ),
-				(uint8)Max( 0, (int)byColor[1] - arg.byColor[1] ), (uint8)Max( 0, (int)byColor[0] - arg.byColor[0] ) );
+			return CColor( (uint8_t)Max( 0, (int)byColor[3] - arg.byColor[3] ), (uint8_t)Max( 0, (int)byColor[2] - arg.byColor[2] ),
+				(uint8_t)Max( 0, (int)byColor[1] - arg.byColor[1] ), (uint8_t)Max( 0, (int)byColor[0] - arg.byColor[0] ) );
 		}
 
 		const CColor operator! () const
@@ -197,42 +197,42 @@ namespace Gamma
 			return CColor( byColor[3], byColor[0], byColor[1], byColor[2] );
 		}
 
-		uint8 a() const
+		uint8_t a() const
 		{
 			return byColor[3];
 		}
 
-		uint8 r() const
+		uint8_t r() const
 		{
 			return byColor[2];
 		}
 
-		uint8 g() const
+		uint8_t g() const
 		{
 			return byColor[1];
 		}
 
-		uint8 b() const
+		uint8_t b() const
 		{
 			return byColor[0];
 		}
 
-		uint8& a()
+		uint8_t& a()
 		{
 			return byColor[3];
 		}
 
-		uint8& r()
+		uint8_t& r()
 		{
 			return byColor[2];
 		}
 
-		uint8& g()
+		uint8_t& g()
 		{
 			return byColor[1];
 		}
 
-		uint8& b()
+		uint8_t& b()
 		{
 			return byColor[0];
 		}
@@ -323,14 +323,14 @@ namespace Gamma
 				B = (float)( 255.0f * _::Hue2RGB(var_1, var_2, H - (1.0f / 3.0f)) );
 			}
 
-			byColor[0] = (uint8)B;
-			byColor[1] = (uint8)G;
-			byColor[2] = (uint8)R;
+			byColor[0] = (uint8_t)B;
+			byColor[1] = (uint8_t)G;
+			byColor[2] = (uint8_t)R;
 
 			return *this;
 		}
 
-		static CColor FormatFrom565Fast( uint16 nR5G6B5 )
+		static CColor FormatFrom565Fast( uint16_t nR5G6B5 )
 		{
 			return 0xff000000|( ( nR5G6B5&0xf800 ) << 8 )|( ( nR5G6B5&0x07e0 ) << 5 )|( ( nR5G6B5&0x001f ) << 3 );
 		}

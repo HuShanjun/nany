@@ -52,7 +52,7 @@ namespace Gamma
 		return m_pSocket->GetConnectType();
 	}
 
-	void CGListener::Start( const char* szAddres, uint16 nPort )
+	void CGListener::Start( const char* szAddres, uint16_t nPort )
 	{
 		m_pSocket->StartListener( szAddres, nPort );
 		m_LocalAddress.SetAddress( szAddres );

@@ -45,7 +45,7 @@ namespace Gamma
 	bool CIniFile::Open( const char* szFileName )
 	{
 		CPkgFile	File;
-		int32		nSize;
+		int32_t		nSize;
 
 		if( !szFileName || !szFileName[0] )
 			return false;
@@ -78,7 +78,7 @@ namespace Gamma
 		return Open( UcsToUtf8( szFileName ).c_str() );
 	}
 
-	bool CIniFile::Init( const tbyte* pBuffer, uint32 nSize )
+	bool CIniFile::Init( const tbyte* pBuffer, uint32_t nSize )
 	{
 		Clear();
 
@@ -98,10 +98,10 @@ namespace Gamma
 			pBuffer[0] == 0xff && 
 			pBuffer[1] == 0xfe )
 		{
-			const uint16* pUcs2 = (const uint16*)( pBuffer + 2 );
-			uint32 nLen = Ucs2ToUtf8( NULL, 0, pUcs2, (uint32)( nSize/sizeof(uint16) ) - 1 );
+			const uint16_t* pUcs2 = (const uint16_t*)( pBuffer + 2 );
+			uint32_t nLen = Ucs2ToUtf8( NULL, 0, pUcs2, (uint32_t)( nSize/sizeof(uint16_t) ) - 1 );
 			strFileBuffer.resize( nLen + 1 );
-			Ucs2ToUtf8( &strFileBuffer[0], nLen + 1, pUcs2, nSize/sizeof(uint16) - 1 );
+			Ucs2ToUtf8( &strFileBuffer[0], nLen + 1, pUcs2, nSize/sizeof(uint16_t) - 1 );
 			m_pFile->m_eType = eTFT_Ucs2;
 		}
 		else
@@ -135,10 +135,10 @@ namespace Gamma
 		{
 		public:
 			_SSaveFile( const char* szName ) : opkgstream( szName ){}
-			int32 Size()									{ return 0; }
-			int32 Read( void* pBuf, uint32 nSize )			{ return 0; }
-			int32 Write( const void* pBuf, uint32 nSize )	{ opkgstream::write( (const char*)pBuf, nSize ); return nSize; }
-			void  Seek( uint32 nPos )						{ opkgstream::seekp( nPos ); }
+			int32_t Size()									{ return 0; }
+			int32_t Read( void* pBuf, uint32_t nSize )			{ return 0; }
+			int32_t Write( const void* pBuf, uint32_t nSize )	{ opkgstream::write( (const char*)pBuf, nSize ); return nSize; }
+			void  Seek( uint32_t nPos )						{ opkgstream::seekp( nPos ); }
 		};
 
 		char szBuffer[2048];
@@ -149,8 +149,8 @@ namespace Gamma
 
 	bool CIniFile::WriteTo( IGammFileInterface* pFile, ETextFileType eType )
 	{
-		uint8 cFlag1[3] = { 0xef, 0xbb, 0xbf };
-		uint8 cFlag2[2] = { 0xff, 0xfe };
+		uint8_t cFlag1[3] = { 0xef, 0xbb, 0xbf };
+		uint8_t cFlag2[2] = { 0xff, 0xfe };
 
 		eType = ( eType == eTFT_Default ) ? m_pFile->m_eType : eType;
 		m_pFile->m_eType = eType;
@@ -168,11 +168,11 @@ namespace Gamma
 				{
 					wstring szTemp = Utf8ToUcs( szStr.c_str() );
 					for( size_t i = 0; i < szTemp.size(); i++ )
-						pFile->Write( szTemp.c_str() + i, sizeof(uint16) );
+						pFile->Write( szTemp.c_str() + i, sizeof(uint16_t) );
 				}
 				else
 				{
-					pFile->Write( szStr.c_str(), (uint32)szStr.size() );
+					pFile->Write( szStr.c_str(), (uint32_t)szStr.size() );
 				}
 			}			
 		};
@@ -321,14 +321,14 @@ namespace Gamma
 	}
 
 	//	读取一个整数
-	int32 CIniFile::GetInteger( const char* lpSection, const char* lpKeyName, int32 nDefault )
+	int32_t CIniFile::GetInteger( const char* lpSection, const char* lpKeyName, int32_t nDefault )
 	{
 		const char* szValue = GetString( lpSection, lpKeyName );
 		return szValue ? GammaA2I( szValue ) : nDefault;
 	}
 
 	//	读取一个整数
-	int64 CIniFile::GetInteger64( const char* lpSection, const char* lpKeyName, int64 nDefault )
+	int64_t CIniFile::GetInteger64( const char* lpSection, const char* lpKeyName, int64_t nDefault )
 	{
 		const char* szValue = GetString( lpSection, lpKeyName );
 		return szValue ? GammaA2I64( szValue ) : nDefault;
@@ -363,7 +363,7 @@ namespace Gamma
 	}
 
 	// 写入某个Section下的Key的值，字符串
-	void CIniFile::WriteInteger64( const char* lpSection, const char* lpKeyName, int64 nValue )
+	void CIniFile::WriteInteger64( const char* lpSection, const char* lpKeyName, int64_t nValue )
 	{
 		char szResult[64];
 		gammasstream( szResult, ELEM_COUNT( szResult ) ) << nValue;

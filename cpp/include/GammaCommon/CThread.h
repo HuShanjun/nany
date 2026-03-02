@@ -27,36 +27,36 @@ namespace Gamma
     typedef HGAMMA				HSEMAPHORE;
 
 #ifdef _WIN32
-    typedef uint32               (__stdcall *THREADPROC)( void * );
+    typedef uint32_t               (__stdcall *THREADPROC)( void * );
 #else
-    typedef uint32               (*THREADPROC)(void*);
+    typedef uint32_t               (*THREADPROC)(void*);
 #endif
 
 	//======================================================================
 	// Process
 	//======================================================================
-	GAMMA_COMMON_API uint32		GammaGetCurrentProcessID();
+	GAMMA_COMMON_API uint32_t		GammaGetCurrentProcessID();
 	GAMMA_COMMON_API void		GammaGetCurrentProcessPath( char* szBuffer, size_t nCount );
-	GAMMA_COMMON_API bool		GammaCheckProcessExist( uint32 nProcessID );
-	GAMMA_COMMON_API uint64		GammaGetProcessMemCost();
+	GAMMA_COMMON_API bool		GammaCheckProcessExist( uint32_t nProcessID );
+	GAMMA_COMMON_API uint64_t		GammaGetProcessMemCost();
 	GAMMA_COMMON_API float		GammaGetProcessCpuCost();
 
     //======================================================================
     // Sleep
     //======================================================================
-    GAMMA_COMMON_API void		GammaSleep( uint32 uMilliSecond );
+    GAMMA_COMMON_API void		GammaSleep( uint32_t uMilliSecond );
 
     //======================================================================
     // Gamma Thread
     //======================================================================
-    GAMMA_COMMON_API bool		GammaCreateThread( HTHREAD* phThread, uint32 nStackSize, THREADPROC pThreadFun, void* pParam );
+    GAMMA_COMMON_API bool		GammaCreateThread( HTHREAD* phThread, uint32_t nStackSize, THREADPROC pThreadFun, void* pParam );
     GAMMA_COMMON_API void		GammaDetachThread( HTHREAD hThread );
-    GAMMA_COMMON_API void		GammaExitThread( uint32 uExitCode );
-    GAMMA_COMMON_API bool		GammaTerminateThread( HTHREAD hThread, uint32 uExitCode );
-	GAMMA_COMMON_API uint64		GammmaGetCurrentThreadID();
-    GAMMA_COMMON_API bool		GammaIsCurrentThread( uint64 nThreadID );
+    GAMMA_COMMON_API void		GammaExitThread( uint32_t uExitCode );
+    GAMMA_COMMON_API bool		GammaTerminateThread( HTHREAD hThread, uint32_t uExitCode );
+	GAMMA_COMMON_API uint64_t		GammmaGetCurrentThreadID();
+    GAMMA_COMMON_API bool		GammaIsCurrentThread( uint64_t nThreadID );
     GAMMA_COMMON_API bool		GammaJoinThread( HTHREAD hThread );//相当于等待hThread退出
-    GAMMA_COMMON_API bool		GammaSetThreadPriority( HTHREAD hThread, int32 nPriority );
+    GAMMA_COMMON_API bool		GammaSetThreadPriority( HTHREAD hThread, int32_t nPriority );
     GAMMA_COMMON_API void       GammaSetThreadName(const char* szThreadNameName);
 
     //======================================================================
@@ -75,22 +75,22 @@ namespace Gamma
 	GAMMA_COMMON_API HSEMAPHORE GammaCreateSemaphore();
 	GAMMA_COMMON_API void		GammaPutSemaphore( HSEMAPHORE hSemaphore );
 	GAMMA_COMMON_API bool		GammaGetSemaphore( HSEMAPHORE hSemaphore );
-	GAMMA_COMMON_API int32		GammaGetSemaphore( HSEMAPHORE hSemaphore, uint32 nMilliSecs );
-	GAMMA_COMMON_API int32		GammaDestroySemaphore( HSEMAPHORE hSemaphore );
+	GAMMA_COMMON_API int32_t		GammaGetSemaphore( HSEMAPHORE hSemaphore, uint32_t nMilliSecs );
+	GAMMA_COMMON_API int32_t		GammaDestroySemaphore( HSEMAPHORE hSemaphore );
 
     ////======================================================================
     //// Semaphore
     ////======================================================================    
-    //HSEMAPHORE    CreateSemaphore( int32 nInitCount, int32 nMaxCount );
-    //int32        PutSemaphore( HSEMAPHORE hSemaphore );
+    //HSEMAPHORE    CreateSemaphore( int32_t nInitCount, int32_t nMaxCount );
+    //int32_t        PutSemaphore( HSEMAPHORE hSemaphore );
 
     ////返回值说明
     ////0 成功
     ////1 超时
     ////-1 无效信号量
-    //int32        GetSemaphore( HSEMAPHORE hSemaphore, uint32 uMilliSecond );
-    //int32        GetSemaphore( HSEMAPHORE hSemaphore );
-    //int32        DestroySemaphore( HSEMAPHORE hSemaphore );
+    //int32_t        GetSemaphore( HSEMAPHORE hSemaphore, uint32_t uMilliSecond );
+    //int32_t        GetSemaphore( HSEMAPHORE hSemaphore );
+    //int32_t        DestroySemaphore( HSEMAPHORE hSemaphore );
 
     class CLock
     {

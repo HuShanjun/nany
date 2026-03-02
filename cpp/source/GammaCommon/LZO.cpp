@@ -153,7 +153,7 @@ m3_m4_offset:
 
 
 	//C语言解压缩算法
-	GAMMA_COMMON_API int32 lzo_compress(const tbyte *in, unsigned in_len, tbyte *out)
+	GAMMA_COMMON_API int32_t lzo_compress(const tbyte *in, unsigned in_len, tbyte *out)
 	{
 		tbyte *op = out;
 		unsigned t,out_len;
@@ -195,10 +195,10 @@ m3_m4_offset:
 		*op++ = 17; // 结束编码标志
 		*op++ = 0;
 		*op++ = 0;
-		return (int32)(op - (tbyte*)out); // 返回编码后的长度
+		return (int32_t)(op - (tbyte*)out); // 返回编码后的长度
 	}
 
-	GAMMA_COMMON_API int32 lzo_decompress(const tbyte *in, unsigned in_len, tbyte *out)
+	GAMMA_COMMON_API int32_t lzo_decompress(const tbyte *in, unsigned in_len, tbyte *out)
 	{
         tbyte *op; // 输出临时缓存区
         const tbyte *ip;
@@ -372,6 +372,6 @@ match_next:
 eof_found:
 		if (ip != ip_end)
 			return -1;
-		return (int32)(op - (tbyte*)out); // 返回解码后的长度
+		return (int32_t)(op - (tbyte*)out); // 返回解码后的长度
 	}
 }

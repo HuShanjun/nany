@@ -11,21 +11,21 @@
 
 #define CHECK_CREATE_INTERVAL		1000
 #define CHECK_STATE_INTERVAL		33
-const uint32 DEFAULT_COMMIT_INTERVER = 5000;
+const uint32_t DEFAULT_COMMIT_INTERVER = 5000;
 
 namespace Gamma
 {
-	IShareMemoryMgr* CreateShareMemoryMgr( uint16 nGasID,
+	IShareMemoryMgr* CreateShareMemoryMgr( uint16_t nGasID,
 		SShareCommonHead* pSrc, const char* szFileName, IShareMemoryHandler* pHandler,
-		uint32 nCommitInterval, bool bKeepShmFile, uint32 nFlushInterval )
+		uint32_t nCommitInterval, bool bKeepShmFile, uint32_t nFlushInterval )
 	{
 		return new CShareMemoryMgr( nGasID, pSrc, szFileName, pHandler,
 			nCommitInterval, bKeepShmFile, nFlushInterval );
 	}
 
-	CShareMemoryMgr::CShareMemoryMgr( uint16 nGasID, SShareCommonHead* pSrc, 
+	CShareMemoryMgr::CShareMemoryMgr( uint16_t nGasID, SShareCommonHead* pSrc, 
 		const char* szFileName, IShareMemoryHandler* pHandler, 
-		uint32 nCommitInterval, bool bKeepShmFile, uint32 nFlushInterval )
+		uint32_t nCommitInterval, bool bKeepShmFile, uint32_t nFlushInterval )
 		: m_nRef( 1 )
 		, m_nGasID( nGasID )
 		, m_pHandler( pHandler )
@@ -49,7 +49,7 @@ namespace Gamma
 		, m_hThreadSyn( NULL )
 #endif
 	{
-		static int32 nThreadLogIndex = 0;
+		static int32_t nThreadLogIndex = 0;
 		char szLogFileName[256];
 		gammasstream(szLogFileName) << "ShmThread_" << nThreadLogIndex++;
 		m_pThreadLog = GetLogFile(szLogFileName, GammaGetCurrentProcessID(), eLPT_All);
@@ -71,7 +71,7 @@ namespace Gamma
 				strPath = m_strShmFilePath.substr( 0, nPos + 1 );
 			CPathMgr::MakeDirectory( strPath.c_str() );
 
-			uint32 nCreateSize = m_pShareSrcCommHead->m_nSizeOfShareFlie;
+			uint32_t nCreateSize = m_pShareSrcCommHead->m_nSizeOfShareFlie;
 			m_hMemoryHandler = GammaMemoryMap( szFileName, false, 0, nCreateSize, nCreateSize );
 			m_pShareDesCommHead	= (SShareHead*)GammaGetMapMemory( m_hMemoryHandler );
 			memcpy( m_pShareDesCommHead, m_pShareSrcCommHead, nCreateSize );
@@ -84,7 +84,7 @@ namespace Gamma
 			m_pShareDesCommHead	= (SShareHead*)GammaGetMapMemory( m_hMemoryHandler );
 			if( m_pShareDesCommHead->m_nVersion != m_pShareSrcCommHead->m_nVersion )
 				GammaThrow( "share memory version incorrect!!!!" );
-			uint32 nOrgFileSize = GammaGetMapMemorySize( m_hMemoryHandler );
+			uint32_t nOrgFileSize = GammaGetMapMemorySize( m_hMemoryHandler );
 			if( m_pShareSrcCommHead->m_nSizeOfShareFlie != nOrgFileSize || 
 				m_pShareDesCommHead->m_nSizeOfShareFlie != nOrgFileSize )
 				GammaThrow( "share memory size incorrect!!!!" );
@@ -101,7 +101,7 @@ namespace Gamma
 		if( !m_pShareDesCommHead )
 			return;
 
-		for( uint32 i = 0; i < m_vecTrunkTypeData.size(); i++ )
+		for( uint32_t i = 0; i < m_vecTrunkTypeData.size(); i++ )
 			FreeInfoOnEnd( i );
 
 #ifndef _WIN32 
@@ -118,7 +118,7 @@ namespace Gamma
 			CPathMgr::DeleteFile( m_strShmFilePath.c_str() );
 
 
-		uint32 nCount = 1;
+		uint32_t nCount = 1;
 		SSendBuf SendBuf;
 		SShmCmdHead CmdHead;
 		GammaAst( !m_QueryCmdBuffer.PopBuffer( CmdHead, &SendBuf, nCount ) );
@@ -132,7 +132,7 @@ namespace Gamma
 		return m_pShareDesCommHead;
 	}
 
-	void CShareMemoryMgr::SetCheckInterval( uint32 nInterval )
+	void CShareMemoryMgr::SetCheckInterval( uint32_t nInterval )
 	{
 		m_nCheckInterval = nInterval;
 	}
@@ -143,32 +143,32 @@ namespace Gamma
 		if( m_eCheckState != eCS_Create )
 			return;
 
-		uint32 nCommitDataNewCount = 0;
-		for( uint32 nTrunkType = 0; nTrunkType < m_vecTrunkTypeData.size(); nTrunkType++ )
+		uint32_t nCommitDataNewCount = 0;
+		for( uint32_t nTrunkType = 0; nTrunkType < m_vecTrunkTypeData.size(); nTrunkType++ )
 		{
 			SChunckTypeInfo& TrunkTypeInfo = m_pShareDesCommHead->m_aryTrunkTypeInfo[nTrunkType];
 			m_vecTrunkTypeData[nTrunkType].m_nDBCost = 0;
 			m_vecNextQueryIndex[nTrunkType] = 0;
 
 			tbyte* pInfoStart = (tbyte*)( &TrunkTypeInfo ) + TrunkTypeInfo.m_nChunkOffset;
-			for ( uint32 m = 0; m < TrunkTypeInfo.m_nChunkCount; m++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
+			for ( uint32_t m = 0; m < TrunkTypeInfo.m_nChunkCount; m++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
 			{
 				SChunckHead* pTrunkHead = (SChunckHead*)pInfoStart;
 				CCommitMap& mapCommit = GetCommitMap(nTrunkType);
 				mapCommit[pTrunkHead] = 0;
 
 				SBlockInfo* pBlockInfo	= (SBlockInfo*)( ((tbyte*)pTrunkHead) + pTrunkHead->m_nChunkHeadSize );
-				for( uint32 i = 0; i < pTrunkHead->m_nBlockCount; i++, pBlockInfo++, nCommitDataNewCount++ )
+				for( uint32_t i = 0; i < pTrunkHead->m_nBlockCount; i++, pBlockInfo++, nCommitDataNewCount++ )
 				{
-					uint32 nCommitDataSize = sizeof( SCommitData );
+					uint32_t nCommitDataSize = sizeof( SCommitData );
 					if( pBlockInfo->m_nArrayElemSize )
 					{
-						uint32 nDataSize = pBlockInfo->m_nMaxBlockSize;
-						uint32 nArrayElemSize = pBlockInfo->m_nArrayElemSize;
-						uint32 nArrayOffset = pBlockInfo->m_nArrayStartOff;
-						uint32 nArrayDataSize = nDataSize - nArrayOffset;
-						uint32 nMaxElemCount = ( nArrayDataSize - sizeof(SSizeType) )/nArrayElemSize;
-						uint32 nPreCommitFlagBufSize = ( nMaxElemCount - 1 )/8 + 1;
+						uint32_t nDataSize = pBlockInfo->m_nMaxBlockSize;
+						uint32_t nArrayElemSize = pBlockInfo->m_nArrayElemSize;
+						uint32_t nArrayOffset = pBlockInfo->m_nArrayStartOff;
+						uint32_t nArrayDataSize = nDataSize - nArrayOffset;
+						uint32_t nMaxElemCount = ( nArrayDataSize - sizeof(SSizeType) )/nArrayElemSize;
+						uint32_t nPreCommitFlagBufSize = ( nMaxElemCount - 1 )/8 + 1;
 						nCommitDataSize += nArrayDataSize + nPreCommitFlagBufSize;
 					}
 					pBlockInfo->m_pContextData = new( new tbyte[nCommitDataSize] ) SCommitData();
@@ -196,11 +196,11 @@ namespace Gamma
 
 	bool CShareMemoryMgr::IsReady()
 	{
-		for( uint32 i = 0; i < m_vecTrunkTypeData.size(); i++ )
+		for( uint32_t i = 0; i < m_vecTrunkTypeData.size(); i++ )
 		{
 			SChunckTypeInfo& TrunkTypeInfo = m_pShareDesCommHead->m_aryTrunkTypeInfo[i];
 			tbyte* pInfoStart = (tbyte*)( &TrunkTypeInfo ) + TrunkTypeInfo.m_nChunkOffset;
-			for( uint32 n = 0; n < TrunkTypeInfo.m_nChunkCount; n++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
+			for( uint32_t n = 0; n < TrunkTypeInfo.m_nChunkCount; n++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
 			{
 				SChunckHead* pTrunkHead = (SChunckHead*)pInfoStart;
 				if( pTrunkHead->m_nChunckID != INVALID_64BITID )
@@ -216,13 +216,13 @@ namespace Gamma
 		CShareMemoryMgr* pMgr = static_cast<CShareMemoryMgr*>( pParam );
 		while( pMgr->m_eCheckState )
 		{
-			int64 nStartTime = GetGammaTime();
+			int64_t nStartTime = GetGammaTime();
 			pMgr->OnLoop();
 
-			int64 nDeltaTime = GetGammaTime() - nStartTime;
+			int64_t nDeltaTime = GetGammaTime() - nStartTime;
 			if( nDeltaTime >= pMgr->m_nCheckInterval )
 				continue;
-			GammaSleep( (uint32)( pMgr->m_nCheckInterval - nDeltaTime ) );
+			GammaSleep( (uint32_t)( pMgr->m_nCheckInterval - nDeltaTime ) );
 		}
 	}
 
@@ -233,7 +233,7 @@ namespace Gamma
 		case eCS_Reboot:
 			{
 				bool bNeedReboot = true;
-				for( uint32 i = 0; i < m_vecTrunkTypeData.size(); i++ )
+				for( uint32_t i = 0; i < m_vecTrunkTypeData.size(); i++ )
 				{
 					size_t nCount = GetCountInCommit( i, m_nGasID );
 					if( !nCount )
@@ -260,7 +260,7 @@ namespace Gamma
 
 		if( m_bAppShutdown )
 		{
-			for( uint32 i = 0; i < m_vecTrunkTypeData.size(); i++ )
+			for( uint32_t i = 0; i < m_vecTrunkTypeData.size(); i++ )
 			{
 				size_t nCount = GetCountInCommit( i, m_nGasID );
 				if( nCount )
@@ -273,7 +273,7 @@ namespace Gamma
 	void CShareMemoryMgr::CheckShareMemoryState()
 	{
 		// 单项提交，比如某个玩家数据改变
-		for( uint32 i = 0; i < m_vecTrunkTypeData.size(); i++ )
+		for( uint32_t i = 0; i < m_vecTrunkTypeData.size(); i++ )
 			PollInfo( i );
 	}
 
@@ -282,11 +282,11 @@ namespace Gamma
 	{
 		GammaSetThreadName("ShmSync");
 		CShareMemoryMgr* pConn = reinterpret_cast<CShareMemoryMgr*>( pParam );
-		uint32 nFlushInterval = pConn->m_nFlushInterval;
+		uint32_t nFlushInterval = pConn->m_nFlushInterval;
 
 		while( pConn->m_bSyn )
 		{
-			int64 nBeginTime = GetGammaTime();
+			int64_t nBeginTime = GetGammaTime();
 			GammaMemoryMapSyn( pConn->m_hMemoryHandler, 0, pConn->m_nMemorySize, false );
 
 			while( pConn->m_bSyn && GetGammaTime() - nBeginTime < nFlushInterval )
@@ -303,7 +303,7 @@ namespace Gamma
 
 		while( true )
 		{
-			uint32 nCount = 1;
+			uint32_t nCount = 1;
 			if( !m_QueryCmdBuffer.PopBuffer( CmdHead, &SendBuf, nCount ) )
 				return;
 
@@ -350,7 +350,7 @@ namespace Gamma
 	void CShareMemoryMgr::OnFinished( ECmdType eType, bool bFailed, SSendBuf SendBuf )
 	{
 		SShmCmdHead Head;
-		Head.m_nType = (uint8)eType;
+		Head.m_nType = (uint8_t)eType;
 		Head.m_bFailed = bFailed;
 		m_FinishCmdBuffer.PushBuffer( Head, &SendBuf, SendBuf.second ? 1 : 0, true );
 	}
@@ -362,7 +362,7 @@ namespace Gamma
 
 		while( true )
 		{
-			uint32 nCount = 1;
+			uint32_t nCount = 1;
 			if( !m_FinishCmdBuffer.PopBuffer( CmdHead, &SendBuf, nCount ) )
 				return;
 
@@ -383,18 +383,18 @@ namespace Gamma
 		}
 	}
 
-	void CShareMemoryMgr::SendCmd( ECmdType eQueryType, uint16 nGasID, int64 uuid,
+	void CShareMemoryMgr::SendCmd( ECmdType eQueryType, uint16_t nGasID, int64_t uuid,
 		const void* pData1, size_t nSize1, const void* pData2, size_t nSize2 )
 	{
 		SShmCmdHead Head;
-		Head.m_nType = (uint8)eQueryType;
+		Head.m_nType = (uint8_t)eQueryType;
 		Head.m_bFailed = false;
 		SSendBuf arySendBuff[2] = { SSendBuf( pData1, nSize1 ), SSendBuf( pData2, nSize2 ) };
 		m_QueryCmdBuffer.PushBuffer( Head, arySendBuff, 2, true );
 
 		char	szErrorLog[255];
 		gammasstream logstr(szErrorLog);
-		logstr << GetProcessTime() << " [DBQuery]  ShmSendCmd, " << (uint32)eQueryType << "," << m_nSendCount++ << "," << uuid  << endl;
+		logstr << GetProcessTime() << " [DBQuery]  ShmSendCmd, " << (uint32_t)eQueryType << "," << m_nSendCount++ << "," << uuid  << endl;
 		m_pThreadLog->Write(szErrorLog, logstr.length());
 
 	}
@@ -420,8 +420,8 @@ namespace Gamma
 		tbyte* pInfoStart = (tbyte*)(&TrunkTypeInfo) + TrunkTypeInfo.m_nChunkOffset;
 		SChunckHead* pTrunkHead = (SChunckHead*)( pInfoStart + pAnswer->m_nTrunkIndex * TrunkTypeInfo.m_nChunkSize );
 		
-		uint32 nCurTime = GetProcessTime();
-		uint32 nDBCost = nCurTime - pAnswer->m_nQueryTime;
+		uint32_t nCurTime = GetProcessTime();
+		uint32_t nDBCost = nCurTime - pAnswer->m_nQueryTime;
 		m_vecTrunkTypeData[pAnswer->m_nTrunkType].m_nDBCost = nDBCost;
 
 		CCommitMap& mapCommit = GetCommitMap(pAnswer->m_nTrunkType);
@@ -438,8 +438,8 @@ namespace Gamma
 		}
 		else
 		{
-			logstr << GetProcessTime() << " [shmthread] OnAnswerDB, result=" << (uint32)bSucceeded
-				<< ",type=" << (uint32)eType << ",id=" << pAnswer->m_nTrunkID 
+			logstr << GetProcessTime() << " [shmthread] OnAnswerDB, result=" << (uint32_t)bSucceeded
+				<< ",type=" << (uint32_t)eType << ",id=" << pAnswer->m_nTrunkID 
 				<< ",costtime:" << nDBCost
 				<< "=" << pAnswer->m_nMainThreadQueryTime - pAnswer->m_nQueryTime
 				<< "+" << pAnswer->m_nDBStartTime - pAnswer->m_nMainThreadQueryTime
@@ -466,12 +466,12 @@ namespace Gamma
 		else
 			mapCommit[pTrunkHead] = m_nPreCheckTime;
 
-		uint32 nCommitID = pAnswer->m_nCommitID;
-		uint32 nDataVersion = pAnswer->m_nCurDataVersion;
+		uint32_t nCommitID = pAnswer->m_nCommitID;
+		uint32_t nDataVersion = pAnswer->m_nCurDataVersion;
 
 		SBlockInfo* pBlockInfo = (SBlockInfo*)( ((tbyte*)pTrunkHead) + pTrunkHead->m_nChunkHeadSize );
 
-		for( uint32 i = 0; i < pTrunkHead->m_nBlockCount; i++, pBlockInfo++ )
+		for( uint32_t i = 0; i < pTrunkHead->m_nBlockCount; i++, pBlockInfo++ )
 		{
 			if( !pBlockInfo->m_pContextData )
 				continue;
@@ -505,7 +505,7 @@ namespace Gamma
 		if ( pTrunkHead->m_nDataState >= eSCT_UpdateFlg )
 		{
 			SBlockInfo* pBlockInfo	= (SBlockInfo*)( ((tbyte*)pTrunkHead) + pTrunkHead->m_nChunkHeadSize );
-			for( uint32 i = 0; i < pTrunkHead->m_nBlockCount; i++, pBlockInfo++ )
+			for( uint32_t i = 0; i < pTrunkHead->m_nBlockCount; i++, pBlockInfo++ )
 				( (SCommitData*)pBlockInfo->m_pContextData )->m_bDataInited = false;
 			pTrunkHead->m_nChunckID = INVALID_64BITID;
 			pTrunkHead->m_nDataState = eSCT_Invalid;
@@ -516,20 +516,20 @@ namespace Gamma
 			m_pThreadLog->Write(szErrorLog, logstr.length());
 
 			SendCmd( eQueryType_CommitAllBlocksOK, pAnswer->m_nDBGasID, 
-				(uint16)pAnswer->m_nTrunkID, pAnswer, sizeof(SCommitFlag), "", 0 );
+				(uint16_t)pAnswer->m_nTrunkID, pAnswer, sizeof(SCommitFlag), "", 0 );
 			return;
 		}
 	}
 	
-	void CShareMemoryMgr::FreeInfoOnEnd( uint32 nTrunkType )
+	void CShareMemoryMgr::FreeInfoOnEnd( uint32_t nTrunkType )
 	{
 		SChunckTypeInfo& TrunkTypeInfo = m_pShareDesCommHead->m_aryTrunkTypeInfo[nTrunkType];
 		tbyte* pInfoStart = (tbyte*)( &TrunkTypeInfo ) + TrunkTypeInfo.m_nChunkOffset;
-		for ( uint32 m = 0; m < TrunkTypeInfo.m_nChunkCount; m++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
+		for ( uint32_t m = 0; m < TrunkTypeInfo.m_nChunkCount; m++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
 		{
 			SChunckHead* pTrunkHead = (SChunckHead*)pInfoStart;
 			SBlockInfo* pBlockInfo	= (SBlockInfo*)( ((tbyte*)pTrunkHead) + pTrunkHead->m_nChunkHeadSize );
-			for( uint32 i = 0; i < pTrunkHead->m_nBlockCount; i++, pBlockInfo++ )
+			for( uint32_t i = 0; i < pTrunkHead->m_nBlockCount; i++, pBlockInfo++ )
 			{
 				delete [] ( (tbyte*)pBlockInfo->m_pContextData );
 				// 必须使用m_ptPoint，否则32位下面高位不会为0
@@ -538,17 +538,17 @@ namespace Gamma
 		}
 	}
 
-	void CShareMemoryMgr::PollInfo( uint32 nTrunkType )
+	void CShareMemoryMgr::PollInfo( uint32_t nTrunkType )
 	{
 		m_nPreCheckTime = GetGammaTime();
 
-		const uint32 COUNT_PERLOOP = 20;
-		uint32 nDBCost = m_vecTrunkTypeData[nTrunkType].m_nDBCost;
+		const uint32_t COUNT_PERLOOP = 20;
+		uint32_t nDBCost = m_vecTrunkTypeData[nTrunkType].m_nDBCost;
 
 		SChunckTypeInfo& TrunkTypeInfo = m_pShareDesCommHead->m_aryTrunkTypeInfo[nTrunkType];
 		// 检查定时提交
 		tbyte* pInfoStart = (tbyte*)( &TrunkTypeInfo ) + TrunkTypeInfo.m_nChunkOffset;
-		for( uint32 n = 0; n < TrunkTypeInfo.m_nChunkCount; n++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
+		for( uint32_t n = 0; n < TrunkTypeInfo.m_nChunkCount; n++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
 		{
 			SChunckHead* pTrunkHead = (SChunckHead*)pInfoStart;
 			// 如果是无效数据不用理会
@@ -559,33 +559,33 @@ namespace Gamma
 				continue;
 
 			CCommitMap& mapCommit = GetCommitMap( nTrunkType );
-			uint32& nLastCommitTime = mapCommit[pTrunkHead];
+			uint32_t& nLastCommitTime = mapCommit[pTrunkHead];
 
 			// 提交时间未到，不用检查
-			uint32 nCheckInterval = pTrunkHead->m_nDataState == eSCT_UpdateBlock ? m_nCommitInterval + nDBCost : 1000;	//非UpdateBlock 
-			if( int64( nLastCommitTime  + nCheckInterval ) > m_nPreCheckTime )
+			uint32_t nCheckInterval = pTrunkHead->m_nDataState == eSCT_UpdateBlock ? m_nCommitInterval + nDBCost : 1000;	//非UpdateBlock 
+			if( int64_t( nLastCommitTime  + nCheckInterval ) > m_nPreCheckTime )
 				continue;
 		
 			// 检查Gas是否正在写数据，如果是则返回，等下次再做Diff
-			uint32 nGasCommitID = pTrunkHead->m_nCommitIDFirst;
+			uint32_t nGasCommitID = pTrunkHead->m_nCommitIDFirst;
 			if( nGasCommitID != pTrunkHead->m_nCommitIDLast )
 				continue;			
 
 			size_t nBufferSize = 0;
-			uint32 nCommitBlockInfoCount = 0;
+			uint32_t nCommitBlockInfoCount = 0;
 			if( m_vecCommitBlockInfo.size() < pTrunkHead->m_nBlockCount )
 				m_vecCommitBlockInfo.resize( pTrunkHead->m_nBlockCount );
 
 			SBlockInfo* pBlockInfo = (SBlockInfo*)( ((tbyte*)pTrunkHead) + pTrunkHead->m_nChunkHeadSize );
-			for( uint32 i = 0; i < pTrunkHead->m_nBlockCount; i++, pBlockInfo++ )
+			for( uint32_t i = 0; i < pTrunkHead->m_nBlockCount; i++, pBlockInfo++ )
 			{
 				SBlockData* pBlockData = (SBlockData*)( ( (tbyte*)pBlockInfo ) + pBlockInfo->m_nDataOffset );
-				uint32 nCurVersion = pBlockData->m_nQueryDataVersion;
+				uint32_t nCurVersion = pBlockData->m_nQueryDataVersion;
 				// 数据没有变化,不需要检查
 				if( nCurVersion <= pBlockData->m_nAnswerDataVersion )
 					continue;
 
-				uint32 nDataSize = BuildDiff( pBlockInfo );
+				uint32_t nDataSize = BuildDiff( pBlockInfo );
 				if( nDataSize == INVALID_32BITID )
 				{
 					nBufferSize = INVALID_32BITID;
@@ -593,11 +593,11 @@ namespace Gamma
 				}
 
 				m_vecCommitBlockInfo[nCommitBlockInfoCount++] = pBlockInfo;
-				uint32 nSize = 
-					sizeof(uint16) + /*nType*/
-					sizeof(uint16) + /*m_nArrayIndexCount*/
-					m_nArrayIndexCount*sizeof(uint16) + /*nIndexArray*/
-					sizeof(uint32) + /*nDataLen*/
+				uint32_t nSize = 
+					sizeof(uint16_t) + /*nType*/
+					sizeof(uint16_t) + /*m_nArrayIndexCount*/
+					m_nArrayIndexCount*sizeof(uint16_t) + /*nIndexArray*/
+					sizeof(uint32_t) + /*nDataLen*/
 					( nDataSize - sizeof(SBlockData) ); /*Data*/
 
 				if( m_szCommitBuf.size() < nBufferSize + nSize )
@@ -605,10 +605,10 @@ namespace Gamma
 
 				SBlockData* pNewBlockData = (SBlockData*)&m_szDiffData[0];
 				CBufFileEx File( (tbyte*)&m_szCommitBuf[nBufferSize], nSize );
-				File << (uint16)pBlockInfo->m_nType;
+				File << (uint16_t)pBlockInfo->m_nType;
 				File << m_nArrayIndexCount;
-				File.Write( &m_vecDiffArrayIndex[0], m_nArrayIndexCount*sizeof(uint16) );
-				File << (uint32)( nDataSize - sizeof(SBlockData) );
+				File.Write( &m_vecDiffArrayIndex[0], m_nArrayIndexCount*sizeof(uint16_t) );
+				File << (uint32_t)( nDataSize - sizeof(SBlockData) );
 				File.Write( pNewBlockData + 1, ( nDataSize - sizeof(SBlockData) ) );
 				nBufferSize += nSize;
 			}
@@ -653,7 +653,7 @@ namespace Gamma
 						Info.m_nTrunkIndex = n;
 						Info.m_nQueryTime = GetProcessTime();
 						SendCmd( eQueryType_CommitFlag, Info.m_nDBGasID, 
-							(uint16)Info.m_nTrunkID, &Info, sizeof(Info), "", 0 );
+							(uint16_t)Info.m_nTrunkID, &Info, sizeof(Info), "", 0 );
 						pTrunkHead->m_nDataState = eSCT_WaitingFlg;
 					}
 					else
@@ -691,19 +691,19 @@ namespace Gamma
 	}
 	
 
-	CCommitMap& CShareMemoryMgr::GetCommitMap( uint32 nTrunkType )
+	CCommitMap& CShareMemoryMgr::GetCommitMap( uint32_t nTrunkType )
 	{
 		return m_vecTrunkTypeData[nTrunkType].m_mapCommitData;
 	}
 	
 	bool CShareMemoryMgr::HasOtherGasData()
 	{
-		for( uint32 nTrunkType = 0; nTrunkType < m_vecTrunkTypeData.size(); nTrunkType++ )
+		for( uint32_t nTrunkType = 0; nTrunkType < m_vecTrunkTypeData.size(); nTrunkType++ )
 		{
 			SChunckTypeInfo& TrunkTypeInfo = m_pShareDesCommHead->m_aryTrunkTypeInfo[nTrunkType];
 			tbyte* pInfoStart = (tbyte*)( &TrunkTypeInfo ) + TrunkTypeInfo.m_nChunkOffset;
 
-			for ( uint32 n = 0; n < TrunkTypeInfo.m_nChunkCount; n++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
+			for ( uint32_t n = 0; n < TrunkTypeInfo.m_nChunkCount; n++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
 			{
 				SChunckHead* pTrunkHead = (SChunckHead*)pInfoStart;
 				if ( pTrunkHead->m_nChunckID == INVALID_64BITID )
@@ -716,14 +716,14 @@ namespace Gamma
 		return false;
 	}
 
-	size_t CShareMemoryMgr::GetCountInCommit( uint32 nTrunkType, uint16 nGasID )
+	size_t CShareMemoryMgr::GetCountInCommit( uint32_t nTrunkType, uint16_t nGasID )
 	{
 		size_t nCount = 0;
 
 		SChunckTypeInfo& TrunkTypeInfo = m_pShareDesCommHead->m_aryTrunkTypeInfo[nTrunkType];
 		tbyte* pInfoStart = (tbyte*)( &TrunkTypeInfo ) + TrunkTypeInfo.m_nChunkOffset;
 
-		for ( uint32 n = 0; n < TrunkTypeInfo.m_nChunkCount; n++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
+		for ( uint32_t n = 0; n < TrunkTypeInfo.m_nChunkCount; n++, pInfoStart += TrunkTypeInfo.m_nChunkSize )
 		{
 			SChunckHead* pTrunkHead = (SChunckHead*)pInfoStart;
 			if ( pTrunkHead->m_nChunckID == INVALID_64BITID )
@@ -735,16 +735,16 @@ namespace Gamma
 		return nCount;
 	}
 
-	uint32 CShareMemoryMgr::BuildDiff( SBlockInfo* pBlockInfo )
+	uint32_t CShareMemoryMgr::BuildDiff( SBlockInfo* pBlockInfo )
 	{
 		SCommitData& CommitData	= *(SCommitData*)( pBlockInfo->m_pContextData );
 		SBlockData* pBlockData	= (SBlockData*)( ( (tbyte*)pBlockInfo ) + pBlockInfo->m_nDataOffset );
-		uint32 nDataSize		= pBlockInfo->m_nMaxBlockSize;
+		uint32_t nDataSize		= pBlockInfo->m_nMaxBlockSize;
 		if( m_szDiffData.size() < nDataSize )
 			m_szDiffData.resize( nDataSize );
 
 		// 检查Gas是否正在写数据，如果是则返回，等下次再做Diff
-		uint32 nGasCommitID = pBlockData->m_nCommitIDFirst;
+		uint32_t nGasCommitID = pBlockData->m_nCommitIDFirst;
 		if( nGasCommitID != pBlockData->m_nCommitIDLast )
 			return INVALID_32BITID;
 
@@ -776,13 +776,13 @@ namespace Gamma
 
 				TBitSet<65536>* pBitSet = (TBitSet<65536>*)pCommitFlagBuf;
 				GammaAst( nMaxElemCount < INVALID_16BITID );
-				for( uint16 i = 0; i < nMaxElemCount; i++ )
+				for( uint16_t i = 0; i < nMaxElemCount; i++ )
 				{
-					m_vecDiffArrayIndex[m_nArrayIndexCount++] = (uint16)i;
+					m_vecDiffArrayIndex[m_nArrayIndexCount++] = (uint16_t)i;
 					pBitSet->SetBit( i, 1 );
 				}
-				pOldArySize->m_nSize		= (uint32)nMaxElemCount;
-				m_nArrayIndexCount			= (uint16)pOldArySize->m_nSize;
+				pOldArySize->m_nSize		= (uint32_t)nMaxElemCount;
+				m_nArrayIndexCount			= (uint16_t)pOldArySize->m_nSize;
 				CommitData.m_bDataInited	= true;
 			}
 			else
@@ -802,7 +802,7 @@ namespace Gamma
 
 				pNewArySize->m_nSize = 0;
 				if( nValidArrayDataSize )
-					pNewArySize->m_nSize	= (uint32)( ( nValidArrayDataSize - 1 )/nArrayElemSize + 1 );
+					pNewArySize->m_nSize	= (uint32_t)( ( nValidArrayDataSize - 1 )/nArrayElemSize + 1 );
 
 				tbyte* pCommitFlagBuf		= pPreData + nArrayDataSize;
 				TBitSet<65536>* pBitSet		= (TBitSet<65536>*)pCommitFlagBuf;
@@ -810,11 +810,11 @@ namespace Gamma
 
 				tbyte* pNewArray			= (tbyte*)( pNewArySize + 1 );
 				tbyte* pOldArray			= (tbyte*)( pOldArySize + 1 );
-				uint32 nDiffCount			= 0;
-				uint32 nElemSize			= pBlockInfo->m_nArrayElemSize;
-				uint32 nCheckCount			= 0;
-				uint32 nCheckOffset			= 0;
-				uint32 nDiffOffset			= 0;
+				uint32_t nDiffCount			= 0;
+				uint32_t nElemSize			= pBlockInfo->m_nArrayElemSize;
+				uint32_t nCheckCount			= 0;
+				uint32_t nCheckOffset			= 0;
+				uint32_t nDiffOffset			= 0;
 
 				// 新的数据与旧的数据对比，将新的数据不同于的部分放到提交缓冲区，
 				// 比且将提交记录写到提交标志表中
@@ -825,7 +825,7 @@ namespace Gamma
 						memcpy( pOldArray + nCheckOffset, pNewArray + nCheckOffset, nElemSize );
 						memcpy( pNewArray + nDiffOffset,  pNewArray + nCheckOffset, nElemSize );
 						nDiffOffset += nElemSize;
-						m_vecDiffArrayIndex[nDiffCount++] = (uint16)nCheckCount;
+						m_vecDiffArrayIndex[nDiffCount++] = (uint16_t)nCheckCount;
 						pBitSet->SetBit( nCheckCount, 1 );
 					}
 					else
@@ -850,7 +850,7 @@ namespace Gamma
 						memset( pNewArray + nDiffOffset, 0, nElemSize );
 						memset( pOldArray + nCheckOffset, 0, nElemSize );
 						nDiffOffset += nElemSize;
-						m_vecDiffArrayIndex[nDiffCount++] = (uint16)nCheckCount;
+						m_vecDiffArrayIndex[nDiffCount++] = (uint16_t)nCheckCount;
 					}
 					nCheckCount	 ++;
 					nCheckOffset += nElemSize;
@@ -859,7 +859,7 @@ namespace Gamma
 				nDataSize				= pBlockInfo->m_nArrayStartOff + sizeof(SSizeType) + nDiffOffset;
 				pOldArySize->m_nSize	= pNewArySize->m_nSize;
 				pNewArySize->m_nSize	= nDiffCount;
-				m_nArrayIndexCount		= (uint16)nDiffCount;
+				m_nArrayIndexCount		= (uint16_t)nDiffCount;
 			}
 		}
 

@@ -44,7 +44,7 @@ namespace Gamma
 		CMemoryBlock* pMem = (CMemoryBlock*)m_pAddrStart;
 		m_pAddrStart += nAllocSize + m_nPageSize*2;
 		LeaveLock( m_hGlobalMemoryLock );
-		uint32 nFlag = VIRTUAL_PAGE_READ|VIRTUAL_PAGE_WRITE;
+		uint32_t nFlag = VIRTUAL_PAGE_READ|VIRTUAL_PAGE_WRITE;
 		if( !Gamma::CommitMemoryPage( pMem, nAllocSize, nFlag ) )
 			return NULL;
 		pMem->m_nBlockSize = nSize;
@@ -58,12 +58,12 @@ namespace Gamma
 
 		return pMem + 1;
 #else		
-		uint32 nPageSize = GetVirtualPageSize();
-		uint32 nAllocSize = AligenUp( (uint32)nSize, nPageSize );
+		uint32_t nPageSize = GetVirtualPageSize();
+		uint32_t nAllocSize = AligenUp( (uint32_t)nSize, nPageSize );
 		void* pMem = ReserveMemoryPage( NULL, nAllocSize );
 		if( !pMem )
 			return NULL;
-		uint32 nFlag = VIRTUAL_PAGE_READ|VIRTUAL_PAGE_WRITE;
+		uint32_t nFlag = VIRTUAL_PAGE_READ|VIRTUAL_PAGE_WRITE;
 		if( !CommitMemoryPage( pMem, nAllocSize, nFlag ) )
 			return NULL;
 		return pMem;
@@ -98,8 +98,8 @@ namespace Gamma
 		Gamma::DecommitMemoryPage( pMem, nAllocSize );
 		Gamma::FreeMemoryPage( pMem, nAllocSize );
 #else				
-		uint32 nPageSize = GetVirtualPageSize();
-		uint32 nAllocSize = AligenUp( (uint32)nSize, nPageSize );
+		uint32_t nPageSize = GetVirtualPageSize();
+		uint32_t nAllocSize = AligenUp( (uint32_t)nSize, nPageSize );
 		DecommitMemoryPage( pMemory, nAllocSize );
 		FreeMemoryPage( pMemory, nAllocSize );
 #endif
@@ -135,12 +135,12 @@ namespace Gamma
 			nSize = 0xffffffffffLL;
 		m_pAddrStart = (tbyte*)ReserveMemoryPage( NULL, nSize );
 #endif
-		for( uint32 i = 0, n = 1; i < ELEM_COUNT(s_aryClassSize); i++ )
+		for( uint32_t i = 0, n = 1; i < ELEM_COUNT(s_aryClassSize); i++ )
 		{
 			while( n*eMemoryConst_Unit <= s_aryClassSize[i] )
 			{
-				uint32 nSize = n++ * eMemoryConst_Unit;
-				m_aryClassIndex[( nSize - 1 ) / eMemoryConst_Unit] = (uint8)i;
+				uint32_t nSize = n++ * eMemoryConst_Unit;
+				m_aryClassIndex[( nSize - 1 ) / eMemoryConst_Unit] = (uint8_t)i;
 			}
 		}
 
@@ -149,7 +149,7 @@ namespace Gamma
 		memset( m_nFixAllocSize, 0, sizeof(m_nFixAllocSize) );
 		m_nBigAllocSize = 0;
 
-		for( uint16 i = 0; i < eMemoryConst_AllocateCount; ++i )
+		for( uint16_t i = 0; i < eMemoryConst_AllocateCount; ++i )
 			InitLock( m_hFixMemoryLock[i] );
 
 #ifdef CHECK_MEMORY_ERROR
@@ -172,17 +172,17 @@ namespace Gamma
 		// 注意：
 		// CMemoryMgr::Free函数会被vc的stl中某些清理函数在CMemoryMgr析构后调用
 		// 因此锁销毁后必须置空，否则会在CMemoryMgr::Free被锁死，导致进程无法退出
-		for ( uint16 i = 0; i < eMemoryConst_AllocateCount; ++i )
+		for ( uint16_t i = 0; i < eMemoryConst_AllocateCount; ++i )
 			DestroyLock( m_hFixMemoryLock[ i ] );
 #ifdef CHECK_MEMORY_ERROR
 		DestroyLock( m_hGlobalMemoryLock );
 #endif
 		m_bEnable = false;
 
-		int64 nTotalAlloc = GetTotalAlloc();
+		int64_t nTotalAlloc = GetTotalAlloc();
 		if( nTotalAlloc != 0 )
 			printf( "Process ID: %d may be %d byte memory leak!!!\n", 
-			GammaGetCurrentProcessID(), (uint32)nTotalAlloc );
+			GammaGetCurrentProcessID(), (uint32_t)nTotalAlloc );
 	}
 
 	void* CMemoryMgr::Allocate( size_t nSize, void* pCallAddress )
@@ -205,11 +205,11 @@ namespace Gamma
 		{
 			pMemAlloc = (SMemHead*)AllocFromSystem( nSize );
 			m_nBigAllocSize += nSize;
-			pMemAlloc->m_nBlockSize = (uint32)nSize;
+			pMemAlloc->m_nBlockSize = (uint32_t)nSize;
 		}
 		else 
 		{
-			uint8 nIdx = m_aryClassIndex[ ( ( nSize - 1 )/eMemoryConst_Unit) ];
+			uint8_t nIdx = m_aryClassIndex[ ( ( nSize - 1 )/eMemoryConst_Unit) ];
 			nSize = s_aryClassSize[ nIdx ];
 
 			if ( !m_bEnable )
@@ -242,13 +242,13 @@ namespace Gamma
 			LeaveLock( m_hFixMemoryLock[ nIdx ] );
 			pMemAlloc->m_MgrHead.m_nIndex = nIdx;
 			pMemAlloc->m_MgrHead.m_nFlag  = eMemMgr_Use;
-			pMemAlloc->m_MgrHead.m_nEmpty = (uint16)nEmptySize;
+			pMemAlloc->m_MgrHead.m_nEmpty = (uint16_t)nEmptySize;
 		}
 
 #ifdef MEMORY_LEASK
 		//记录堆栈
 		EnterLock( m_hAllMemory );
-		uint32 nBegin, nEnd;
+		uint32_t nBegin, nEnd;
 		SAllocInfo Info;
 		memset( &Info, 0, sizeof(SAllocInfo) );
 		if( ALLOC_STACK == 1 )
@@ -284,7 +284,7 @@ namespace Gamma
 		SAllocInfo* pCallInfo = pMemAlloc->m_pAllocInfo;
 #endif
 
-		uint32 nSize;
+		uint32_t nSize;
 		if( ( pMemAlloc->m_MgrHead.m_nFlag&eMemMgr_Use ) == 0 )
 		{
 			nSize = pMemAlloc->m_nBlockSize;
@@ -297,7 +297,7 @@ namespace Gamma
 				pMemAlloc->m_MgrHead.m_nIndex >= eMemoryConst_AllocateCount )
 				GammaThrow( "Free Invalid Memory!!!!" );
 
-			uint8 nIdx = pMemAlloc->m_MgrHead.m_nIndex;
+			uint8_t nIdx = pMemAlloc->m_MgrHead.m_nIndex;
 			nSize = s_aryClassSize[nIdx];
 			size_t nPreClassSize = nIdx ? s_aryClassSize[nIdx - 1] : 0;
 			size_t nMaxEmptySize = nSize - nPreClassSize;
@@ -323,7 +323,7 @@ namespace Gamma
 	}
 
 #ifdef MEMORY_LEASK
-	CMemoryMgr::SAllocInfo* CMemoryMgr::InsertAllocInfo( uint32 nIndex, void* pAllocAddress[ALLOC_STACK], uint32 nAllocSize )
+	CMemoryMgr::SAllocInfo* CMemoryMgr::InsertAllocInfo( uint32_t nIndex, void* pAllocAddress[ALLOC_STACK], uint32_t nAllocSize )
 	{
 		if( m_nFreeCount == 0 )
 		{
@@ -348,7 +348,7 @@ namespace Gamma
 		}
 		else
 		{
-			for( uint32 i = m_nAllocInfoSize; i > nIndex; i-- )
+			for( uint32_t i = m_nAllocInfoSize; i > nIndex; i-- )
 				m_aryAllocInfo[i] = m_aryAllocInfo[i - 1];
 			m_nAllocInfoSize++;
 		}
@@ -357,7 +357,7 @@ namespace Gamma
 		return pInfo;
 	}
 
-	uint32 CMemoryMgr::GetAllocStack( uint32 nIndex, void**& pAddress, uint32& nAllocSize )
+	uint32_t CMemoryMgr::GetAllocStack( uint32_t nIndex, void**& pAddress, uint32_t& nAllocSize )
 	{
 		if( nIndex >= m_nAllocInfoSize )
 			return 0;
@@ -366,32 +366,32 @@ namespace Gamma
 		return ALLOC_STACK;
 	}
 #else
-	uint32 CMemoryMgr::GetAllocStack( uint32 nIndex, void**& pAddress, uint32& nAllocSize )
+	uint32_t CMemoryMgr::GetAllocStack( uint32_t nIndex, void**& pAddress, uint32_t& nAllocSize )
 	{
 		return 0;
 	}
 #endif
 
-	int64 CMemoryMgr::GetTotalMgrSize()
+	int64_t CMemoryMgr::GetTotalMgrSize()
 	{
-		int64 nSize = 0;
-		for( uint32 i = 0; i < eMemoryConst_AllocateCount; i++ )
+		int64_t nSize = 0;
+		for( uint32_t i = 0; i < eMemoryConst_AllocateCount; i++ )
 			nSize += m_nFixManageSize[i];
 		return nSize;
 	}
 
-	int64 CMemoryMgr::GetFreeMgrSize()
+	int64_t CMemoryMgr::GetFreeMgrSize()
 	{
-		int64 nSize = 0;
-		for( uint32 i = 0; i < eMemoryConst_AllocateCount; i++ )
+		int64_t nSize = 0;
+		for( uint32_t i = 0; i < eMemoryConst_AllocateCount; i++ )
 			nSize += m_nFixManageSize[i] - m_nFixAllocSize[i];
 		return nSize;
 	}
 
-	int64 CMemoryMgr::GetTotalAlloc()
+	int64_t CMemoryMgr::GetTotalAlloc()
 	{
-		int64 nTotalCount = 0;
-		for( uint32 i = 0; i < eMemoryConst_AllocateCount; i++ )
+		int64_t nTotalCount = 0;
+		for( uint32_t i = 0; i < eMemoryConst_AllocateCount; i++ )
 			nTotalCount += m_nFixAllocSize[i];
 		nTotalCount += m_nBigAllocSize;
 		return nTotalCount;
@@ -410,20 +410,20 @@ namespace Gamma
 	{
 #ifdef MEMORY_LEASK
 		EnterLock( m_hAllMemory );
-		uint32 nCount = m_nAllocInfoSize;
+		uint32_t nCount = m_nAllocInfoSize;
 		SAllocInfo** aryAllocInfo = (SAllocInfo**)alloca( sizeof(SAllocInfo*)*nCount );
 		memcpy( aryAllocInfo, m_aryAllocInfo, sizeof(SAllocInfo*)*nCount );
 		LeaveLock( m_hAllMemory );
 
 		FILE* fpM = fopen( "memory.txt", "w" );
 		FILE* fpS = fopen( "stack.txt", "w" );
-		for( uint32 i = 0; fpM && fpS && i < nCount; i++ )
+		for( uint32_t i = 0; fpM && fpS && i < nCount; i++ )
 		{
 			if( aryAllocInfo[i]->m_nAllocSize < 100 )
 				continue;
 			fprintf( fpM, "%08x\t%d\n", aryAllocInfo[i], aryAllocInfo[i]->m_nAllocSize );
 			fprintf( fpS, "%08x\n", aryAllocInfo[i] );
-			for( uint32 j = 0; j < ALLOC_STACK; j++ )
+			for( uint32_t j = 0; j < ALLOC_STACK; j++ )
 			{
 				char szBuffer[256];
 				DebugAddress2Symbol( aryAllocInfo[i]->m_pAllocAddress[j], szBuffer, 255 );

@@ -8,12 +8,12 @@
 
 namespace Gamma
 {
-	#define INVALID_DATA_SIZE ( (uint32)( INVALID_32BITID - 1 ) )
+	#define INVALID_DATA_SIZE ( (uint32_t)( INVALID_32BITID - 1 ) )
 
 	//==============================================================================
 	// 读取整数值
 	//==============================================================================
-	uint32 GetUnsignedInt( const char* szBuffer, size_t& nLinePos, size_t nSize )
+	uint32_t GetUnsignedInt( const char* szBuffer, size_t& nLinePos, size_t nSize )
 	{
 		//跳过非数据
 		while( nLinePos < nSize && 
@@ -26,7 +26,7 @@ namespace Gamma
 			nLinePos++;
 		}
 
-		uint32 nValue = 0;
+		uint32_t nValue = 0;
 		while( nLinePos < nSize )
 		{
 			if( !IsHexNumber( szBuffer[nLinePos] ) )
@@ -50,12 +50,12 @@ namespace Gamma
 	}
 
 	EHttpReadState CHttpRecvState::CheckHttpBuffer( 
-		char* szBuffer, uint32& nBufferSize )
+		char* szBuffer, uint32_t& nBufferSize )
 	{
 		if( m_nHttpLength == INVALID_DATA_SIZE )
 			return eHRS_NeedMore;
 
-		uint32 nSize = nBufferSize;
+		uint32_t nSize = nBufferSize;
 		if( m_nHttpLength == INVALID_32BITID && nSize < 4 )
 			return eHRS_NeedMore;
 
@@ -68,7 +68,7 @@ namespace Gamma
 		}
 
 		const char* szMsg = szBuffer;
-		if( *(uint32*)szMsg != MAKE_DWORD( 'H', 'T', 'T', 'P' ) )
+		if( *(uint32_t*)szMsg != MAKE_DWORD( 'H', 'T', 'T', 'P' ) )
 		{
 			m_nHttpLength = INVALID_DATA_SIZE;
 			return eHRS_NeedMore;
@@ -96,7 +96,7 @@ namespace Gamma
 			return eHRS_Error;
 
 		const char* szTransferType = NULL;
-		uint32 nContentLength = INVALID_32BITID;
+		uint32_t nContentLength = INVALID_32BITID;
 		while( true )
 		{
 			// 数据不够
@@ -106,7 +106,7 @@ namespace Gamma
 			if( szMsg[nLinePos++] != '\n' )
 				continue;
 
-			if( szMsg[nLinePos] == '\n' || *(uint16*)( szMsg + nLinePos ) == MAKE_UINT16( '\r', '\n' ) )
+			if( szMsg[nLinePos] == '\n' || *(uint16_t*)( szMsg + nLinePos ) == MAKE_UINT16( '\r', '\n' ) )
 			{
 				nLinePos += szMsg[nLinePos] == '\n' ? 1 : 2;
 				break;
@@ -121,7 +121,7 @@ namespace Gamma
 			if( nLinePos + nContentLengthTagLen <= nSize && 
 				!memcmp( szMsg + nLinePos, szContentLengthTag, nContentLengthTagLen ) )
 			{
-				nLinePos += (uint32)nContentLengthTagLen;
+				nLinePos += (uint32_t)nContentLengthTagLen;
 
 				//跳过非数据
 				while( nLinePos < nSize && !IsNumber( szMsg[nLinePos] ) )
@@ -170,7 +170,7 @@ namespace Gamma
 		if( nContentLength < INVALID_DATA_SIZE )
 		{
 			m_nHttpLength = nContentLength;
-			nBufferSize -= (uint32)nLinePos;
+			nBufferSize -= (uint32_t)nLinePos;
 			memmove( &szBuffer[0], &szBuffer[nLinePos], nBufferSize );
 			if( nBufferSize > m_nHttpLength )
 				nBufferSize = m_nHttpLength;
@@ -238,7 +238,7 @@ namespace Gamma
 		return eHRS_Ok;
 	}
 
-	uint32 CHttpRecvState::GetDataSize() const
+	uint32_t CHttpRecvState::GetDataSize() const
 	{
 		if( m_nHttpLength >= INVALID_DATA_SIZE )
 			return 0;
@@ -270,7 +270,7 @@ namespace Gamma
 	}
 
 	Gamma::EHttpReadState CHttpRequestState::CheckHttpBuffer( 
-		const char* szBuffer, uint32 nBufferSize )
+		const char* szBuffer, uint32_t nBufferSize )
 	{
 		if( nBufferSize < 6 )
 			return eHRS_NeedMore;
@@ -281,8 +281,8 @@ namespace Gamma
 		else
 			return eHRS_Error;
 
-		uint32 nCurPos = m_bGetMethod ? 5 : 6;
-		uint32 nNameStart = nCurPos;
+		uint32_t nCurPos = m_bGetMethod ? 5 : 6;
+		uint32_t nNameStart = nCurPos;
 
 		// 得页面路径  
 		while( szBuffer[nCurPos] != ' ' && nCurPos < nBufferSize )
@@ -301,8 +301,8 @@ namespace Gamma
 		}
 		else
 		{
-			m_nPageLength = (uint32)( m_szParamStart - m_szPageStart - 1 );
-			m_nParamLength = (uint32)( szBuffer + nCurPos - m_szParamStart );
+			m_nPageLength = (uint32_t)( m_szParamStart - m_szPageStart - 1 );
+			m_nParamLength = (uint32_t)( szBuffer + nCurPos - m_szParamStart );
 		}
 
 		m_nDataLength = 0;
@@ -397,7 +397,7 @@ namespace Gamma
 	SUrlInfo GetHostAndPortFromUrl( const char* szUrl )
 	{
 		SUrlInfo Info = { 0, 0, 0 };
-		uint32 nHeadLen = 0;
+		uint32_t nHeadLen = 0;
 		if( memcmp( szUrl, "http://", 7 ) == 0 )
 			nHeadLen = 7;
 		else if( memcmp( szUrl, "https://", 8 ) == 0 )
@@ -413,20 +413,20 @@ namespace Gamma
 			Info.szHost[Info.nHostLen] != ':' )
 			Info.nHostLen++;
 		if( Info.szHost[Info.nHostLen] == ':' )
-			Info.nPort = (uint16)GammaA2I( Info.szHost + Info.nHostLen + 1 );
+			Info.nPort = (uint16_t)GammaA2I( Info.szHost + Info.nHostLen + 1 );
 		return Info;
 	}
 	
-	uint32 MakeHttpRequest( char* szBuffer, uint32 nBufferSize, 
-		bool bPost, const char* szUrl, const void* pData, uint32 nDataSize )
+	uint32_t MakeHttpRequest( char* szBuffer, uint32_t nBufferSize, 
+		bool bPost, const char* szUrl, const void* pData, uint32_t nDataSize )
 	{
-		uint32 nUrlLen = (uint32)strlen( szUrl );
+		uint32_t nUrlLen = (uint32_t)strlen( szUrl );
 		if( nBufferSize <= nUrlLen + nDataSize + HTTP_REQUEST_HEAD_SIZE )
 			return 0;
 		SUrlInfo Info = GetHostAndPortFromUrl( szUrl );
 		const char* szMeth = bPost ? "POST " : "GET ";
-		uint32 nLen =
-			(uint32)( gammasstream( szBuffer, nBufferSize ) 
+		uint32_t nLen =
+			(uint32_t)( gammasstream( szBuffer, nBufferSize ) 
 			<< szMeth << ( Info.szHost + Info.nHostLen ) << " HTTP/1.1\r\n"
 			<< "Host: " << gammacstring( Info.szHost, Info.nHostLen, true ) << "\r\n"
 			<< "Accept: */*\r\n" 
@@ -438,10 +438,10 @@ namespace Gamma
 		return nLen + nDataSize;
 	}
 
-	uint32 MakeWebSocketShakeHand( char* szBuffer, uint32 nBufferSize, 
-		uint8(&aryBinKey)[16], const char* szUrl )
+	uint32_t MakeWebSocketShakeHand( char* szBuffer, uint32_t nBufferSize, 
+		uint8_t(&aryBinKey)[16], const char* szUrl )
 	{
-		uint32 nUrlLen = (uint32)strlen( szUrl );
+		uint32_t nUrlLen = (uint32_t)strlen( szUrl );
 		if( nBufferSize <= nUrlLen + HTTP_REQUEST_HEAD_SIZE )
 			return 0;
 		SUrlInfo Info = GetHostAndPortFromUrl( szUrl );
@@ -458,15 +458,15 @@ namespace Gamma
 			"Sec-WebSocket-Key: " << szUUID << "\r\n"
 			"Origin: null\r\n"
 			"Sec-WebSocket-Version: 13\r\n\r\n";
-		return (uint32)ssShakeHand.GetCurPos();
+		return (uint32_t)ssShakeHand.GetCurPos();
 	}
 
-	GAMMA_COMMON_API uint32 WebSocketShakeHandCheck( const char* pBuffer, size_t nSize, 
-		bool bServer, const char*& szWebSocketKey, uint32& nWebSocketKeyLen )
+	GAMMA_COMMON_API uint32_t WebSocketShakeHandCheck( const char* pBuffer, size_t nSize, 
+		bool bServer, const char*& szWebSocketKey, uint32_t& nWebSocketKeyLen )
 	{
-		uint32 nReadCount = 0;
-		uint32 nPreLineStart = 0;
-		uint32 nKeyCount = 0;
+		uint32_t nReadCount = 0;
+		uint32_t nPreLineStart = 0;
+		uint32_t nKeyCount = 0;
 		const char* szKeyStart = NULL;
 		bool bFinished = false;
 		while( nReadCount < nSize )
@@ -487,7 +487,7 @@ namespace Gamma
 				if( bServer )
 				{
 					static const char* szKey = "Sec-WebSocket-Key";
-					static const uint32 nKey = (uint32)strlen( szKey );
+					static const uint32_t nKey = (uint32_t)strlen( szKey );
 					if( !memcmp( szKey, pBuffer + nPreLineStart, nKey ) )
 					{
 						szKeyStart = pBuffer + nPreLineStart + nKey;
@@ -497,7 +497,7 @@ namespace Gamma
 				else
 				{
 					static const char* szKey = "Sec-WebSocket-Accept";
-					static const uint32 nKey = (uint32)strlen( szKey );
+					static const uint32_t nKey = (uint32_t)strlen( szKey );
 					if( !memcmp( szKey, pBuffer + nPreLineStart, nKey ) )
 					{
 						szKeyStart = pBuffer + nPreLineStart + nKey;
@@ -526,7 +526,7 @@ namespace Gamma
 			return INVALID_32BITID;
 		}
 
-		uint32 nKeyIndex = 0;
+		uint32_t nKeyIndex = 0;
 		while( nKeyIndex < nKeyCount && 
 			( szKeyStart[nKeyIndex] == ':' || IsBlank( szKeyStart[nKeyIndex] ) ) )
 			nKeyIndex++;
@@ -548,8 +548,8 @@ namespace Gamma
 		return nReadCount;
 	}
 
-	GAMMA_COMMON_API uint32 MakeWebSocketServerShakeHandResponese( char* szBuffer, 
-		uint32 nBufferSize, const char* szWebSocketKey, uint32 nWebSocketKeyLen )
+	GAMMA_COMMON_API uint32_t MakeWebSocketServerShakeHandResponese( char* szBuffer, 
+		uint32_t nBufferSize, const char* szWebSocketKey, uint32_t nWebSocketKeyLen )
 	{
 		// 填充http响应头信息  
 		char szClientKey[64 + 40];
@@ -568,13 +568,13 @@ namespace Gamma
 			"Upgrade: websocket\r\n"
 			"Connection: upgrade\r\n"
 			"Sec-WebSocket-Accept: " << szBase64 << "\r\n\r\n";
-		return (uint32)ssBuffer.GetCurPos();
+		return (uint32_t)ssBuffer.GetCurPos();
 	}
 
-	GAMMA_COMMON_API uint64 GetWebSocketProtocolLen( 
-		const SWebSocketProtocal* pProtocol, uint64 nSize )
+	GAMMA_COMMON_API uint64_t GetWebSocketProtocolLen( 
+		const SWebSocketProtocal* pProtocol, uint64_t nSize )
 	{
-		union{ uint64 u64; uint8 u8[sizeof(uint64)]; } Size;
+		union{ uint64_t u64; uint8_t u8[sizeof(uint64_t)]; } Size;
 		Size.u64 = pProtocol->m_nLen;
 		const char* pStart = (const char*)(pProtocol + 1);
 		const char* pAppend = pStart;
@@ -602,20 +602,20 @@ namespace Gamma
 		return (pAppend - pStart) + Size.u64 + (pProtocol->m_bMask ? 4 : 0);
 	}
 
-	GAMMA_COMMON_API uint64 DecodeWebSocketProtocol( 
-		const SWebSocketProtocal* pProtocol, char*& pExtraBuffer, uint64& nSize )
+	GAMMA_COMMON_API uint64_t DecodeWebSocketProtocol( 
+		const SWebSocketProtocal* pProtocol, char*& pExtraBuffer, uint64_t& nSize )
 	{
-		uint64 nLen = pProtocol->m_nLen;
+		uint64_t nLen = pProtocol->m_nLen;
 		const char* pStart = pExtraBuffer;
 		char* pAppend = (char*)pStart;
-		uint32 nAppendSize = 0;
+		uint32_t nAppendSize = 0;
 		if( nLen >= 126 )
 		{
-			nAppendSize = nLen == 126 ? sizeof(uint16) : sizeof(uint64);
+			nAppendSize = nLen == 126 ? sizeof(uint16_t) : sizeof(uint64_t);
 			if( nSize < nAppendSize )
 				return INVALID_64BITID;
 			char* pDest = (char*)&nLen;
-			for( uint32 i = 0; i < nAppendSize; i++ )
+			for( uint32_t i = 0; i < nAppendSize; i++ )
 				pDest[nAppendSize - 1 - i] = pAppend[i];
 			pAppend += nAppendSize;
 		}
@@ -627,7 +627,7 @@ namespace Gamma
 		{
 			const char* szMask = pAppend;
 			pAppend += 4;
-			for( uint64 i = 0; i < nLen; i++ )
+			for( uint64_t i = 0; i < nLen; i++ )
 				pAppend[i] ^= szMask[i%4];
 		}
 
@@ -636,10 +636,10 @@ namespace Gamma
 		return ( pAppend - pStart ) + nLen; 
 	}
 
-	GAMMA_COMMON_API uint32 EncodeWebSocketProtocol(
-		SWebSocketProtocal& Protocol, char* pExtraBuffer, uint64 nSize )
+	GAMMA_COMMON_API uint32_t EncodeWebSocketProtocol(
+		SWebSocketProtocal& Protocol, char* pExtraBuffer, uint64_t nSize )
 	{
-		union { uint64 u64; uint8 u8[sizeof(uint64)]; } Size;
+		union { uint64_t u64; uint8_t u8[sizeof(uint64_t)]; } Size;
 		Size.u64 = nSize;
 		Protocol.m_bFinished = 1;
 		if (Size.u64 < 126)
@@ -660,9 +660,9 @@ namespace Gamma
 			(char)CGammaRand::Rand(0, 256)
 		};
 
-		for( uint32 i = 0; i < nSize; i++ )
+		for( uint32_t i = 0; i < nSize; i++ )
 			pExtraBuffer[i] ^= szMask[i % 4];
-		return *(uint32*)szMask;
+		return *(uint32_t*)szMask;
 	}
 
 }

@@ -7,7 +7,7 @@
 
 namespace Gamma
 {
-	inline bool IsXmlIdentity( int32 c )
+	inline bool IsXmlIdentity( int32_t c )
 	{
 		return 
 			( c >= 'a' && c <= 'z' ) ||
@@ -359,10 +359,10 @@ namespace Gamma
 		return Save( os, 0 );
 	}
 
-	bool CDomXmlDocument::Save( std::ostream& os, uint32 nStack ) const
+	bool CDomXmlDocument::Save( std::ostream& os, uint32_t nStack ) const
 	{
 		char szBuff[1024];
-		for( uint32 i = 0; i < nStack; ++i )
+		for( uint32_t i = 0; i < nStack; ++i )
 		{
 			szBuff[i] = '\t';
 		}
@@ -383,7 +383,7 @@ namespace Gamma
 			os << '\'';
 		}
 		
-		uint32 nCount = 0;
+		uint32_t nCount = 0;
 		for( const CDomXmlDocument* pChild = GetFirstChild(); 
 			pChild; pChild = pChild->GetNextSibling(), ++nCount )
 		{
@@ -610,9 +610,9 @@ namespace Gamma
 	{
 		if( !m_szContent )
 			return "";
-        if( ( (uint8)m_szContent[0] ) != CDictionary::eUtf8HeadTag0 ||
-            ( (uint8)m_szContent[1] ) != CDictionary::eUtf8HeadTag1 ||
-            ( (uint8)m_szContent[2] ) != CDictionary::eUtf8HeadTag2 )
+        if( ( (uint8_t)m_szContent[0] ) != CDictionary::eUtf8HeadTag0 ||
+            ( (uint8_t)m_szContent[1] ) != CDictionary::eUtf8HeadTag1 ||
+            ( (uint8_t)m_szContent[2] ) != CDictionary::eUtf8HeadTag2 )
 			return m_szContent;
 
 		const char* szText = CDictionary::Inst().GetValue( CDictionary::StrToKey( m_szContent + 3 ) );
@@ -661,7 +661,7 @@ namespace Gamma
 		return pAttribute;
 	}
 
-	uint32 CDomXmlDocument::Count() const
+	uint32_t CDomXmlDocument::Count() const
 	{
 		return m_nChildCount;
 	}

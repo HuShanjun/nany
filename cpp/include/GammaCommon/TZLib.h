@@ -9,19 +9,19 @@
 
 namespace Gamma
 {
-	#define DEFAULT_READ_TYPE int32 (FileType::*)( void*, uint32 )
-	#define DEFAULT_WRITE_TYPE void (FileType::*)( const void*, uint32 )
+	#define DEFAULT_READ_TYPE int32_t (FileType::*)( void*, uint32_t )
+	#define DEFAULT_WRITE_TYPE void (FileType::*)( const void*, uint32_t )
 	typedef void* HZLIB;
 
 	GAMMA_COMMON_API HZLIB CreateZLibWriter();
-	GAMMA_COMMON_API uint32 FlushZLibWriter( HZLIB zip, tbyte* pBuffer, uint32 nBufferSize, const void* pSrc, uint32 nSize );
-	GAMMA_COMMON_API uint32 DestroyZLibWriter( HZLIB zip, tbyte* pBuffer, uint32 nBufferSize );
+	GAMMA_COMMON_API uint32_t FlushZLibWriter( HZLIB zip, tbyte* pBuffer, uint32_t nBufferSize, const void* pSrc, uint32_t nSize );
+	GAMMA_COMMON_API uint32_t DestroyZLibWriter( HZLIB zip, tbyte* pBuffer, uint32_t nBufferSize );
 
 	GAMMA_COMMON_API HZLIB CreateZLibReader();
-	GAMMA_COMMON_API uint32 FlushZLibReader( HZLIB zip, const tbyte* pBuffer, uint32 nBufferSize, void* pTarget, uint32& nSize );
+	GAMMA_COMMON_API uint32_t FlushZLibReader( HZLIB zip, const tbyte* pBuffer, uint32_t nBufferSize, void* pTarget, uint32_t& nSize );
 	GAMMA_COMMON_API void DestroyZLibReader( HZLIB zip );
 
-	template<typename FileType, typename FunWirter = DEFAULT_WRITE_TYPE, uint32 nBufferSize = 1024 >
+	template<typename FileType, typename FunWirter = DEFAULT_WRITE_TYPE, uint32_t nBufferSize = 1024 >
 	class TZLibWriter
 	{
 		HZLIB		m_hZip;
@@ -43,12 +43,12 @@ namespace Gamma
 			Flush();
 		}
 
-		void Write( const void* pBuf, uint32 nLen )
+		void Write( const void* pBuf, uint32_t nLen )
 		{ 
 			if( !m_hZip )
 				return;
 			tbyte nBuffer[nBufferSize];
-			uint32 nCompress = FlushZLibWriter( m_hZip, nBuffer, nBufferSize, pBuf, nLen );
+			uint32_t nCompress = FlushZLibWriter( m_hZip, nBuffer, nBufferSize, pBuf, nLen );
 			while( nCompress == nBufferSize )
 			{
 				( m_File.*m_funWirte )( nBuffer, nCompress );
@@ -62,7 +62,7 @@ namespace Gamma
 			if( !m_hZip )
 				return;
 			tbyte nBuffer[nBufferSize];
-			uint32 nCompress = DestroyZLibWriter( m_hZip, nBuffer, nBufferSize );
+			uint32_t nCompress = DestroyZLibWriter( m_hZip, nBuffer, nBufferSize );
 			( m_File.*m_funWirte )( nBuffer, nCompress );
 			m_hZip = NULL;
 		}
@@ -75,7 +75,7 @@ namespace Gamma
 		}
 	};
 
-	template<typename FileType, typename FunReader = DEFAULT_READ_TYPE, uint32 nBufferSize = 1024 >
+	template<typename FileType, typename FunReader = DEFAULT_READ_TYPE, uint32_t nBufferSize = 1024 >
 	class TZLibReader
 	{
 		HZLIB		m_hZip;
@@ -83,11 +83,11 @@ namespace Gamma
 		FunReader	m_funRead;
 
 		tbyte		m_aryData[nBufferSize];
-		int32		m_nDataSize;
+		int32_t		m_nDataSize;
 
 		tbyte		m_aryCache[nBufferSize];
-		uint32		m_nCacheSize;
-		uint32		m_nCacheReadPos;
+		uint32_t		m_nCacheSize;
+		uint32_t		m_nCacheReadPos;
 
 		TZLibReader& operator= ( const TZLibReader& );
 
@@ -95,8 +95,8 @@ namespace Gamma
 		{
 			m_nCacheReadPos = 0;
 			m_nCacheSize = nBufferSize;
-			uint32 nUsedData = FlushZLibReader( m_hZip, m_aryData, m_nDataSize, m_aryCache, m_nCacheSize );
-			while( (int32)nUsedData == m_nDataSize )
+			uint32_t nUsedData = FlushZLibReader( m_hZip, m_aryData, m_nDataSize, m_aryCache, m_nCacheSize );
+			while( (int32_t)nUsedData == m_nDataSize )
 			{
 				m_nDataSize = ( m_File.*m_funRead )( m_aryData, nBufferSize );
 				if( m_nDataSize < 0 )
@@ -127,15 +127,15 @@ namespace Gamma
 			Flush();
 		}
 
-		uint32 Read( void* pBuf, uint32 nLen )
+		uint32_t Read( void* pBuf, uint32_t nLen )
 		{ 
 			if( !m_hZip )
 				return 0;
 
-			uint32 nTotalRead = 0;
+			uint32_t nTotalRead = 0;
 			while( m_nCacheSize - m_nCacheReadPos < nLen )
 			{
-				uint32 nReadSize = m_nCacheSize - m_nCacheReadPos;
+				uint32_t nReadSize = m_nCacheSize - m_nCacheReadPos;
 				memcpy( pBuf, m_aryCache + m_nCacheReadPos, nReadSize );
 				pBuf = ( (char*)pBuf ) + nReadSize;
 				nLen -= nReadSize;

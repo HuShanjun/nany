@@ -24,9 +24,9 @@ namespace Gamma
     //用','分割m_szComboBoxItems
     struct SComboBoxData
     {
-        uint16          m_nComboBoxIndex;
+        uint16_t          m_nComboBoxIndex;
         const wchar_t*	m_szComboBoxItems;
-        SComboBoxData( const wchar_t* szComboBoxItems, uint16 nComboBoxIndex ) 
+        SComboBoxData( const wchar_t* szComboBoxItems, uint16_t nComboBoxIndex ) 
             : m_szComboBoxItems( szComboBoxItems ), m_nComboBoxIndex( nComboBoxIndex )
         {}
 	};
@@ -52,18 +52,18 @@ namespace Gamma
 
 	struct SScaleRange
 	{
-		uint32 m_nCur;
-		uint32 m_nMin;
-		uint32 m_nMax;
-		SScaleRange( uint32 nCur, uint32 nMin = 0, uint32 nMax = INVALID_32BITID )
+		uint32_t m_nCur;
+		uint32_t m_nMin;
+		uint32_t m_nMax;
+		SScaleRange( uint32_t nCur, uint32_t nMin = 0, uint32_t nMax = INVALID_32BITID )
 			: m_nMin( nMin ), m_nMax( nMax )
 		{
-			m_nCur = Limit<uint32>( nCur, m_nMin, m_nMax );
+			m_nCur = Limit<uint32_t>( nCur, m_nMin, m_nMax );
 		}
 
-		const SScaleRange& operator= ( uint32 nValue )
+		const SScaleRange& operator= ( uint32_t nValue )
 		{
-			m_nCur = Limit<uint32>( nValue, m_nMin, m_nMax );
+			m_nCur = Limit<uint32_t>( nValue, m_nMin, m_nMax );
             return *this;
 		}
 	};
@@ -139,14 +139,14 @@ namespace Gamma
         const CVarient& operator=  ( SFileData FileData );
 		const CVarient& operator=  ( const char* szStr );
 		const CVarient& operator=  ( const wchar_t* szStr );
-        const CVarient& operator=  ( int32 nValue );
+        const CVarient& operator=  ( int32_t nValue );
 		const CVarient& operator=  ( float fValue );
 		const CVarient& operator=  ( CVector2f vecValue );
 		const CVarient& operator=  ( CVector3f vecValue );
 		const CVarient& operator=  ( CVector4f vecValue );
 		const CVarient& operator=  ( SComboBoxData comValue );
 		const CVarient& operator=  ( SCheckComboBoxData comValue );
-		const CVarient& operator=  ( uint32 nValue );
+		const CVarient& operator=  ( uint32_t nValue );
 		const CVarient& operator=  ( CColor nValue );
 		const CVarient& operator=  ( SMemory nValue );
 		const CVarient& operator=  ( SScaleRange nValue );
@@ -157,16 +157,16 @@ namespace Gamma
 
         EVarientType    Type()const     { return m_eType; }
         const wchar_t*	Str()const;
-		int32           Int()const;
+		int32_t           Int()const;
 		float           Float()const;
-		uint32          Uint()const;
+		uint32_t          Uint()const;
 		CColor          Color()const;
 		CVector2f       Vec2()const;
 		CVector3f       Vec3()const;
 		CVector4f       Vec4()const;
         const wchar_t*	FileName()const;
-		uint16          ComIndex()const;
-		uint32			MaskCount()const;
+		uint16_t          ComIndex()const;
+		uint32_t			MaskCount()const;
 		const tbyte*    ComMask()const;
         const wchar_t*	ComItems()const;
 		const void*		Mem()const;

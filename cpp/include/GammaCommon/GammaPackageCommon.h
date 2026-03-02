@@ -16,10 +16,10 @@ namespace Gamma
 	struct SPkgNameHeader
 	{
 		enum{ eFileEncript = 0x1, eFileCompressed = 0x2 };
-		uint32 m_nSubPkgzSize;
-		uint32 m_nFileNum;
-		uint32 m_nDataSize;
-		uint32 m_nAttr;
+		uint32_t m_nSubPkgzSize;
+		uint32_t m_nFileNum;
+		uint32_t m_nDataSize;
+		uint32_t m_nAttr;
 
 		SPkgNameHeader()
 		{
@@ -46,12 +46,12 @@ namespace Gamma
 	struct SMainData
 	{
 		enum{ eFileCompletely = 0x1, eFileCompressed = 0x2, MAX_SUB_PKGZ_SIZE = 64 * 1024 * 2  };
-		uint32 m_nMainDataOffset;
-		uint32 m_nMainDataSize;
-		uint32 m_nMainDataOffsetCompress;
-		uint32 m_nMainDataSizeCompress;
-		uint32 m_Hash;
-		uint32 m_nState;
+		uint32_t m_nMainDataOffset;
+		uint32_t m_nMainDataSize;
+		uint32_t m_nMainDataOffsetCompress;
+		uint32_t m_nMainDataSizeCompress;
+		uint32_t m_Hash;
+		uint32_t m_nState;
 		void SetCompletely( bool bCompletely )
 		{
 			m_nState = bCompletely ? m_nState | eFileCompletely 
@@ -79,11 +79,11 @@ namespace Gamma
 	{
 		enum{ eHashLen = 16 };
 		
-		uint32 m_nIndexOffset;
-		uint32 m_nIndexSize;
-		uint8  m_bDataExist;
+		uint32_t m_nIndexOffset;
+		uint32_t m_nIndexSize;
+		uint8_t  m_bDataExist;
 
-		uint32 GetExtraDataSize() const
+		uint32_t GetExtraDataSize() const
 		{
 			return m_bDataExist ? sizeof(SMainData) : 0;
 		}
@@ -93,7 +93,7 @@ namespace Gamma
 			return m_bDataExist ? (SMainData*)( this + 1 ) : NULL;
 		}
 
-		uint32 GetMainDataSize() const
+		uint32_t GetMainDataSize() const
 		{
 			const SMainData* pData = GetMainData();
 			if( !pData )
@@ -144,15 +144,15 @@ namespace Gamma
 
 	struct SPkgMainDataHeader
 	{
-		uint32 m_nFreeAreaOffset;
-		uint32 m_nFreeAreaCount;
+		uint32_t m_nFreeAreaOffset;
+		uint32_t m_nFreeAreaCount;
 	};
 
 	// 空闲区域信息
 	struct SFreeAreaInfo
 	{
-		uint32 m_nSize;          // 空闲块大小
-		uint32 m_nOffset;        // 空闲块偏移
+		uint32_t m_nSize;          // 空闲块大小
+		uint32_t m_nOffset;        // 空闲块偏移
 	};
 
 	enum EDiffPackageState

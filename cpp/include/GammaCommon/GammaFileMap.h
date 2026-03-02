@@ -22,7 +22,7 @@ namespace Gamma
 	// 返回值为内存映射句柄
 	//=========================================================
 	GAMMA_COMMON_API HFILEMAP GammaMemoryMap( const char* szFile, 
-		bool bReadOnly, uint32 nOffset, uint32 nSize, uint32 nTruncateSize );
+		bool bReadOnly, uint32_t nOffset, uint32_t nSize, uint32_t nTruncateSize );
 
 	//=========================================================
 	// 重新内存映射
@@ -35,7 +35,7 @@ namespace Gamma
 	// 返回值 是否成功
 	//=========================================================
 	GAMMA_COMMON_API bool GammaMemoryRemapMap( HFILEMAP hMap,
-		bool bReadOnly, uint32 nOffset, uint32 nSize, uint32 nTruncateSize );
+		bool bReadOnly, uint32_t nOffset, uint32_t nSize, uint32_t nTruncateSize );
 
 	//=========================================================
 	// 得到内存映射地址
@@ -45,7 +45,7 @@ namespace Gamma
 	//=========================================================
 	// 得到内存映射大小
 	//=========================================================
-	GAMMA_COMMON_API uint32 GammaGetMapMemorySize( HFILEMAP hMap );
+	GAMMA_COMMON_API uint32_t GammaGetMapMemorySize( HFILEMAP hMap );
 
 	//=========================================================
 	// 解除文件内存映射

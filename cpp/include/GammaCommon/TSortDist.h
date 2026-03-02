@@ -14,7 +14,7 @@
 
 namespace Gamma
 {
-	template<class T, uint32 nRange = 100 >
+	template<class T, uint32_t nRange = 100 >
 	class TSortDist
 	{
 	public:
@@ -48,7 +48,7 @@ namespace Gamma
 			return m_vUnitSortbyDist[nIndex].nDist;
 		}
 
-		uint32 GetRadius() const { return nRadius; }
+		uint32_t GetRadius() const { return nRadius; }
 
 private:
 		struct TDistGrid : public TVector2<T>

@@ -39,8 +39,8 @@ namespace Gamma
 	class ILog
 	{
 	public:
-		virtual	uint32				Format( const char*, ... ) = 0;
-		virtual	uint32				Format( const char*, va_list ) = 0;
+		virtual	uint32_t				Format( const char*, ... ) = 0;
+		virtual	uint32_t				Format( const char*, va_list ) = 0;
 		virtual	void				Write( const char*, size_t ) = 0;	
 
 		virtual const char*			GetPrefix() const = 0;
@@ -57,30 +57,30 @@ namespace Gamma
 	inline std::ostream&			operator<< ( std::ostream& ostr, wchar_t c )		{ wchar_t s[2] = { c, 0 }; return ostr << s; }
 
 	GAMMA_COMMON_API void			SetLogPath( const char* szLogPath );
-	GAMMA_COMMON_API ILog*			GetLogFile( const char* szPrefix, uint32 nContext, ELogPathType eType );
-	GAMMA_COMMON_API bool			WriteLog( const char* szPrefix, uint32 nContext, ELogPathType eType, const char* szBuffer, size_t nlen );
+	GAMMA_COMMON_API ILog*			GetLogFile( const char* szPrefix, uint32_t nContext, ELogPathType eType );
+	GAMMA_COMMON_API bool			WriteLog( const char* szPrefix, uint32_t nContext, ELogPathType eType, const char* szBuffer, size_t nlen );
 	GAMMA_COMMON_API void			FlushAllLog();
 
-	typedef void (*GlobalLog)		( const char*, size_t, uint32 );
+	typedef void (*GlobalLog)		( const char*, size_t, uint32_t );
 	GAMMA_COMMON_API void			SetGlobLogFun( GlobalLog funGlobalLog );
 	GAMMA_COMMON_API GlobalLog		GetGlobLogFun();
-	GAMMA_COMMON_API std::ostream&	GetLogStream(uint32 nLevel);
+	GAMMA_COMMON_API std::ostream&	GetLogStream(uint32_t nLevel);
 
 	typedef void (*GlobalErr)       ( const char*, size_t );
 	GAMMA_COMMON_API void           SetGlobErrFun( GlobalErr funGlobalErr );
 	GAMMA_COMMON_API GlobalErr      GetGlobErrFun();
 	GAMMA_COMMON_API std::ostream&  GetErrStream();
 
-	GAMMA_COMMON_API void			EnterStack( const char* szFile, uint32 nLine, const void* pContext );
-	GAMMA_COMMON_API void			PollProcess( const char* szFile, uint32 nLine );	
+	GAMMA_COMMON_API void			EnterStack( const char* szFile, uint32_t nLine, const void* pContext );
+	GAMMA_COMMON_API void			PollProcess( const char* szFile, uint32_t nLine );	
 	GAMMA_COMMON_API void			LeaveStack();
 
 	GAMMA_COMMON_API void			Redirect2StdConsole( bool bEnable );
-	GAMMA_COMMON_API void			Redirect2Remote( const char* szIP, uint16 nPort );
-	GAMMA_COMMON_API void			SetConsoleSize( int32 x, int32 y );
-	GAMMA_COMMON_API int32			ReadFromConsole(char* szBuffer, int32 nCount);
-	GAMMA_COMMON_API int32			ReadFileFromConsole(const char* szFileName, int nStartPos, char* szBuffer, int nSize);
-	GAMMA_COMMON_API void			SetLogLevel(uint32 nLevel);
+	GAMMA_COMMON_API void			Redirect2Remote( const char* szIP, uint16_t nPort );
+	GAMMA_COMMON_API void			SetConsoleSize( int32_t x, int32_t y );
+	GAMMA_COMMON_API int32_t			ReadFromConsole(char* szBuffer, int32_t nCount);
+	GAMMA_COMMON_API int32_t			ReadFileFromConsole(const char* szFileName, int nStartPos, char* szBuffer, int nSize);
+	GAMMA_COMMON_API void			SetLogLevel(uint32_t nLevel);
 
 // 新日志接口 nLevel为日志级别枚举ELogLevel
 	GAMMA_COMMON_API void			GammaPrint(ELogLevel nLevel, const char* szFormat, ...);

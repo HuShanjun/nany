@@ -30,7 +30,7 @@ namespace Gamma
 
 		inline float Sin( float f ) const
 		{
-			int32 nIndex = ( (int32)( ( f/GM_2PI )*eCircle ) )&eCircleMask;
+			int32_t nIndex = ( (int32_t)( ( f/GM_2PI )*eCircle ) )&eCircleMask;
 			float fResult = nIndex&eInvMask ? m_fSinBuf[ eTableSize - ( nIndex&eTableMask ) ] : m_fSinBuf[ nIndex&eTableMask ];
 			return nIndex&eSignedMask ? -fResult : fResult;
 		}
@@ -38,9 +38,9 @@ namespace Gamma
 		inline float ASin( float f ) const
 		{
 			if( f >= 0 )
-				return m_fASinBuf[( (int32)( Limit( f, 0.0f, 1.0f )*eTableSize ) )&eTableMask];
+				return m_fASinBuf[( (int32_t)( Limit( f, 0.0f, 1.0f )*eTableSize ) )&eTableMask];
 			else
-				return -m_fASinBuf[( (int32)( Limit( -f, 0.0f, 1.0f )*eTableSize ) )&eTableMask];
+				return -m_fASinBuf[( (int32_t)( Limit( -f, 0.0f, 1.0f )*eTableSize ) )&eTableMask];
 		}
 
 		inline float Cos( float f ) const	{ return Sin( GM_PI_2 - f ); }
@@ -229,21 +229,21 @@ namespace Gamma
 	}
 
 	template<typename ILineAction>
-	inline bool TightLineTo( int32 xSrc, int32 ySrc, int32 xDes, int32 yDes, ILineAction& Action )
+	inline bool TightLineTo( int32_t xSrc, int32_t ySrc, int32_t xDes, int32_t yDes, ILineAction& Action )
 	{
-		int32 xRange = xDes < xSrc ? xSrc-xDes : xDes-xSrc;		//instead of abs()
-		int32 yRange = yDes < ySrc ? ySrc-yDes : yDes-ySrc;		//abs
+		int32_t xRange = xDes < xSrc ? xSrc-xDes : xDes-xSrc;		//instead of abs()
+		int32_t yRange = yDes < ySrc ? ySrc-yDes : yDes-ySrc;		//abs
 
-		int32 xDelta = xDes < xSrc ? -1 : 1;
-		int32 yDelta = yDes < ySrc ? -1 : 1;
+		int32_t xDelta = xDes < xSrc ? -1 : 1;
+		int32_t yDelta = yDes < ySrc ? -1 : 1;
 
 
 		if( !Action.Do( xSrc, ySrc ) )
 			return false;
 
-		int32 nCurDx = 0;
-		int32 nCurDy = 0;
-		int32 nJudge = 0;
+		int32_t nCurDx = 0;
+		int32_t nCurDy = 0;
+		int32_t nJudge = 0;
 
 		if( yRange > xRange )
 		{
@@ -256,8 +256,8 @@ namespace Gamma
 			nCurDx = 1;
 			nJudge = ( xRange>>1 );
 		}
-		int32 nCurx = xSrc;
-		int32 nCury = ySrc;
+		int32_t nCurx = xSrc;
+		int32_t nCury = ySrc;
 	
 		while( (nCurx != xDes ) || ( nCury != yDes ) )
 		{
@@ -282,23 +282,23 @@ namespace Gamma
 
 
 	template<typename ILineAction>
-	inline bool LineTo( int32 xSrc, int32 ySrc, int32 xDes, int32 yDes, ILineAction Action, bool bCheckEnd /*= false*/ )
+	inline bool LineTo( int32_t xSrc, int32_t ySrc, int32_t xDes, int32_t yDes, ILineAction Action, bool bCheckEnd /*= false*/ )
 	{
-		int32 xRange1 = xDes < xSrc ? xSrc - xDes : xDes - xSrc;
-		int32 yRange1 = yDes < ySrc ? ySrc - yDes : yDes - ySrc;
-		int32 xRange2 = xRange1 << 1;
-		int32 yRange2 = yRange1 << 1;
+		int32_t xRange1 = xDes < xSrc ? xSrc - xDes : xDes - xSrc;
+		int32_t yRange1 = yDes < ySrc ? ySrc - yDes : yDes - ySrc;
+		int32_t xRange2 = xRange1 << 1;
+		int32_t yRange2 = yRange1 << 1;
 
-		int32 xDelta = xDes < xSrc ? -1 : 1;
-		int32 yDelta = yDes < ySrc ? -1 : 1;
+		int32_t xDelta = xDes < xSrc ? -1 : 1;
+		int32_t yDelta = yDes < ySrc ? -1 : 1;
 
 		if( !Action( xSrc, ySrc ) )
 			return false;
 
 		int nJudge = 0;
 		
-		int32 nCurx = xSrc;
-		int32 nCury = ySrc;
+		int32_t nCurx = xSrc;
+		int32_t nCury = ySrc;
 		
 		if( yRange1 > xRange1 )
 		{
@@ -354,21 +354,21 @@ namespace Gamma
 	// 返回顶点数量以及索引数量
 	//=============================================================================================================================
 	template< typename _VertexVec>
-	inline std::pair<uint32,uint32> BuildSphere( _VertexVec* pVertex, uint16* pIndex, 
-		int32 nCircleDivCount, int32 nHeightDivCount, float fRadiusY, float fUpRadiusXZ, float fDownRadiusXZ, bool bTop, bool bBottom, 
+	inline std::pair<uint32_t,uint32_t> BuildSphere( _VertexVec* pVertex, uint16_t* pIndex, 
+		int32_t nCircleDivCount, int32_t nHeightDivCount, float fRadiusY, float fUpRadiusXZ, float fDownRadiusXZ, bool bTop, bool bBottom, 
 		float fUSectorStart, float fUSectorEnd, float fVSegmentStart, float fVSegmentEnd, bool bWrapUV,
-		float fSectorStart, float fSectorEnd, float fSegmentStart, float fSegmentEnd, uint32 nVetexContext )
+		float fSectorStart, float fSectorEnd, float fSegmentStart, float fSegmentEnd, uint32_t nVetexContext )
 	{	
 		fSectorStart		= Limit( fSectorStart, 0.0f, 1.0f );
 		fSectorEnd			= Limit( fSectorEnd, 0.0f, 1.0f );
 		fSegmentStart		= Limit( fSegmentStart, 0.0f, 1.0f );
 		fSegmentEnd			= Limit( fSegmentEnd, 0.0f, 1.0f );
 
-		int32 nYSegStart	= (int32)floor( fSegmentStart*nHeightDivCount );
-		int32 nYSegEnd		= (int32)ceil( fSegmentEnd*nHeightDivCount );
-		int32 nYSecStart	= (int32)floor( fSectorStart*nCircleDivCount );
-		int32 nYSecEnd		= (int32)ceil( fSectorEnd*nCircleDivCount );
-		int32 nLineSector	= nYSecEnd - nYSecStart;
+		int32_t nYSegStart	= (int32_t)floor( fSegmentStart*nHeightDivCount );
+		int32_t nYSegEnd		= (int32_t)ceil( fSegmentEnd*nHeightDivCount );
+		int32_t nYSecStart	= (int32_t)floor( fSectorStart*nCircleDivCount );
+		int32_t nYSecEnd		= (int32_t)ceil( fSectorEnd*nCircleDivCount );
+		int32_t nLineSector	= nYSecEnd - nYSecStart;
 		float fMinPitch		= ( 1 - fSegmentEnd*2.0f );
 		float fMaxPitch		= ( 1 - fSegmentStart*2.0f );
 		float fMinYaw		= fSectorStart*GM_2PI;
@@ -376,8 +376,8 @@ namespace Gamma
 
 		if( pVertex == NULL || pIndex == NULL )
 		{
-			int32 nVertexCount = ( nLineSector + 1 )*( nYSegEnd - nYSegStart + 1 );
-			int32 nIndexCount = nLineSector*( nYSegEnd - nYSegStart )*6;
+			int32_t nVertexCount = ( nLineSector + 1 )*( nYSegEnd - nYSegStart + 1 );
+			int32_t nIndexCount = nLineSector*( nYSegEnd - nYSegStart )*6;
 
 			if( fSegmentStart == 0.0f && fDownRadiusXZ < 0 )
 			{
@@ -401,11 +401,11 @@ namespace Gamma
 				nIndexCount += nLineSector*3;
 			}
 
-			return std::pair<uint32,uint32>( Max( nVertexCount, 0 ), Max( nIndexCount, 0 ) );
+			return std::pair<uint32_t,uint32_t>( Max( nVertexCount, 0 ), Max( nIndexCount, 0 ) );
 		}
 
-		uint32 nCurVertexCount = 0;
-		uint32 nCurIndexCount = 0;
+		uint32_t nCurVertexCount = 0;
+		uint32_t nCurIndexCount = 0;
 		if( bTop && ( fSegmentStart != 0.0f || fDownRadiusXZ >= 0 ) )
 		{
 			if( fDownRadiusXZ < 0 )
@@ -413,16 +413,16 @@ namespace Gamma
 			else
 				pVertex[nCurVertexCount++] = _VertexVec( 0, fMaxPitch*fRadiusY, 0, 0.5f, bWrapUV ? 0.0f : 0.5f, nVetexContext );
 
-			for( int32 i = 0; i < nLineSector; i++ )
+			for( int32_t i = 0; i < nLineSector; i++ )
 			{
 				pIndex[nCurIndexCount++] = 0;
-				pIndex[nCurIndexCount++] = (uint16)( i + 2 );
-				pIndex[nCurIndexCount++] = (uint16)( i + 1 );
+				pIndex[nCurIndexCount++] = (uint16_t)( i + 2 );
+				pIndex[nCurIndexCount++] = (uint16_t)( i + 1 );
 			}
 		}
 
 		///< Y方向
-		for( int32 i = nYSegStart; i <= nYSegEnd; i++ )
+		for( int32_t i = nYSegStart; i <= nYSegEnd; i++ )
 		{
 			if( i == 0 && fSegmentStart == 0.0f && fDownRadiusXZ < 0 )
 			{
@@ -430,15 +430,15 @@ namespace Gamma
 			}
 			else if( i == nHeightDivCount && fSegmentEnd == 1.0f && fDownRadiusXZ < 0 )
 			{
-				int32 nCurVerCount = nCurVertexCount;
-				int32 nLineStart = nCurVerCount - nLineSector - 1;
+				int32_t nCurVerCount = nCurVertexCount;
+				int32_t nLineStart = nCurVerCount - nLineSector - 1;
 				pVertex[nCurVertexCount++] = _VertexVec( 0, -fRadiusY, 0, 0.5f, bWrapUV ? 1.0f : 0.5f, nVetexContext );
 
-				for( int32 i = 0; i < nLineSector; i++ )
+				for( int32_t i = 0; i < nLineSector; i++ )
 				{
-					pIndex[nCurIndexCount++] = (uint16)( nCurVertexCount - 1 );
-					pIndex[nCurIndexCount++] = (uint16)( i + nLineStart );
-					pIndex[nCurIndexCount++] = (uint16)( i + 1 + nLineStart );
+					pIndex[nCurIndexCount++] = (uint16_t)( nCurVertexCount - 1 );
+					pIndex[nCurIndexCount++] = (uint16_t)( i + nLineStart );
+					pIndex[nCurIndexCount++] = (uint16_t)( i + 1 + nLineStart );
 				}
 			}
 			else
@@ -463,7 +463,7 @@ namespace Gamma
 				if( !bWrapUV )
 					v = 0.5f - Abs<float>( v - 0.5f );
 
-				for( int32 j = nYSecStart; j <= nYSecEnd; j++ )
+				for( int32_t j = nYSecStart; j <= nYSecEnd; j++ )
 				{
 					float fCurSector = Limit( j/(float)nCircleDivCount, fSectorStart, fSectorEnd );
 					float fXZAngle = Limit( j*GM_2PI/nCircleDivCount, fMinYaw, fMaxYaw );
@@ -483,26 +483,26 @@ namespace Gamma
 
 				if( i == 1 && fSegmentStart == 0.0f && fDownRadiusXZ < 0 )
 				{
-					int32 nCurVerCount = nCurVertexCount;
-					int32 nLine2Start = nCurVerCount - nLineSector - 1;
-					for( int32 i = 0; i < nLineSector; i++ )
+					int32_t nCurVerCount = nCurVertexCount;
+					int32_t nLine2Start = nCurVerCount - nLineSector - 1;
+					for( int32_t i = 0; i < nLineSector; i++ )
 					{
 						pIndex[nCurIndexCount++] = 0;
-						pIndex[nCurIndexCount++] = (uint16)( nLine2Start + i + 1 );
-						pIndex[nCurIndexCount++] = (uint16)( nLine2Start + i );
+						pIndex[nCurIndexCount++] = (uint16_t)( nLine2Start + i + 1 );
+						pIndex[nCurIndexCount++] = (uint16_t)( nLine2Start + i );
 					}
 				}
 				else
 				{
-					int32 nCurVerCount = nCurVertexCount;
-					int32 nLine2Start = nCurVerCount - nLineSector - 1;
-					int32 nLine1Start = nLine2Start  - nLineSector - 1;
-					for( int32 i = 0; i < nLineSector; i++ )
+					int32_t nCurVerCount = nCurVertexCount;
+					int32_t nLine2Start = nCurVerCount - nLineSector - 1;
+					int32_t nLine1Start = nLine2Start  - nLineSector - 1;
+					for( int32_t i = 0; i < nLineSector; i++ )
 					{
-						uint16 nVer11 = (uint16)( nLine1Start + i );
-						uint16 nVer21 = (uint16)( nLine2Start + i );
-						uint16 nVer12 = (uint16)( nLine1Start + i + 1 );
-						uint16 nVer22 = (uint16)( nLine2Start + i + 1 );
+						uint16_t nVer11 = (uint16_t)( nLine1Start + i );
+						uint16_t nVer21 = (uint16_t)( nLine2Start + i );
+						uint16_t nVer12 = (uint16_t)( nLine1Start + i + 1 );
+						uint16_t nVer22 = (uint16_t)( nLine2Start + i + 1 );
 
 						pIndex[nCurIndexCount++] = nVer21;
 						pIndex[nCurIndexCount++] = nVer11;
@@ -517,21 +517,21 @@ namespace Gamma
 
 		if( bBottom && ( fSegmentEnd != 1.0f || fDownRadiusXZ >= 0 ) )
 		{
-			uint16 nVertStart = (uint16)( nCurVertexCount - nLineSector - 1 );
+			uint16_t nVertStart = (uint16_t)( nCurVertexCount - nLineSector - 1 );
 			if( fDownRadiusXZ < 0 )
 				pVertex[nCurVertexCount++] = _VertexVec( 0, sinf( fMinPitch*GM_PI_2 )*fRadiusY, 0, 0.5f, bWrapUV ? 1.0f : 0.5f, nVetexContext );
 			else
 				pVertex[nCurVertexCount++] = _VertexVec( 0, fMinPitch*fRadiusY, 0, 0.5f, bWrapUV ? 1.0f : 0.5f, nVetexContext );
 
-			for( int32 i = 0; i < nLineSector; i++ )
+			for( int32_t i = 0; i < nLineSector; i++ )
 			{
-				pIndex[nCurIndexCount++] = (uint16)( nCurVertexCount - 1 );
-				pIndex[nCurIndexCount++] = (uint16)( nVertStart + i + 0 );
-				pIndex[nCurIndexCount++] = (uint16)( nVertStart + i + 1 );
+				pIndex[nCurIndexCount++] = (uint16_t)( nCurVertexCount - 1 );
+				pIndex[nCurIndexCount++] = (uint16_t)( nVertStart + i + 0 );
+				pIndex[nCurIndexCount++] = (uint16_t)( nVertStart + i + 1 );
 			}
 		}
 
-		return std::pair<uint32,uint32>( nCurVertexCount, nCurIndexCount );
+		return std::pair<uint32_t,uint32_t>( nCurVertexCount, nCurIndexCount );
 	}
 
 	//=============================================================================================================================
@@ -757,7 +757,7 @@ namespace Gamma
 				}
 				else
 				{
-					int32 edge[2];
+					int32_t edge[2];
 					Real end[2][2];
 					ComputeIntersection(sValue, classify, edge, end);
 					ComputeMinimumParameters(edge, end, result.parameter);

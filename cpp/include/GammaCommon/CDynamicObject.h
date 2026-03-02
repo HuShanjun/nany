@@ -23,15 +23,15 @@ namespace Gamma
 	public: 
 		virtual ~CDynamicObject() {}
 		bool						IsValid() const;
-		virtual uint32				GetClassID() = 0;
-		virtual bool				IsClassID( uint32 nClassID ) = 0;
-		static void					UnregisterClass( uint32 nClassID );
-		static CDynamicObject*		CreateInstance( uint32 nClassID, const void* pContext = NULL );
+		virtual uint32_t				GetClassID() = 0;
+		virtual bool				IsClassID( uint32_t nClassID ) = 0;
+		static void					UnregisterClass( uint32_t nClassID );
+		static CDynamicObject*		CreateInstance( uint32_t nClassID, const void* pContext = NULL );
 		static void					DestroyInstance( CDynamicObject* pInstance );
-		static size_t				GetClassInstanceUsedCount( uint32 nClassID );
-		static uint32				GetAllocSize();
+		static size_t				GetClassInstanceUsedCount( uint32_t nClassID );
+		static uint32_t				GetAllocSize();
 		static void					DumpAllocSize();
-		static void					RegisterClass( uint32 nClassID, uint32 nObjectSize, uint32 nObjectPoolSize,
+		static void					RegisterClass( uint32_t nClassID, uint32_t nObjectSize, uint32_t nObjectPoolSize,
 										CreateDynamicObjFun pCreateFun, DestroyDynamicObjFun pDestroyFun );
 	};
 
@@ -39,7 +39,7 @@ namespace Gamma
 	template<class CDynamicClass, class ParamType>
 	struct TDynamicClassDef
 	{
-		TDynamicClassDef( uint32 nClassID, uint32 nObjectPoolSize )
+		TDynamicClassDef( uint32_t nClassID, uint32_t nObjectPoolSize )
 		{
 			CDynamicObject::RegisterClass( 
 				nClassID, sizeof(CDynamicClass), nObjectPoolSize, 
@@ -64,7 +64,7 @@ namespace Gamma
 	template<class CDynamicClass>
 	struct TDynamicClassDef<CDynamicClass, void>
 	{
-		TDynamicClassDef( uint32 nClassID, uint32 nObjectPoolSize )
+		TDynamicClassDef( uint32_t nClassID, uint32_t nObjectPoolSize )
 		{
 			CDynamicObject::RegisterClass( 
 				nClassID, sizeof(CDynamicClass), nObjectPoolSize, 
@@ -96,12 +96,12 @@ namespace Gamma
 	#define DECLARE_DYNAMIC_CLASS( Class ) \
 		private: \
 		typedef Gamma::TDynamicClassDef<Class, void> CDynamicClassDef;\
-		static uint32 s_nClassID;\
+		static uint32_t s_nClassID;\
 		static CDynamicClassDef s_ClassDef;\
 		public: \
-		static uint32 GetID() { return s_nClassID; } \
-		virtual uint32 GetClassID(){ return Class::s_nClassID; }\
-		virtual bool IsClassID( uint32 nClassID ){ return nClassID == s_nClassID; };\
+		static uint32_t GetID() { return s_nClassID; } \
+		virtual uint32_t GetClassID(){ return Class::s_nClassID; }\
+		virtual bool IsClassID( uint32_t nClassID ){ return nClassID == s_nClassID; };\
 		static Class* CreateInstance() { return static_cast<Class*>( \
 			CDynamicObject::CreateInstance( Class::s_nClassID, 0 ) ); }
 
@@ -109,19 +109,19 @@ namespace Gamma
 	#define DECLARE_DYNAMIC_CLASS_WITH_PARENT( Class, Parent ) \
 		private:\
 		typedef Gamma::TDynamicClassDef<Class, void> CDynamicClassDef;\
-		static uint32 s_nClassID;\
+		static uint32_t s_nClassID;\
 		static CDynamicClassDef s_ClassDef;\
 		public: \
-		static uint32 GetID() { return s_nClassID; } \
-		virtual uint32 GetClassID(){ return Class::s_nClassID; }\
-		virtual bool IsClassID( uint32 nClassID ){ return nClassID == s_nClassID\
+		static uint32_t GetID() { return s_nClassID; } \
+		virtual uint32_t GetClassID(){ return Class::s_nClassID; }\
+		virtual bool IsClassID( uint32_t nClassID ){ return nClassID == s_nClassID\
 			 || Parent::IsClassID(nClassID); };\
 		static Class* CreateInstance() { return static_cast<Class*>( \
 			CDynamicObject::CreateInstance( Class::s_nClassID, 0 ) ); }
 
 	///定义CLIENTCONN对象
 	#define DEFINE_DYNAMIC_CLASS( Class, nPoolSize, ClassID ) \
-		uint32 Class::s_nClassID = ClassID;\
+		uint32_t Class::s_nClassID = ClassID;\
 		Class::CDynamicClassDef Class::s_ClassDef( ClassID, nPoolSize );
 
 }

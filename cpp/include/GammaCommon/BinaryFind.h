@@ -61,18 +61,18 @@ namespace Gamma
 	}
 
     //=====================================================================
-    //   int32 GetBound( const VectorType& vecNode, const KeyType& KeyVal )
+    //   int32_t GetBound( const VectorType& vecNode, const KeyType& KeyVal )
     //   查找某个值在vector中的索引
     //   返回vector中的索引，-1表示没找到
     //=====================================================================
     template< class VectorType, class KeyType, class CompareType > 
-    int32 Find( const VectorType& vecNode, size_t nVectorSize, const KeyType& KeyVal, const CompareType& Compare )
+    int32_t Find( const VectorType& vecNode, size_t nVectorSize, const KeyType& KeyVal, const CompareType& Compare )
 	{
         if( nVectorSize == 0 )
             return -1;
 
-        int32 nBegin = 0;
-        int32 nEnd = (int32)nVectorSize;
+        int32_t nBegin = 0;
+        int32_t nEnd = (int32_t)nVectorSize;
 
         for( ;; )
         {
@@ -94,7 +94,7 @@ namespace Gamma
     }
 
 	template< class VectorType, class KeyType > 
-	int32 Find( const VectorType& vecNode, size_t nVectorSize, const KeyType& KeyVal )
+	int32_t Find( const VectorType& vecNode, size_t nVectorSize, const KeyType& KeyVal )
 	{
 		return Find( vecNode, nVectorSize, KeyVal, std::less<KeyType>() );
 	}

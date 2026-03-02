@@ -1,4 +1,4 @@
-﻿//===============================================
+//===============================================
 // CVersion.h 
 // 定义版本号操作
 // 柯达昭
@@ -33,34 +33,34 @@ namespace Gamma
 		{
 			struct  
 			{
-				uint16	m_nBuild;
-				uint16	m_nRevision;
-				uint16	m_nMinor;
-				uint8	m_nMajor;
-				uint8	m_nReserve;
+				uint16_t	m_nBuild;
+				uint16_t	m_nRevision;
+				uint16_t	m_nMinor;
+				uint8_t	m_nMajor;
+				uint8_t	m_nReserve;
 			};
-			uint64		m_nVersion;
+			uint64_t		m_nVersion;
 		};
 
 	public:
-		CVersion( uint8 nReserve = 0, uint8 nMajor = 0, uint16 nMinor = 0, uint16 nRevision = 0, uint16 nBuild = 0 )
+		CVersion( uint8_t nReserve = 0, uint8_t nMajor = 0, uint16_t nMinor = 0, uint16_t nRevision = 0, uint16_t nBuild = 0 )
 			: m_nReserve( nReserve ), m_nMajor( nMajor ), m_nMinor( nMinor ), m_nRevision( nRevision ), m_nBuild( nBuild )
 		{
 		}
 
 		CVersion( const wchar_t* szVersion )
 		{
-			int32 nNumber[eVF_Count] = { 0, 0, 0, 0, 0 };
+			int32_t nNumber[eVF_Count] = { 0, 0, 0, 0, 0 };
 			std::vector<std::wstring> vecVersion = SeparateString( szVersion, L'.' );
 			for( size_t i = 0; i < vecVersion.size() && i < eVF_Count; i++ )
 				nNumber[i] = GammaA2I( vecVersion[i].c_str() );
-			*this = CVersion( (uint8)nNumber[0], (uint8)nNumber[1], (uint16)nNumber[2], (uint16)nNumber[3], (uint16)nNumber[4] );
+			*this = CVersion( (uint8_t)nNumber[0], (uint8_t)nNumber[1], (uint16_t)nNumber[2], (uint16_t)nNumber[3], (uint16_t)nNumber[4] );
 		}
 
 		CVersion( const char* szVersion )
 		{
-			int32 nNumber[eVF_Count] = { 0, 0, 0, 0, 0 };
-			std::pair<const char*, uint32> aryResult[eVF_Count];
+			int32_t nNumber[eVF_Count] = { 0, 0, 0, 0, 0 };
+			std::pair<const char*, uint32_t> aryResult[eVF_Count];
 			size_t nCount = SeparateStringFast( szVersion, '.', aryResult, eVF_Count );
 			for( size_t i = 0; i < nCount; i++ )
 			{
@@ -68,10 +68,10 @@ namespace Gamma
 				strncpy2array_safe( szBuffer, aryResult[i].first, aryResult[i].second );
 				nNumber[i] = GammaA2I( szBuffer );
 			}
-			*this = CVersion( (uint8)nNumber[0], (uint8)nNumber[1], (uint16)nNumber[2], (uint16)nNumber[3], (uint16)nNumber[4] );
+			*this = CVersion( (uint8_t)nNumber[0], (uint8_t)nNumber[1], (uint16_t)nNumber[2], (uint16_t)nNumber[3], (uint16_t)nNumber[4] );
 		}
 
-		CVersion( uint64 nVersion )
+		CVersion( uint64_t nVersion )
 			: m_nVersion( nVersion )
 		{
 		}
@@ -81,22 +81,22 @@ namespace Gamma
 		{
 			CharType szBuf[64];
 			TGammaStrStream<CharType> ss( szBuf, 64 );
-			ss << (uint32)m_nReserve << "." << (uint32)m_nMajor << "." << (uint32)m_nMinor;
+			ss << (uint32_t)m_nReserve << "." << (uint32_t)m_nMajor << "." << (uint32_t)m_nMinor;
 			if( m_nBuild )
-				ss << "." << (uint32)m_nRevision << "." << (uint32)m_nBuild;
+				ss << "." << (uint32_t)m_nRevision << "." << (uint32_t)m_nBuild;
 			else if( m_nRevision )
-				ss << "." << (uint32)m_nRevision;
+				ss << "." << (uint32_t)m_nRevision;
 			return szBuf;
 		}
 
-		operator uint64()		const { return m_nVersion;						}
-		uint16 GetBuild()		const { return m_nBuild;						}
-		uint16 GetRevision()	const { return m_nRevision;						}
-		uint16 GetMinor()		const { return m_nMinor;						}
-		uint16 GetMajor()		const { return m_nMajor;						}
-		uint16 GetReserve()		const { return m_nReserve;						}
-		uint32 GetHigh32()		const { return (uint32)( m_nVersion >> 32 );	}
-		uint32 GetLow32()		const { return (uint32)( m_nVersion );			}
+		operator uint64_t()		const { return m_nVersion;						}
+		uint16_t GetBuild()		const { return m_nBuild;						}
+		uint16_t GetRevision()	const { return m_nRevision;						}
+		uint16_t GetMinor()		const { return m_nMinor;						}
+		uint16_t GetMajor()		const { return m_nMajor;						}
+		uint16_t GetReserve()		const { return m_nReserve;						}
+		uint32_t GetHigh32()		const { return (uint32_t)( m_nVersion >> 32 );	}
+		uint32_t GetLow32()		const { return (uint32_t)( m_nVersion );			}
 
         /// xo lua用的比较
         bool Less( const CVersion& v ) const { return m_nVersion < v.m_nVersion; }
@@ -121,14 +121,14 @@ namespace Gamma
 			}
 
 			std::vector<std::string> vecString = SeparateString( szVersions, ',' );
-			for( uint32 i = 0; i < vecString.size(); i++ )
+			for( uint32_t i = 0; i < vecString.size(); i++ )
 			{
 				std::string& strVersion = vecString[i];
 				if( strVersion.empty() )
 					continue;
 
 				CVersion verBegin;
-				CVersion verLast( INVALID_64BITID );
+				CVersion verLast( static_cast<uint64_t>(INVALID_64BITID) );
 				std::string::size_type nPos = strVersion.find( '-' );
 				if( nPos == std::string::npos )
 				{

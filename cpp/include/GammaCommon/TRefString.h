@@ -17,7 +17,7 @@ namespace Gamma
 	template<typename _Elem, typename StringType = std::basic_string<_Elem>>
 	class TRefString : public StringType
 	{
-		uint32	m_nRef;
+		uint32_t	m_nRef;
 	public:
 		TRefString() : m_nRef(0)
 		{
@@ -72,7 +72,7 @@ namespace Gamma
 				delete this;
 		}
 
-		uint32 GetRef()
+		uint32_t GetRef()
 		{
 			return m_nRef;
 		}

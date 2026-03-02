@@ -14,22 +14,22 @@ namespace Gamma
 		: public CClassPool
 		, public CAllocList::CGammaRBTreeNode
 	{
-		uint32					m_nClassID;
-		uint32					m_nObjectSize;
+		uint32_t					m_nClassID;
+		uint32_t					m_nObjectSize;
 		CreateDynamicObjFun		m_pCreateFun;
 		DestroyDynamicObjFun	m_pDestroyFun;
 
 	public:
 		CDynamicObjectAlloc( 
-			uint32 nClassID, uint32 nObjectSize, uint32 nObjectPoolSize,
+			uint32_t nClassID, uint32_t nObjectSize, uint32_t nObjectPoolSize,
 			CreateDynamicObjFun pCreateFun, DestroyDynamicObjFun pDestroyFun );
-		operator uint32() const { return m_nClassID; }
+		operator uint32_t() const { return m_nClassID; }
 
 		CDynamicObject*	Alloc( const void* pContext );
 		void			Free( CDynamicObject* );
-		uint32			GetUsedCount();
-		uint32			GetFreeCount();
-		uint32			GetClassSize();
+		uint32_t			GetUsedCount();
+		uint32_t			GetFreeCount();
+		uint32_t			GetClassSize();
 	};
 
 	/************************************************************************/
@@ -46,12 +46,12 @@ namespace Gamma
 		static CBaseClassMgr&	Instance();
 
 		void					RegisterClass( CDynamicObjectAlloc* pAlloc );
-		void					UnregisterClass( uint32 nClassID );
-		CDynamicObjectAlloc*	GetRegisterClassAlloc( uint32 nClassID );
-		CDynamicObject*			CreateObject( uint32 nClassID, const void* pContext );
+		void					UnregisterClass( uint32_t nClassID );
+		CDynamicObjectAlloc*	GetRegisterClassAlloc( uint32_t nClassID );
+		CDynamicObject*			CreateObject( uint32_t nClassID, const void* pContext );
 		void					DestroyObject( CDynamicObject* pBaseObject );
-		size_t					GetClassInstanceUsedCount( uint32 nClassID );
-		uint32					GetAllocSize();
+		size_t					GetClassInstanceUsedCount( uint32_t nClassID );
+		uint32_t					GetAllocSize();
 		void					DumpAllocSize();
 	};
 
@@ -59,13 +59,13 @@ namespace Gamma
 	/*  标准分配器                                                          */
 	/************************************************************************/
 	CDynamicObjectAlloc::CDynamicObjectAlloc( 
-		uint32 nClassID, uint32 nObjectSize, uint32 nObjectPoolSize,
+		uint32_t nClassID, uint32_t nObjectSize, uint32_t nObjectPoolSize,
 		CreateDynamicObjFun pCreateFun, DestroyDynamicObjFun pDestroyFun )
 		: m_nClassID( nClassID )
 		, m_nObjectSize( nObjectSize )
 		, m_pCreateFun( pCreateFun )
 		, m_pDestroyFun( pDestroyFun )
-		, CClassPool( Max<uint32>( nObjectSize, sizeof(void*)*2 ), nObjectPoolSize )
+		, CClassPool( Max<uint32_t>( nObjectSize, sizeof(void*)*2 ), nObjectPoolSize )
 	{
 	}
 
@@ -80,17 +80,17 @@ namespace Gamma
 		CClassPool::Free( m_pDestroyFun( pBaseObject ) );
 	}
 
-	uint32 CDynamicObjectAlloc::GetUsedCount()
+	uint32_t CDynamicObjectAlloc::GetUsedCount()
 	{
-		return (uint32)( CClassPool::GetTotalBlockCount() - CClassPool::GetFreeBlockCount() );
+		return (uint32_t)( CClassPool::GetTotalBlockCount() - CClassPool::GetFreeBlockCount() );
 	}
 
-	uint32 CDynamicObjectAlloc::GetFreeCount()
+	uint32_t CDynamicObjectAlloc::GetFreeCount()
 	{
-		return (uint32)CClassPool::GetFreeBlockCount();
+		return (uint32_t)CClassPool::GetFreeBlockCount();
 	}
 
-	uint32 CDynamicObjectAlloc::GetClassSize()
+	uint32_t CDynamicObjectAlloc::GetClassSize()
 	{
 		return m_nObjectSize;
 	}
@@ -124,11 +124,11 @@ namespace Gamma
 
 	void CBaseClassMgr::RegisterClass( CDynamicObjectAlloc* pAlloc )
 	{
-		if( m_AllocList.Find( (uint32)*pAlloc ) == NULL )
+		if( m_AllocList.Find( (uint32_t)*pAlloc ) == NULL )
 			m_AllocList.Insert( *pAlloc );
 	}
 
-	void CBaseClassMgr::UnregisterClass( uint32 nClassID )
+	void CBaseClassMgr::UnregisterClass( uint32_t nClassID )
 	{		
 		CDynamicObjectAlloc* pAllock = m_AllocList.Find( nClassID );
 		if( pAllock == NULL )
@@ -137,12 +137,12 @@ namespace Gamma
 		SAFE_DELETE( pAllock );
 	}
 
-	CDynamicObjectAlloc* CBaseClassMgr::GetRegisterClassAlloc( uint32 nClassID )
+	CDynamicObjectAlloc* CBaseClassMgr::GetRegisterClassAlloc( uint32_t nClassID )
 	{
 		return m_AllocList.Find( nClassID );
 	}
 
-	CDynamicObject* CBaseClassMgr::CreateObject( uint32 nClassID, const void* pContext )
+	CDynamicObject* CBaseClassMgr::CreateObject( uint32_t nClassID, const void* pContext )
 	{
 		CDynamicObjectAlloc* pNode = m_AllocList.Find( nClassID );
 		if( pNode == NULL )
@@ -152,7 +152,7 @@ namespace Gamma
 
 	void CBaseClassMgr::DestroyObject( CDynamicObject* pBaseObject )
 	{
-		uint32 nClassID = pBaseObject->GetClassID();
+		uint32_t nClassID = pBaseObject->GetClassID();
 		CDynamicObjectAlloc* pNode = m_AllocList.Find( nClassID );
 
 		if( !pNode )
@@ -166,7 +166,7 @@ namespace Gamma
 		*(void**)pBaseObject = nullptr;
 	}
 
-	size_t CBaseClassMgr::GetClassInstanceUsedCount(  uint32 nClassID )
+	size_t CBaseClassMgr::GetClassInstanceUsedCount(  uint32_t nClassID )
 	{
 		CDynamicObjectAlloc* pNode = m_AllocList.Find( nClassID );
 		if( pNode == NULL )
@@ -174,12 +174,12 @@ namespace Gamma
 		return pNode->GetUsedCount();
 	}
 
-	uint32 CBaseClassMgr::GetAllocSize()
+	uint32_t CBaseClassMgr::GetAllocSize()
 	{
-		uint32 nAllocSize = 0;
+		uint32_t nAllocSize = 0;
 		for( CDynamicObjectAlloc* pNode = m_AllocList.GetFirst(); pNode; pNode = pNode->GetNext() )
 		{
-			uint32 nTotalCount = pNode->GetFreeCount() + pNode->GetUsedCount();
+			uint32_t nTotalCount = pNode->GetFreeCount() + pNode->GetUsedCount();
 			nAllocSize += nTotalCount*pNode->GetClassSize();
 		}
 		return nAllocSize;
@@ -188,12 +188,12 @@ namespace Gamma
 	void CBaseClassMgr::DumpAllocSize()
 	{
 		FILE* fpM = fopen("DynamicObject.txt", "a");
-		uint32 nTotalAllocSize = 0;
+		uint32_t nTotalAllocSize = 0;
 		for (CDynamicObjectAlloc* pNode = m_AllocList.GetFirst(); pNode; pNode = pNode->GetNext())
 		{
-			uint32 nTotalCount = pNode->GetFreeCount() + pNode->GetUsedCount();
-			uint32 nAllocSize = nTotalCount * pNode->GetClassSize();
-			fprintf(fpM, "Class(%d) AllocSize(%d) TotalCount(%d) FreeCount(%d) UsedCount(%d) ClassSiez(%d)\n", (uint32)(*pNode), nAllocSize, nTotalCount, pNode->GetFreeCount(), pNode->GetUsedCount(), pNode->GetClassSize());
+			uint32_t nTotalCount = pNode->GetFreeCount() + pNode->GetUsedCount();
+			uint32_t nAllocSize = nTotalCount * pNode->GetClassSize();
+			fprintf(fpM, "Class(%d) AllocSize(%d) TotalCount(%d) FreeCount(%d) UsedCount(%d) ClassSiez(%d)\n", (uint32_t)(*pNode), nAllocSize, nTotalCount, pNode->GetFreeCount(), pNode->GetUsedCount(), pNode->GetClassSize());
 			nTotalAllocSize += nAllocSize;
 		}
 		fprintf(fpM, "==============TotalSize(%d)==============\n", nTotalAllocSize);
@@ -209,19 +209,19 @@ namespace Gamma
 	//====================================================================
 	//
 	//====================================================================
-	void CDynamicObject::RegisterClass( uint32 nClassID, uint32 nObjectSize, 
-		uint32 nObjectPoolSize, CreateDynamicObjFun pCreateFun, DestroyDynamicObjFun pDestroyFun )
+	void CDynamicObject::RegisterClass( uint32_t nClassID, uint32_t nObjectSize, 
+		uint32_t nObjectPoolSize, CreateDynamicObjFun pCreateFun, DestroyDynamicObjFun pDestroyFun )
 	{
 		return CBaseClassMgr::Instance().RegisterClass( 
 			new CDynamicObjectAlloc( nClassID, nObjectSize, nObjectPoolSize, pCreateFun, pDestroyFun ) );
 	}
 
-	void CDynamicObject::UnregisterClass( uint32 nClassID )
+	void CDynamicObject::UnregisterClass( uint32_t nClassID )
 	{
 		return CBaseClassMgr::Instance().UnregisterClass( nClassID );
 	}
 
-	CDynamicObject* CDynamicObject::CreateInstance( uint32 nClassID, const void* pContext )
+	CDynamicObject* CDynamicObject::CreateInstance( uint32_t nClassID, const void* pContext )
 	{
 		return CBaseClassMgr::Instance().CreateObject( nClassID, pContext );
 	}
@@ -231,12 +231,12 @@ namespace Gamma
 		return CBaseClassMgr::Instance().DestroyObject( pInstance );
 	}
 
-	size_t CDynamicObject::GetClassInstanceUsedCount( uint32 nClassID )
+	size_t CDynamicObject::GetClassInstanceUsedCount( uint32_t nClassID )
 	{
 		return CBaseClassMgr::Instance().GetClassInstanceUsedCount( nClassID );
 	}	
 
-	uint32 CDynamicObject::GetAllocSize()
+	uint32_t CDynamicObject::GetAllocSize()
 	{
 		return CBaseClassMgr::Instance().GetAllocSize();
 	}

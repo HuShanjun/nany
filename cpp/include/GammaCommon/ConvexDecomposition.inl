@@ -109,7 +109,7 @@ namespace Gamma
 						pNextPoint->x >= fMinX && pNextPoint->x <= fMaxX )
 					{
 						// 三角形A内  
-						int32 nResult = IsInTriangle( *pNextPoint, *pLeft, *pCur, *pRight );
+						int32_t nResult = IsInTriangle( *pNextPoint, *pLeft, *pCur, *pRight );
 						if( nResult < 0 )
 							continue;
 

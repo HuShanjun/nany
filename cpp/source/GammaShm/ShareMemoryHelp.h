@@ -19,7 +19,7 @@ namespace Gamma
 	
 	struct SShmCmdHead
 	{
-		uint8	m_nType;
+		uint8_t	m_nType;
 		bool	m_bFailed;
 	};
 
@@ -29,39 +29,39 @@ namespace Gamma
 			: m_bDataInited( false )
 			, m_nBlockCommitID( 0 ){}
 		bool			m_bDataInited;
-		uint32			m_nBlockCommitID;
+		uint32_t			m_nBlockCommitID;
 	};
 
 	struct SLogBuffChange
 	{
-		uint32			m_nCommitID;
-		uint32			m_nReadOffset;
+		uint32_t			m_nCommitID;
+		uint32_t			m_nReadOffset;
 	};
 
 	struct SLogName
 	{
 		SLogName():m_nSerialNum(0),m_nCreateTime(0),m_nGasTime(0) {};
 		string			m_strFileName;
-		uint32			m_nCreateTime;
-		uint32			m_nSerialNum;
-		uint32			m_nGasTime;
+		uint32_t			m_nCreateTime;
+		uint32_t			m_nSerialNum;
+		uint32_t			m_nGasTime;
 	};
 
 	struct SModInfo
 	{
-		uint16			m_nDBGasID;
-		uint64			m_nID;
-		uint32			m_nQueryChannel;
+		uint16_t			m_nDBGasID;
+		uint64_t			m_nID;
+		uint32_t			m_nQueryChannel;
 	};
 
-	typedef map<void*, uint32> CCommitMap;
+	typedef map<void*, uint32_t> CCommitMap;
 	typedef map<SChunckHead*, SModInfo> CModFlagMap;
 
 	struct STrunkTypeData
 	{
 		STrunkTypeData() : m_nCommitID(0){}
-		uint32			m_nCommitID;
+		uint32_t			m_nCommitID;
 		CCommitMap		m_mapCommitData;
-		uint32			m_nDBCost;
+		uint32_t			m_nDBCost;
 	};
 }

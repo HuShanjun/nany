@@ -76,15 +76,15 @@ namespace Gamma
 	void* CScriptLua::ms_pRegistScriptLua = (void*)"__regist_cscript_lua";
 	void* CScriptLua::ms_pFirstClassInfo = (void*)"__first_class_info";
 	void* CScriptLua::ms_pErrorHandler = (void*)"__error_handler";
-	std::map<int64, std::pair<std::string, int> > g_mapMemInfo;
+	std::map<int64_t, std::pair<std::string, int> > g_mapMemInfo;
 	std::map<std::string, int>  g_mapSourceInfo;
-	int64 g_nTotalNew;
-	int64 g_nTotalFree;
+	int64_t g_nTotalNew;
+	int64_t g_nTotalFree;
 #ifdef _DEBUG
-	uint32 g_nIndex = 0;
-	std::pair<const char*, uint32> g_aryLog[1024];
+	uint32_t g_nIndex = 0;
+	std::pair<const char*, uint32_t> g_aryLog[1024];
 #endif // _DEBUG
-	CScriptLua::CScriptLua( const char* strDebugHost, uint16 nDebugPort, bool bWaitForDebugger )
+	CScriptLua::CScriptLua( const char* strDebugHost, uint16_t nDebugPort, bool bWaitForDebugger )
 		: m_bPreventExeInRunBuffer(false)
 	{
 		m_aryBlockByClass.resize(eMemoryConst_AllocateCount);
@@ -374,7 +374,7 @@ namespace Gamma
 		m_vecLuaState.pop_back();
 	}
 
-	int32 CScriptLua::Panic(lua_State* pL)
+	int32_t CScriptLua::Panic(lua_State* pL)
 	{
 		CScriptLua* pScriptLua = GetScript(pL);
 		pScriptLua->Output("PANIC: unprotected error in call to Lua API : ", -1);
@@ -465,8 +465,8 @@ namespace Gamma
 		{
 			g_nTotalNew += nNewSize;
 			g_nTotalFree += nOldSize;
-			int64 s_pFree = (int64)pPreBuff;
-			int64 s_pNew = (int64)pNewBuf;
+			int64_t s_pFree = (int64_t)pPreBuff;
+			int64_t s_pNew = (int64_t)pNewBuf;
 			if (nOldSize > 0)
 			{
 				if (g_mapMemInfo.find(s_pFree) != g_mapMemInfo.end())
@@ -530,11 +530,11 @@ namespace Gamma
 		return pScriptLua;
 	}
 
-	int32 CScriptLua::IncRef( void* pObj )
+	int32_t CScriptLua::IncRef( void* pObj )
 	{
 		GammaAst( pObj );
 		lua_State* pL = GetLuaState();
-		int32 nTop = lua_gettop( pL );
+		int32_t nTop = lua_gettop( pL );
 		PushCppObjAndWeakTable( pL );
 
 		lua_pushlightuserdata( pL, CScriptLua::ms_pGlobObjectTable );
@@ -548,7 +548,7 @@ namespace Gamma
 		}
 
 		lua_rawget( pL, -2 );
-		int32 nPreRef = lua_isnil( pL, -1 ) ? 0 : (int32)lua_tonumber( pL, -1 );
+		int32_t nPreRef = lua_isnil( pL, -1 ) ? 0 : (int32_t)lua_tonumber( pL, -1 );
 		lua_pop( pL, 1 );
 		lua_pushlightuserdata( pL, pObj );
 		lua_pushnumber( pL, ++nPreRef );
@@ -557,11 +557,11 @@ namespace Gamma
 		return nPreRef;
 	}
 
-	int32 CScriptLua::DecRef( void* pObj )
+	int32_t CScriptLua::DecRef( void* pObj )
 	{
 		GammaAst( pObj );
 		lua_State* pL = GetLuaState();
-		int32 nTop = lua_gettop( pL );
+		int32_t nTop = lua_gettop( pL );
 		PushCppObjAndWeakTable( pL );
 
 		lua_pushlightuserdata( pL, CScriptLua::ms_pGlobObjectTable );
@@ -575,7 +575,7 @@ namespace Gamma
 		}
 
 		lua_rawget( pL, -2 );
-		int32 nPreRef = lua_isnil( pL, -1 ) ? 0 : (int32)lua_tonumber( pL, -1 );
+		int32_t nPreRef = lua_isnil( pL, -1 ) ? 0 : (int32_t)lua_tonumber( pL, -1 );
 		lua_pop( pL, 1 );
 		GammaAst( nPreRef > 0 );
 		lua_pushlightuserdata( pL, pObj );
@@ -588,20 +588,20 @@ namespace Gamma
 	bool CScriptLua::CallVM( const CCallbackInfo* pCallBase, void* pRetBuf, void** pArgArray )
 	{
 		lua_State* pL = GetLuaState();
-		int32 nTop = lua_gettop(pL);
+		int32_t nTop = lua_gettop(pL);
 
 		lua_pushlightuserdata(pL, CScriptLua::ms_pErrorHandler);
 		lua_rawget(pL, LUA_REGISTRYINDEX);
-		int32 nErrFunIndex = nTop + 1;		// 1
+		int32_t nErrFunIndex = nTop + 1;		// 1
 
 		PushCppObjAndWeakTable( pL );				// 3	
-		int32 nCppObjStr = nErrFunIndex + 1;
-		int32 nWeakTable = nCppObjStr + 1;
+		int32_t nCppObjStr = nErrFunIndex + 1;
+		int32_t nWeakTable = nCppObjStr + 1;
 
 		lua_pushlightuserdata(pL, *(void**)pArgArray[0]);
 		lua_gettable(pL, -2);						// 4
 
-		int32 nType = lua_type( pL, -1 );
+		int32_t nType = lua_type( pL, -1 );
 		if (nType == LUA_TNIL)
 		{
 			lua_settop(pL, nTop);            //Error occur
@@ -638,7 +638,7 @@ namespace Gamma
 				(char*)pArgArray[nArgIndex], nCppObjStr, nWeakTable);
 		}
 
-		int32 nArg = (int32)(listParam.size());
+		int32_t nArg = (int32_t)(listParam.size());
 		lua_pcall(pL, nArg, nResultType ? 1 : 0, nErrFunIndex);
 		if (nResultType)
 		{
@@ -667,7 +667,7 @@ namespace Gamma
 
 		lua_pushlightuserdata(pL, CScriptLua::ms_pErrorHandler);
 		lua_rawget(pL, LUA_REGISTRYINDEX);
-		int32 nErrFunIndex = lua_gettop(pL);		// 1
+		int32_t nErrFunIndex = lua_gettop(pL);		// 1
 
 		lua_pushlightuserdata(pL, CScriptLua::ms_pGlobObjectWeakTable);
 		lua_rawget(pL, LUA_REGISTRYINDEX);		// 2	
@@ -709,7 +709,7 @@ namespace Gamma
 	// 通用函数
 	//--------------------------------------------------------------------------------
 	// Lua stack 堆栈必须只有一个值，类（表,在栈底）.调用后， stack top = 1, 对象对应的表在栈顶
-	void* CScriptLua::NewLuaObj(lua_State* pL, const CClassInfo* pInfo, int32 nCppObjs)
+	void* CScriptLua::NewLuaObj(lua_State* pL, const CClassInfo* pInfo, int32_t nCppObjs)
 	{
 		lua_pushvalue( pL, nCppObjs );
 		lua_rawget( pL, -2 );
@@ -743,7 +743,7 @@ namespace Gamma
 	}
 
 	void CScriptLua::RegistToLua( lua_State* pL, const CClassInfo* pInfo,
-		void* pObj, int32 nObj, int32 nGlobalWeakTable, int32 nCppObjTable )
+		void* pObj, int32_t nObj, int32_t nGlobalWeakTable, int32_t nCppObjTable )
 	{                                            
 		//__addTableOfUserdata, 把对象表，挂在 CScriptLua::ms_pGlobObjectWeakTableKey
 		lua_pushlightuserdata(pL, pObj);
@@ -765,13 +765,13 @@ namespace Gamma
 	}
 
 	void CScriptLua::RegisterObject(lua_State* pL, const CClassInfo* pInfo, 
-		void* pObj, bool bGC, int32 nCppObjStr, int32 nWeakTable)
+		void* pObj, bool bGC, int32_t nCppObjStr, int32_t nWeakTable)
 	{
 		//In C++, stack top = 1, 返回Obj, 留在堆栈里
 		if (pInfo->IsCallBack())
 			pInfo->ReplaceVirtualTable(GetScript(pL), pObj, bGC, 0);
 
-		int32 nObj = lua_gettop(pL);
+		int32_t nObj = lua_gettop(pL);
 		//设置全局对象表 CScriptLua::ms_pGlobObjectWeakTableKey    
 		lua_pushvalue( pL, nCppObjStr );
 		lua_rawget( pL, nObj );
@@ -786,13 +786,13 @@ namespace Gamma
 		if (szStr == nullptr)
 			return lua_pushnil(pL);
 		CScriptLua* pScript = CScriptLua::GetScript(pL);
-		uint32 nSize = (uint32)wcslen(szStr);
+		uint32_t nSize = (uint32_t)wcslen(szStr);
 		pScript->m_szTempUtf8.resize(nSize * 6 + 1);
-		uint32 nLen = UcsToUtf8(&pScript->m_szTempUtf8[0], nSize * 6 + 1, szStr);
+		uint32_t nLen = UcsToUtf8(&pScript->m_szTempUtf8[0], nSize * 6 + 1, szStr);
 		lua_pushlstring(pL, pScript->m_szTempUtf8.c_str(), nLen);
 	}
 
-	const wchar_t* CScriptLua::ConvertUtf8ToUcs2(lua_State* pL, int32 nStkId)
+	const wchar_t* CScriptLua::ConvertUtf8ToUcs2(lua_State* pL, int32_t nStkId)
 	{
 		if (lua_isnil(pL, nStkId))
 			return nullptr;
@@ -802,9 +802,9 @@ namespace Gamma
 		if (szStr[0] == 0)
 			return L"";
 		CScriptLua* pScript = CScriptLua::GetScript(pL);
-		uint32 nSize = (uint32)strlen(szStr);
+		uint32_t nSize = (uint32_t)strlen(szStr);
 		pScript->m_szTempUcs2.resize(nSize + 1);
-		uint32 nLen = Utf8ToUcs(&pScript->m_szTempUcs2[0], nSize + 1, szStr);
+		uint32_t nLen = Utf8ToUcs(&pScript->m_szTempUcs2[0], nSize + 1, szStr);
 		pScript->m_szTempUcs2.resize(nLen);
 		const char* szUcsBuffer = (const char*)&pScript->m_szTempUcs2[0];
 		lua_pushlstring(pL, szUcsBuffer, (nLen + 1) * sizeof(wchar_t));
@@ -815,7 +815,7 @@ namespace Gamma
 	//=========================================================================
 	// 构造和析构                                            
 	//=========================================================================
-	int32 CScriptLua::ObjectGC(lua_State* pL)
+	int32_t CScriptLua::ObjectGC(lua_State* pL)
 	{
 		void* pUpValue = lua_touserdata( pL, lua_upvalueindex( 1 ) );
 		const CClassInfo* pInfo = (const CClassInfo*)pUpValue;
@@ -830,11 +830,11 @@ namespace Gamma
 		return 0;
 	}
 
-	int32 CScriptLua::ObjectConstruct(lua_State* pL)
+	int32_t CScriptLua::ObjectConstruct(lua_State* pL)
 	{
-		int32 nCallBase = lua_upvalueindex( 1 );
-		int32 nCppObjs = lua_upvalueindex( 2 );
-		int32 nWeakTable = lua_upvalueindex( 3 );		
+		int32_t nCallBase = lua_upvalueindex( 1 );
+		int32_t nCppObjs = lua_upvalueindex( 2 );
+		int32_t nWeakTable = lua_upvalueindex( 3 );		
 		auto pInfo = (const CClassInfo*)lua_touserdata(pL, nCallBase);
 
 		// 如果c++对象已经构造则跳过（当将一个c++对象cast成lua对象时会有这种情况）
@@ -851,14 +851,14 @@ namespace Gamma
 
 		auto& listParam = pInfo->GetConstructorParamType();
 		auto& listParamSize = pInfo->GetConstructorParamSize();
-		uint32 nParamSize = pInfo->GetConstructorParamTotalSize();
-		uint32 nParamCount = (uint32)listParam.size();
+		uint32_t nParamSize = pInfo->GetConstructorParamTotalSize();
+		uint32_t nParamCount = (uint32_t)listParam.size();
 		size_t nArgSize = nParamCount * sizeof(void*);
 		char* pDataBuf = (char*)alloca(nParamSize + nArgSize);
 		void** pArgArray = (void**)(pDataBuf + nParamSize);
 
 		// 跳过第一个参数
-		int32 nStkId = 2;
+		int32_t nStkId = 2;
 
 		//Lua函数最右边的参数，在Lua stack的栈顶,         
 		//放在m_listParam的第一个成员中
@@ -901,7 +901,7 @@ namespace Gamma
 	//=========================================================================
 	// 调试中断                                                
 	//=========================================================================
-	int32 CScriptLua::DebugBreak(lua_State* pState)
+	int32_t CScriptLua::DebugBreak(lua_State* pState)
 	{
 		CScriptLua* pScript = GetScript(pState);
 		CDebugBase* pDebugger = pScript->GetDebugger();
@@ -913,10 +913,10 @@ namespace Gamma
 	//=========================================================================
 	// 调试中断                                                
 	//=========================================================================
-	int32 CScriptLua::BackTrace(lua_State* pState)
+	int32_t CScriptLua::BackTrace(lua_State* pState)
 	{
-		uint32 n = lua_isnil(pState, -1)
-			? INVALID_32BITID : (uint32)lua_tonumber(pState, -1);
+		uint32_t n = lua_isnil(pState, -1)
+			? INVALID_32BITID : (uint32_t)lua_tonumber(pState, -1);
 		CScriptLua* pScript = GetScript(pState);
 		CDebugBase* pDebugger = pScript->GetDebugger();
 		static_cast<CDebugLua*>(pDebugger)->SetCurState(pState);
@@ -927,13 +927,13 @@ namespace Gamma
 	//=====================================================================
 	// Lua脚本调用C++的接口
 	//=====================================================================
-	int32 CScriptLua::CallByLua(lua_State* pL)
+	int32_t CScriptLua::CallByLua(lua_State* pL)
 	{
-		int32 nCallBase = lua_upvalueindex( 1 );
-		int32 nCppObjs = lua_upvalueindex( 2 );
-		int32 nWeakTable = lua_upvalueindex( 3 );
+		int32_t nCallBase = lua_upvalueindex( 1 );
+		int32_t nCppObjs = lua_upvalueindex( 2 );
+		int32_t nWeakTable = lua_upvalueindex( 3 );
 		CCallInfo* pCallBase = (CCallInfo*)lua_touserdata(pL, nCallBase);
-		uint32 nTop = lua_gettop(pL);
+		uint32_t nTop = lua_gettop(pL);
 
 		CScriptLua* pScript = CScriptLua::GetScript(pL);
 		pScript->PushLuaState(pL);
@@ -942,16 +942,16 @@ namespace Gamma
 		{
 			auto& listParam = pCallBase->GetParamList();
 			auto& listParamSize = pCallBase->GetParamSize();
-			uint32 nParamSize = pCallBase->GetParamTotalSize();
-			uint32 nParamCount = (uint32)listParam.size();
+			uint32_t nParamSize = pCallBase->GetParamTotalSize();
+			uint32_t nParamCount = (uint32_t)listParam.size();
 			DataType nResultType = pCallBase->GetResultType();
-			size_t nReturnSize = nResultType ? pCallBase->GetResultSize() : sizeof(int64);
+			size_t nReturnSize = nResultType ? pCallBase->GetResultSize() : sizeof(int64_t);
 			size_t nArgSize = nParamCount * sizeof(void*);
 			char* pDataBuf = (char*)alloca(nParamSize + nArgSize + nReturnSize);
 			void** pArgArray = (void**)(pDataBuf + nParamSize);
 			char* pResultBuf = pDataBuf + nParamSize + nArgSize;
 
-			int32 nStkId = 1;
+			int32_t nStkId = 1;
 
 			//Lua函数最右边的参数，在Lua stack的栈顶,         
 			//放在m_listParam的第一个成员中
@@ -1010,7 +1010,7 @@ namespace Gamma
 		lua_rawget( pL, LUA_REGISTRYINDEX );
 	}
 
-	int32 CScriptLua::GetIndexClosure( lua_State* pL )
+	int32_t CScriptLua::GetIndexClosure( lua_State* pL )
 	{
 		lua_pushvalue( pL, lua_upvalueindex( 1 ) );
 		lua_pushvalue( pL, lua_upvalueindex( 2 ) );
@@ -1018,7 +1018,7 @@ namespace Gamma
 		return 1;
 	}
 
-	int32 CScriptLua::GetNewIndexClosure( lua_State* pL )
+	int32_t CScriptLua::GetNewIndexClosure( lua_State* pL )
 	{
 		lua_pushvalue( pL, lua_upvalueindex( 1 ) );
 		lua_pushvalue( pL, lua_upvalueindex( 2 ) );
@@ -1026,7 +1026,7 @@ namespace Gamma
 		return 1;
 	}
 
-	int32 CScriptLua::GetInstanceField( lua_State* pL )
+	int32_t CScriptLua::GetInstanceField( lua_State* pL )
 	{
 		// GetInstanceField( instance, key )
 		lua_pushvalue( pL, 2 );
@@ -1041,16 +1041,16 @@ namespace Gamma
 			return 1;
 		}
 
-		int32 nCppObjs = lua_upvalueindex( 2 );
-		int32 nWeakTable = lua_upvalueindex( 3 );
+		int32_t nCppObjs = lua_upvalueindex( 2 );
+		int32_t nWeakTable = lua_upvalueindex( 3 );
 		CScriptLua* pScript = CScriptLua::GetScript( pL );
 		pScript->PushLuaState( pL );
 		auto& listParam = pCallBase->GetParamList();
 		auto& listParamSize = pCallBase->GetParamSize();
-		uint32 nParamSize = pCallBase->GetParamTotalSize();
-		uint32 nParamCount = (uint32)listParam.size();
+		uint32_t nParamSize = pCallBase->GetParamTotalSize();
+		uint32_t nParamCount = (uint32_t)listParam.size();
 		DataType nResultType = pCallBase->GetResultType();
-		size_t nReturnSize = nResultType ? pCallBase->GetResultSize() : sizeof( int64 );
+		size_t nReturnSize = nResultType ? pCallBase->GetResultSize() : sizeof( int64_t );
 		size_t nArgSize = nParamCount * sizeof( void* );
 		char* pDataBuf = (char*)alloca( nParamSize + nArgSize + nReturnSize );
 		void** pArgArray = (void**)(pDataBuf + nParamSize);
@@ -1075,7 +1075,7 @@ namespace Gamma
 		return 1;
 	}
 
-	int32 CScriptLua::SetInstanceField( lua_State* pL )
+	int32_t CScriptLua::SetInstanceField( lua_State* pL )
 	{
 		// SetInstanceField( instance, key, value )
 		lua_pushvalue( pL, 2 );
@@ -1098,22 +1098,22 @@ namespace Gamma
 		}
 
 		lua_remove( pL, 2 );
-		int32 nCppObjs = lua_upvalueindex( 2 );
-		int32 nWeakTable = lua_upvalueindex( 3 );
+		int32_t nCppObjs = lua_upvalueindex( 2 );
+		int32_t nWeakTable = lua_upvalueindex( 3 );
 		CScriptLua* pScript = CScriptLua::GetScript( pL );
 		pScript->PushLuaState( pL );
 		auto& listParam = pCallBase->GetParamList();
 		auto& listParamSize = pCallBase->GetParamSize();
-		uint32 nParamSize = pCallBase->GetParamTotalSize();
-		uint32 nParamCount = (uint32)listParam.size();
+		uint32_t nParamSize = pCallBase->GetParamTotalSize();
+		uint32_t nParamCount = (uint32_t)listParam.size();
 		DataType nResultType = pCallBase->GetResultType();
-		size_t nReturnSize = nResultType ? pCallBase->GetResultSize() : sizeof( int64 );
+		size_t nReturnSize = nResultType ? pCallBase->GetResultSize() : sizeof( int64_t );
 		size_t nArgSize = nParamCount * sizeof( void* );
 		char* pDataBuf = (char*)alloca( nParamSize + nArgSize + nReturnSize );
 		void** pArgArray = (void**)(pDataBuf + nParamSize);
 		char* pResultBuf = pDataBuf + nParamSize + nArgSize;
 
-		int32 nStkId = 1;
+		int32_t nStkId = 1;
 		// 获取this指针以及lua传入的值
 		for( size_t nArgIndex = 0; nArgIndex < nParamCount; nArgIndex++ )
 		{
@@ -1133,10 +1133,10 @@ namespace Gamma
 	//=========================================================================
 	// 类型转换                                                
 	//=========================================================================
-	int32 CScriptLua::ClassCast(lua_State* pL)
+	int32_t CScriptLua::ClassCast(lua_State* pL)
 	{
-		int32 nCppObjs = lua_upvalueindex( 1 );
-		int32 nWeakTable = lua_upvalueindex( 2 );
+		int32_t nCppObjs = lua_upvalueindex( 1 );
+		int32_t nWeakTable = lua_upvalueindex( 2 );
 
 		// arg1:obj, arg2:newClass
 		lua_getfield(pL, -1, "__class_info");
@@ -1160,7 +1160,7 @@ namespace Gamma
 		const CClassInfo* pOrgInfo = (const CClassInfo*)lua_touserdata(pL, -1);
 		lua_pop(pL, 2);							// obj, newClass
 
-		int32 nOffset = pNewInfo->GetBaseOffset(pOrgInfo);
+		int32_t nOffset = pNewInfo->GetBaseOffset(pOrgInfo);
 		if (nOffset >= 0)
 			nOffset = -nOffset;
 		else
@@ -1219,7 +1219,7 @@ namespace Gamma
 
 		struct SIO_Replace
 		{
-			static int32 IO_Utf2A(lua_State* pL)
+			static int32_t IO_Utf2A(lua_State* pL)
 			{
 				if (lua_type(pL, 1) != LUA_TSTRING)
 					return 1;
@@ -1227,7 +1227,7 @@ namespace Gamma
 				if (szFileName == nullptr || szFileName[0] == 0)
 					return 1;
 				std::wstring strName(strlen(szFileName), wchar_t());
-				uint32 nLen = Utf8ToUcs(&strName[0], (uint32)strName.size(), szFileName);
+				uint32_t nLen = Utf8ToUcs(&strName[0], (uint32_t)strName.size(), szFileName);
 				strName.resize(nLen);
 				GammaAst(strName.size() < 1024);
 				char szAcsName[4096];
@@ -1249,7 +1249,7 @@ namespace Gamma
 
 		lua_pushlightuserdata(pL, CScriptLua::ms_pErrorHandler);
 		lua_rawget(pL, LUA_REGISTRYINDEX); //1
-		int32 nErrFunIndex = lua_gettop(pL);
+		int32_t nErrFunIndex = lua_gettop(pL);
 
 		if (lua_load(pL, &SIO_Replace::ReadString, &szStr, nullptr))
 			throw("Invalid string!!!!");
@@ -1259,7 +1259,7 @@ namespace Gamma
 #endif
 	}
 
-	int32 CScriptLua::Print(lua_State* pL)
+	int32_t CScriptLua::Print(lua_State* pL)
 	{
 		CScriptLua* pScriptLua = GetScript(pL);
 		int n = lua_gettop(pL);  /* number of arguments */
@@ -1285,7 +1285,7 @@ namespace Gamma
 		return 0;
 	}
 
-	int32 CScriptLua::ToString( lua_State* pL )
+	int32_t CScriptLua::ToString( lua_State* pL )
 	{
 		luaL_checkany( pL, -1 );
 		if( luaL_callmeta( pL, -1, "__tostring" ) )
@@ -1301,14 +1301,14 @@ namespace Gamma
 		{
 
 			double n = lua_tonumber( pL, -1 );
-			if( n != (double)((int64)n) )
+			if( n != (double)((int64_t)n) )
 			{
 				sprintf( szDouble, "%lf", n );
 				s = szDouble;
 			}
 			else
 			{
-				sprintf(szDouble, "%lld", (int64)n);
+				sprintf(szDouble, "%lld", (int64_t)n);
 				s = szDouble;
 			}
 		}
@@ -1371,7 +1371,7 @@ namespace Gamma
 		lua_getfield(pL, -1, "loaders");
 		GammaAst(lua_istable(pL, -1));
 		lua_pushcfunction(pL, &CScriptLua::LoadFile);
-		int32 i = 1;
+		int32_t i = 1;
 		for (; ; i++)
 		{
 			lua_rawgeti(pL, -2, i);
@@ -1424,7 +1424,7 @@ namespace Gamma
 			return nullptr;
 
 		pLoadInfo->bFinished = true;
-		uint32 nSize = (uint32)(pLoadInfo->fileBuff.size());
+		uint32_t nSize = (uint32_t)(pLoadInfo->fileBuff.size());
 		const tbyte* pBuffer = (const tbyte*)pLoadInfo->fileBuff.c_str();
 		if (pBuffer[0] == 0xef &&
 			pBuffer[1] == 0xbb &&
@@ -1454,7 +1454,7 @@ namespace Gamma
 		return (const char*)(&((*pInfo->pBuffer)[0]));
 	}
 
-	int32 CScriptLua::LoadFile(lua_State* pL)
+	int32_t CScriptLua::LoadFile(lua_State* pL)
 	{
 		const char* szFileName = lua_tostring(pL, 1);
 		size_t nLen = strlen(szFileName);
@@ -1479,7 +1479,7 @@ namespace Gamma
 		return 1;
 	}
 
-	int32 CScriptLua::DoFile(lua_State* pL)
+	int32_t CScriptLua::DoFile(lua_State* pL)
 	{
 		const char* szFileName = lua_tostring(pL, 1);
 		size_t nLen = strlen(szFileName);
@@ -1565,7 +1565,7 @@ namespace Gamma
 						GammaAst(!lua_isnil(pL, -1));
 					}
 
-					lua_call(pL, (int32)pInfo->BaseRegist().size(), 1);
+					lua_call(pL, (int32_t)pInfo->BaseRegist().size(), 1);
 					lua_pushvalue(pL, -1);
 					lua_setglobal(pL, szClass);
 
@@ -1600,7 +1600,7 @@ namespace Gamma
 				for( auto pCall = mapFunction.GetFirst(); pCall; pCall = pCall->GetNext() )
 				{
 					if( pCall->GetFunctionIndex() == eCT_Value )
-						lua_pushinteger( pL, (int32)pCall->GetFunctionOrg() );
+						lua_pushinteger( pL, (int32_t)pCall->GetFunctionOrg() );
 					else
 					{
 						lua_pushlightuserdata( pL, pCall );
@@ -1629,7 +1629,7 @@ namespace Gamma
 			if (strncmp(s_CacheTruckPrefix.c_str(), pDebug->source + 1, 13))
 			{
 				lua_getinfo(pState, "l", pDebug);
-				uint32 nIndex = (g_nIndex++) % 1024;
+				uint32_t nIndex = (g_nIndex++) % 1024;
 				g_aryLog[nIndex].first = pDebug->source;
 				g_aryLog[nIndex].second = pDebug->currentline;
 			}
@@ -1683,7 +1683,7 @@ namespace Gamma
 		return !IsNil;
 	}
 
-	bool CScriptLua::Get( void* pObject, int32 nIndex, void* pResultBuf, const STypeInfo& TypeInfo )
+	bool CScriptLua::Get( void* pObject, int32_t nIndex, void* pResultBuf, const STypeInfo& TypeInfo )
 	{
 		DataType nResultType = ToDataType( TypeInfo );
 		if( !nResultType || !pResultBuf || !pObject )
@@ -1750,7 +1750,7 @@ namespace Gamma
 		return true;
 	}
 
-	bool CScriptLua::Set( void* pObject, int32 nIndex, void* pArgBuf, const STypeInfo& TypeInfo )
+	bool CScriptLua::Set( void* pObject, int32_t nIndex, void* pArgBuf, const STypeInfo& TypeInfo )
 	{
 		DataType nParamType = ToDataType( TypeInfo );
 		if( !nParamType || !pArgBuf || !pObject )
@@ -1789,11 +1789,11 @@ namespace Gamma
 
 		lua_pushlightuserdata( pL, ms_pErrorHandler );
 		lua_rawget( pL, LUA_REGISTRYINDEX );
-		int32 nErrFunIndex = lua_gettop( pL );
+		int32_t nErrFunIndex = lua_gettop( pL );
 
 		PushCppObjAndWeakTable( pL );// 3	
-		int32 nCppObjStr = nErrFunIndex + 1;	
-		int32 nWeakTable = nCppObjStr + 1;
+		int32_t nCppObjStr = nErrFunIndex + 1;	
+		int32_t nWeakTable = nCppObjStr + 1;
 
 		if( !PushPointerToLua( pL, pFunction, nCppObjStr, nWeakTable, false ) || 
 			!lua_isfunction( pL, -1 ) )
@@ -1802,8 +1802,8 @@ namespace Gamma
 			return false;
 		}
 
-		uint32 nParamCount = aryTypeInfo.nSize - 1;
-		for( uint32 nArgIndex = 0; nArgIndex < nParamCount; nArgIndex++ )
+		uint32_t nParamCount = aryTypeInfo.nSize - 1;
+		for( uint32_t nArgIndex = 0; nArgIndex < nParamCount; nArgIndex++ )
 		{
 			DataType nType = ToDataType( aryTypeInfo.aryInfo[nArgIndex] );
 			CLuaTypeBase* pParamType = GetLuaTypeBase( nType );
@@ -1827,7 +1827,7 @@ namespace Gamma
 
 	bool CScriptLua::RunBuffer( const void* pBuffer, size_t nSize, const char* szFileName, bool bForce/* = false*/ )
 	{
-		int32 nErrFunIndex = -1;
+		int32_t nErrFunIndex = -1;
 		lua_State* pL = GetLuaState();
 
 		if( !m_bPreventExeInRunBuffer )
@@ -1869,16 +1869,16 @@ namespace Gamma
 	void CScriptLua::UnlinkCppObjFromScript( void* pObj )
 	{
 		lua_State* pL = GetLuaState();
-		int32 nTop = lua_gettop(pL);
+		int32_t nTop = lua_gettop(pL);
 
 		PushCppObjAndWeakTable( pL );
-		int32 nCppObj = nTop + 1;
-		int32 nWeakTable = nCppObj + 1;
+		int32_t nCppObj = nTop + 1;
+		int32_t nWeakTable = nCppObj + 1;
 		GammaAst(!lua_isnil(pL, nWeakTable));
 
 		lua_pushlightuserdata(pL, pObj);	
 		lua_gettable( pL, -2 );						//[strCppObj,WeakTable,tblObj]
-		int32 nObjTable = nWeakTable + 1;
+		int32_t nObjTable = nWeakTable + 1;
 
 		if (lua_isnil(pL, -1))
 		{
@@ -1922,7 +1922,7 @@ namespace Gamma
 	bool CScriptLua::IsValid( void* pObject )
 	{
 		lua_State* pL = GetLuaState();
-		int32 nTop = lua_gettop( pL );
+		int32_t nTop = lua_gettop( pL );
 		PushCppObjAndWeakTable( pL );
 		bool bIsValid = PushPointerToLua( pL, pObject, nTop + 1, nTop + 2, false );
 		lua_pop( pL, 3 );

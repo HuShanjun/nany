@@ -218,12 +218,12 @@ namespace Gamma
 	};
 
 	typedef TRect<float>        CFRect;
-	typedef TRect<int32>        CIRect;
-	typedef TRect<uint32>       CURect;
-	typedef TRect<int16>        CIRect16;
-	typedef TRect<uint16>       CURect16;
-	typedef TRect<int8>			CIRect8;
-	typedef TRect<uint8>		CURect8;
+	typedef TRect<int32_t>        CIRect;
+	typedef TRect<uint32_t>       CURect;
+	typedef TRect<int16_t>        CIRect16;
+	typedef TRect<uint16_t>       CURect16;
+	typedef TRect<int8_t>			CIRect8;
+	typedef TRect<uint8_t>		CURect8;
 }
 
 #endif

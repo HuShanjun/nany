@@ -32,7 +32,7 @@ namespace Gamma
 	struct GAMMA_COMMON_API SFunctionTable
 	{
 		SFunctionTable();
-		int32 GetFunctionCount();
+		int32_t GetFunctionCount();
 
 		void* m_pFun[MAX_VTABLE_SIZE];
 	};
@@ -44,12 +44,12 @@ namespace Gamma
 
 	///< Find virtual function index in virtual table
 	typedef void( *VirtualFunCallback )( void*, void* );
-	uint32 GAMMA_COMMON_API FindVirtualFunction( uint32 nSize,
+	uint32_t GAMMA_COMMON_API FindVirtualFunction( uint32_t nSize,
 		VirtualFunCallback funCallback, void* pContext );
 
 	///< Find normal virtual function's index in virtual table
 	template< typename ClassType, typename RetType, typename... Param >
-	static uint32 GetVirtualFunIndex( RetType ( ClassType::*pFun )( Param... ) )
+	static uint32_t GetVirtualFunIndex( RetType ( ClassType::*pFun )( Param... ) )
 	{
 		typedef void ( ClassType::*FunctionType )();
 		FunctionType funCall = (FunctionType)pFun;
@@ -61,7 +61,7 @@ namespace Gamma
 
 	///< Find destructor's index in virtual table
 	template<typename ClassType>
-	uint32 GetDestructorFunIndex()
+	uint32_t GetDestructorFunIndex()
 	{
 		struct SFun : public ClassType 
 		{ virtual ~SFun(){} static void Call( SFun* pObj, void* ) { pObj->~SFun(); } };

@@ -12,6 +12,6 @@
 
 namespace Gamma
 {
-	uint32 GAMMA_COMMON_API GammaHash( const void* pMem, size_t size );
+	uint32_t GAMMA_COMMON_API GammaHash( const void* pMem, size_t size );
 }
 #endif

@@ -12,14 +12,14 @@ namespace Gamma
 
     public:
 		CDatabase();
-		EErrorCodes FormatCode( uint32 nErrorCode );
+		EErrorCodes FormatCode( uint32_t nErrorCode );
 
-		IDbConnection* CreateConnection( const char* szHost, uint16 uPort,
-			const char* szUser, const char* szPassword, const char* szDatabase, uint32 nDBId,
+		IDbConnection* CreateConnection( const char* szHost, uint16_t uPort,
+			const char* szUser, const char* szPassword, const char* szDatabase, uint32_t nDBId,
 			bool bFoundAsUpdateRow, bool bMultiStatements, bool bPingReconnect );
 
 		IDbConnection* CreateConnection( const char* szPipe,
-			const char* szUser, const char* szPassword, const char* szDatabase, uint32 nDBId,
+			const char* szUser, const char* szPassword, const char* szDatabase, uint32_t nDBId,
 			bool bFoundAsUpdateRow, bool bMultiStatements, bool bPingReconnect );
     };
 }

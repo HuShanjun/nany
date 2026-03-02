@@ -24,7 +24,7 @@ namespace Gamma
 		HANDLE						m_hFile;
 		HANDLE						m_hMap;
 #else
-		int32						m_nFileDesc;
+		int32_t						m_nFileDesc;
 #endif
 		size_t						m_nFileSize;
 		size_t						m_nOffset;
@@ -33,7 +33,7 @@ namespace Gamma
 	};
 
 	HFILEMAP GammaMemoryMap( const char* szFile, bool bReadOnly, 
-		uint32 nOffset, uint32 nSize, uint32 nTruncateSize )
+		uint32_t nOffset, uint32_t nSize, uint32_t nTruncateSize )
 	{
 		SFileMapInfo Info;
 		memset( &Info, 0, sizeof(Info) );
@@ -54,7 +54,7 @@ namespace Gamma
 		char szPhysicalPath[2048];
 		CPathMgr::ToPhysicalPath( szFile, szPhysicalPath, ELEM_COUNT( szPhysicalPath ) );
 		CPathMgr::ShortPath( szPhysicalPath );
-		int32 flags = nTruncateSize ? ( O_RDWR|O_CREAT ) : O_RDWR;
+		int32_t flags = nTruncateSize ? ( O_RDWR|O_CREAT ) : O_RDWR;
 		Info.m_nFileDesc = open( szPhysicalPath, flags, S_IRWXU|S_IRWXG|S_IRWXO );
 		if( Info.m_nFileDesc < 0 )
 			return NULL;
@@ -66,7 +66,7 @@ namespace Gamma
 		return new SFileMapInfo( Info );
 	}
 
-	bool GammaMemoryRemapMap( HFILEMAP hMap, bool bReadOnly, uint32 nOffset, uint32 nSize, uint32 nTruncateSize )
+	bool GammaMemoryRemapMap( HFILEMAP hMap, bool bReadOnly, uint32_t nOffset, uint32_t nSize, uint32_t nTruncateSize )
 	{
 		SFileMapInfo& Info = *hMap;
 
@@ -77,7 +77,7 @@ namespace Gamma
 #ifdef _WIN32
 			nTruncateSize = ::GetFileSize( Info.m_hFile, NULL );
 #else
-			nTruncateSize = (uint32)lseek( Info.m_nFileDesc, 0, SEEK_END );
+			nTruncateSize = (uint32_t)lseek( Info.m_nFileDesc, 0, SEEK_END );
 #endif
 		}
 
@@ -108,7 +108,7 @@ namespace Gamma
 
 		Info.m_nFileSize = nTruncateSize;
 		Info.m_nOffset = nOffset;
-		Info.m_nSize = Min<uint32>( nSize, nTruncateSize - nOffset );
+		Info.m_nSize = Min<uint32_t>( nSize, nTruncateSize - nOffset );
 
 #ifdef _WIN32
 		DWORD dwProtectec = bReadOnly ? PAGE_READONLY : PAGE_READWRITE;
@@ -116,7 +116,7 @@ namespace Gamma
 		Info.m_hMap = ::CreateFileMapping( Info.m_hFile, 0, dwProtectec, 0, nTruncateSize, NULL );
 		Info.m_pBuffer = (tbyte*)::MapViewOfFile( Info.m_hMap, dwMapFlag, 0, nOffset, Info.m_nSize );
 #else
-		int32 nProtected = bReadOnly ? PROT_READ : ( PROT_READ|PROT_WRITE );
+		int32_t nProtected = bReadOnly ? PROT_READ : ( PROT_READ|PROT_WRITE );
 		Info.m_pBuffer = (tbyte*)mmap( NULL, Info.m_nSize, nProtected, MAP_SHARED, Info.m_nFileDesc, Info.m_nOffset );
 #endif
 		return true;
@@ -127,9 +127,9 @@ namespace Gamma
 		return hMap->m_pBuffer;
 	}
 
-	uint32 GammaGetMapMemorySize( HFILEMAP hMap )
+	uint32_t GammaGetMapMemorySize( HFILEMAP hMap )
 	{
-		return (uint32)hMap->m_nSize;
+		return (uint32_t)hMap->m_nSize;
 	}
 
 	void GammaMemoryUnMap( HFILEMAP hMap )
@@ -141,7 +141,7 @@ namespace Gamma
 		::CloseHandle( Info.m_hFile );
 #else
 		munmap( Info.m_pBuffer, Info.m_nSize );
-		close( (int32)Info.m_nFileDesc );
+		close( (int32_t)Info.m_nFileDesc );
 #endif
 		SAFE_DELETE( hMap );
 	}

@@ -52,7 +52,7 @@ namespace Gamma
 			ucontext_t* pInfo = (ucontext_t*)pContext;
 			frame_t* pFP = (frame_t*)(ptrdiff_t)pInfo->uc_mcontext.arm_fp;
 			void* aryPC[2] = { (void*)(ptrdiff_t)pInfo->uc_mcontext.arm_pc, pFP->fm_pc };
-			GammaLog << "Cur Stack:" << (uint64)(ptrdiff_t)&pContext << std::endl;
+			GammaLog << "Cur Stack:" << (uint64_t)(ptrdiff_t)&pContext << std::endl;
 		#endif
 		}
 	#elif !( defined _IOS )
@@ -61,17 +61,17 @@ namespace Gamma
 #endif
 	}
 
-	void DebugAddress2Symbol( void* pAddress, char* szSymbolBuf, uint32 nSize )
+	void DebugAddress2Symbol( void* pAddress, char* szSymbolBuf, uint32_t nSize )
 	{
 		CGammaDebug::Instance().DebugAddress2Symbol( pAddress, szSymbolBuf, nSize );
 	}
 
-	size_t GetStack( void** pStack, uint16 nBegin, uint16 nEnd )
+	size_t GetStack( void** pStack, uint16_t nBegin, uint16_t nEnd )
 	{
 		return CGammaDebug::Instance().GetStack( pStack, nBegin, nEnd );
 	}
 
-	size_t PrintStack( uint16 nMax, int32 nLine, std::ostream& Stream )
+	size_t PrintStack( uint16_t nMax, int32_t nLine, std::ostream& Stream )
 	{
 		void** pStack = new void*[nMax];
 		size_t nSize = CGammaDebug::Instance().GetStack( pStack, 2, 2 + nMax, &nLine );
@@ -80,7 +80,7 @@ namespace Gamma
 		return nCount;
 	}
 
-	size_t PrintStack( void** pStack, size_t nSize, int32 nLine, std::ostream& Stream )
+	size_t PrintStack( void** pStack, size_t nSize, int32_t nLine, std::ostream& Stream )
 	{
 		char szBuf[1024];
 		Stream << std::showbase;
@@ -113,7 +113,7 @@ namespace Gamma
 		return nSize;
 	}
 
-	void _GlobalAssertDefault( const char* exp, const char* szFile, uint32 nLine )
+	void _GlobalAssertDefault( const char* exp, const char* szFile, uint32_t nLine )
 	{
 		GammaLog << exp << " in file " << szFile << ":" << nLine << std::endl;
 	}
@@ -135,7 +135,7 @@ namespace Gamma
 	}
 
 	void GammaException( const char* szMsg, const char* szFile, const char* szDate, 
-		const char* szTime, uint32 nLine, const char* szFunction, bool bForceAbort )
+		const char* szTime, uint32_t nLine, const char* szFunction, bool bForceAbort )
 	{
 		std::string sFile = GammaString( szFile );
 		const char* szFileName = strrchr( sFile.c_str(), '/' );
@@ -174,9 +174,9 @@ namespace Gamma
 		}
 #endif
 	}
-	GAMMA_COMMON_API uint32 GetCpuSuport()
+	GAMMA_COMMON_API uint32_t GetCpuSuport()
 	{
-		static uint32 nSupport = INVALID_32BITID;
+		static uint32_t nSupport = INVALID_32BITID;
 		if( nSupport != INVALID_32BITID )
 			return nSupport;
 
@@ -184,7 +184,7 @@ namespace Gamma
 		nSupport = eMMX|eSSE|eSSE2;
 #elif( defined _WIN32 )
 		nSupport = 0;
-		uint32 nFeature = 0;
+		uint32_t nFeature = 0;
 		__try 
 		{		
 			__asm mov eax, 1				;
@@ -198,7 +198,7 @@ namespace Gamma
 
 		//暂时禁止对3DNOW的检测
 		nFeature &= ~e3DNOW;
-		int32 nFlage[4] = { eMMX, eSSE, eSSE2, e3DNOW };
+		int32_t nFlage[4] = { eMMX, eSSE, eSSE2, e3DNOW };
 
 		for( size_t i = 0; i < 4; i++ )
 		{

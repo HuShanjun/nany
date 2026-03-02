@@ -16,17 +16,17 @@ namespace Gamma
     }
 
 
-    uint32 CDbResult::GetRowNum()
+    uint32_t CDbResult::GetRowNum()
     {
-        return static_cast<uint32>(mysql_num_rows(m_pRes));
+        return static_cast<uint32_t>(mysql_num_rows(m_pRes));
     }
 
-    uint32 CDbResult::GetColNum()
+    uint32_t CDbResult::GetColNum()
     {
         return mysql_num_fields(m_pRes);
     }
 
-	void CDbResult::Locate( uint32 nIndex )
+	void CDbResult::Locate( uint32_t nIndex )
 	{
 		GammaAst( nIndex < GetRowNum() );
 		mysql_data_seek( m_pRes, nIndex );
@@ -34,14 +34,14 @@ namespace Gamma
 		m_Lengths = mysql_fetch_lengths( m_pRes );
 	}
 
-    const char* CDbResult::GetData(uint32 uColIndex)
+    const char* CDbResult::GetData(uint32_t uColIndex)
     {
         GammaAst(GetRowNum()>0);
         GammaAst(uColIndex<GetColNum());
         return m_Row[uColIndex];
     }
 
-    unsigned CDbResult::GetDataLength(uint32 uColIndex)
+    unsigned CDbResult::GetDataLength(uint32_t uColIndex)
     {
         GammaAst(uColIndex<GetColNum());
         return m_Lengths[uColIndex];

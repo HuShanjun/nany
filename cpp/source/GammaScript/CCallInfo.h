@@ -35,12 +35,12 @@ namespace Gamma
     class CCallInfo 
 		: public CCallBaseMap::CGammaRBTreeNode
     {
-		typedef std::vector<uint32> DataTypeSize;
+		typedef std::vector<uint32_t> DataTypeSize;
 		typedef std::vector<DataType> DataTypeArray;
 		const CCallInfo& operator= ( const CCallInfo& );
     public:
 		CCallInfo( IFunctionWrap* funWrap, const STypeInfoArray& aryTypeInfo, 
-			uintptr_t funOrg, const char* szTypeInfoName, int32 nFunIndex, const char* szFunName );
+			uintptr_t funOrg, const char* szTypeInfoName, int32_t nFunIndex, const char* szFunName );
 		operator const gammacstring&( ) const { return m_sFunName; }
 		bool operator < ( const gammacstring& strKey ) { return (const gammacstring&)*this < strKey; }
 
@@ -48,10 +48,10 @@ namespace Gamma
 		IFunctionWrap*			GetFunWrap()		const { return m_funWrap; }
 		const DataTypeArray&	GetParamList()		const { return m_listParam; }
 		const DataTypeSize&		GetParamSize()		const { return m_listParamSize; }
-		uint32					GetParamTotalSize()	const { return m_nTotalParamSize; }
+		uint32_t					GetParamTotalSize()	const { return m_nTotalParamSize; }
 		DataType				GetResultType()		const { return m_nResult; }
-		uint32					GetResultSize()		const { return m_nReturnSize; }
-		int32					GetFunctionIndex()	const { return m_nFunIndex; }
+		uint32_t					GetResultSize()		const { return m_nReturnSize; }
+		int32_t					GetFunctionIndex()	const { return m_nFunIndex; }
 		const gammacstring&		GetFunctionName()	const { return m_sFunName; }
 		uintptr_t				GetFunctionOrg()	const { return m_funOrg; }
 
@@ -62,9 +62,9 @@ namespace Gamma
 		DataType				m_nResult;			// 返回值类型
 		DataTypeArray			m_listParam;	 	// 每个参数类型记录
 		DataTypeSize			m_listParamSize; 	// 每一个参数的字节对齐大小，数组最后一个是返回值
-		uint32					m_nTotalParamSize;	// 参数总字节对齐
-		uint32					m_nReturnSize;		// 返回值字节对齐
-		int32					m_nFunIndex;
+		uint32_t					m_nTotalParamSize;	// 参数总字节对齐
+		uint32_t					m_nReturnSize;		// 返回值字节对齐
+		int32_t					m_nFunIndex;
 	};
 
 	//=====================================================================
@@ -90,12 +90,12 @@ namespace Gamma
 		const CCallbackInfo& operator= ( const CCallbackInfo& );
     public:
 		CCallbackInfo( IFunctionWrap* funWrap, const STypeInfoArray& aryTypeInfo, uintptr_t funBoot, 
-			int32 nFunIndex, bool bPureVirtual, const char* szTypeInfoName, const char* szFunName );
+			int32_t nFunIndex, bool bPureVirtual, const char* szTypeInfoName, const char* szFunName );
         ~CCallbackInfo();
 
 		virtual void	Call( void* pRetBuf, void** pArgArray, CScriptBase& Script ) const;
 		void*			GetBootFun() const { return (void*)m_funOrg; }
-		int32			Destruc( SVirtualObj* pObject, void* pParam, CScriptBase& Script ) const;
+		int32_t			Destruc( SVirtualObj* pObject, void* pParam, CScriptBase& Script ) const;
 	};
 }
 

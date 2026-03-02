@@ -51,11 +51,11 @@ namespace Gamma
 		bool					m_bSendAllow;
 		bool					m_bRecvAllow;
 
-		virtual void			Create( int32 nAiFamily );
+		virtual void			Create( int32_t nAiFamily );
 		bool					FetchLocalAddress();
 
-		virtual bool			NT_ProcessListener( uint32 nEvent, bool bError ) = 0;
-		virtual bool			NT_ProcessConnect( uint32 nEvent, bool bError ) = 0;
+		virtual bool			NT_ProcessListener( uint32_t nEvent, bool bError ) = 0;
+		virtual bool			NT_ProcessConnect( uint32_t nEvent, bool bError ) = 0;
     public:
         friend class CGNetwork;
         CGSocket( CGNetwork* pNetwork );
@@ -73,15 +73,15 @@ namespace Gamma
 		bool					IsSendAllow() const;
 
 		virtual EConnecterType	GetConnectType() const = 0;
-		virtual ECloseType		Connect( const sockaddr* pAddr, uint32 nSize );
-		virtual void			StartListener( const char* szAddres, uint16 nPort );
+		virtual ECloseType		Connect( const sockaddr* pAddr, uint32_t nSize );
+		virtual void			StartListener( const char* szAddres, uint16_t nPort );
 		virtual void			Send( const void* pBuf, size_t nSize ) = 0;
 
 		ptrdiff_t				NT_GetEventID() const { return m_nEventID; }
 		void					NT_SetEventID( ptrdiff_t nID ) { m_nEventID = nID; }
 
 		virtual void			NT_Close();
-		virtual bool			NT_ProcessEvent( uint32 nEvent, bool bError );
+		virtual bool			NT_ProcessEvent( uint32_t nEvent, bool bError );
 	};
 
 	class CGSocketUDP : public CGSocket, public CGSocketUDPMap::CGammaRBTreeNode
@@ -89,8 +89,8 @@ namespace Gamma
 		// for listener
 		CGSocketUDPMap			m_mapSockets;
 
-		virtual bool			NT_ProcessListener( uint32 nEvent, bool bError );
-		virtual bool			NT_ProcessConnect( uint32 nEvent, bool bError );
+		virtual bool			NT_ProcessListener( uint32_t nEvent, bool bError );
+		virtual bool			NT_ProcessConnect( uint32_t nEvent, bool bError );
 	public:
 		CGSocketUDP( CGNetwork* pNetwork );
 		virtual ~CGSocketUDP();
@@ -106,14 +106,14 @@ namespace Gamma
 
 	class CGSocketTCP : public CGSocket
 	{
-		virtual bool			NT_ProcessListener( uint32 nEvent, bool bError );
-		virtual bool			NT_ProcessConnect( uint32 nEvent, bool bError );
+		virtual bool			NT_ProcessListener( uint32_t nEvent, bool bError );
+		virtual bool			NT_ProcessConnect( uint32_t nEvent, bool bError );
 		virtual CGSocketTCP*	NT_Accept( SOCKET hSocket, const sockaddr_in& addrRemote );
 	public:
 		CGSocketTCP( CGNetwork* pNetwork );
 		virtual ~CGSocketTCP();
 
-		virtual void			StartListener( const char* szAddres, uint16 nPort );
+		virtual void			StartListener( const char* szAddres, uint16_t nPort );
 		virtual EConnecterType	GetConnectType() const { return eConnecterType_TCP; }
 		virtual void			Send( const void* pBuf, size_t nSize );
 	};
@@ -122,17 +122,17 @@ namespace Gamma
 	{
 		SSL_CTX*				m_sslContext;
 		SSL*					m_sslSocket;
-		uint8					m_sslState;
+		uint8_t					m_sslState;
 		bool					m_bReadToSSLWrite;
 		bool					m_bWriteToSSLRead;
 
-		virtual bool			NT_ProcessConnect( uint32 nEvent, bool bError );
+		virtual bool			NT_ProcessConnect( uint32_t nEvent, bool bError );
 		virtual CGSocketTCP*	NT_Accept( SOCKET hSocket, const sockaddr_in& addrRemote );
 	public:
 		CGSocketTCPS( CGNetwork* pNetwork, SSL_CTX* sslContext );
 		virtual ~CGSocketTCPS();
 
-		virtual void			Create( int32 nAiFamily );
+		virtual void			Create( int32_t nAiFamily );
 		virtual EConnecterType	GetConnectType() const { return eConnecterType_TCPS; }
 
 		virtual void			NT_Close();

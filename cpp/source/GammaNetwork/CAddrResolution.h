@@ -40,7 +40,7 @@ namespace Gamma
 		bool						IsResolveSuceeded() const;
 		const UAddressInfo*			GetAddressBuff( bool bUdp ) const;
 		void						Resolve();
-		void						SetIPValidTime( uint32 nValidSeconds );
+		void						SetIPValidTime( uint32_t nValidSeconds );
 		void						FinishResolution( CAddressInfoList aryResult[2] );
 	};
 }

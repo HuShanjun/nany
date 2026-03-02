@@ -760,18 +760,18 @@ namespace Gamma
 		#define GAMMA_MATRIX_SWAP( a, b ) { float t = a; a = b; b = t; }
 
 		CMatrix InvertMat( *this );
-		int32 is[4];
-		int32 js[4];
+		int32_t is[4];
+		int32_t js[4];
 		float fDet = 1.0f;
 		int f = 1;
 
-		for( int32 k = 0; k < 4; k++ )
+		for( int32_t k = 0; k < 4; k++ )
 		{
 			// 第一步，全选主元
 			float fMax = 0.0f;
-			for( int32 i = k; i < 4; i++ )
+			for( int32_t i = k; i < 4; i++ )
 			{
-				for( int32 j = k; j < 4; j++ )
+				for( int32_t j = k; j < 4; j++ )
 				{
 					//const float f = abs( InvertMat.m[i][j] );
 					const float f = InvertMat.m[i][j] < 0 ?  -InvertMat.m[i][j] : InvertMat.m[i][j];
@@ -813,18 +813,18 @@ namespace Gamma
 			// 第二步
 			InvertMat.m[k][k] = 1.0f / InvertMat.m[k][k];	
 			// 第三步
-			for( int32 j = 0; j < 4; j++ )
+			for( int32_t j = 0; j < 4; j++ )
 			{
 				if( j != k )
 					InvertMat.m[k][j] *= InvertMat.m[k][k];
 			}
 
 			// 第四步
-			for( int32 i = 0; i < 4; i++ )
+			for( int32_t i = 0; i < 4; i++ )
 			{
 				if( i != k )
 				{
-					for( int32 j = 0; j < 4; j++ )
+					for( int32_t j = 0; j < 4; j++ )
 					{
 						if( j != k )
 							InvertMat.m[i][j] = InvertMat.m[i][j] - InvertMat.m[i][k] * InvertMat.m[k][j];
@@ -833,14 +833,14 @@ namespace Gamma
 			}
 
 			// 第五步
-			for( int32 i = 0; i < 4; i++ )
+			for( int32_t i = 0; i < 4; i++ )
 			{
 				if( i != k )
 					InvertMat.m[i][k] *= -InvertMat.m[k][k];
 			}
 		}
 
-		for( int32 k = 3; k >= 0; k-- )
+		for( int32_t k = 3; k >= 0; k-- )
 		{
 			if( js[k] != k )
 			{

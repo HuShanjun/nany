@@ -8,6 +8,6 @@
 
 namespace Gamma
 {
-	GAMMA_COMMON_API int32 lzo_compress( const tbyte* in, uint32 in_len, tbyte* out );
-	GAMMA_COMMON_API int32 lzo_decompress( const tbyte* in, uint32 in_len, tbyte* out );
+	GAMMA_COMMON_API int32_t lzo_compress( const tbyte* in, uint32_t in_len, tbyte* out );
+	GAMMA_COMMON_API int32_t lzo_decompress( const tbyte* in, uint32_t in_len, tbyte* out );
 }

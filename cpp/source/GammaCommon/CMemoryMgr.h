@@ -19,7 +19,7 @@ namespace Gamma
 
 #if( defined __linux__ )
 	enum EMemoryConst { eMemoryConst_Unit = 16 };
-	static const uint32 s_aryClassSize[] =
+	static const uint32_t s_aryClassSize[] =
 	{ 
 		16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256,
 		272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 
@@ -33,7 +33,7 @@ namespace Gamma
 	};
 #else
 	enum EMemoryConst { eMemoryConst_Unit = 8 };
-	static const uint32 s_aryClassSize[] =
+	static const uint32_t s_aryClassSize[] =
 	{
 		8,    16,    24,    32,   40,   48,   56,   64,   72, 80,
 		88,   96,   104,   112,  120,  128,  136,  144,  152, 160,
@@ -79,9 +79,9 @@ namespace Gamma
 
 		struct SMgrMemHead
 		{
-			uint16	m_nEmpty;
-			uint8	m_nIndex;
-			uint8	m_nFlag;
+			uint16_t	m_nEmpty;
+			uint8_t	m_nIndex;
+			uint8_t	m_nFlag;
 		};
 
 		struct SAllocInfo;
@@ -90,9 +90,9 @@ namespace Gamma
 			union
 			{
 				SMgrMemHead	m_MgrHead;
-				uint32		m_nBlockSize;
+				uint32_t		m_nBlockSize;
 #ifdef _IOS
-				uint64		m_nPackHead;
+				uint64_t		m_nPackHead;
 #elif( defined __linux__ )
 				void*		m_pPackHead[2];
 #else
@@ -114,10 +114,10 @@ namespace Gamma
 #ifndef ENABLE_MEMORY_MGR
 		void*				Allocate( size_t nSize, void* )	{ return malloc( nSize );	}
 		void				Free( void * p )				{ return free( p );			}
-		int64				GetTotalAlloc()					{ return -1;				}
-		int64				GetTotalMgrSize()				{ return -1;				}
-		int64				GetFreeMgrSize()				{ return -1;				}
-		uint32				GetAllocStack( uint32, void**&, uint32& ){ return false;	}
+		int64_t				GetTotalAlloc()					{ return -1;				}
+		int64_t				GetTotalMgrSize()				{ return -1;				}
+		int64_t				GetFreeMgrSize()				{ return -1;				}
+		uint32_t				GetAllocStack( uint32_t, void**&, uint32_t& ){ return false;	}
 		void				DumpMemoryInfo()				{							}
 #else
 		CMemoryMgr(void);
@@ -125,10 +125,10 @@ namespace Gamma
 
 		void*				Allocate( size_t nSize, void* pCallAddress );
 		void				Free( void* p );
-		int64				GetTotalAlloc();
-		int64				GetTotalMgrSize();
-		int64				GetFreeMgrSize();
-		uint32				GetAllocStack( uint32 nIndex, void**& pAddress, uint32& nAllocSize );
+		int64_t				GetTotalAlloc();
+		int64_t				GetTotalMgrSize();
+		int64_t				GetFreeMgrSize();
+		uint32_t				GetAllocStack( uint32_t nIndex, void**& pAddress, uint32_t& nAllocSize );
 		void				DumpMemoryInfo();
 		void				ClearMemoryInfo();
 
@@ -136,12 +136,12 @@ namespace Gamma
 	private:
 
 		bool				m_bEnable;
-		uint8				m_aryClassIndex[eMemoryConst_IndexCount];
+		uint8_t				m_aryClassIndex[eMemoryConst_IndexCount];
 		SLock				m_hFixMemoryLock[eMemoryConst_AllocateCount];
 
-		int64				m_nFixManageSize[eMemoryConst_AllocateCount];
-		int64				m_nFixAllocSize[eMemoryConst_AllocateCount];
-		int64				m_nBigAllocSize;
+		int64_t				m_nFixManageSize[eMemoryConst_AllocateCount];
+		int64_t				m_nFixAllocSize[eMemoryConst_AllocateCount];
+		int64_t				m_nBigAllocSize;
 
 		SMemHead*			m_aryMemFreeList[eMemoryConst_AllocateCount];
 
@@ -157,7 +157,7 @@ namespace Gamma
 		struct SAllocInfo
 		{
 			void*			m_pAllocAddress[ALLOC_STACK];
-			uint32			m_nAllocSize;
+			uint32_t			m_nAllocSize;
 		};
 
 		struct SAllocInfoCompare
@@ -175,12 +175,12 @@ namespace Gamma
 
 		SLock				m_hAllMemory;
 		SAllocInfo**		m_aryAllocInfo;
-		uint32				m_nAllocInfoMaxSize;
-		uint32				m_nAllocInfoSize;
+		uint32_t				m_nAllocInfoMaxSize;
+		uint32_t				m_nAllocInfoSize;
 		SAllocInfo*			m_pFreeInfo;
-		uint32				m_nFreeCount;
+		uint32_t				m_nFreeCount;
 
-		SAllocInfo*			InsertAllocInfo( uint32 nIndex, void* pAllocAddress[ALLOC_STACK], uint32 nAllocSize );
+		SAllocInfo*			InsertAllocInfo( uint32_t nIndex, void* pAllocAddress[ALLOC_STACK], uint32_t nAllocSize );
 #endif
 
 #endif

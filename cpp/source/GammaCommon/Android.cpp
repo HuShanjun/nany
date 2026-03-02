@@ -20,7 +20,7 @@
 #include <alloca.h>
 
 #undef main
-extern int32 main( int nArg, const char* szArg[] );
+extern int32_t main( int nArg, const char* szArg[] );
 #define SYSTEM_FILE_ID	0x7b56b800
 
 namespace Gamma
@@ -80,7 +80,7 @@ namespace Gamma
 		return m_szPackagePath;
 	}
 
-	uint64 CAndroidApp::GetVersion() const
+	uint64_t CAndroidApp::GetVersion() const
 	{
 		return m_nVersion;
 	}
@@ -93,7 +93,7 @@ namespace Gamma
 	//===================================================================
 	// jni adapter
 	//===================================================================
-	void CAndroidApp::SetClipboardContent( int32 nType, const void* pContent, uint32 nSize )
+	void CAndroidApp::SetClipboardContent( int32_t nType, const void* pContent, uint32_t nSize )
 	{
 		if( nType != CONTENT_TYPE_TEXT )
 			return;
@@ -120,7 +120,7 @@ namespace Gamma
 		pJniEnv->DeleteLocalRef( ClassNativeActivity );
 	}
 
-	void CAndroidApp::GetClipboardContent( int32 nType, const void*& pContent, uint32& nSize )
+	void CAndroidApp::GetClipboardContent( int32_t nType, const void*& pContent, uint32_t& nSize )
 	{
 		if( nType != CONTENT_TYPE_TEXT )
 			return;
@@ -208,9 +208,9 @@ namespace Gamma
 		jobject jFullScreenInitText = NULL;
 		if( szFullScreenInitText )
 		{
-			uint32 l = wcslen( szFullScreenInitText );
+			uint32_t l = wcslen( szFullScreenInitText );
 			jchar* szBuffer = new jchar[l];
-			for( uint32 i = 0; i < l; i++ )
+			for( uint32_t i = 0; i < l; i++ )
 				szBuffer[i] = szFullScreenInitText[i];
 			jFullScreenInitText = pJniEnv->NewString( szBuffer, l );
 			delete[] szBuffer;
@@ -228,7 +228,7 @@ namespace Gamma
 		pJniEnv->DeleteLocalRef(jFullScreenInitText);
 	}
 
-	bool CAndroidApp::GetSystemFile( bool bList, int32 nType, void* pContext, void* funCallback )
+	bool CAndroidApp::GetSystemFile( bool bList, int32_t nType, void* pContext, void* funCallback )
 	{
 		if( !funCallback || !m_pActivity || !m_pActivity->clazz )
 			return false;
@@ -297,7 +297,7 @@ namespace Gamma
 				jobject Path = pJniEnv->NewStringUTF( "_data" );
 				while( pJniEnv->CallBooleanMethod( Cursor, nMethodMove ) )
 				{
-					int32 nIndex = pJniEnv->CallIntMethod( Cursor, nMethodGetIndex, Path );
+					int32_t nIndex = pJniEnv->CallIntMethod( Cursor, nMethodGetIndex, Path );
 					jobject jPath = pJniEnv->CallObjectMethod( Cursor, nMethodGetValue, nIndex );
 					jstring strPath = jPath ? (jstring)jPath : NULL;
 					const char* szPath = jPath ? pJniEnv->GetStringUTFChars( strPath, NULL ) : "";
@@ -317,7 +317,7 @@ namespace Gamma
 		}
 		else
 		{
-			int32 nID = ( ++m_nSysFileID )|SYSTEM_FILE_ID;
+			int32_t nID = ( ++m_nSysFileID )|SYSTEM_FILE_ID;
 			pFileContext->m_nID = nID;
 			m_Lock.Lock();
 			m_mapFileContext.Insert( *pFileContext );
@@ -371,7 +371,7 @@ namespace Gamma
 		return dlsym( RTLD_DEFAULT, szName );
 	}
 
-	void CAndroidApp::OnActivityResult( JNIEnv* env, int32 nID, int32 nResult, jobject Intent )
+	void CAndroidApp::OnActivityResult( JNIEnv* env, int32_t nID, int32_t nResult, jobject Intent )
 	{
 		if( SYSTEM_FILE_ID == ( nID&0xffffff00 ) )
 			return OnSystemFileCallback( env, nID, nResult, Intent );
@@ -384,7 +384,7 @@ namespace Gamma
 		m_Lock.Unlock();
 	}
 	
-	void CAndroidApp::OnSystemFileCallback( JNIEnv* env, int32 nID, int32 nResult, jobject Intent )
+	void CAndroidApp::OnSystemFileCallback( JNIEnv* env, int32_t nID, int32_t nResult, jobject Intent )
 	{
 		m_Lock.Lock();
 		SFileOpenContext* pFileContext = m_mapFileContext.Find( nID );
@@ -543,7 +543,7 @@ namespace Gamma
 		{
 			if( env->CallBooleanMethod( Cursor, MethodMove ) )
 			{
-				int32 nIndex = env->CallIntMethod(Cursor, MethodGetIndex, column);
+				int32_t nIndex = env->CallIntMethod(Cursor, MethodGetIndex, column);
 				jobject jPath = env->CallObjectMethod(Cursor, MethodGetValue, nIndex);
 				jstring strPath = jPath ? (jstring) jPath : NULL;
 				const char *szPath = jPath ? env->GetStringUTFChars(strPath, NULL ) : "";
@@ -569,12 +569,12 @@ namespace Gamma
 		FinishedSystemFileCallback( pFileContext );
 	}
 
-	void CAndroidApp::AddCharMsgFromJava( const jchar* szBuffer, uint32 nSize )
+	void CAndroidApp::AddCharMsgFromJava( const jchar* szBuffer, uint32_t nSize )
 	{
 		GammaLock( m_hInputLock );
 		if( m_bFullScreenInput )
 			m_vecInputBuffer.clear();
-		for( uint32 i = 0; i < nSize; i++ )
+		for( uint32_t i = 0; i < nSize; i++ )
 			m_vecInputBuffer.push_back( szBuffer[i] );
 		GammaUnlock( m_hInputLock );
 	}
@@ -747,19 +747,19 @@ namespace Gamma
 	//===================================================================
 	// framework
 	//===================================================================
-	int32 CAndroidApp::AndroidMessagePump()
+	int32_t CAndroidApp::AndroidMessagePump()
 	{
 		STATCK_LOG( this );
 		if( m_bDestroyed || m_pActivity == NULL )
 			return 0;
 		PROCESS_LOG;
 
-		int32 nCommandCount = ProcessCommand();
+		int32_t nCommandCount = ProcessCommand();
 		if( nCommandCount < 0 )
 			return -1;
 
 		PROCESS_LOG;
-		int32 nInputCount = ProcessInput();
+		int32_t nInputCount = ProcessInput();
 		PROCESS_LOG;
 		if( nInputCount < 0 )
 			return nCommandCount;
@@ -775,7 +775,7 @@ namespace Gamma
 				if( pContext->m_nID == 0 )
 				{
 					vector<const char*> vecPath;
-					for( uint32 i = 0; i < pContext->m_vecFileName.size(); i++ )
+					for( uint32_t i = 0; i < pContext->m_vecFileName.size(); i++ )
 						vecPath.push_back( pContext->m_vecFileName[i].c_str() );
 					const char** aryPath = vecPath.empty() ? NULL : &vecPath[0];
 					( (SystemFileListCallback)pContext->m_funCallback )(
@@ -794,7 +794,7 @@ namespace Gamma
 		return nCommandCount + nInputCount;
 	}
 
-	int32 CAndroidApp::DispatchMessage( uint32 nInputID, uint32 nMsg, uint32 wParam, uint32 lParam )
+	int32_t CAndroidApp::DispatchMessage( uint32_t nInputID, uint32_t nMsg, uint32_t wParam, uint32_t lParam )
 	{
 		for( map<void*, InputHandler>::iterator it = m_mapHandlers.begin();
 			it != m_mapHandlers.end(); ++it )
@@ -814,17 +814,17 @@ namespace Gamma
 			m_mapHandlers.erase( pContext );
 	}
 
-	int32 CAndroidApp::AndroidInputHandler( AInputEvent* event )
+	int32_t CAndroidApp::AndroidInputHandler( AInputEvent* event )
 	{
-		uint32 nMsg = 0, wParam = 0, lParam = 0, nInputID = 0;
-		uint32 nInputType = AInputEvent_getType( event );
+		uint32_t nMsg = 0, wParam = 0, lParam = 0, nInputID = 0;
+		uint32_t nInputType = AInputEvent_getType( event );
 
 		//TODO:处理各种Input事件
 		if( nInputType == AINPUT_EVENT_TYPE_MOTION ) 
 		{
-			int32 nActionCode = AMotionEvent_getAction( event );
-			int32 nAction = nActionCode & AMOTION_EVENT_ACTION_MASK;
-			int32 nActionPointerIndex = nActionCode >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+			int32_t nActionCode = AMotionEvent_getAction( event );
+			int32_t nAction = nActionCode & AMOTION_EVENT_ACTION_MASK;
+			int32_t nActionPointerIndex = nActionCode >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
 			nInputID = AMotionEvent_getPointerId( event, nActionPointerIndex );
 
 			switch( nAction )
@@ -844,20 +844,20 @@ namespace Gamma
 					wParam = MK_LBUTTON;
 					for( int nPoint = 0; nPoint < AMotionEvent_getPointerCount(event); nPoint++ )
 					{
-						lParam = (uint32)AMotionEvent_getX( event, nPoint ) |
-							( (uint32)AMotionEvent_getY( event, nPoint ) << 16 );
+						lParam = (uint32_t)AMotionEvent_getX( event, nPoint ) |
+							( (uint32_t)AMotionEvent_getY( event, nPoint ) << 16 );
 						DispatchMessage( AMotionEvent_getPointerId( event, nPoint ), WM_MOUSEMOVE, MK_LBUTTON, lParam );
 					}
 				}
 				return 1;
 			}
 
-			lParam = (uint32)AMotionEvent_getX( event, nActionPointerIndex ) |
-				( (uint32)AMotionEvent_getY( event, nActionPointerIndex ) << 16 );
+			lParam = (uint32_t)AMotionEvent_getX( event, nActionPointerIndex ) |
+				( (uint32_t)AMotionEvent_getY( event, nActionPointerIndex ) << 16 );
 		}
 		else if( nInputType == AINPUT_EVENT_TYPE_KEY ) 
 		{
-			int32 nAction = AKeyEvent_getAction( event );
+			int32_t nAction = AKeyEvent_getAction( event );
 			if( nAction == AKEY_EVENT_ACTION_DOWN )
 				nMsg = WM_KEYDOWN;
 			else if( nAction == AKEY_EVENT_ACTION_UP )
@@ -865,7 +865,7 @@ namespace Gamma
 			else
 				return 1;
 
-			int32 nKeyCode = AKeyEvent_getKeyCode( event );
+			int32_t nKeyCode = AKeyEvent_getKeyCode( event );
 			switch( nKeyCode )
 			{
 			case AKEYCODE_BACK:
@@ -946,7 +946,7 @@ namespace Gamma
 		return 0;
 	}
 
-	void CAndroidApp::AndroidCmdHandler( int32 cmd )
+	void CAndroidApp::AndroidCmdHandler( int32_t cmd )
 	{
 		GammaLog << "AndroidCmdHandler begin:" << cmd << endl;
 
@@ -1132,7 +1132,7 @@ namespace Gamma
 				{
 					( (CAndroidApp*)pContext )->m_pMaxMainStack = &pContext;
 					GammaLog << "Start Main Thread -> Stack:" 
-						<< (uint64)(ptrdiff_t)&pContext << "," 
+						<< (uint64_t)(ptrdiff_t)&pContext << "," 
 						<< ( (CAndroidApp*)pContext )->m_nMainStackSize << endl;
 					( (CAndroidApp*)pContext )->MainThread();
 					return NULL;
@@ -1151,10 +1151,10 @@ namespace Gamma
 		m_bDestroyRequested = false;
 	}
 
-	int32 CAndroidApp::MainThread()
+	int32_t CAndroidApp::MainThread()
 	{
-		//int64 nPreTime = 0;
-		//int64 nCurTime = 0;
+		//int64_t nPreTime = 0;
+		//int64_t nCurTime = 0;
 		//nPreTime = GetGammaTime();
 		//nCurTime = GetGammaTime();
 		//while( nCurTime < nPreTime + 500 )
@@ -1247,15 +1247,15 @@ namespace Gamma
 		pthread_mutex_unlock( &m_Mutex );
 	}
 
-	int8 CAndroidApp::ReadCommand()
+	int8_t CAndroidApp::ReadCommand()
 	{
-		int8 cmd;
+		int8_t cmd;
 		if( read( m_nCommandRead, &cmd, sizeof(cmd) ) == sizeof(cmd) )
 			return cmd;
 		return -1;
 	}
 
-	void CAndroidApp::PreExecCommand( int8 nCmd )
+	void CAndroidApp::PreExecCommand( int8_t nCmd )
 	{
 		switch( nCmd )
 		{
@@ -1303,7 +1303,7 @@ namespace Gamma
 		}
 	}
 
-	void CAndroidApp::PostExecCommand( int8 nCmd )
+	void CAndroidApp::PostExecCommand( int8_t nCmd )
 	{
 		switch( nCmd )
 		{
@@ -1332,9 +1332,9 @@ namespace Gamma
 		}
 	}
 
-	void CAndroidApp::WriteCommand( int8 nCmd )
+	void CAndroidApp::WriteCommand( int8_t nCmd )
 	{
-		GammaLog << "WriteCommand:" << (int32)nCmd << endl;
+		GammaLog << "WriteCommand:" << (int32_t)nCmd << endl;
 		write( m_nCommandWrite, &nCmd, sizeof(nCmd) );
 	}
 
@@ -1361,7 +1361,7 @@ namespace Gamma
 		pthread_mutex_unlock( &m_Mutex );
 	}
 
-	void CAndroidApp::SetActivityState( int8 cmd )
+	void CAndroidApp::SetActivityState( int8_t cmd )
 	{
 		pthread_mutex_lock( &m_Mutex );
 		WriteCommand( cmd );
@@ -1386,7 +1386,7 @@ namespace Gamma
 		//free(android_app);
 	}
 
-	int32 CAndroidApp::ProcessCommand()
+	int32_t CAndroidApp::ProcessCommand()
 	{
 		STATCK_LOG( this );
 		struct pollfd pfd = { m_nCommandRead, POLLIN, 0 };
@@ -1394,7 +1394,7 @@ namespace Gamma
 			return 0;
 
 		PROCESS_LOG;
-		int8 cmd = ReadCommand();
+		int8_t cmd = ReadCommand();
 		PreExecCommand( cmd );
 		PROCESS_LOG;
 		AndroidCmdHandler( cmd );
@@ -1414,13 +1414,13 @@ namespace Gamma
 		return -1;
 	}
 
-	int32 CAndroidApp::ProcessInput()
+	int32_t CAndroidApp::ProcessInput()
 	{
 		STATCK_LOG( this );
 		if( !m_pInputQueue || !m_bActivityRunning )
 			return -1;
 
-		int32 nCount = 0;
+		int32_t nCount = 0;
 		AInputEvent* pEvent = NULL;
 		PROCESS_LOG;
 		while( AInputQueue_hasEvents( m_pInputQueue ) > 0 )
@@ -1452,7 +1452,7 @@ namespace Gamma
 			PROCESS_LOG;
 			nCount++;
 
-			int32 nHandledCount = 1;
+			int32_t nHandledCount = 1;
 			if( bSkipPreDispatch && m_bInputVisible )
 				EnableInput( false, NULL );
 			else
@@ -1463,9 +1463,9 @@ namespace Gamma
 
 		PROCESS_LOG;
 		GammaLock( m_hInputLock );
-		uint32 nCharCount = (uint32)m_vecInputBuffer.size();
-		uint32 nSize = Max<uint32>( nCharCount*sizeof(uint16), 1 );
-		uint16* aryBuffer = (uint16*)alloca( nSize );
+		uint32_t nCharCount = (uint32_t)m_vecInputBuffer.size();
+		uint32_t nSize = Max<uint32_t>( nCharCount*sizeof(uint16_t), 1 );
+		uint16_t* aryBuffer = (uint16_t*)alloca( nSize );
 		if( nCharCount )
 			memcpy( aryBuffer, &m_vecInputBuffer[0], nSize );
 		m_vecInputBuffer.clear();
@@ -1476,7 +1476,7 @@ namespace Gamma
 		if( nCharCount && m_bFullScreenInput )
 			DispatchMessage( 0, WM_CHAR, 0, 0 );
 
-		for( uint32 i = 0; i < nCharCount; i++ )
+		for( uint32_t i = 0; i < nCharCount; i++ )
 		{
 			if( aryBuffer[i] )
 			{
@@ -1502,13 +1502,13 @@ namespace Gamma
 			char	m_szCpuType[CPUTYPE_LEN]*;
 			char	m_szOSDesc[OSDESC_LEN]*;
 			char	m_szLanguage[LANGUAGE_LEN]*;
-			uint64	m_nMac*;
-			uint32	m_nCpuFrequery*;
-			uint32	m_nCpuCount*;
-			uint32	m_nMemSize*;
-			uint16  m_nScreen_X*;
-			uint16	m_nScreen_Y*;
-			uint32	m_nVideoMemSize;
+			uint64_t	m_nMac*;
+			uint32_t	m_nCpuFrequery*;
+			uint32_t	m_nCpuCount*;
+			uint32_t	m_nMemSize*;
+			uint16_t  m_nScreen_X*;
+			uint16_t	m_nScreen_Y*;
+			uint32_t	m_nVideoMemSize;
 			*/
 
 			JNIEnv* pJniEnv = NULL;
@@ -1567,16 +1567,16 @@ namespace Gamma
 			jobject jobjWifiInfo = pJniEnv->CallObjectMethod( jobjWifiManager, MethodGetConnectionInfo );
 			jstring jstrMac = (jstring)pJniEnv->CallObjectMethod( jobjWifiInfo, MethodGetMacAddress );
 			const char* szMac = jstrMac ? pJniEnv->GetStringUTFChars( jstrMac, NULL ) : NULL;
-			for( uint32 i = 0, j = 0; szMac && szMac[i]; i++ )
+			for( uint32_t i = 0, j = 0; szMac && szMac[i]; i++ )
 			{
 				if( !IsHexNumber( szMac[i] ) )
 					continue;
-				int32 nHigh = ValueFromHexNumber( szMac[i++] ) << 4;
-				int32 nLow = ValueFromHexNumber( szMac[i] );
-				( (uint8*)&m_HardwareDesc.m_nMac )[j++] = nHigh|nLow;
+				int32_t nHigh = ValueFromHexNumber( szMac[i++] ) << 4;
+				int32_t nLow = ValueFromHexNumber( szMac[i] );
+				( (uint8_t*)&m_HardwareDesc.m_nMac )[j++] = nHigh|nLow;
 			}
 
-			uint8* nMac = (uint8*)&m_HardwareDesc.m_nMac;
+			uint8_t* nMac = (uint8_t*)&m_HardwareDesc.m_nMac;
 			sprintf( m_HardwareDesc.m_szUUID, "%02x%02x%02x%02x%02x%02x-",
 				nMac[0], nMac[1], nMac[2], nMac[3], nMac[4], nMac[5] );
 			jstring jstrDeviceSerial = (jstring)pJniEnv->GetStaticObjectField( BuildClass, Serial );
@@ -1602,8 +1602,8 @@ namespace Gamma
 			jobject jobjDisplay = pJniEnv->CallObjectMethod( jobjWindowManager, MethodGetDefaultDisplay );
 			jobject jobjMetrics = pJniEnv->NewObject( DisplayMetricsClass, MethodDisplayMetrics );
 			pJniEnv->CallVoidMethod( jobjDisplay, MethodGetMetrics, jobjMetrics );
-			m_HardwareDesc.m_nScreen_X = (uint16)( pJniEnv->GetIntField( jobjMetrics, WidthPixels ) );
-			m_HardwareDesc.m_nScreen_Y = (uint16)( pJniEnv->GetIntField( jobjMetrics, HeightPixels ) );
+			m_HardwareDesc.m_nScreen_X = (uint16_t)( pJniEnv->GetIntField( jobjMetrics, WidthPixels ) );
+			m_HardwareDesc.m_nScreen_Y = (uint16_t)( pJniEnv->GetIntField( jobjMetrics, HeightPixels ) );
 
 			jstring jstrDeviceHardWare = (jstring)pJniEnv->GetStaticObjectField( BuildClass, Hardware );
 			jstring jstrDeviceBoard = (jstring)pJniEnv->GetStaticObjectField( BuildClass, Board );
@@ -1684,7 +1684,7 @@ namespace Gamma
 			{
 				fgets( szTempBuffer, 2048, fp );
 				fclose( fp );
-				m_HardwareDesc.m_nCpuFrequery = (uint32)( atoll( szTempBuffer )/( 1000 ) );
+				m_HardwareDesc.m_nCpuFrequery = (uint32_t)( atoll( szTempBuffer )/( 1000 ) );
 			}
 
 			if( NULL != ( fp = fopen( "/proc/meminfo", "r" ) ) )
@@ -1694,7 +1694,7 @@ namespace Gamma
 				const char* szStart = szTempBuffer;
 				while( *szStart && !IsNumber( *szStart ) )
 					szStart++;
-				m_HardwareDesc.m_nMemSize = (uint32)( atoll( szStart )/( 1024 ) );
+				m_HardwareDesc.m_nMemSize = (uint32_t)( atoll( szStart )/( 1024 ) );
 			}
 		}
 		catch(...)

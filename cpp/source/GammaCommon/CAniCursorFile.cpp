@@ -13,17 +13,17 @@ namespace Gamma
 {
 	struct SBitmapInfoHead
 	{
-		uint32	nSize;
-		uint32 	nWidth;
-		uint32 	nHeight;
-		uint16 	nPlanes;
-		uint16 	nBitCount;
-		uint32	nCompression;
-		uint32	nSizeImage;
-		uint32 	nXPelsPerMeter;
-		uint32 	nYPelsPerMeter;
-		uint32	nClrUsed;
-		uint32	nClrImportant;
+		uint32_t	nSize;
+		uint32_t 	nWidth;
+		uint32_t 	nHeight;
+		uint16_t 	nPlanes;
+		uint16_t 	nBitCount;
+		uint32_t	nCompression;
+		uint32_t	nSizeImage;
+		uint32_t 	nXPelsPerMeter;
+		uint32_t 	nYPelsPerMeter;
+		uint32_t	nClrUsed;
+		uint32_t	nClrImportant;
 	};
 
 	//=============================================
@@ -67,7 +67,7 @@ namespace Gamma
 		char szCursorKey[32];
 		if ( ( (ptrdiff_t)szCursorName ) <= INVALID_16BITID )
 		{	
-			gammasstream( szCursorKey, ELEM_COUNT( szCursorKey ) ) << (uint32)((ptrdiff_t)(szCursorName));
+			gammasstream( szCursorKey, ELEM_COUNT( szCursorKey ) ) << (uint32_t)((ptrdiff_t)(szCursorName));
 			pCursorKey = &szCursorKey[0];
 		}
 
@@ -106,7 +106,7 @@ namespace Gamma
 		return GetGammaFileMgr().Load( szCursorFile, false, true, this ) != 0;
 	}
 
-	void CAniCursorFile::OnLoadedEnd( const char* szFileName, const tbyte* pBuffer, uint32 nSize )
+	void CAniCursorFile::OnLoadedEnd( const char* szFileName, const tbyte* pBuffer, uint32_t nSize )
 	{
 		if( pBuffer == NULL || nSize == 0 )
 			return;
@@ -130,7 +130,7 @@ namespace Gamma
 			return;
 
 		// 不完整
-		if ( fileInfo.m_nFileLen != (int32)nSize )
+		if ( fileInfo.m_nFileLen != (int32_t)nSize )
 			return;
 
 		while( !BufFile.IsEOF() )
@@ -198,15 +198,15 @@ namespace Gamma
 		if ( !chunkHeader.m_nSize )
 			return;
 
-		uint32 nCurPos = BufFile.GetPos();
+		uint32_t nCurPos = BufFile.GetPos();
 		BufFile.SeekFromCur( 2 );
 
-		uint16 nImgType = 0xff;
+		uint16_t nImgType = 0xff;
 		BufFile.Read( (char*)&nImgType, sizeof(nImgType) );
 
 		if ( nImgType <= 2 )	// cursor or icon
 		{
-			uint16 nCursorCount = 1;
+			uint16_t nCursorCount = 1;
 			BufFile.Read( (char*)&nCursorCount, sizeof(nCursorCount) );
 			// 不允许一帧有多张图
 			if ( nCursorCount > 1 )
@@ -236,7 +236,7 @@ namespace Gamma
 	template<>
 	void CAniCursorFile::ReadChunk<CAniCursorFile::eHeaderID_RATE>( CBufFile& BufFile, const SChunckHeader& chunkHeader )
 	{
-		m_vecFrameDurations.resize( chunkHeader.m_nSize / sizeof(uint32) );
+		m_vecFrameDurations.resize( chunkHeader.m_nSize / sizeof(uint32_t) );
 		BufFile.Read( (char*)&m_vecFrameDurations[0], chunkHeader.m_nSize );
 		for ( size_t i = 0; i < m_vecFrameDurations.size(); i++ )
 			m_vecFrameDurations[i] = m_vecFrameDurations[i] * MillisecondsPerJIF;
@@ -245,19 +245,19 @@ namespace Gamma
 	template<>
 	void CAniCursorFile::ReadChunk<CAniCursorFile::eHeaderID_SEQ>( CBufFile& BufFile, const SChunckHeader& chunkHeader )
 	{
-		m_vecSequence.resize( chunkHeader.m_nSize / sizeof(uint32) );
+		m_vecSequence.resize( chunkHeader.m_nSize / sizeof(uint32_t) );
 		BufFile.Read( (char*)&m_vecSequence[0], chunkHeader.m_nSize );
 	}
 
 	void CAniCursorFile::ReadStaticCursor( CBufFile& BufFile, SCursorData& cursor, size_t nReadStartPos, size_t nDataSize )
 	{
-		uint8 nWidth;
-		uint8 nHeight;
-		int16 nHotSpotX;
-		int16 nHotSpotY;
-		uint16 nReserved = 0;
-		uint16 nImgType = 0xff;
-		uint16 nCursorCount = 1;
+		uint8_t nWidth;
+		uint8_t nHeight;
+		int16_t nHotSpotX;
+		int16_t nHotSpotY;
+		uint16_t nReserved = 0;
+		uint16_t nImgType = 0xff;
+		uint16_t nCursorCount = 1;
 
 		BufFile.Read( (char*)&nReserved, sizeof(nReserved) );
 		BufFile.Read( (char*)&nImgType, sizeof(nImgType) );
@@ -285,39 +285,39 @@ namespace Gamma
 		const SBitmapInfoHead* pInfo = (const SBitmapInfoHead*)BufFile.GetBufByCur();
 		BufFile.SeekFromCur( sizeof(SBitmapInfoHead) );
 
-		uint32 nPixelCount = nHeight * nWidth;
-		vector<uint32> vecColor( nPixelCount );
-		uint32* pColor = &vecColor[0];
+		uint32_t nPixelCount = nHeight * nWidth;
+		vector<uint32_t> vecColor( nPixelCount );
+		uint32_t* pColor = &vecColor[0];
 
 		if( pInfo->nBitCount == 32 )
 		{
-			const uint32* pPixel = (const uint32*)( pInfo + 1 );
-			for( uint32 y = 0; y < nHeight; ++y )
+			const uint32_t* pPixel = (const uint32_t*)( pInfo + 1 );
+			for( uint32_t y = 0; y < nHeight; ++y )
 			{
-				uint32* pCurLine = pColor + ( nHeight - y - 1 )*nWidth;
-				for( uint32 x = 0; x < nWidth; ++x, ++pPixel )
+				uint32_t* pCurLine = pColor + ( nHeight - y - 1 )*nWidth;
+				for( uint32_t x = 0; x < nWidth; ++x, ++pPixel )
 					pCurLine[x] = *pPixel;
 			}
 		}
 		else if( pInfo->nBitCount == 24 )
 		{
 			const tbyte* pPixel = (const tbyte*)( pInfo + 1 );
-			for( uint32 y = 0; y < nHeight; ++y )
+			for( uint32_t y = 0; y < nHeight; ++y )
 			{
-				uint32* pCurLine = pColor + ( nHeight - y - 1 )*nWidth;
-				for( uint32 x = 0; x < nWidth; ++x, pPixel += 3 )
-					pCurLine[x] = ( *(uint32*)pPixel )|0xff000000;
+				uint32_t* pCurLine = pColor + ( nHeight - y - 1 )*nWidth;
+				for( uint32_t x = 0; x < nWidth; ++x, pPixel += 3 )
+					pCurLine[x] = ( *(uint32_t*)pPixel )|0xff000000;
 			}
 		}
 		else
 		{
-			const uint32* pPalette = (const uint32*)( pInfo + 1 );
-			const uint32* pBitSetBuf = pPalette + ( 1LL << pInfo->nBitCount );
+			const uint32_t* pPalette = (const uint32_t*)( pInfo + 1 );
+			const uint32_t* pBitSetBuf = pPalette + ( 1LL << pInfo->nBitCount );
 			const TBitSet<0x7fffffff>* pBitSet = (const TBitSet<0x7fffffff>*)( pBitSetBuf );
-			for( uint32 y = 0, n = 0; y < nHeight; ++y )
+			for( uint32_t y = 0, n = 0; y < nHeight; ++y )
 			{
-				uint32* pCurLine = pColor + ( nHeight - y - 1 )*nWidth;
-				for( uint32 x = 0; x < nWidth; ++x, n += pInfo->nBitCount )
+				uint32_t* pCurLine = pColor + ( nHeight - y - 1 )*nWidth;
+				for( uint32_t x = 0; x < nWidth; ++x, n += pInfo->nBitCount )
 					pCurLine[x] = pPalette[pBitSet->GetBit( n, pInfo->nBitCount )]|0xff000000;
 			}
 		}
@@ -330,7 +330,7 @@ namespace Gamma
 		HDC hDC = ::GetDC( NULL );
 		ICONINFO info; 
 		BITMAPINFO bmi;
-		uint32* pBit = NULL;
+		uint32_t* pBit = NULL;
 		ZeroMemory( &bmi.bmiHeader, sizeof(BITMAPINFOHEADER) );
 		bmi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
 		bmi.bmiHeader.biWidth		= nWidth;
@@ -344,7 +344,7 @@ namespace Gamma
 		if( !info.hbmColor || !pBit )
 			return;
 
-		memcpy( pBit, pColor, nWidth*nHeight*sizeof(uint32) );
+		memcpy( pBit, pColor, nWidth*nHeight*sizeof(uint32_t) );
 		const void* pMask = BufFile.GetBuf() + BufFile.GetPos() - nPixelCount/8;
 		info.hbmMask = CreateBitmap( nWidth, nHeight, 1, 1, pMask );  
 		info.fIcon = FALSE;    
@@ -356,12 +356,12 @@ namespace Gamma
 #endif
 	}
 
-	uint32 CAniCursorFile::GetFrameCount() const
+	uint32_t CAniCursorFile::GetFrameCount() const
 	{
-		return (uint32)m_vecSequence.size();
+		return (uint32_t)m_vecSequence.size();
 	}
 
-	uint32 CAniCursorFile::GetFrameDuration( uint32 nFrame ) const
+	uint32_t CAniCursorFile::GetFrameDuration( uint32_t nFrame ) const
 	{
 		if( nFrame >= m_vecSequence.size() )
 			return 0;
@@ -370,7 +370,7 @@ namespace Gamma
 		return m_vecFrameDurations[m_vecSequence[nFrame]];
 	}
 
-	uint32 CAniCursorFile::GetTotalTime() const
+	uint32_t CAniCursorFile::GetTotalTime() const
 	{
 		if( m_nTotalTime )
 			return m_nTotalTime;
@@ -378,24 +378,24 @@ namespace Gamma
 			return 0;
 		if( m_vecFrameDurations.empty() )
 			return 0;
-		for( uint32 i = 0; i < m_vecSequence.size(); i++ )
+		for( uint32_t i = 0; i < m_vecSequence.size(); i++ )
 			m_nTotalTime += m_vecFrameDurations[m_vecSequence[i]];
 		return m_nTotalTime;
 	}
 
 	void CAniCursorFile::Update()
 	{
-		uint32 nTotalTime = GetTotalTime();
+		uint32_t nTotalTime = GetTotalTime();
 		if( nTotalTime == 0 )
 			return SetCursor( NULL );
 
-		uint32 nCurTime = (uint32)( GetGammaTime()%nTotalTime );
-		uint32 nFrame = 0;
+		uint32_t nCurTime = (uint32_t)( GetGammaTime()%nTotalTime );
+		uint32_t nFrame = 0;
 		while( nFrame < m_vecSequence.size() &&
 			nCurTime >= m_vecFrameDurations[m_vecSequence[nFrame]] )
 			nCurTime -= m_vecFrameDurations[m_vecSequence[nFrame++]];
 		nFrame = nFrame%m_vecSequence.size();
-		uint32 nIndex = m_vecSequence[nFrame];
+		uint32_t nIndex = m_vecSequence[nFrame];
 		if( nIndex >= m_vecFrameDatas.size() )
 			return SetCursor( NULL );
 		SetCursor( &m_vecFrameDatas[nIndex] );

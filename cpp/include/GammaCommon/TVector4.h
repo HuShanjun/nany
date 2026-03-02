@@ -161,8 +161,8 @@ namespace Gamma
         // =====================================================================
         // 操作符重载  
         // =====================================================================
-        const T& operator [] ( const int32 i ) const;
-        T& operator [] ( const int32 i );
+        const T& operator [] ( const int32_t i ) const;
+        T& operator [] ( const int32_t i );
 
         const TVector4 operator + (const TVector4& b) const;
 		const TVector4 operator - (const TVector4& b) const;
@@ -287,12 +287,12 @@ namespace Gamma
         return x*b.x + y*b.y + z*b.z + w*b.w;
     }
 
-    template<class T> inline const T& TVector4<T>::operator [] ( const int32 i ) const
+    template<class T> inline const T& TVector4<T>::operator [] ( const int32_t i ) const
     {
         return v[i];
     }
 
-    template<class T> inline T& TVector4<T>::operator [] ( const int32 i )
+    template<class T> inline T& TVector4<T>::operator [] ( const int32_t i )
     {
         return v[i];
     }
@@ -419,7 +419,7 @@ namespace Gamma
         return TVector4( -x, -y, -z, -w );
     }
 
-	typedef TVector4<int32>     CVector4;
+	typedef TVector4<int32_t>     CVector4;
 	typedef TVector4<float>     CVector4f;
 	typedef TVector4<double>    CVector4d;
 } 

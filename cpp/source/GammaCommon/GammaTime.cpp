@@ -25,7 +25,7 @@ namespace Gamma
 	//========================================================================
 	// struct STime 
 	//========================================================================
-	void STime::Format2Str( char* szOut, uint32 nSize )
+	void STime::Format2Str( char* szOut, uint32_t nSize )
 	{
 		char szBuffer[32];
 		gammasstream( szBuffer ) 
@@ -52,7 +52,7 @@ namespace Gamma
 	// Time
 	//========================================================================
 
-    int64 GetTimeFromMechineStart()
+    int64_t GetTimeFromMechineStart()
     {
 #ifdef _WIN32
 		//struct CFreq
@@ -72,8 +72,8 @@ namespace Gamma
 		//// 下面的代码功能上等于被注释掉的代码
 		//// 不使用上面的代码的原因是因为uCounter.QuadPart*1000可能会超出int64范围
 		//
-		//int64 nSecond = uCounter.QuadPart/Freq.m_Freq.QuadPart;
-		//int64 nMSecnd = uCounter.QuadPart%Freq.m_Freq.QuadPart;
+		//int64_t nSecond = uCounter.QuadPart/Freq.m_Freq.QuadPart;
+		//int64_t nMSecnd = uCounter.QuadPart%Freq.m_Freq.QuadPart;
 		//return nSecond*1000 + ( nMSecnd*1000 )/Freq.m_Freq.QuadPart;
 
 		//// QueryPerformanceCounter，QueryPerformanceFrequency函数有平台相关性，
@@ -98,69 +98,69 @@ namespace Gamma
 
 		FILETIME CurTime;
 		s_GetTimeFun.m_funGetTime( &CurTime );
-		uint64 nCurTime = CurTime.dwLowDateTime;
-		nCurTime |= ((uint64)CurTime.dwHighDateTime) << 32;
+		uint64_t nCurTime = CurTime.dwLowDateTime;
+		nCurTime |= ((uint64_t)CurTime.dwHighDateTime) << 32;
 		return nCurTime / 10000;
 		
 #elif ( defined _IOS || defined _MAC )
         static struct mach_timebase_info timebase = { 0, 0 };
         if( timebase.numer == 0 )
             mach_timebase_info( &timebase );
-        return (int64)( ( mach_absolute_time()*timebase.numer/timebase.denom )/NSEC_PER_MSEC );
+        return (int64_t)( ( mach_absolute_time()*timebase.numer/timebase.denom )/NSEC_PER_MSEC );
 #else
         timespec ts;
         if( -1 == clock_gettime( CLOCK_MONOTONIC, &ts ) )
             GammaThrow( "Call clock_gettime failed!!");
-        return ((uint64)ts.tv_sec)*1000 + ts.tv_nsec/1000000;
+        return ((uint64_t)ts.tv_sec)*1000 + ts.tv_nsec/1000000;
 #endif
     }
     
-    int64 InitZoneTime()
+    int64_t InitZoneTime()
     {
         time_t t1 = 100000;
         time( &t1 );
 #ifdef _WIN32
-        int64 t2 =(int64) mktime( gmtime( &t1 ) );
+        int64_t t2 =(int64_t) mktime( gmtime( &t1 ) );
 #else
 		tm time;
-		int64 t2 =(int64) mktime( gmtime_r( &t1, &time ) );
+		int64_t t2 =(int64_t) mktime( gmtime_r( &t1, &time ) );
 #endif
         return ( t1 - t2 ) * 1000;
 	}
 
-	int64	g_nProcessStart = GetTimeFromMechineStart();
-	int64	g_nNatureTime = ( (int64)time( NULL ) )*1000 - GetProcessTime();
-	int64	g_nZoneTime = InitZoneTime();
+	int64_t	g_nProcessStart = GetTimeFromMechineStart();
+	int64_t	g_nNatureTime = ( (int64_t)time( NULL ) )*1000 - GetProcessTime();
+	int64_t	g_nZoneTime = InitZoneTime();
 
 	CLock	g_TimeLock;
-	int64	g_nLogicTime = 0;
-	int64	g_nDeltaFromProcessTime = 0;
+	int64_t	g_nLogicTime = 0;
+	int64_t	g_nDeltaFromProcessTime = 0;
 	bool	g_bPause = false;
 	double	g_fTimeScale = 1.0f;
 
-	int64 GetProcessTime()
+	int64_t GetProcessTime()
 	{
 		return GetTimeFromMechineStart() - g_nProcessStart;
 	}
 	
-	void AddProcessTime( int64 nDeltaTime )
+	void AddProcessTime( int64_t nDeltaTime )
 	{
 		g_nProcessStart -= nDeltaTime;
 	}
 
-	int64 GetZoneTime()
+	int64_t GetZoneTime()
 	{
 		return g_nZoneTime;
 	}
 
-	int64 CalculateGammaTime()
+	int64_t CalculateGammaTime()
 	{
 		if( g_fTimeScale == 1.0 )
 			return GetProcessTime();
-		return (int64)( GetProcessTime()*g_fTimeScale );
+		return (int64_t)( GetProcessTime()*g_fTimeScale );
 	}
 
-    int64 GetGammaTime()
+    int64_t GetGammaTime()
     {
         if( g_bPause )
             return g_nLogicTime;
@@ -186,7 +186,7 @@ namespace Gamma
 		return g_bPause;
 	}
 
-    void SetGammaTime( int64 nLogicTime )
+    void SetGammaTime( int64_t nLogicTime )
     {
         g_TimeLock.Lock();
         if( g_bPause )
@@ -198,8 +198,8 @@ namespace Gamma
 	
 	void SetGammaTimeScale( float fScale )
 	{
-		int64 nCurTime = GetGammaTime();
-		int64 nNatureTime = GetNatureTime();
+		int64_t nCurTime = GetGammaTime();
+		int64_t nNatureTime = GetNatureTime();
 		g_fTimeScale = fScale;
 		SetNatureTime( nNatureTime, g_nZoneTime );
 		SetGammaTime( nCurTime );
@@ -210,7 +210,7 @@ namespace Gamma
 		return (float)g_fTimeScale;
 	}
 
-	void SetNatureTime( int64 nNatureTime, int64 nZoneTime)
+	void SetNatureTime( int64_t nNatureTime, int64_t nZoneTime)
 	{
 		g_TimeLock.Lock();
 		g_nNatureTime = nNatureTime - CalculateGammaTime();
@@ -218,27 +218,27 @@ namespace Gamma
 		g_TimeLock.Unlock();
 	}
 
-	int64 GetProcessStartNatureTime()
+	int64_t GetProcessStartNatureTime()
 	{
 		return g_nNatureTime;
 	}
 
-	int64 NatureTime2LocalTime(int64 nNatureTime)
+	int64_t NatureTime2LocalTime(int64_t nNatureTime)
 	{
 		return g_nZoneTime + nNatureTime;
 	}
 
-	int64 LocalTime2NatureTime( int64 nLocalTime )
+	int64_t LocalTime2NatureTime( int64_t nLocalTime )
 	{
 		return nLocalTime - g_nZoneTime;
 	}
 
-	int64 GetLocalTime()
+	int64_t GetLocalTime()
 	{
 		return g_nZoneTime + GetNatureTime();
 	}
 
-	int64 GetNatureTime()
+	int64_t GetNatureTime()
 	{
 		return g_nNatureTime + CalculateGammaTime();
 	}
@@ -296,7 +296,7 @@ namespace Gamma
 #endif
 	}
 
-    STime GetFormatTimeSTMFromMillisecond( int64 nMillisecond )
+    STime GetFormatTimeSTMFromMillisecond( int64_t nMillisecond )
     {
 		time_t nTime = (time_t)( nMillisecond / 1000 );
 #ifdef _WIN32
@@ -318,19 +318,19 @@ namespace Gamma
         return stm;
     }
 
-	uint32 GetOffSetTime( uint64 nNatureTime )
+	uint32_t GetOffSetTime( uint64_t nNatureTime )
 	{
 		STime ST = GetFormatTimeSTMFromMillisecond( nNatureTime );
-		int32 nDay = ST.m_nDayofWeek - 1;
+		int32_t nDay = ST.m_nDayofWeek - 1;
 
 		if ( nDay < 0 )
 			nDay = 6;
 
-		uint32 nScecond = ( nDay * 24 + ST.m_nHour ) * 3600 + ST.m_nMinutes * 60 + ST.m_nSecond;
+		uint32_t nScecond = ( nDay * 24 + ST.m_nHour ) * 3600 + ST.m_nMinutes * 60 + ST.m_nSecond;
 		return nScecond; 
 	}
 
-	int64 Format2NatureTime( uint32 nYear, uint32 nMon, uint32 nDay, uint32 nHour, uint32 nMin, uint32 nSec, uint32 nMSec )
+	int64_t Format2NatureTime( uint32_t nYear, uint32_t nMon, uint32_t nDay, uint32_t nHour, uint32_t nMin, uint32_t nSec, uint32_t nMSec )
 	{
 		time_t rawtime;
 		time ( &rawtime );
@@ -347,12 +347,12 @@ namespace Gamma
 		Time.tm_hour	= nHour;
 		Time.tm_min		= nMin;
 		Time.tm_sec		= nSec;
-		int64 nTime = mktime( &Time );
+		int64_t nTime = mktime( &Time );
 		return nTime >= 0 ? nTime*1000 + nMSec : -1;
 	}
 
 	/// 获取指定时刻的当地时间(s)
-	int64 Format2LocalTime( uint32 nYear, uint32 nMon, uint32 nDay, uint32 nHour, uint32 nMin, uint32 nSec )
+	int64_t Format2LocalTime( uint32_t nYear, uint32_t nMon, uint32_t nDay, uint32_t nHour, uint32_t nMin, uint32_t nSec )
 	{
 		time_t rawtime;
 		time ( &rawtime );
@@ -369,14 +369,14 @@ namespace Gamma
 		Time.tm_hour	= nHour;
 		Time.tm_min		= nMin;
 		Time.tm_sec		= nSec;
-		int64 nTime		= mktime( &Time );
+		int64_t nTime		= mktime( &Time );
 		return nTime >= 0 ? nTime + g_nZoneTime / 1000 : -1;
 	}
 
-	int64 Str2Time( const char* szTime )
+	int64_t Str2Time( const char* szTime )
 	{
 		char szBuf[32];
-		uint32 nLen = 0, i = 0;
+		uint32_t nLen = 0, i = 0;
 		while( nLen < 14 )
 		{
 			char c = szTime[i++];
@@ -404,19 +404,19 @@ namespace Gamma
 			szBuf[nLen++] = '0';
 
 		szBuf[nLen] = 0;
-		int32 nSec	= atoi( szBuf + 12 ); szBuf[12] = 0;
-		int32 nMin	= atoi( szBuf + 10 ); szBuf[10] = 0;
-		int32 nHour = atoi( szBuf + 8  ); szBuf[8 ] = 0;
-		int32 nDay	= atoi( szBuf + 6  ); szBuf[6 ] = 0;
-		int32 nMon	= atoi( szBuf + 4  ); szBuf[4 ] = 0;
-		int32 nYear = atoi( szBuf + 0  ); szBuf[0 ] = 0;
+		int32_t nSec	= atoi( szBuf + 12 ); szBuf[12] = 0;
+		int32_t nMin	= atoi( szBuf + 10 ); szBuf[10] = 0;
+		int32_t nHour = atoi( szBuf + 8  ); szBuf[8 ] = 0;
+		int32_t nDay	= atoi( szBuf + 6  ); szBuf[6 ] = 0;
+		int32_t nMon	= atoi( szBuf + 4  ); szBuf[4 ] = 0;
+		int32_t nYear = atoi( szBuf + 0  ); szBuf[0 ] = 0;
 		return Format2NatureTime( nYear, nMon, nDay, nHour, nMin, nSec )/1000;
 	}
 
-	int64 Str2LocalTime( const char* szTime )
+	int64_t Str2LocalTime( const char* szTime )
 	{
 		char szBuf[32];
-		uint32 nLen = 0, i = 0;
+		uint32_t nLen = 0, i = 0;
 		while( nLen < 14 )
 		{
 			char c = szTime[i++];
@@ -444,12 +444,12 @@ namespace Gamma
 			szBuf[nLen++] = '0';
 
 		szBuf[nLen] = 0;
-		int32 nSec	= atoi( szBuf + 12 ); szBuf[12] = 0;
-		int32 nMin	= atoi( szBuf + 10 ); szBuf[10] = 0;
-		int32 nHour = atoi( szBuf + 8  ); szBuf[8 ] = 0;
-		int32 nDay	= atoi( szBuf + 6  ); szBuf[6 ] = 0;
-		int32 nMon	= atoi( szBuf + 4  ); szBuf[4 ] = 0;
-		int32 nYear = atoi( szBuf + 0  ); szBuf[0 ] = 0;
+		int32_t nSec	= atoi( szBuf + 12 ); szBuf[12] = 0;
+		int32_t nMin	= atoi( szBuf + 10 ); szBuf[10] = 0;
+		int32_t nHour = atoi( szBuf + 8  ); szBuf[8 ] = 0;
+		int32_t nDay	= atoi( szBuf + 6  ); szBuf[6 ] = 0;
+		int32_t nMon	= atoi( szBuf + 4  ); szBuf[4 ] = 0;
+		int32_t nYear = atoi( szBuf + 0  ); szBuf[0 ] = 0;
 		return Format2LocalTime( nYear, nMon, nDay, nHour, nMin, nSec );
 	}
 
@@ -466,7 +466,7 @@ namespace Gamma
     float CFPS::GetFPS()
     {
         m_nFrameCount++;
-        int64 nCurTime = GetTimeFromMechineStart();
+        int64_t nCurTime = GetTimeFromMechineStart();
         if( nCurTime - m_nPreTime >= 1000 )
         {
             m_fFPS = ( m_nFrameCount*1000.0f )/( nCurTime - m_nPreTime );
@@ -496,9 +496,9 @@ namespace Gamma
        Stop();
     }
 
-	int64 CTick::GetPassTime() const
+	int64_t CTick::GetPassTime() const
 	{
-		int64 nPassTime = m_pMgr ? m_pMgr->GetCurUpdateTime() - GetStartTime() : 0;
+		int64_t nPassTime = m_pMgr ? m_pMgr->GetCurUpdateTime() - GetStartTime() : 0;
 		GammaAst( nPassTime >= 0 );
 		return nPassTime;
 	}
@@ -513,12 +513,12 @@ namespace Gamma
     //========================================================================
     // 用于管理定时器
     // 时间只可以前进，不可后退
-    // void Update( uint32 nDeltaTime )
+    // void Update( uint32_t nDeltaTime )
     //========================================================================
 	#define MAX_TICK_ARRAY_SIZE 4096
 
     CTickMgr::CTickMgr( gammacstring strName,
-		uint16 nTickArraySize, bool bEnableTickID ) 
+		uint16_t nTickArraySize, bool bEnableTickID ) 
         : m_strName( strName )
 		, m_nPreUpdateTime(0)
 		, m_pCurUpdateTick(NULL)
@@ -530,13 +530,13 @@ namespace Gamma
 
 		if( bEnableTickID )
 		{
-			m_aryTickEnable = new uint8[( INVALID_16BITID + 1 )/8 ];
+			m_aryTickEnable = new uint8_t[( INVALID_16BITID + 1 )/8 ];
 			memset( m_aryTickEnable, 0xff, ( INVALID_16BITID + 1 )/8 );
 		}
 
 		if( nTickArraySize > MAX_TICK_ARRAY_SIZE )
 			nTickArraySize = MAX_TICK_ARRAY_SIZE;
-		m_nTickArraySize = (uint16)AligenUpTo2Power( nTickArraySize );
+		m_nTickArraySize = (uint16_t)AligenUpTo2Power( nTickArraySize );
 		m_nTickMask = m_nTickArraySize - 1;
 		m_aryTickTime = new TickList[m_nTickArraySize];
     }
@@ -556,7 +556,7 @@ namespace Gamma
 	
 	void CTickMgr::ClearAllTicks()
 	{
-		for( uint32 i = 0; i < m_nTickArraySize; ++i )
+		for( uint32_t i = 0; i < m_nTickArraySize; ++i )
 		{
 			TickList& List = m_aryTickTime[i];
 			while( List.GetFirst() )
@@ -564,12 +564,12 @@ namespace Gamma
 		}
 	}
 
-	void CTickMgr::AddTick( CTick* pTick, uint32 nInterval, uint16 nTickID )
+	void CTickMgr::AddTick( CTick* pTick, uint32_t nInterval, uint16_t nTickID )
 	{
 		AddTick( pTick, nInterval, nInterval, nTickID );
 	}
 
-    void CTickMgr::AddTick( CTick* pTick, uint32 nStart, uint32 nInterval, uint16 nTickID )
+    void CTickMgr::AddTick( CTick* pTick, uint32_t nStart, uint32_t nInterval, uint16_t nTickID )
     {
 		if( pTick->m_pMgr )
 			DelTick( pTick );
@@ -606,7 +606,7 @@ namespace Gamma
 			m_pCurUpdateTick	= NULL;
     }
 
-	void CTickMgr::InsertTick( CTick* pTick, int64 nTickTime )
+	void CTickMgr::InsertTick( CTick* pTick, int64_t nTickTime )
 	{
 		GammaAst( !pTick->IsInList() );
 		GammaAst( pTick->m_pMgr == this );
@@ -615,18 +615,18 @@ namespace Gamma
 		m_aryTickTime[pTick->m_nNextTickTime&m_nTickMask].PushBack( *pTick );//某时间刻 的tick
 	}
 
-    void CTickMgr::Update( uint32 nDeltaTime )
+    void CTickMgr::Update( uint32_t nDeltaTime )
 	{
 		#ifdef GAMMA_CHECK_PROFILE
 		PROFILE_FUNCTION( Tick_Update );
 		#endif
-		int64 nEndTime = m_nPreUpdateTime + nDeltaTime; 
+		int64_t nEndTime = m_nPreUpdateTime + nDeltaTime; 
 		//遍历tick List 数组中  对数组中属于调用时间内的所有list进行处理
         for( ; m_nPreUpdateTime < nEndTime; m_nPreUpdateTime++ )
 		{
 			TickList IgnoreTickList;
 
-           const uint32 nPos = (uint32)( m_nPreUpdateTime&m_nTickMask );
+           const uint32_t nPos = (uint32_t)( m_nPreUpdateTime&m_nTickMask );
 		   //遍历list
             while( m_aryTickTime[nPos].GetFirst() )
             {
@@ -655,8 +655,8 @@ namespace Gamma
 				CProfile* pProfile = m_pTickProfile[m_pCurUpdateTick->m_nTickID];
 				pProfile->CheckBegin();
 #endif
-				uint16 nTickID = m_pCurUpdateTick->m_nTickID;
-				uint32 nTickInterval = m_pCurUpdateTick->GetInteval();
+				uint16_t nTickID = m_pCurUpdateTick->m_nTickID;
+				uint32_t nTickInterval = m_pCurUpdateTick->GetInteval();
 				try
 				{
 					// Tick没有关闭
@@ -696,7 +696,7 @@ namespace Gamma
         }
     }
 
-	bool CTickMgr::EnableTick( uint16 nTickID, bool bEnable )
+	bool CTickMgr::EnableTick( uint16_t nTickID, bool bEnable )
 	{
 		if( !m_aryTickEnable )
 			return false;
@@ -707,21 +707,21 @@ namespace Gamma
 		return true;
 	}
 
-	bool CTickMgr::IsTickEnable( uint16 nTickID )
+	bool CTickMgr::IsTickEnable( uint16_t nTickID )
 	{
 		if( !m_aryTickEnable )
 			return true;
 		return ( m_aryTickEnable[nTickID/8] & ( 1 << ( nTickID%8 ) ) ) != 0;
 	}
 
-	void CTickMgr::SetCurUpdateTime( int64 nValue )
+	void CTickMgr::SetCurUpdateTime( int64_t nValue )
 	{
-		int64 nDlt = nValue - m_nPreUpdateTime;
+		int64_t nDlt = nValue - m_nPreUpdateTime;
 		GammaLog << "SetCurUpdateTime," << nValue << "," << m_nPreUpdateTime  << std::endl;
 		m_nPreUpdateTime = nValue;
 
 		TickList listTick[MAX_TICK_ARRAY_SIZE];
-		for( uint32 i = 0; i < m_nTickArraySize; ++i )
+		for( uint32_t i = 0; i < m_nTickArraySize; ++i )
 		{
 			TickList& List = m_aryTickTime[i];
 
@@ -730,7 +730,7 @@ namespace Gamma
 				CTick* pNode = List.GetFirst();
 				pNode->m_nNextTickTime += nDlt; 
 				pNode->Remove();
-				uint32 nIndex = pNode->m_nNextTickTime&m_nTickMask;
+				uint32_t nIndex = pNode->m_nNextTickTime&m_nTickMask;
 				listTick[nIndex].PushBack( *pNode );
 			}
 		}
@@ -738,7 +738,7 @@ namespace Gamma
 		if( m_pCurUpdateTick && !m_pCurUpdateTick->IsInList() )
 			m_pCurUpdateTick->m_nNextTickTime += nDlt; 
 
-		for( uint32 i = 0; i < m_nTickArraySize; ++i )
+		for( uint32_t i = 0; i < m_nTickArraySize; ++i )
 		{
 			TickList& List = listTick[i];
 
@@ -746,7 +746,7 @@ namespace Gamma
 			{
 				CTick* pNode = List.GetFirst();
 				pNode->Remove();
-				uint32 nIndex = pNode->m_nNextTickTime&m_nTickMask;
+				uint32_t nIndex = pNode->m_nNextTickTime&m_nTickMask;
 				m_aryTickTime[nIndex].PushBack( *pNode );
 			}
 		}
