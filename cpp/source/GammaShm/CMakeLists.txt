@@ -12,12 +12,13 @@ set(SOURCES_
 )
 
 if(WIN32)
-	add_definitions(-DGAMMA_COMMON_EXPORTS)
-	add_library(${ProjectName} SHARED ${SOURCES_})
+	add_library(${ProjectName} STATIC ${SOURCES_})
 else(WIN32)
-	add_definitions(-DGAMMA_COMMON_EXPORTS)
+	add_definitions(-DGAMMA_DLL)
 	add_library(${ProjectName} SHARED ${SOURCES_})
+	target_link_libraries(${ProjectName} GammaCommon)
+	include(${CMAKE_SOURCE_DIR}/common.cmake)
 endif(WIN32)
 
 set_target_properties(${ProjectName} PROPERTIES FOLDER "lib")
-include(${CMAKE_SOURCE_DIR}/common.cmake)
+

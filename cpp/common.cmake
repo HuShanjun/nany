@@ -9,7 +9,11 @@ find_package(CURL REQUIRED)
 find_package(unofficial-libmariadb CONFIG REQUIRED)
 
 # 3rd-libs
-target_link_libraries(${ProjectName} CURL::libcurl OpenSSL::SSL OpenSSL::Crypto mysqlclient ZLIB::ZLIB unofficial::libmariadb)
+target_link_libraries(${ProjectName} 
+    CURL::libcurl 
+    OpenSSL::SSL OpenSSL::Crypto ZLIB::ZLIB 
+    unofficial::libmariadb
+)
 
 if(WIN32)
     target_link_libraries(${ProjectName} ws2_32 lua)
