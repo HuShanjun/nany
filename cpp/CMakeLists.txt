@@ -14,6 +14,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)        # 禁用编译器特定扩展
 
 # 设置编译选项
 if(WIN32)
+	# 源文件与执行字符集设为 UTF-8，避免含中文的源文件在代码页 936 下出现 C4819/C2001
+	add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE -D_SCL_SECURE_NO_WARNINGS -DWIN32_LEAN_AND_MEAN -D_WIN32 -DPLATFORM_WIN32 -DNOMINMAX)
 	add_definitions(/we"4715")
 	add_definitions(/MP)
@@ -79,5 +81,6 @@ add_subdirectory(source/GammaShm)
 
 
 add_subdirectory(sample/main)
+add_subdirectory(sample/GammaShm)
 
 

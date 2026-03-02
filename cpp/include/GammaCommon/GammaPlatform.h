@@ -77,6 +77,7 @@ namespace Gamma
 	GAMMA_COMMON_API bool	GetSystemFileList( int32_t nType, void* pContext, SystemFileListCallback funCallback );
 	GAMMA_COMMON_API void*	LoadDynamicLib( const char* szName );
 	GAMMA_COMMON_API void*	GetFunctionAddress( void* pLibContext, const char* szName );
+	GAMMA_COMMON_API void	SetConsoleOutputUTF8();
 
 #ifdef _WIN32
 	GAMMA_COMMON_API void	SetPackagePath( const char* szPackagePath );

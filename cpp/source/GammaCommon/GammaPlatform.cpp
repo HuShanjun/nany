@@ -265,4 +265,12 @@ namespace Gamma
 
 #endif
 #endif
+
+	GAMMA_COMMON_API void	SetConsoleOutputUTF8()
+	{
+#ifdef _WIN32
+		SetConsoleOutputCP(65001);
+		SetConsoleCP(65001);
+#endif
+	}
 }
