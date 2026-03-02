@@ -39,3 +39,8 @@
 
 # debug information files
 *.dwo
+.cache
+/cpp/build
+/cpp/3rd-libs/linux
+/cpp/bin
+/cpp/libs
