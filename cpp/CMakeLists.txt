@@ -44,6 +44,7 @@ set(THIRD_PARTY_PATH ${CMAKE_SOURCE_DIR}/3rd-src)
 
 #include 路径
 include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/include/gamma)
 include_directories(${THIRD_PARTY_PATH}/lua/inc)
 
 # 设置PATH
@@ -71,13 +72,13 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 add_subdirectory(3rd-src/lua)
 
 # 递归枚举目录下所有文件
-add_subdirectory(source/GammaCommon)
-add_subdirectory(source/GammaDatabase)
-add_subdirectory(source/GammaMTDbs)
-add_subdirectory(source/GammaNetwork)
-add_subdirectory(source/GammaConnects)
-add_subdirectory(source/GammaScript)
-add_subdirectory(source/GammaShm)
+add_subdirectory(source/gamma/GammaCommon)
+add_subdirectory(source/gamma/GammaDatabase)
+add_subdirectory(source/gamma/GammaMTDbs)
+add_subdirectory(source/gamma/GammaNetwork)
+add_subdirectory(source/gamma/GammaConnects)
+add_subdirectory(source/gamma/GammaScript)
+add_subdirectory(source/gamma/GammaShm)
 
 
 add_subdirectory(sample/main)
