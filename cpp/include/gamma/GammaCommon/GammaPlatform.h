@@ -83,22 +83,22 @@ namespace Gamma
 	GAMMA_COMMON_API void	SetPackagePath( const char* szPackagePath );
 	GAMMA_COMMON_API int32_t	StartApp( AppEntryFunction funEntry, int nArg, const wchar_t* szArg[] );
 	GAMMA_COMMON_API int32_t	StartApp( AppEntryFunction funEntry, void* pApp, wchar_t* szCmdLine );
-	#define main gamma_main( int, const char** );\
-		int32_t wmain( int nArg, const wchar_t* szArg[] )\
-		{ return Gamma::StartApp( gamma_main, nArg, szArg ); } \
-		int32_t WINAPI wWinMain( HINSTANCE hInst, HINSTANCE, wchar_t* szCmd, int )\
-		{ return Gamma::StartApp( gamma_main, hInst, szCmd ); } \
-		int gamma_main
+	// #define main gamma_main( int, const char** );\
+	// 	int32_t wmain( int nArg, const wchar_t* szArg[] )\
+	// 	{ return Gamma::StartApp( gamma_main, nArg, szArg ); } \
+	// 	int32_t WINAPI wWinMain( HINSTANCE hInst, HINSTANCE, wchar_t* szCmd, int )\
+	// 	{ return Gamma::StartApp( gamma_main, hInst, szCmd ); } \
+	// 	int gamma_main
 #else
 	#ifdef _ANDROID 
 	GAMMA_COMMON_API JavaVM* GetJavaVM();
 	GAMMA_COMMON_API void* GetMainActivity();
 	#endif
 	GAMMA_COMMON_API int32_t	StartApp( AppEntryFunction funEntry, int nArg, const char* szArg[] );
-	#define main gamma_main( int, const char** );\
-		int32_t main( int nArg, const char* szArg[] ) \
-		{ return Gamma::StartApp( gamma_main, nArg, szArg ); } \
-		int gamma_main
+	// #define main gamma_main( int, const char** );\
+	// 	int32_t main( int nArg, const char* szArg[] ) \
+	// 	{ return Gamma::StartApp( gamma_main, nArg, szArg ); } \
+	// 	int gamma_main
 #endif
 }
 

@@ -83,5 +83,9 @@ add_subdirectory(source/gamma/GammaShm)
 
 add_subdirectory(sample/main)
 add_subdirectory(sample/GammaShm)
+add_subdirectory(sample/GammaDatabase)
+add_subdirectory(sample/GammaMTDbs)
+add_subdirectory(sample/GammaNetwork)
+add_subdirectory(sample/GammaConnects)
 
 

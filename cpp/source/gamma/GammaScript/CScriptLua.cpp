@@ -388,7 +388,7 @@ namespace Gamma
 		FILE* fpM = fopen(szFile, "w");
 		if (fpM)
 		{
-			fprintf(fpM, "-----------New(%ld)-Free(%ld)-Remain(%ld)-----------\n", g_nTotalNew, g_nTotalFree, g_nTotalNew - g_nTotalFree);
+			fprintf(fpM, "-----------New(%lld)-Free(%lld)-Remain(%lld)-----------\n", g_nTotalNew, g_nTotalFree, g_nTotalNew - g_nTotalFree);
 			for (auto it = g_mapSourceInfo.begin(); it != g_mapSourceInfo.end(); ++it)
 			{
 				if (it->second < nMinSize)
