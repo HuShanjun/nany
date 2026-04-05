@@ -7,6 +7,9 @@
         "-I${workspaceFolder}/3rd-libs/msvc/x64-windows-static-md/include",
         // "-I${workspaceFolder}/3rd-libs/linux/x64-linux/include"
     ],
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build/linux"
+    ],
     "files.exclude": {
         "**/bin": true,
         "**/build": true,
