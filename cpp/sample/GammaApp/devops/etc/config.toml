@@ -1,0 +1,5 @@
+[AppSetting]
+SingleFrameLog=0
+DumpLevel=1
+ShowConsole=1
+OpenLogFile=1
