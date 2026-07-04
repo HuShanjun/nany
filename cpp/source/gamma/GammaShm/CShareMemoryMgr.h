@@ -87,8 +87,9 @@ namespace Gamma
 		uint32_t					m_nBlockCommitID;
 
 		vector<STrunkTypeData>	m_vecTrunkTypeData;
-
+		// shm 线程 --> Gas 数据缓存	
 		CCircleBuffer			m_QueryCmdBuffer;
+		// Gas --> shm 线程数据缓存
 		CCircleBuffer			m_FinishCmdBuffer;
 
 		ECheckState				m_eCheckState;

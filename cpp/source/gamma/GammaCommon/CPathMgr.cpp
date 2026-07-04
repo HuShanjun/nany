@@ -96,7 +96,7 @@ namespace Gamma
 	*****************************************************************************/
 	void CPathMgr::SetCurPath( const char* szPathName )
 	{
-		s_PathContex.m_Lock.Lock();
+		CGuard guard( s_PathContex.m_Lock.GetHandle() );
 		if( IsAbsolutePath( szPathName ) )
 			strcpy2array_safe( s_PathContex.m_szCurrPath, szPathName );
 		else
@@ -140,7 +140,6 @@ namespace Gamma
 #endif
         chdir( s_PathContex.m_szCurrPath + nOffset );
 #endif
-        s_PathContex.m_Lock.Unlock();
 	}
 
 	void CPathMgr::SetCurPath( const wchar_t* szPathName )

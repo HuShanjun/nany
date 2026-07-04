@@ -53,8 +53,12 @@ namespace Gamma
 		uint32_t			m_nType;
 		uint32_t			m_nDataOffset;
 		uint32_t			m_nMaxBlockSize;
-		uint32_t			m_nArrayStartOff;	// 数组结构起始位置
+		uint32_t			m_nArrayStartOff;	// 真实数据起始位置
 		uint32_t			m_nArrayElemSize;	// 数组元素大小
+
+		// SCommitData，用于记录提交数据
+		// 如果是数组结构，则需要记录数组元素的个数及上次元素提交的镜像数据，用于和当前数据进行diff
+		// 数据结构数据大小为：sizeof(SCommitData) + sizeof(BitSet<MAX_ELEMENT_COUNT>) + sizeof(ElementType) * MAX_ELEMENT_COUNT	
 		union
 		{
 			uint64_t		m_ptPoint;

@@ -2,6 +2,7 @@
 #include "GammaCommon/GammaCommonType.h"
 #include "GammaNetwork/GammaNetworkBase.h"
 #include "GammaConnects/ConnectDef.h"
+#include <ostream>
 #include <string>
 
 #ifdef _WIN32
@@ -39,7 +40,10 @@ namespace Gamma
 		uint64_t		GetPackAddress() const;
 	};
 
-	GAMMA_NETWORK_API uint32_t		ConVertAddressToInt32( const char* szAddress );
+    std::ostream &operator<<(std::ostream &os, const CAddress &address);
+    std::ostream &operator<<(std::istream &os, const CAddress *address);
+
+    GAMMA_NETWORK_API uint32_t		ConVertAddressToInt32( const char* szAddress );
 	GAMMA_NETWORK_API const char*	ConvertInt32ToAddress( uint32_t nIP );
 	GAMMA_NETWORK_API bool			IsIP(const char* szAddress);
 	GAMMA_NETWORK_API bool			IsPort(const char* szPort);

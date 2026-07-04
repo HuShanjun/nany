@@ -12,15 +12,14 @@ set(SOURCES_
 )
 
 if(WIN32)
+	add_definitions(-DGAMMA_APP_EXPORTS)
 	add_library(${ProjectName} STATIC ${SOURCES_})
-	target_link_libraries(${ProjectName} GammaCommon GammaNetwork)
+	target_link_libraries(${ProjectName} GammaCommon GammaConnects)
 else(WIN32)
-	add_definitions(-DGAMMA_DLL)
+	add_definitions(-DGAMMA_APP_EXPORTS)
 	add_library(${ProjectName} SHARED ${SOURCES_})
-	target_link_libraries(${ProjectName} GammaCommon GammaNetwork)
-	include(${CMAKE_SOURCE_DIR}/common.cmake)
+	target_link_libraries(${ProjectName} GammaCommon GammaConnects)
 endif(WIN32)
 
 set_target_properties(${ProjectName} PROPERTIES FOLDER "lib")
-
-
+include(${CMAKE_SOURCE_DIR}/common.cmake)

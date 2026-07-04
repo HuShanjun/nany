@@ -163,14 +163,15 @@ namespace Gamma
 					uint32_t nCommitDataSize = sizeof( SCommitData );
 					if( pBlockInfo->m_nArrayElemSize )
 					{
-						uint32_t nDataSize = pBlockInfo->m_nMaxBlockSize;
+						uint32_t nDataSize = pBlockInfo->m_nMaxBlockSize; // sizeof(CClassBagItemArray)
 						uint32_t nArrayElemSize = pBlockInfo->m_nArrayElemSize;
 						uint32_t nArrayOffset = pBlockInfo->m_nArrayStartOff;
 						uint32_t nArrayDataSize = nDataSize - nArrayOffset;
 						uint32_t nMaxElemCount = ( nArrayDataSize - sizeof(SSizeType) )/nArrayElemSize;
-						uint32_t nPreCommitFlagBufSize = ( nMaxElemCount - 1 )/8 + 1;
+						uint32_t nPreCommitFlagBufSize = ( nMaxElemCount - 1 )/8 + 1; // bitset 大小，8个元素一个字节
 						nCommitDataSize += nArrayDataSize + nPreCommitFlagBufSize;
 					}
+					
 					pBlockInfo->m_pContextData = new( new tbyte[nCommitDataSize] ) SCommitData();
 				}
 				if( pTrunkHead->m_nChunckID != INVALID_64BITID )
@@ -355,6 +356,7 @@ namespace Gamma
 		m_FinishCmdBuffer.PushBuffer( Head, &SendBuf, SendBuf.second ? 1 : 0, true );
 	}
 
+	// shm 线程，收到Gas的提交请求，处理完成后的回调
 	void CShareMemoryMgr::CheckResult()
 	{
 		SSendBuf SendBuf;

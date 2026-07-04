@@ -19,10 +19,16 @@ namespace Gamma
 		WSACleanup();
 		return ip;
 	}
+    std::ostream &operator<<(std::ostream &os, const CAddress &address) {
+        os << address.GetIP() << ":" << address.GetPort();
+        return os;
+    }
+    std::ostream &operator<<(std::istream &os, const CAddress *address) {
+        return os << address->GetIP() << ":" << address->GetPort();
+    }
 #endif // WIN32
 
-
-	uint32_t ConVertAddressToInt32( const char* szAddress )
+    uint32_t ConVertAddressToInt32( const char* szAddress )
 	{
 		return (uint32_t)inet_addr(szAddress);
 	}
@@ -159,5 +165,14 @@ namespace Gamma
 	uint8_t CAddress::GetAddressSize() const
 	{
 		return (uint8_t)strlen(m_sAddress);
+	}
+
+	std::ostream &operator<<(std::ostream &os, const CAddress &address) {
+		os << address.GetAddress() << ":" << address.GetPort();
+		return os;
+	}
+    std::ostream &operator<<(std::ostream &os, const CAddress *address) {
+		os << *address;
+		return os;
 	}
 }

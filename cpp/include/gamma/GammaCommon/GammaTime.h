@@ -219,8 +219,8 @@ namespace Gamma
 		void			Stop();
 
 		int64_t			GetPassTime()		const;
-		uint16_t			GetTickID()			const { return m_nTickID; }
-		uint32_t			GetInteval()		const { return m_nTickInterval; }
+		uint16_t		GetTickID()			const { return m_nTickID; }
+		uint32_t		GetInteval()		const { return m_nTickInterval; }
 		int64_t			GetNextTickTime()	const { return m_nNextTickTime; }
 		CTickMgr*		GetTickMgr()		const { return m_pMgr; }
 		bool			IsRegisted()		const { return m_pMgr != NULL; }

@@ -16,6 +16,7 @@ extern "C"
 #include "lualib.h"
 
 }
+#include <format>
 #include "GammaCommon/CNew.h"
 #include "GammaCommon/GammaCodeCvs.h"
 #include "GammaCommon/GammaMemory.h"
@@ -388,12 +389,14 @@ namespace Gamma
 		FILE* fpM = fopen(szFile, "w");
 		if (fpM)
 		{
-			fprintf(fpM, "-----------New(%lld)-Free(%lld)-Remain(%lld)-----------\n", g_nTotalNew, g_nTotalFree, g_nTotalNew - g_nTotalFree);
+			std::string szLog = std::format("-----------New({})-Free({})-Remain({})-----------\n", g_nTotalNew, g_nTotalFree, g_nTotalNew - g_nTotalFree);
+			fwrite(szLog.c_str(), szLog.size(), 1, fpM);
 			for (auto it = g_mapSourceInfo.begin(); it != g_mapSourceInfo.end(); ++it)
 			{
 				if (it->second < nMinSize)
-					continue;
-				fprintf(fpM, "%s--size-->%d\n", it->first.c_str(), it->second);
+					continue;	
+				std::string szLog = std::format("{}--size-->{}\n", it->first, it->second);
+				fwrite(szLog.c_str(), szLog.size(), 1, fpM);
 			}
 		}
 		if (fpM)

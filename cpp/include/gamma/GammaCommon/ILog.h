@@ -15,6 +15,7 @@
 #include <string>
 #include <iosfwd>
 #include <iomanip>
+#include <format>
 
 #define LOG_TOTAL_LENGTH	1024
 #define LOG_FILE_MAXLENG	1024*1024*10
@@ -89,6 +90,27 @@ namespace Gamma
 	#define GammaWarn				( Gamma::GetLogStream(2) )
 	#define GammaInfo				( Gamma::GetLogStream(3) )
 	#define GammaError				( Gamma::GetLogStream(4) )
+
+	template<typename ...Args>
+	void LogNote(std::format_string<Args...> fmt, Args&&... args)
+	{
+		GammaNote << std::format(fmt, std::forward<Args>(args)...);
+	}
+	template<typename ...Args>
+	void LogWarn(std::format_string<Args...> fmt, Args&&... args)
+	{
+		GammaWarn << std::format(fmt, std::forward<Args>(args)...);
+	}
+	template<typename ...Args>
+	void LogInfo(std::format_string<Args...> fmt, Args&&... args)
+	{
+		GammaInfo << std::format(fmt, std::forward<Args>(args)...);
+	}
+	template<typename ...Args>
+	void LogError(std::format_string<Args...> fmt, Args&&... args)
+	{
+		GammaError << std::format(fmt, std::forward<Args>(args)...);
+	}
 
 	#define GammaLog				( GammaInfo )
 	#define ShowConsole( flag )		Gamma::Redirect2StdConsole( !!flag )

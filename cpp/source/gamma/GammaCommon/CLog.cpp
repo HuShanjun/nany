@@ -7,10 +7,12 @@
 #include "GammaCommon/CPathMgr.h"
 #include "GammaCommon/GammaCodeCvs.h"
 #include "Win32.h"
+#include <filesystem>
 
 #define  _LOGTEST
 
 uint32_t g_nLogLevel = 0;
+namespace fs = std::filesystem;
 
 namespace Gamma
 {
@@ -213,15 +215,17 @@ namespace Gamma
 		tm tmCurTime;
 		::localtime_r( &m_nCreateTime, &tmCurTime );
 #endif
-
 		char szDir[256];
 		sprintf( szDir, DIR_FORMAT, tmCurTime.tm_year + 1900, tmCurTime.tm_mon + 1 );
 
-		std::string szFileName = CLogManager::Instance().GetLogPath();
-		szFileName += szDir;
-		CPathMgr::MakeDirectory( Utf8ToUcs( szFileName.c_str() ).c_str() );
-
-		szFileName += m_szPrefix;
+		fs::path log_path = CLogManager::Instance().GetLogPath();
+		
+		log_path /= szDir;
+		if (!fs::exists(log_path)) {
+			fs::create_directories(log_path);
+		}
+		log_path /= m_szPrefix;
+		std::string szFileName = log_path.string();
 
 		if( m_eType&eLPT_Date )
 		{

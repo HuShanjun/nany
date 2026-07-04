@@ -40,8 +40,8 @@ namespace Gamma
 		uint8_t					m_eCloseType;
 		string					m_strCloseLog;
 
-		uint32_t					m_nMinDelay;
-		uint32_t					m_nMaxDelay;
+		uint32_t				m_nMinDelay;
+		uint32_t				m_nMaxDelay;
 		string					m_szSendBuf;
 		string					m_szRecvBuf;
 
@@ -85,11 +85,11 @@ namespace Gamma
 		const CAddress&			GetLocalAddress() const;
 		const CAddress&			GetRemoteAddress() const;
 
-		virtual uint32_t			GetPingDelay() const { return 0; }
+		virtual uint32_t		GetPingDelay() const { return 0; }
 		virtual void			SendShellMsg( bool bReliable, const SSendBuf aryBuffer[], uint32_t nBufferCount );
 
 		virtual void			SetHeartBeatInterval( uint32_t nSeconds ){};
-		virtual uint32_t			GetHeartBeatInterval() { return 0; }
+		virtual uint32_t		GetHeartBeatInterval() { return 0; }
 		void					EnableSendShellMsg( bool bValue );
 		bool					IsEnableSendShellMsg() { return m_bEnableSendShellMsg; }
 
