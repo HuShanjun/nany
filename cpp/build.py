@@ -6,7 +6,7 @@ print(f'操作系统: {sys.platform}')
 # 如果是linux
 if sys.platform == 'linux':
     # 执行cmake --preset linux-vcpkg-static,执行成功后执行cmake --build build/linux
-    if os.system('cmake --preset linux-vcpkg-static') != 0:
+    if os.system('cmake --preset linux-build-local') != 0:
         print('执行cmake --preset linux-vcpkg-static失败')
         exit(1)
     if os.system('cmake --build build/linux -j 16') != 0:

@@ -7,8 +7,8 @@ set_property(GLOBAL PROPERTY USE_FOLDERS On)
 # 设置编译选项
 # set(CMAKE_CXX_FLAGS   "-no-pie")  
 # set(CMAKE_C_FLAGS   "-no-pie")
-# 设置 C++ 标准为 C++20
-set(CMAKE_CXX_STANDARD 20)
+# 设置 C++ 标准为 C++23
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)  # 必须支持指定的标准
 set(CMAKE_CXX_EXTENSIONS OFF)        # 禁用编译器特定扩展
 
@@ -27,15 +27,23 @@ if(WIN32)
     set(CMAKE_CXX_FLAGS_RELEASE	"${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG /bigobj")
     include_directories(${CMAKE_SOURCE_DIR}/3rd-libs/msvc/x64-windows-static-md/include)
     set(PLATFORM_NAME "msvc")
+    if(NOT CMAKE_TOOLCHAIN_FILE)
+        list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/3rd-libs/msvc/x64-windows-static-md)
+    endif(NOT  CMAKE_TOOLCHAIN_FILE)
+    
 else(WIN32)
 	#add_definitions(-fvisibility=hidden)
 	add_definitions(-Wno-terminate)
-	add_definitions(-D_PORT_VERSION -Wno-deprecated -fPIC -std=c++17)
+	add_definitions(-D_PORT_VERSION -Wno-deprecated -fPIC)
     set(CMAKE_CXX_FLAGS_DEBUG	"${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG -ggdb")
     set(CMAKE_CXX_FLAGS_RELEASE	"${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -O2 -ggdb")
     set(PLATFORM_NAME "linux")
     set(RELEASE_SUB_DIR "Release")
     set(DEBUG_SUB_DIR "Debug")
+
+    if(NOT CMAKE_TOOLCHAIN_FILE)
+        list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/3rd-libs/linux/x64-linux)
+    endif(NOT CMAKE_TOOLCHAIN_FILE)
 endif(WIN32)
 
 
@@ -79,13 +87,15 @@ add_subdirectory(source/gamma/GammaNetwork)
 add_subdirectory(source/gamma/GammaConnects)
 add_subdirectory(source/gamma/GammaScript)
 add_subdirectory(source/gamma/GammaShm)
+add_subdirectory(source/gamma/GammaApp)
 
 
 add_subdirectory(sample/main)
-add_subdirectory(sample/GammaShm)
+# add_subdirectory(sample/GammaShm)
 add_subdirectory(sample/GammaDatabase)
 add_subdirectory(sample/GammaMTDbs)
 add_subdirectory(sample/GammaNetwork)
 add_subdirectory(sample/GammaConnects)
+add_subdirectory(sample/GammaApp)
 
 

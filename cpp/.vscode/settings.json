@@ -13,6 +13,9 @@
     "files.exclude": {
         "**/bin": true,
         "**/build": true,
-        "**/libs": true
+        "**/libs": true,
+        "**/3rd-libs": true,
+        "**/.cache": true,
+        "**/clangd-compiledb": true
     }
 }
