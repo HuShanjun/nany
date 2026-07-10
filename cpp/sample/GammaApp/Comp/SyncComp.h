@@ -4,16 +4,16 @@
 #include "CompHelp.h"
 #include "Help/ShmHelp.h"
 
-
-class SyncComp : public IComp {
+class SyncComp : public IComp
+{
 public:
     DEFINE_COMP_ID(SyncComp, EAppCompID);
 
     SyncComp();
     ~SyncComp();
 
-    void Init() override;
-    void UnInit() override;
+    void OnStarted() override {}
+    void OnQuit() override {}
 
     void UpdateShmData(const CDataContainer *pContainter, void *pData, uint32 nOffset);
     void SynSelfData(CDataContainer *pDataObserver, int64 _DataUUID, uint16 _nTableID,

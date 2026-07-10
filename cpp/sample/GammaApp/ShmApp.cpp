@@ -1,7 +1,7 @@
 #include "ShmApp.h"
 #include "GammaApp/CBaseApp.h"
 #include "GammaCommon/CPathMgr.h"
-#include "GammaCommon/toml.hpp"
+#include "toml++/toml.hpp"
 #include "Net/ConnFromClient.h"
 
 #include <iostream>
@@ -20,6 +20,8 @@ bool CShmApp::Init(int32 nArg, const char **szCmdLine) {
     m_pCharDataMgr = new CCharDataMgr();
     m_pCharDataMgr->OnInit();
     m_pCharDataMgr->Start();
+
+    GammaNote << LogHeader()<<" Init success" << std::endl;
     return true;
 }
 
@@ -90,7 +92,12 @@ uint8 CShmApp::GetDumpLevel() {
     return *m_AppConfig["AppSetting"]["DumpLevel"].value<uint8>();
 }
 
-void CShmApp::OnStarted()
-{
-    m_pConnMgr->StartService("127.0.0.1", 1234, GET_CLASS_ID( ConnFromClient ), eConnType_TCP_Raw);
+void CShmApp::OnStarted() {
+    m_pConnMgr->StartService("127.0.0.1", 1234, GET_CLASS_ID(ConnFromClient), eConnType_TCP_Raw);
+}
+
+void CShmApp::OnCheckQuit() {
+    delete m_pCharDataMgr;
+    m_pCharDataMgr = nullptr;
+    CBaseApp::OnCheckQuit();
 }

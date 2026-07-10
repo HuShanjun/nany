@@ -6,7 +6,10 @@
 
 namespace Gamma
 {
-	enum { eCR_Again = 0, eCR_Error = -1 };
+	enum class ECheckResult {
+		 eCR_Again = 0,  // 消息不完整，需要再次监察
+		 eCR_Error = -1  // 消息错误，需要丢弃
+	};
 
 	template<typename DispatchClass, 
 		typename IdType_t, 
@@ -20,9 +23,10 @@ namespace Gamma
 		typedef size_t (*MsgCheckFun_t)( DispatchClass* pClass, const void*, size_t );
 		typedef void   (DispatchClass::*MsgProcessFun_t)		( const MsgBaseType*, size_t );
 
-		class CMsgFunction : public std::pair<MsgCheckFun_t,MsgProcessFun_t>
+		struct CMsgFunction
 		{ 
-		public:
+			MsgCheckFun_t pCheckFun;
+			MsgProcessFun_t pProcessFun;
 			size_t		nHeadSize;
 			const char* szName;
 		};
@@ -40,20 +44,22 @@ namespace Gamma
 
 		MsgCheckFun_t GetCheckFun( size_t nIndex )
 		{
-			return GetMsgFunction()[nIndex].first;
+			return GetMsgFunction()[nIndex].pCheckFun;
 		}
 
 		MsgProcessFun_t GetProcessFun( size_t nIndex )
 		{
-			return GetMsgFunction()[nIndex].second;
+			return GetMsgFunction()[nIndex].pProcessFun;
 		}
 
 	public:
 		enum { eMaxRecivesize = 4 * 4096 * 4096 };
 
 		TDispatch( uint32_t nMaxLen = INVALID_32BITID );
+
 		template<typename ClassType, typename MsgType>
 		static void	RegistProcessFun( void (ClassType::*pMsgProcessFun)( const MsgType*, size_t ) );
+		
 		size_t		Dispatch( const void* pData, size_t nSize );
 	};
 

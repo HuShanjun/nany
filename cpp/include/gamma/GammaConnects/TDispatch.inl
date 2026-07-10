@@ -1,4 +1,5 @@
-﻿
+﻿#include "GammaConnects/TDispatch.h"
+
 namespace Gamma
 {	
 	template<typename DispatchClass, typename MsgClass>
@@ -6,16 +7,16 @@ namespace Gamma
 	{
 		typedef DispatchClass CDispatchClass;
 		if( nSize < MsgClass::GetHeaderSize() )
-			return (size_t)eCR_Again;
+			return (size_t)ECheckResult::eCR_Again;
 
 		const MsgClass* pMsg = static_cast<const MsgClass*>(pData);
 		size_t nExtraSize = pMsg->GetExtraSize( nSize );
 		if( nExtraSize >= CDispatchClass::eMaxRecivesize )
-			return (size_t)eCR_Error;
+			return (size_t)ECheckResult::eCR_Error;
 
 		size_t nCmdSize =  nExtraSize + MsgClass::GetHeaderSize();//--?2014年9月25日19:40:54
 		if( nCmdSize > nSize )
-			return (size_t)eCR_Again;
+			return (size_t)ECheckResult::eCR_Again;
 		return nCmdSize;
 	}
 
@@ -47,10 +48,10 @@ namespace Gamma
 			}
 
 			size_t nCheckSize = ( *pCheckFun )( pDispatchClass, pBuf, nSize );
-			if( nCheckSize == eCR_Again )
+			if( nCheckSize == (size_t)ECheckResult::eCR_Again )
 				return nUseSize;
 
-			if( nCheckSize == eCR_Error )
+			if( nCheckSize == (size_t)ECheckResult::eCR_Error )
 			{
 				GammaLog << "Dispatch error:The net package error:" << (uint32_t)pMsg->GetId() << std::endl;
 				GammaThrow ( "The net package error!" );
@@ -73,8 +74,8 @@ namespace Gamma
 		return nUseSize;
 	}
 
-	template<typename DispatchClass, typename IdType_t, typename SubClass, typename MsgBaseType>
-	template<typename ClassType, typename MsgType>
+	template<typename DispatchClass, typename IdType_t, typename SubClass, typename MsgBaseType>  // class 模板参数
+	template<typename ClassType, typename MsgType> // 函数模板参数
 	void TDispatch<DispatchClass, IdType_t, SubClass, MsgBaseType>::RegistProcessFun
 		( void (ClassType::*pMsgProcessFun)( const MsgType*, size_t ) )
 	{
@@ -82,8 +83,8 @@ namespace Gamma
 		if( MsgType::GetIdByType() >= GetMsgFunction().size() )
 			GetMsgFunction().resize( MsgType::GetIdByType() + 1 );
 
-		GetMsgFunction()[MsgType::GetIdByType()].first = &CheckMsg<CDispatchClass, MsgType>;
-		GetMsgFunction()[MsgType::GetIdByType()].second = (MsgProcessFun_t)pMsgProcessFun;
+		GetMsgFunction()[MsgType::GetIdByType()].pCheckFun = &CheckMsg<CDispatchClass, MsgType>;
+		GetMsgFunction()[MsgType::GetIdByType()].pProcessFun = (MsgProcessFun_t)pMsgProcessFun;
 		GetMsgFunction()[MsgType::GetIdByType()].szName = MsgType::GetName();
 		GetMsgFunction()[MsgType::GetIdByType()].nHeadSize = sizeof( MsgType );
 	}

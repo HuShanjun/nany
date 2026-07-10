@@ -102,7 +102,7 @@ namespace Gamma
 	
 	CWebConnection::MsgCheckFun_t CWebConnection::GetCheckFun( size_t nIndex )
 	{
-		struct __{ static size_t Check( CWebConnection*, const void*, size_t ){ return eCR_Again; } };
+		struct __{ static size_t Check( CWebConnection*, const void*, size_t ){ return (size_t)ECheckResult::eCR_Again; } };
 		if( !IsMsgDispatchEnable() )
 			return &__::Check;
 		return CWebConnBase::GetCheckFun( nIndex );

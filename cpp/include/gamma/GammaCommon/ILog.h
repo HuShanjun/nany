@@ -9,6 +9,7 @@
 // 4、Log文件格式如下：文件名关键字_年-月-日-大小自动切换序.标识符.log"
 //====================================================================================
 #include "GammaCommon/GammaCommonType.h"
+#include <source_location>
 #include <stdarg.h>
 #include <limits>
 #include <map>
@@ -16,6 +17,8 @@
 #include <iosfwd>
 #include <iomanip>
 #include <format>
+#include <source_location>
+#include <filesystem>
 
 #define LOG_TOTAL_LENGTH	1024
 #define LOG_FILE_MAXLENG	1024*1024*10
@@ -25,8 +28,8 @@ namespace Gamma
 	enum ELogLevel
 	{
 		eLL_Note = 1,
-		eLL_Warn = 2,
-		eLL_Info = 3,
+		eLL_Info = 2,
+		eLL_Warn = 3,
 		eLL_Error = 4,
 	};
 	enum ELogPathType
@@ -83,31 +86,36 @@ namespace Gamma
 	GAMMA_COMMON_API int32_t			ReadFileFromConsole(const char* szFileName, int nStartPos, char* szBuffer, int nSize);
 	GAMMA_COMMON_API void			SetLogLevel(uint32_t nLevel);
 
+	inline std::string LogHeader(const std::source_location& location = std::source_location::current()){
+		std::string file_name = std::filesystem::path(location.file_name()).filename().string();
+		return std::format("[{}:{}][{}] ", file_name, location.line(), location.function_name());
+	}
+
 // 新日志接口 nLevel为日志级别枚举ELogLevel
 	GAMMA_COMMON_API void			GammaPrint(ELogLevel nLevel, const char* szFormat, ...);
 
-	#define GammaNote				( Gamma::GetLogStream(1) )
-	#define GammaWarn				( Gamma::GetLogStream(2) )
-	#define GammaInfo				( Gamma::GetLogStream(3) )
-	#define GammaError				( Gamma::GetLogStream(4) )
+	#define GammaNote				( Gamma::GetLogStream(Gamma::ELogLevel::eLL_Note)  )
+	#define GammaWarn				( Gamma::GetLogStream(Gamma::ELogLevel::eLL_Warn)  )
+	#define GammaInfo				( Gamma::GetLogStream(Gamma::ELogLevel::eLL_Info)  )
+	#define GammaError				( Gamma::GetLogStream(Gamma::ELogLevel::eLL_Error) )	
 
 	template<typename ...Args>
-	void LogNote(std::format_string<Args...> fmt, Args&&... args)
+	inline void LogNote(std::format_string<Args...> fmt, Args&&... args)
 	{
 		GammaNote << std::format(fmt, std::forward<Args>(args)...);
 	}
 	template<typename ...Args>
-	void LogWarn(std::format_string<Args...> fmt, Args&&... args)
+	inline void LogWarn(std::format_string<Args...> fmt, Args&&... args)
 	{
 		GammaWarn << std::format(fmt, std::forward<Args>(args)...);
 	}
 	template<typename ...Args>
-	void LogInfo(std::format_string<Args...> fmt, Args&&... args)
+	inline void LogInfo(std::format_string<Args...> fmt, Args&&... args)
 	{
 		GammaInfo << std::format(fmt, std::forward<Args>(args)...);
 	}
 	template<typename ...Args>
-	void LogError(std::format_string<Args...> fmt, Args&&... args)
+	inline void LogError(std::format_string<Args...> fmt, Args&&... args)
 	{
 		GammaError << std::format(fmt, std::forward<Args>(args)...);
 	}
@@ -120,3 +128,54 @@ namespace Gamma
 	#define GammaErr				( Gamma::PrintStack( 256, __LINE__, Gamma::GetErrStream() ), Gamma::GetErrStream() )
 #endif
 }
+
+namespace Log {
+	template <typename ...Args>
+	inline void Note(std::format_string<Args...> fmt, Args&&... args)
+	{
+		GammaInfo << std::format(fmt, std::forward<Args>(args)...);
+	}
+
+	template <typename ...Args>
+	inline void Warn(std::format_string<Args...> fmt, Args&&... args)
+	{
+		GammaWarn << std::format(fmt, std::forward<Args>(args)...);
+	}
+
+	template <typename ...Args>
+	inline void Info(std::format_string<Args...> fmt, Args&&... args)
+	{
+		GammaInfo << std::format(fmt, std::forward<Args>(args)...);
+	}
+
+	template <typename ...Args>
+	inline void Error(std::format_string<Args...> fmt, Args&&... args)
+	{
+		GammaError << std::format(fmt, std::forward<Args>(args)...);
+	}
+
+	template <typename ...Args>
+	inline void Note1(Args&&... args)
+	{
+		(GammaNote << ... << std::forward<Args>(args));
+	}
+	
+	template <typename ...Args>
+	inline void Info1(Args&&... args)
+	{
+		(GammaInfo << ... << std::forward<Args>(args));
+	}
+
+	template <typename ...Args>
+	inline void Warn1(Args&&... args)
+	{
+		(GammaWarn << ... << std::forward<Args>(args));
+	}
+
+	template <typename ...Args>
+	inline void Error1(Args&&... args)
+	{
+		(GammaError << ... << std::forward<Args>(args));
+	}
+
+};

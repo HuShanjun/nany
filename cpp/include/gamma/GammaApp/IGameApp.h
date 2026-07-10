@@ -81,10 +81,6 @@ inline T *IGameApp::AddComp(Args &&...args) {
     return static_cast<T *>(pComp);
 }
 
-template <typename T>
-inline T *IGameApp::GetComp() {
-    return dynamic_cast<T *>(GetComp(T::GetID()));
-}
 
 IGameAppPtr GetGameApp();
 
@@ -92,6 +88,12 @@ template <typename T>
 CRefObject<T> GetGameApp() {
     return dynamic_cast<T *>(GetGameApp().get());
 }
+
+template <typename T>
+inline T *IGameApp::GetComp() {
+    return dynamic_cast<T *>(GetComp(T::GetID()));
+}
+
 
 template <typename T>
 T* GetComp(){

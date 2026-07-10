@@ -24,6 +24,7 @@ public:
     virtual bool IsShowConsole() override;
     virtual bool IsOpenLogFile() override;
     virtual void OnStarted() override;
+    virtual void OnCheckQuit() override;
 
     CCharDataMgr* GetCharDataMgr() { return m_pCharDataMgr; }
 

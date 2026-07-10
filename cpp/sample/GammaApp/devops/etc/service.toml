@@ -1,0 +1,11 @@
+[Gate]
+LocalHost = "127.0.0.1"
+LocalPort = 10000
+RemoteHost = "127.0.0.1"
+RemotePort = 10000
+
+[Login]
+LocalHost = "127.0.0.1"
+LocalPort = 10001
+RemoteHost = "127.0.0.1"
+RemotePort = 10001

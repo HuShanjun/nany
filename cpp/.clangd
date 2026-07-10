@@ -1,2 +1,12 @@
 CompileFlags:
-  CompilationDatabase: clangd-compiledb
+  Add:
+    - -std=c++23
+  CompilationDatabase: build/linux
+
+---
+If:
+  PathMatch: include/Interface/.*\.h$
+CompileFlags:
+  Add:
+    - -xc++-header
+    - -std=c++23

@@ -33,7 +33,7 @@ AllowShortBlocksOnASingleLine: true
 AllowShortCaseLabelsOnASingleLine: true
 
 # 允许短的函数放在同一行: None, InlineOnly(定义在类中), Empty(空函数), Inline(定义在类中，空函数), All
-AllowShortFunctionsOnASingleLine: None
+AllowShortFunctionsOnASingleLine: InlineOnly
 
 # 允许短的if语句保持在同一行
 AllowShortIfStatementsOnASingleLine: false
@@ -95,13 +95,13 @@ BreakBeforeBinaryOperators: NonAssignment
 #   Mozilla(除枚举、函数、记录定义，与Attach类似), Stroustrup(除函数定义、catch、else，与Attach类似), 
 #   Allman(总是在大括号前换行), GNU(总是在大括号前换行，并对于控制语句的大括号增加额外的缩进), WebKit(在函数前换行), Custom
 #   注：这里认为语句块也属于函数
-BreakBeforeBraces: Custom
+BreakBeforeBraces: Attach
 
 # 在三元运算符前换行
 BreakBeforeTernaryOperators: false
 
 # 在构造函数的初始化列表的冒号后换行
-BreakConstructorInitializers: AfterColon
+BreakConstructorInitializers: BeforeColon
 
 #BreakInheritanceList: AfterColon
 
@@ -113,7 +113,7 @@ ColumnLimit: 100
 CompactNamespaces: true
 
 # 构造函数的初始化列表要么都在同一行，要么都各自一行
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
 
 # 构造函数的初始化列表的缩进宽度
 ConstructorInitializerIndentWidth: 4

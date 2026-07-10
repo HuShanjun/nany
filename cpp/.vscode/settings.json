@@ -1,12 +1,5 @@
 {
-    "clangd.fallbackFlags": [
-        "-std=c++20",
-        "-Wall",
-        "-I${workspaceFolder}/include",
-        "-I${workspaceFolder}/3rd-libs/lua/inc",
-        "-I${workspaceFolder}/3rd-libs/msvc/x64-windows-static-md/include",
-        // "-I${workspaceFolder}/3rd-libs/linux/x64-linux/include"
-    ],
+    "clangd.path": "/home/hushanjun/download/clangd_22.1.6/bin/clangd",
     "clangd.arguments": [
         "--compile-commands-dir=${workspaceFolder}/build/linux"
     ],
@@ -16,6 +9,7 @@
         "**/libs": true,
         "**/3rd-libs": true,
         "**/.cache": true,
+        "**/log": true,
         "**/clangd-compiledb": true
     }
 }

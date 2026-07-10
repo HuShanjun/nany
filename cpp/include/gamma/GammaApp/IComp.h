@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef>
 #include <cstdint>
 #include <vector>
 
@@ -20,14 +19,16 @@ public:
     IComp &operator=(IComp &&) = delete;
     virtual ~IComp() {};
 
+    virtual void OnInit() = 0;
+    virtual void OnCleanup() = 0;
+
     virtual void OnStarted() = 0;
-    virtual void Clearup() = 0;
+    virtual void OnQuit() = 0;
 };
 
 class CompMgr {
 public:
-    CompMgr() {
-    }
+    CompMgr() {}
 
     virtual ~CompMgr() {
         for (auto pComp : m_vecComp) {
@@ -76,6 +77,22 @@ public:
         return dynamic_cast<T *>(GetComp(T::GetID()));
     }
 
+    void OnInit() {
+        for (auto pComp : m_vecComp) {
+            if (pComp) {
+                pComp->OnInit();
+            }
+        }
+    }
+
+    void OnCleanup() {
+        for (auto pComp : m_vecComp) {
+            if (pComp) {
+                pComp->OnCleanup();
+            }
+        }
+    }
+
     void OnStarted() {
         for (auto pComp : m_vecComp) {
             if (pComp) {
@@ -84,10 +101,10 @@ public:
         }
     }
 
-    void Clearup() {
+    void OnQuit() {
         for (auto pComp : m_vecComp) {
             if (pComp) {
-                pComp->Clearup();
+                pComp->OnQuit();
             }
         }
     }

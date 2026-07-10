@@ -1,0 +1,259 @@
+# =========================================================
+# 基础风格与语言
+# =========================================================
+# 基于 LLVM 风格，但我们会强制改成 Allman（大括号独占一行）
+BasedOnStyle: LLVM
+Language: Cpp
+
+# =========================================================
+# 缩进与空格
+# =========================================================
+# 访问修饰符（public/private/protected）向左偏移 4 格
+AccessModifierOffset: -4
+
+# 对齐圆括号后的内容
+AlignAfterOpenBracket: Align
+
+# 不对连续的赋值或声明做特殊对齐（避免 diff 噪音）
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+
+# 转义换行符 '\' 左对齐
+AlignEscapedNewlines: Left
+
+# 操作符对齐
+AlignOperands: true
+
+# 尾部注释对齐
+AlignTrailingComments: true
+
+# =========================================================
+# 函数参数 / 构造函数初始化列表
+# =========================================================
+# 函数参数 / 构造函数初始化列表 / 函数声明
+# 不允许所有参数挤在一行
+AllowAllArgumentsOnNextLine: true
+AllowAllConstructorInitializersOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+
+# 禁止短代码块、case、函数、if、循环被压缩成一行
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+# 返回值后不强制换行
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+
+# 多行字符串前强制换行
+AlwaysBreakBeforeMultilineStrings: true
+
+# 模板声明始终换行
+AlwaysBreakTemplateDeclarations: Yes
+
+# 参数打包（关闭，保证每个参数一行）
+BinPackArguments: false
+BinPackParameters: false
+
+# =========================================================
+# 大括号风格（Allman / BSD）
+# =========================================================
+BreakBeforeBraces: Allman
+
+BraceWrapping:
+  # 类 / 结构体 / 枚举 / 联合 / 命名空间 / 函数后大括号换行
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+
+  # catch / else 前大括号换行
+  BeforeCatch: true
+  BeforeElse: true
+
+  # 不缩进大括号本身
+  IndentBraces: false
+
+  # 空函数 / 空结构体 / 空命名空间不拆开
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+
+# =========================================================
+# 操作符与换行
+# =========================================================
+# 二元操作符前不换行
+BreakBeforeBinaryOperators: None
+
+# 继承冒号前换行
+BreakBeforeInheritanceComma: true
+
+# 三目运算符前换行
+BreakBeforeTernaryOperators: true
+
+# 构造函数初始化列表在冒号前换行（你这个风格的关键）
+BreakConstructorInitializers: BeforeColon
+BreakInheritanceList: BeforeColon
+
+# 字符串字面量允许断行
+BreakStringLiterals: true
+
+# =========================================================
+# 行宽限制
+# =========================================================
+# 每行最大字符数（你要求 <= 80）
+ColumnLimit: 80
+
+# =========================================================
+# 构造函数初始化列表（核心）
+# =========================================================
+# 每个初始化项强制单独一行（关键）
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+
+# 初始化列表缩进 4 格
+ConstructorInitializerIndentWidth: 4
+
+# 续行缩进 4 格
+ContinuationIndentWidth: 4
+
+# =========================================================
+# 指针 / 引用
+# =========================================================
+# 不自动推导指针对齐方式
+DerivePointerAlignment: false
+
+# 指针靠右（Type* name）
+PointerAlignment: Right
+
+# 引用靠左（Type& name）
+ReferenceAlignment: Left
+
+# =========================================================
+# 命名空间与宏
+# =========================================================
+# 不压缩命名空间
+CompactNamespaces: false
+
+# 自动修复命名空间结尾注释
+FixNamespaceComments: true
+
+# 宏列表（foreach 类）
+ForEachMacros:
+  - foreach
+  - Q_FOREACH
+  - BOOST_FOREACH
+
+# =========================================================
+# Include 排序
+# =========================================================
+IncludeBlocks: Preserve
+IncludeCategories:
+  - Regex: "^<(.*)>"
+    Priority: 2
+  - Regex: '^"(.*)"'
+    Priority: 1
+IncludeIsMainRegex: "(Test|Tests)?$"
+
+# =========================================================
+# case / switch / if / for
+# =========================================================
+# case 标签缩进
+IndentCaseLabels: true
+
+# 预处理指令不缩进
+IndentPPDirectives: None
+
+# 缩进宽度
+IndentWidth: 4
+
+# 函数名后换行（你这个风格）
+IndentWrappedFunctionNames: true
+
+# =========================================================
+# 空行控制
+# =========================================================
+# 块开头不保留多余空行
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# 最多保留 1 个连续空行
+MaxEmptyLinesToKeep: 1
+
+# 命名空间不额外缩进
+NamespaceIndentation: None
+
+# =========================================================
+# 惩罚权重（影响换行决策）
+# =========================================================
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 60
+
+# =========================================================
+# 空格细节
+# =========================================================
+# C 风格强转后不加空格
+SpaceAfterCStyleCast: false
+
+# template 关键字后加空格
+SpaceAfterTemplateKeyword: true
+
+# 赋值前加空格
+SpaceBeforeAssignmentOperators: true
+
+# C++11 初始化列表前不加空格
+SpaceBeforeCpp11BracedList: false
+
+# 构造函数初始化列表冒号前加空格
+SpaceBeforeCtorInitializerColon: true
+
+# 继承冒号前加空格
+SpaceBeforeInheritanceColon: true
+
+# 控制语句（if/for/while）前加空格
+SpaceBeforeParens: ControlStatements
+
+# 范围 for 冒号前加空格
+SpaceBeforeRangeBasedForLoopColon: true
+
+# 空括号里不加空格
+SpaceInEmptyParentheses: false
+
+# 尾部注释前至少 2 个空格
+SpacesBeforeTrailingComments: 2
+
+# 尖括号里不加空格
+SpacesInAngles: false
+
+# 容器字面量里加空格
+SpacesInContainerLiterals: true
+
+# C 风格强转括号里不加空格
+SpacesInCStyleCastParentheses: false
+
+# 普通括号里不加空格
+SpacesInParentheses: false
+
+# 方括号里不加空格
+SpacesInSquareBrackets: false
+
+# =========================================================
+# 标准与 Tab
+# =========================================================
+# C++11 及以上
+Standard: Cpp11
+
+# Tab 宽度
+TabWidth: 4
+
+# 禁止使用 Tab，全部用空格
+UseTab: Never

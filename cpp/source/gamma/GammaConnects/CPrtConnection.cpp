@@ -3,6 +3,7 @@
 #include "GammaCommon/CPkgFile.h"
 #include "CConnectionMgr.h"
 #include "CPrtConnection.h"
+#include "GammaConnects/TDispatch.h"
 #include "GammaPrt.h"
 #include "ikcp.h"
 
@@ -126,7 +127,7 @@ namespace Gamma
 
 	CPrtConnection::MsgCheckFun_t CPrtConnection::GetCheckFun( size_t nIndex )
 	{
-		struct __{ static size_t Check( CPrtConnection*, const void*, size_t ){ return eCR_Again; } };
+		struct __{ static size_t Check( CPrtConnection*, const void*, size_t ){ return (size_t)ECheckResult::eCR_Again; } };
 		if( !IsMsgDispatchEnable() )
 			return &__::Check;
 		return TDispatch<CPrtConnection, uint8_t>::GetCheckFun( nIndex );
@@ -146,7 +147,7 @@ namespace Gamma
 			static size_t CheckMsg( CPrtConnection* pClass, const void* pData, size_t nSize )
 			{
 				if( nSize < CGC_ShellMsg8::GetHeaderSize() )
-					return (size_t)eCR_Again;
+					return (size_t)ECheckResult::eCR_Again;
 
 				const CGC_ShellMsg8* pMsg = static_cast<const CGC_ShellMsg8*>(pData);
 				size_t nExtraSize = pMsg->GetExtraSize( nSize );
@@ -160,11 +161,11 @@ namespace Gamma
 				}
 
 				if( nExtraSize >= CPrtConnection::eMaxRecivesize )
-					return (size_t)eCR_Error;
+					return (size_t)ECheckResult::eCR_Error;
 
 				size_t nCmdSize = nExtraSize + CGC_ShellMsg8::GetHeaderSize();
 				if( nCmdSize > nSize )
-					return (size_t)eCR_Again;
+					return (size_t)ECheckResult::eCR_Again;
 				return nCmdSize;
 			}
 		};
@@ -174,8 +175,8 @@ namespace Gamma
 		CGC_ShellMsg8Fun funShellMsg = &CPrtConnection::OnNetMsg<CGC_ShellMsg8>;
 		for( uint8_t i = 0; i < eGC_ShellMsg32; i++ )
 		{
-			vecMsgFun[i].first = &SCheckMsg8::CheckMsg;
-			vecMsgFun[i].second = (MsgProcessFun_t)funShellMsg;
+			vecMsgFun[i].pCheckFun = &SCheckMsg8::CheckMsg;
+			vecMsgFun[i].pProcessFun = (MsgProcessFun_t)funShellMsg;
 			vecMsgFun[i].szName = CGC_ShellMsg8::GetName();
 			vecMsgFun[i].nHeadSize = sizeof( CGC_ShellMsg8 );
 		}

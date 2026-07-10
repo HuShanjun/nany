@@ -53,6 +53,7 @@ set(THIRD_PARTY_PATH ${CMAKE_SOURCE_DIR}/3rd-src)
 #include 路径
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/gamma)
+include_directories(${THIRD_PARTY_PATH})
 include_directories(${THIRD_PARTY_PATH}/lua/inc)
 
 # 设置PATH
@@ -88,7 +89,7 @@ add_subdirectory(source/gamma/GammaConnects)
 add_subdirectory(source/gamma/GammaScript)
 add_subdirectory(source/gamma/GammaShm)
 add_subdirectory(source/gamma/GammaApp)
-
+add_subdirectory(source/GameApp)
 
 add_subdirectory(sample/main)
 # add_subdirectory(sample/GammaShm)
