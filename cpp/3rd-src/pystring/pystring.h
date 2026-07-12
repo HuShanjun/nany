@@ -6,8 +6,6 @@
 #ifndef INCLUDED_PYSTRING_H
 #define INCLUDED_PYSTRING_H
 
-#define PYSTRING_HEADER_ONLY
-
 #ifdef PYSTRING_HEADER_ONLY
 #define PYSTRING_INLINE inline
 #else

@@ -133,25 +133,25 @@ namespace Log {
 	template <typename ...Args>
 	inline void Note(std::format_string<Args...> fmt, Args&&... args)
 	{
-		GammaInfo << std::format(fmt, std::forward<Args>(args)...);
+		GammaInfo << std::format(fmt, std::forward<Args>(args)...) << std::endl;
 	}
 
 	template <typename ...Args>
 	inline void Warn(std::format_string<Args...> fmt, Args&&... args)
 	{
-		GammaWarn << std::format(fmt, std::forward<Args>(args)...);
+		GammaWarn << std::format(fmt, std::forward<Args>(args)...) << std::endl;
 	}
 
 	template <typename ...Args>
 	inline void Info(std::format_string<Args...> fmt, Args&&... args)
 	{
-		GammaInfo << std::format(fmt, std::forward<Args>(args)...);
+		GammaInfo << std::format(fmt, std::forward<Args>(args)...) << std::endl;
 	}
 
 	template <typename ...Args>
 	inline void Error(std::format_string<Args...> fmt, Args&&... args)
 	{
-		GammaError << std::format(fmt, std::forward<Args>(args)...);
+		GammaError << std::format(fmt, std::forward<Args>(args)...) << std::endl;
 	}
 
 	template <typename ...Args>

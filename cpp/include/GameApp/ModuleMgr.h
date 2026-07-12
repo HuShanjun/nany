@@ -4,7 +4,7 @@
 #include "GammaCommon/CTinyTimer.h"
 #include "Interface/IConsummer.h"
 #include "GammaCommon/TSingleton.h"
-#include "GammaApp/IGameApp.h"
+#include "Interface/IGameApp.h"
 #include <string>
 using namespace Gamma;
 

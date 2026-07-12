@@ -2,7 +2,7 @@
 #include "DataDefine.h"
 #include "GammaCommon/GammaCpp.h"
 #include "GammaCommon/CPkgFile.h"
-#include "GammaApp/IGameApp.h"
+#include "Interface/IGameApp.h"
 
 extern IGameAppPtr g_pApp;
 

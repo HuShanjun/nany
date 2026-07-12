@@ -1,15 +1,11 @@
-﻿#include "GammaApp/ModuleMgr.h"
-#include "GammaApp/IGameApp.h"
+﻿#include "GameApp/ModuleMgr.h"
+#include "Interface/IGameApp.h"
 #include "GammaCommon/CFileUtil.h"
 #include "GammaCommon/CThread.h"
 #include "GammaCommon/ILog.h"
-#include "pystring/pystring.h"
 #include "toml++/toml.hpp"
 #include <format>
 
-using namespace pystring;
-
-extern IGameAppPtr g_pApp;
 
 typedef void (*pInitDllServant)(IGameAppPtr);
 typedef void (*pDllGetConsummer)(IConsummerPtr &);
@@ -43,10 +39,11 @@ CModuleMgr::~CModuleMgr() {
 }
 
 bool CModuleMgr::LoadDll(const char *strSettings, const std::string &strTomlFile) {
-    if (g_pApp == NULL) {
+    auto pGameApp = GetGameApp();
+    if (pGameApp == nullptr) {
         return false;
     }
-    g_pApp->Register(&m_Tick, FRAME_INTERVAL, INVALID_16BITID);
+    pGameApp->Register(&m_Tick, FRAME_INTERVAL, INVALID_16BITID);
     m_strSession = strSettings;
     m_strTomlFile = strTomlFile;
 
@@ -156,7 +153,7 @@ bool CModuleMgr::LoadDll(CDllInfoPtr &pDllInfo) {
     }
 
     pGetConsummer(pDllInfo->m_pConsummer);
-    pInitServant(g_pApp.get());
+    pInitServant(GetGameApp().get());
     pDllInfo->m_pFile = pDynamicFile;
     if (pDllInfo->m_pConsummer->GetModuleID() != pDllInfo->m_nModuleId) {
         ThrowException<CCException>("module id not match predefined [%s]", strDllName.c_str());

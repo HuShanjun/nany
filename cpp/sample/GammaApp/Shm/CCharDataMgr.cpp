@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <format>
 
-#include "GammaApp/IGameApp.h"
+#include "Interface/IGameApp.h"
 #include "GammaCommon/CPathMgr.h"
 #include "GammaCommon/CPkgFile.h"
 #include "GammaCommon/CThread.h"

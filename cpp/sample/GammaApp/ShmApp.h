@@ -6,7 +6,7 @@
 
 namespace fs = std::filesystem;
 
-class CShmApp : public Gamma::CBaseApp
+class CShmApp : public Gamma::CBaseApp , public IGameApp
 {
     using path = std::filesystem::path;
 public:
@@ -27,6 +27,9 @@ public:
     virtual void OnCheckQuit() override;
 
     CCharDataMgr* GetCharDataMgr() { return m_pCharDataMgr; }
+
+    bool OnInit() override {return true;};
+    bool OnUnInit() override {return true;};
 
 private:
     fs::path m_devopsPath;

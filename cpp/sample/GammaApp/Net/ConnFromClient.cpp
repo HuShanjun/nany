@@ -1,6 +1,6 @@
 #include "ConnFromClient.h"
 #include "GammaCommon/GammaHelp.h"
-#include "GammaCommon/pystring.h"
+#include "pystring/pystring.h"
 #include "TableData.gen/DataDefine.h"
 #include "ShmApp.h"
 #include <cstdint>

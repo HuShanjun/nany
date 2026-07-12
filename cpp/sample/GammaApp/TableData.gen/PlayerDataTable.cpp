@@ -2,7 +2,7 @@
 #include "TableData.Gen/PlayerDataTable.h"
 #include "Help/ShmHelp.h"
 #include "GammaCommon/GammaHelp.h"
-#include "GammaApp/IGameApp.h"
+#include "Interface/IGameApp.h"
 
 extern IGameAppPtr g_pApp;
 

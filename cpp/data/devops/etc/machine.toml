@@ -1,0 +1,96 @@
+[AppSetting]
+SingleFrameLog=0
+DumpLevel=1
+ShowConsole=1
+OpenLogFile=1
+InnerServer=0
+LogLevel=1
+
+[Script]
+type="lua"
+gc_interval=60000
+log_gc=1
+waitfordebug=0
+
+# server_type_id = server_id / 100
+# EServerType.center = 0
+# EServerType.login = 1
+# EServerType.Game = 2
+# EServerType.Gate = 3
+# EServerType.DBMain = 4
+
+# 组网方式
+# login -> center
+# login -> DBMain
+# game -> center
+# game -> DBMain
+# game -> game
+# gate -> center
+# gate -> game
+# center -> DBMain
+[Server.Center]
+type = "Center"
+ServerID = 0
+LocalHost = "127.0.0.1"
+LocalPort = 8006
+
+[Server.Login]
+type = "Login"
+ServerID = 100
+LocalHost = "127.0.0.1"
+LocalPort = 8007
+
+
+[Server.Game01]
+type = "Game"
+ServerID = 200
+PublicHost = "0.0.0.0"
+PublicPort = 8002
+LocalHost = "127.0.0.1"
+LocalPort = 8003
+
+[Server.Game02]
+type = "Game"
+ServerID = 201
+PublicHost = "0.0.0.0"
+PublicPort = 8004
+LocalHost = "127.0.0.1"
+LocalPort = 8005
+
+[Server.Gate01]
+type = "Gate"
+ServerID = 300
+LocalHost = "127.0.0.1"
+LocalPort = 8008
+PublicHost = "0.0.0.0"
+PublicPort = 8009
+
+[Server.Gate02]
+type = "Gate"
+ServerID = 301
+LocalHost = "127.0.0.1"
+LocalPort = 8010
+PublicHost = "0.0.0.0"
+PublicPort = 8011
+
+[Server.DBMain]
+type = "DBMain"
+ServerID = 400
+LocalHost = "127.0.0.1"
+LocalPort = 3306
+
+[DBMain]
+commitinterval = 1000
+thread = 2
+host = "127.0.0.1"
+port = 3306
+user = "root"
+pwd = 123456
+database = "sos"
+
+# 网络拓扑
+[NetTopology]
+Gate = ["Login", "Center", "Game"]
+Login = ["Center", "DBMain"]
+Center = ["DBMain"]
+Game = ["Center", "DBMain", "Game"]

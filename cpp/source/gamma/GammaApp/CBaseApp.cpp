@@ -1,8 +1,8 @@
 ﻿
 #include "GammaApp/CBaseApp.h"
 
-#include "GammaApp/IComp.h"
-#include "GammaApp/IGameApp.h"
+#include "Interface/IComp.h"
+#include "Interface/IGameApp.h"
 #include "GammaCommon/CGammaWindow.h"
 #include "GammaCommon/CPathMgr.h"
 #include "GammaCommon/CPkgFile.h"
@@ -11,7 +11,7 @@
 #include "GammaCommon/GammaProfile.h"
 #include "GammaCommon/GammaSignal.h"
 #include "GammaCommon/ILog.h"
-#include "GammaCommon/cxxopts.hpp"
+#include "cxxopts/cxxopts.hpp"
 
 #include <assert.h>
 #include <cstdint>
@@ -30,10 +30,9 @@
 #include <direct.h>
 #endif
 
-IGameAppPtr g_pApp = nullptr;
-
 namespace Gamma {
 static CBaseApp *ls_pInst = NULL;
+IGameAppPtr g_pApp = nullptr;
 
 using namespace std;
 CBaseApp::CBaseApp(const char *szConfigFile, uint32 nMaxLoopInterval, bool bLogFile,
@@ -53,13 +52,15 @@ CBaseApp::CBaseApp(const char *szConfigFile, uint32 nMaxLoopInterval, bool bLogF
       m_nDumpLevel(bEnableDump) {
     GammaAst(!ls_pInst);
     ls_pInst = this;
-    g_pApp = this;
 }
 
 CBaseApp::~CBaseApp() {
     ls_pInst = NULL;
 }
 
+void CBaseApp::SetGameApp(IGameAppPtr pGameApp) {
+    g_pApp = pGameApp;
+}
 CBaseApp *CBaseApp::Inst() {
     return ls_pInst;
 }
@@ -70,17 +71,18 @@ bool CBaseApp::Init(int32 nArg, const char **szCmdLine) {
     InitPathConfig();
     LoadConfig();
     InitLog();
+    RegisterComp();
 
     m_pTickMgr = new CTickMgr(gammacstring("AppTick", true));
     // 切换到工程路径下
     CPathMgr::SetCurPath(m_strWorkPath.c_str());
     CreateConnMgr();
-    return true;
+    return OnInit();
 }
 
 int32 CBaseApp::UnInit() {
     // TODO: 实现UnInit
-    return 0;
+    return OnUnInit();
 }
 
 void CBaseApp::InitLog() {
@@ -280,6 +282,7 @@ void CBaseApp::OnQuit() {
 }
 
 void CBaseApp::Prepare() {
+    m_CompMgr.OnInit();
     GammaLog << "CBaseApp::OnPreStart() end......\t" << m_nLogicTime << endl;
     m_bStarted = true;
     m_CompMgr.OnStarted();
@@ -522,6 +525,7 @@ std::string CBaseApp::GetAppSetting(const char *szSection, const char *szKey) co
 }
 } // namespace Gamma
 
+
 IGameAppPtr GetGameApp() {
-    return CBaseApp::Inst();
+    return Gamma::g_pApp;
 }

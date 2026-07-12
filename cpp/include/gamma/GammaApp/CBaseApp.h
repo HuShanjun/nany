@@ -1,12 +1,13 @@
 ﻿#pragma once
-#include "GammaApp/IComp.h"
+#include "GammaCommon/CVirtualFun.h"
+#include "Interface/IComp.h"
 #include "GammaCommon/CGammaWindow.h"
 #include "GammaCommon/CDomXml.h"
 #include "GammaCommon/CVersion.h"
 #include "GammaCommon/CIniFile.h"
 #include "GammaCommon/CRefshare.h"
 #include "GammaConnects/IConnectionMgr.h"
-#include "GammaApp/IGameApp.h"
+#include "Interface/IGameApp.h"
 #include "cxxopts/cxxopts.hpp"
 #include "toml++/toml.hpp"
 #include <set>
@@ -34,7 +35,7 @@ namespace Gamma {
 
 #define BASE_FRAME_INTERVAL 33
 
-class GAMMA_FRAMEWORK_API CBaseApp : public IGameApp {
+class GAMMA_FRAMEWORK_API CBaseApp {
     typedef std::vector<gammacstring> CAppCmdList;
 
 protected:
@@ -101,6 +102,23 @@ protected:
 
     static void AppLog(const char *szLog, size_t nLen, uint32 nLevel);
     static void ErrLog(const char *szLog, size_t nLen);
+    
+    /* 具体实现类需要实现的接口 */
+    virtual void OnReady() = 0;
+    virtual void InitCmdLine(int argc, const char **argv) = 0;
+    virtual void LoadConfig() = 0;
+    virtual void InitPathConfig() = 0;
+    virtual void RegisterComp() = 0;
+    virtual uint32 GetLogLevel() = 0;
+    virtual uint8 GetDumpLevel() = 0;
+    virtual bool IsShowConsole() = 0;
+    virtual bool IsOpenLogFile() = 0;
+
+    virtual bool OnInit() = 0;
+    virtual bool OnUnInit() = 0;
+    /* 具体实现类需要实现的接口 */
+
+    void SetGameApp(IGameAppPtr pGameApp);
 
 public:
     static CBaseApp *Inst();
@@ -125,9 +143,9 @@ public:
     const char *GetModuleName() const { return m_strClassName.c_str(); }
     const char *GetProgressName() const { return m_strProgressName.c_str(); }
     CVersion GetShellVersion() const { return m_Version; }
-    int64 GetCurTime() const override { return m_nCurTime; }
-    uint32 GetCurFrame() const override { return m_nCurFrame; }
-    uint32 GetBaseCyc() const override { return 33; }
+    int64 GetCurTime() const { return m_nCurTime; }
+    uint32 GetCurFrame() const { return m_nCurFrame; }
+    uint32 GetBaseCyc() const { return 33; }
     bool IsQuit() const { return m_bQuit; }
     std::string GetExePath();
     std::string GetExeName();
@@ -144,25 +162,44 @@ public:
 
     void StopTick() { m_bStopTick = !m_bStopTick; }
 
-    void Register(CTick *pTick, uint32 uCyc, uint16 nTickID) override {
+    void Register(CTick *pTick, uint32 uCyc, uint16 nTickID) {
         Register(pTick, uCyc, uCyc, nTickID);
     }
-    void Register(CTick *pTick, uint32 nStart, uint32 uCyc, uint16 nTickID) override;
-    void UnRegister(CTick *pTick) override;
-    int64 GetCurTickTime() const override;
+    void Register(CTick *pTick, uint32 nStart, uint32 uCyc, uint16 nTickID);
+    void UnRegister(CTick *pTick);
+    int64 GetCurTickTime() const;
     void SetCurUpdateTime(uint32 nValue);
 
     void CreateConnMgr(uint32 nDisconnectTime = 30000);
-    virtual IConnectionMgr *GetConnMgr() const override { return m_pConnMgr; }
+    virtual IConnectionMgr *GetConnMgr() const { return m_pConnMgr; }
 
     /* 获取组件 */
-    IComp *GetComp(uint8_t nCompID) override;
-    IComp *AddComp(uint8_t nCompID, IComp *pComp) override;
-    void DelComp(uint8_t nCompID) override;
+    IComp *GetComp(uint8_t nCompID);
+    IComp *AddComp(uint8_t nCompID, IComp *pComp);
+    void DelComp(uint8_t nCompID);
+
+    template <typename T, typename... Args>
+    IComp *AddComp(Args &&...args);
+
+    template <typename T>
+    void DelComp();
 
     // 获取App配置
     bool HasAppSetting(const char *szSection, const char *szKey) const;
     int32 GetAppSettingInt(const char *szSection, const char *szKey) const;
     std::string GetAppSetting(const char *szSection, const char *szKey) const;
+    toml::table GetAppSettingTable(const char *szSection) const { return *m_AppConfig[szSection].as_table(); }
 };
+
+template <typename T>
+inline void CBaseApp::DelComp() {
+    DelComp(T::GetID());
+}
+
+template <typename T, typename... Args>
+inline IComp *CBaseApp::AddComp(Args &&...args) {
+    T* pComp = new T(std::forward<Args>(args)...);
+    return AddComp(T::GetID(), (IComp *)pComp);
+}
+
 } // namespace Gamma

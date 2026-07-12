@@ -3,9 +3,9 @@
 #include <cstdint>
 #include <vector>
 
-#define DEFINE_COMP_ID(name, EnumType)                                                             \
+#define DEFINE_COMP_ID(name, CompID)                                                             \
     static constexpr uint8_t GetID() {                                                             \
-        return static_cast<uint8_t>(EnumType::eACID_##name);                                       \
+        return static_cast<uint8_t>(CompID);                                       \
     }                                                                                              \
     static constexpr const char *GetName() {                                                       \
         return #name;                                                                              \
@@ -13,6 +13,7 @@
 
 class IComp {
 public:
+    IComp() = default;
     IComp(const IComp &) = delete;
     IComp(IComp &&) = delete;
     IComp &operator=(const IComp &) = delete;

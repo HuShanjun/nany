@@ -97,6 +97,6 @@ add_subdirectory(sample/GammaDatabase)
 add_subdirectory(sample/GammaMTDbs)
 add_subdirectory(sample/GammaNetwork)
 add_subdirectory(sample/GammaConnects)
-add_subdirectory(sample/GammaApp)
+# add_subdirectory(sample/GammaApp)
 
 

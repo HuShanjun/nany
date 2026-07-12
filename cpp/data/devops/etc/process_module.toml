@@ -1,0 +1,12 @@
+# module_name = [module_id, module_version]
+[Login]
+ModuleLogin = [10000, 1]
+
+[Game]
+ModuleGame = [20000, 1]
+
+[Center]
+ModuleCenter = [30000, 1]
+
+[Gate]
+ModuleGate = [40000, 1]

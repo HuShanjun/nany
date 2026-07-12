@@ -8,10 +8,13 @@
             "name": "Launch-cppdbg",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/bin/linux/Debug/GammaAppSample",
+            "program": "${workspaceRoot}/bin/linux/Debug/GameApp",
             "args": [
                 "-d",
-                "${workspaceRoot}/sample/GammaApp/devops"
+                "${workspaceRoot}/data/devops",
+                "-n",
+                "Game01",
+
             ],
             "cwd": "${workspaceRoot}"
         },

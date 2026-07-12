@@ -1,13 +1,13 @@
 #pragma once
 
-#include "GammaApp/IComp.h"
+#include "Interface/IComp.h"
 #include "CompHelp.h"
 #include "Help/ShmHelp.h"
 
 class SyncComp : public IComp
 {
 public:
-    DEFINE_COMP_ID(SyncComp, EAppCompID);
+    DEFINE_COMP_ID(SyncComp, EAppCompID::eACID_SyncComp);
 
     SyncComp();
     ~SyncComp();
