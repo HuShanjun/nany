@@ -6,7 +6,7 @@
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
                 "VCPKG_INSTALLED_DIR" : "${sourceDir}/3rd-libs/msvc",
-                "VCPKG_MANIFEST_DIR ": "${sourceDir}/vcpkg",
+                "VCPKG_MANIFEST_DIR": "${sourceDir}/vcpkg",
                 "VCPKG_TARGET_TRIPLET": "x64-windows-static-md"
             },
             "generator": "Visual Studio 17 2022",
@@ -26,7 +26,7 @@
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-                "VCPKG_MANIFEST_DIR ": "${sourceDir}/vcpkg",
+                "VCPKG_MANIFEST_DIR": "${sourceDir}/vcpkg",
                 "VCPKG_INSTALLED_DIR" : "${sourceDir}/3rd-libs/linux",
                 "VCPKG_TARGET_TRIPLET": "x64-linux"
             },
