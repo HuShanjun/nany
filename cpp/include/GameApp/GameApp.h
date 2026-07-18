@@ -34,9 +34,10 @@ public:
     virtual bool OnInit() override;
     virtual bool OnUnInit() override;
 
-    uint32 GetServerID() const { return m_nServerID; }
-    const std::string& GetServerName() const { return m_strServerName; }
-    const std::string& GetServerType() const { return m_strServerType; }
+    uint32 GetServerID() const override { return m_nServerID; }
+    const std::string& GetServerName() const override { return m_strServerName; }
+    const std::string& GetServerType() const override { return m_strServerType; }
+    const char* GetBinPath() override;
 
 private:
     bool LoadServerInfo();

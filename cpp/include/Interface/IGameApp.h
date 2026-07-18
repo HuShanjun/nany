@@ -9,6 +9,7 @@
 #include "IComp.h"
 #include <cstdint>
 #include <functional>
+#include <string>
 
 #define FRAME_INTERVAL 50
 #define FLOAT_CHECK_ZERO 0.000001f
@@ -41,6 +42,10 @@ public:
     virtual void UnRegister(CTick *pTick) = 0;
     virtual int64 GetCurTickTime() const = 0;
     virtual IConnectionMgr *GetConnMgr() const = 0;
+    virtual uint32 GetServerID() const = 0;
+    virtual const std::string& GetServerType() const = 0;
+    virtual const std::string& GetServerName() const = 0;
+    virtual const char* GetBinPath() = 0;
     /* CBaseApp 实现的接口, 外部业务需要访问 */
 };
 

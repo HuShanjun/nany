@@ -60,6 +60,12 @@ IConnectionMgr *CGameApp::GetConnMgr() const {
     return CBaseApp::GetConnMgr();
 }
 
+const char* CGameApp::GetBinPath() {
+    // GetExePath caches into CBaseApp::m_strBinPath
+    static_cast<void>(GetExePath());
+    return CBaseApp::GetBinPath();
+}
+
 void CGameApp::OnReady() {
 }
 

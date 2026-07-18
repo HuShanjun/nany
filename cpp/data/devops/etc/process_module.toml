@@ -10,3 +10,6 @@ ModuleCenter = [30000, 1]
 
 [Gate]
 ModuleGate = [40000, 1]
+
+[DBMain]
+ModuleDBMain = [50000, 1]
