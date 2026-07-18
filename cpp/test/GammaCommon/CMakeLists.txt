@@ -1,4 +1,4 @@
 gamma_add_gtest(test_GammaCommon
-  SOURCES test_GammaMath.cpp test_TempDir.cpp
+  SOURCES test_GammaMath.cpp test_TempDir.cpp test_Md5.cpp
   LIBS GammaCommon
 )
