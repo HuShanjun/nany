@@ -79,6 +79,7 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 
 # 源码版3rd目录
 add_subdirectory(3rd-src/lua)
+add_subdirectory(3rd-src/pystring)
 
 # 递归枚举目录下所有文件
 add_subdirectory(source/gamma/GammaCommon)
@@ -90,6 +91,12 @@ add_subdirectory(source/gamma/GammaScript)
 add_subdirectory(source/gamma/GammaShm)
 add_subdirectory(source/gamma/GammaApp)
 add_subdirectory(source/GameApp)
+
+option(NANY_BUILD_TESTS "Build unit/integration tests" ON)
+if(NANY_BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(test)
+endif()
 
 add_subdirectory(sample/main)
 # add_subdirectory(sample/GammaShm)

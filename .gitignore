@@ -49,3 +49,5 @@
 /cpp/sample/GammaApp/devops/log
 /cpp/sample/GammaApp/devops/shm
 /cpp/sample/GammaApp/devops/ShmApp/sample/GammaApp/devops/log/202607/*.log
+/cpp/data/devops/log
+/cpp/test/config/test.toml
