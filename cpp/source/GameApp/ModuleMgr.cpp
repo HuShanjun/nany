@@ -7,7 +7,7 @@
 #include <format>
 
 
-typedef void (*pInitDllServant)(IGameAppPtr);
+typedef void (*pInitDllServant)(IGameApp*);
 typedef void (*pDllGetConsummer)(IConsummerPtr &);
 
 CDllInfo::CDllInfo()

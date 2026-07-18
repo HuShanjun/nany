@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "toml++/toml.hpp"
+#include <cstdlib>
 #include <filesystem>
 
 namespace fs = std::filesystem;
