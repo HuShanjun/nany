@@ -1,12 +1,14 @@
 #pragma once
 
 #include "GameApp/GameAppHelp.h"
+#include "CGameConnFromClient.h"
 #include "GammaCommon/GammaTime.h"
 #include "Interface/INetComp.h"
 #include "GammaCommon/TGammaRBTree.h"
 #include "toml++/toml.hpp"
 #include "GammaNetwork/CAddress.h"
 
+#include <map>
 #include <set>
 #include <cstdint>
 #include <string>
@@ -32,10 +34,9 @@ struct SServerInfo {
 };
 
 class CGameConnServer;
-class CGameConnFromClient;
 
 typedef Gamma::TGammaRBTree<CGameConnServer> CGameConnServerTree;
-typedef Gamma::TGammaRBTree<CGameConnFromClient> CGameConnFromClientTree;
+typedef Gamma::TGammaRBTree<CClientConnectNode> CGameConnFromClientTree;
 typedef CGameConnServerTree::CGammaRBTreeNode CGameConnServerNode;
 typedef CGameConnFromClientTree::CGammaRBTreeNode CGameConnFromClientNode;
 
@@ -75,10 +76,11 @@ public:
     void SendMsgToServer(uint32_t nServerID, void* pData, size_t nSize) override {}
     void SendMsgToLogin(void* pData, size_t nSize) override {}
 
-private:
-    void OnReconnectTick();
     void AddServerConnect(CGameConnServer* pServerConn);
     void DelServerConnect(CGameConnServer* pServerConn);
+
+private:
+    void OnReconnectTick();
 
     void AddClientConnect(CGameConnFromClient* pFromClientConn);
     void DelClientConnect(CGameConnFromClient* pFromClientConn);
@@ -91,6 +93,7 @@ private:
     CServerTypeMap m_mapServerType;
     CNetCompTick m_ReconnectTick;
     std::map<uint16, CAddress> m_mapServers;
+    std::map<uint32, CGameConnServer*> m_mapServerConn;
     CGameConnServerTree m_treeServer;
     CGameConnFromClientTree m_treeFromClient;
     const toml::table m_ServerConfig;

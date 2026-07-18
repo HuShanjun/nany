@@ -1,13 +1,23 @@
 ﻿#include "CGameConnServer.h"
+#include "CNetComp.h"
 #include "GameApp/GameApp.h"
+#include "GameApp/ModuleMgr.h"
+#include "GammaApp/CBaseApp.h"
 
-// #include "ModuleMgr.h"
 // #include "ShellCommon/NetDefine.h"
 
 using namespace std;
 // extern CGameAppPtr g_pApp;
 
 DEFINE_DYNAMIC_CLASS(CGameConnServer, 10, GET_CLASS_ID(CGameConnServer))
+
+static CNetComp *GetNetComp() {
+    CBaseApp *pApp = CBaseApp::Inst();
+    if (!pApp) {
+        return nullptr;
+    }
+    return static_cast<CNetComp *>(pApp->GetComp(CNetComp::GetID()));
+}
 
 //========================================================================
 // CGameConnToWorld
@@ -32,6 +42,12 @@ void CGameConnServer::OnConnected() {
     // msg.nServerID = g_pApp->GetServerID();
     // msg.nServerType = g_pApp->GetServerType();
     // this->SendShellMsg(&msg, sizeof(msg));
+    if (m_nServerID != 0) {
+        if (auto *pNet = GetNetComp()) {
+            pNet->AddServerConnect(this);
+        }
+        CModuleMgr::Instance()->OnServerConnect(static_cast<uint16>(m_nServerID));
+    }
 }
 
 void CGameConnServer::OnDisConnect() {
@@ -41,6 +57,12 @@ void CGameConnServer::OnDisConnect() {
     GammaLog << "<==>" << GetLocalAddress().GetAddress() << ":" << GetLocalAddress().GetPort()
              << endl;
     // g_pApp->OnServerDisConnect(m_nServerID, this);
+    if (m_nServerID != 0) {
+        CModuleMgr::Instance()->OnServerDisConnect(static_cast<uint16>(m_nServerID));
+        if (auto *pNet = GetNetComp()) {
+            pNet->DelServerConnect(this);
+        }
+    }
 }
 
 //====================================================================

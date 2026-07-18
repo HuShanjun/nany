@@ -1,4 +1,5 @@
 #include "CNetComp.h"
+#include "CGameConnFromClient.h"
 #include "CGameConnServer.h"
 #include "GammaApp/CBaseApp.h"
 #include "Interface/IComp.h"
@@ -70,7 +71,8 @@ EServerType GetServerType(const std::string &strServerType) {
 
 CNetComp::CNetComp(toml::table serverConfig)
     : m_ServerConfig(serverConfig)
-    , m_ReconnectTick(this, &CNetComp::OnReconnectTick) {
+    , m_ReconnectTick(this, &CNetComp::OnReconnectTick)
+    , m_pCurServerInfo(nullptr) {
 }
 
 CNetComp::~CNetComp() {
@@ -125,12 +127,26 @@ void CNetComp::OnInit() {
 
 void CNetComp::OnStarted() {
     auto pConnMgr = GetGameApp()->GetConnMgr();
-    if (m_pCurServerInfo && m_pCurServerInfo->nPublicPort > 0) {
-        pConnMgr->StartService(m_pCurServerInfo->strPublicHost.c_str(),
-                               m_pCurServerInfo->nPublicPort, CGameConnServer::GetID());
-        Log::Info("CNetComp::OnStarted StartService {}:{}", m_pCurServerInfo->strPublicHost,
-                  m_pCurServerInfo->nPublicPort);
+    if (!m_pCurServerInfo) {
+        Log::Error("CNetComp::OnStarted current server info is null");
+        return;
     }
+
+    if (m_pCurServerInfo->nLocalPort > 0) {
+        pConnMgr->StartService(m_pCurServerInfo->strLocalHost.c_str(),
+                               m_pCurServerInfo->nLocalPort, CGameConnServer::GetID());
+        Log::Info("CNetComp::OnStarted Local StartService {}:{}",
+                  m_pCurServerInfo->strLocalHost, m_pCurServerInfo->nLocalPort);
+    }
+
+    if (m_pCurServerInfo->nPublicPort > 0) {
+        pConnMgr->StartService(m_pCurServerInfo->strPublicHost.c_str(),
+                               m_pCurServerInfo->nPublicPort,
+                               CGameConnFromClient::GetID());
+        Log::Info("CNetComp::OnStarted Public StartService {}:{}",
+                  m_pCurServerInfo->strPublicHost, m_pCurServerInfo->nPublicPort);
+    }
+
     GetGameApp()->Register(&m_ReconnectTick, 1000, 0);
 }
 
@@ -141,8 +157,7 @@ void CNetComp::OnQuit() {
 void CNetComp::OnReconnectTick() {
     auto pConnMgr = GetGameApp()->GetConnMgr();
     for (auto &[nServerID, addr] : m_mapServers) {
-        auto pServerConn = m_treeServer.Find(nServerID);
-        if (pServerConn) {
+        if (m_mapServerConn.contains(nServerID)) {
             continue;
         }
         const char *szAddress = addr.GetAddress();
@@ -153,8 +168,61 @@ void CNetComp::OnReconnectTick() {
             Log::Error("CNetComp::OnReconnectTick {}:{}", szAddress, nPort);
             continue;
         }
-        pServerConn = static_cast<CGameConnServer *>(pBase);
+        auto pServerConn = static_cast<CGameConnServer *>(pBase);
         pServerConn->SetServerID(nServerID);
+        AddServerConnect(pServerConn);
+    }
+}
+
+void CNetComp::AddServerConnect(CGameConnServer *pServerConn) {
+    if (!pServerConn) {
+        return;
+    }
+    uint32 nServerID = pServerConn->GetConnectID();
+    if (nServerID == 0) {
+        return;
+    }
+    m_mapServerConn[nServerID] = pServerConn;
+    // Best-effort tree insert for any future Find-based callers; ignore if already linked.
+    if (!pServerConn->IsInTree()) {
+        // Root-only quirk: IsInTree false both before insert and after becoming sole root.
+        // Only Insert when Find misses this id.
+        if (!m_treeServer.Find(nServerID)) {
+            m_treeServer.Insert(*pServerConn);
+        }
+    }
+    Log::Info("CNetComp::AddServerConnect serverId={}", nServerID);
+}
+
+void CNetComp::DelServerConnect(CGameConnServer *pServerConn) {
+    if (!pServerConn) {
+        return;
+    }
+    uint32 nServerID = pServerConn->GetConnectID();
+    m_mapServerConn.erase(nServerID);
+    // Remove from tree when possible (non-root). Root detach is best-effort.
+    if (pServerConn->IsInTree()) {
+        static_cast<CGameConnServerNode *>(pServerConn)->Remove();
+    } else if (m_treeServer.Find(nServerID) == pServerConn) {
+        // Sole root: leave it in the tree until process exit. Reconnect uses the map.
+        Log::Info("CNetComp::DelServerConnect root node left in tree serverId={}", nServerID);
+    }
+    Log::Info("CNetComp::DelServerConnect serverId={}", nServerID);
+}
+
+void CNetComp::AddClientConnect(CGameConnFromClient *pFromClientConn) {
+    if (!pFromClientConn) {
+        return;
+    }
+    m_treeFromClient.Insert(static_cast<CClientConnectNode &>(*pFromClientConn));
+}
+
+void CNetComp::DelClientConnect(CGameConnFromClient *pFromClientConn) {
+    if (!pFromClientConn) {
+        return;
+    }
+    if (pFromClientConn->IsInTree()) {
+        static_cast<CClientConnectNode *>(pFromClientConn)->Remove();
     }
 }
 
