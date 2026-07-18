@@ -43,22 +43,39 @@ bool CModuleMgr::LoadDll(const char *strSettings, const std::string &strTomlFile
     if (pGameApp == nullptr) {
         return false;
     }
+    m_strBinPath = pGameApp->GetBinPath();
+    if (m_strBinPath.empty()) {
+        Log::Error("CModuleMgr::LoadDll bin path is empty");
+        return false;
+    }
+    if (m_strBinPath.back() != '/') {
+        m_strBinPath.push_back('/');
+    }
     pGameApp->Register(&m_Tick, FRAME_INTERVAL, INVALID_16BITID);
     m_strSession = strSettings;
     m_strTomlFile = strTomlFile;
 
     toml::table file_table = toml::parse_file(strTomlFile);
     if (!file_table.contains(strSettings)) {
-        Log::Error("toml file not exist {}", strSettings);
+        Log::Error("CModuleMgr::LoadDll toml section not exist {}", strSettings);
         return false;
     }
 
     std::vector<CDllInfoPtr> listDllInfo;
-    toml::table &settings = *file_table[strSettings].as_table();
-    for (auto &[key, value] : settings) {
-        auto value_array = value.as_array();
-        int nModuleId = value_array[0].as_integer()->get();
-        int nModuleVer = value_array[1].as_integer()->get();
+    toml::table *settings = file_table[strSettings].as_table();
+    if (settings == nullptr) {
+        Log::Error("CModuleMgr::LoadDll toml section {} is not a table", strSettings);
+        return false;
+    }
+    for (auto &[key, value] : *settings) {
+        auto *value_array = value.as_array();
+        if (value_array == nullptr) {
+            Log::Error("CModuleMgr::LoadDll module {} is not an array in section {}", key.str(),
+                       strSettings);
+            return false;
+        }
+        int nModuleId = static_cast<int>((*value_array)[0].value_or(int64_t{0}));
+        int nModuleVer = static_cast<int>((*value_array)[1].value_or(int64_t{0}));
         if (nModuleVer == 0) {
             continue;
         }

@@ -153,7 +153,10 @@ bool CGameApp::OnInit() {
     // 加载模块
     fs::path etcPath = m_strEtcPath;
     std::string strProcessModuleConfig = (etcPath / "process_module.toml").string();
-    // CModuleMgr::Instance()->LoadDll(m_strServerType.c_str(), strProcessModuleConfig);
+    if (!CModuleMgr::Instance()->LoadDll(m_strServerType.c_str(), strProcessModuleConfig)) {
+        Log::Error("CGameApp::OnInit LoadDll failed for type {}", m_strServerType);
+        return false;
+    }
     return true;
 }
 
