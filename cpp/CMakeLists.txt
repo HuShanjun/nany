@@ -90,6 +90,7 @@ add_subdirectory(source/gamma/GammaScript)
 add_subdirectory(source/gamma/GammaShm)
 add_subdirectory(source/gamma/GammaApp)
 add_subdirectory(source/GameApp)
+add_subdirectory(source/module/ModuleLogin)
 
 option(NANY_BUILD_TESTS "Build unit/integration tests" ON)
 if(NANY_BUILD_TESTS)
