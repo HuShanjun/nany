@@ -5,4 +5,5 @@ add_subdirectory(GammaCommon)
 add_subdirectory(GammaNetwork)
 add_subdirectory(GammaScript)
 add_subdirectory(GammaConnects)
+add_subdirectory(GammaDatabase)
 # Later tasks append: ...
