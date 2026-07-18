@@ -99,10 +99,10 @@ void CGameApp::InitPathConfig() {
         return;
     }
     fs::path pathDevops = fs::path(m_strDevopsPath);
-    m_strWorkPath = pathDevops / m_strServerName;
-    m_strDataPath = pathDevops / "data";
-    m_strEtcPath = pathDevops / "etc";
-    m_strLogPath = pathDevops / "log";
+    m_strWorkPath   = pathDevops / m_strServerName;
+    m_strDataPath   = pathDevops / "data";
+    m_strEtcPath    = pathDevops / "etc";
+    m_strLogPath    = pathDevops / "log";
 
     // 创建工作路径
     if (!fs::exists(m_strWorkPath)) {

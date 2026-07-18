@@ -104,7 +104,7 @@ namespace Gamma
 		template<typename FunType, typename RetType, typename... Param>
 		bool					RunFunction( RetType* pRetBuf, FunType pFun, Param ... p );
 		template<typename FunType, typename... Param>
-		bool					RunFunction( nullptr_t, FunType pFun, Param ... p );
+		bool					RunFunction( std::nullptr_t, FunType pFun, Param ... p );
 	};
 
 	template<typename Type>
@@ -142,7 +142,7 @@ namespace Gamma
 	}
 
 	template<typename FunType, typename... Param>
-	bool CScriptBase::RunFunction( nullptr_t, FunType pFun, Param ... p )
+	bool CScriptBase::RunFunction( std::nullptr_t, FunType pFun, Param ... p )
 	{
 		CheckDebugCmd();
 		void* aryParam[sizeof...( p ) + 1] = { &p ... };

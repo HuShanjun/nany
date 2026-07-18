@@ -84,6 +84,7 @@ private:
     void DelClientConnect(CGameConnFromClient* pFromClientConn);
 
     void ParserNetTopology();
+    SServerInfo *GetServerInfo(uint32 nServerID);
 
 private:
     std::set<EServerType> m_vecNetTopology[EServerType::Count];
