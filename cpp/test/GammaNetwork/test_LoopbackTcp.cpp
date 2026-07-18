@@ -6,12 +6,10 @@
 
 using namespace Gamma;
 
-// This test deliberately does NOT reuse the IConnectHandler-based echo
-// stubs from sample/GammaNetwork/server.cpp / client.cpp (samples are not
-// modified). See the NOTE below for why: on this engine build, the only
-// Gamma::INetwork operations confirmed safe are CreateNetWork() and
-// StartListener(); everything else that would be needed for a real
-// send/recv exchange is confirmed to crash.
+// Bind-only smoke test: CreateNetWork() + StartListener(), then verify the
+// listener's local address and connect type. This is NOT a loopback send/recv
+// test — Connect(), Check(), Release(), and any real send/recv exchange are
+// deliberately skipped (see NOTE below).
 //
 // NOTE (pre-existing engine bug, broader than the Task 6 finding):
 // Gamma::CGNetwork::Check() segfaults *unconditionally*, even with zero
@@ -34,13 +32,12 @@ using namespace Gamma;
 //
 // Given Connect()/Check()/Release() are all confirmed to crash the whole
 // test binary (which would take every other TEST in test_GammaNetwork down
-// with it), this test only exercises the operations proven safe
-// (CreateNetWork + StartListener), documents the finding, and SKIPs before
+// with it), this smoke test stops after bind verification and SKIPs before
 // touching anything unsafe rather than crashing CI. pNetwork/pListener are
-// intentionally left un-Released (leaked) on process exit - the same
-// workaround pattern used in test/GammaConnects/test_ConnMgrSmoke.cpp for
-// the Task 6 finding.
-TEST( Network_Integration, LoopbackSendRecv )
+// intentionally left un-Released (intentional leak on process exit) — the
+// same workaround pattern used in test/GammaConnects/test_ConnMgrSmoke.cpp
+// for the Task 6 finding.
+TEST( Network_Integration, ListenerBindSmoke )
 {
 	INetwork* pNetwork = CreateNetWork();
 	ASSERT_NE( pNetwork, nullptr );
@@ -69,12 +66,11 @@ TEST( Network_Integration, LoopbackSendRecv )
 	EXPECT_EQ( nPort, pListener->GetLocalAddress().GetPort() );
 	EXPECT_EQ( eConnecterType_TCP, pListener->GetConnectType() );
 
-	GTEST_SKIP() << "Bind succeeded, but skipping the actual send/recv exchange: "
-					"Gamma::CGNetwork::Connect()/Check() (and therefore "
-					"INetwork::Release(), whose ~CGNetwork calls Check(0)) are "
-					"confirmed to segfault unconditionally on this engine build, "
-					"even with zero connections (see the comment above this test "
-					"and nany/.superpowers/sdd/task-8-report.md). "
-					"pNetwork/pListener are intentionally left un-Released to "
-					"avoid crashing the test binary.";
+	GTEST_SKIP() << "Bind-only smoke complete; skipping Connect/Check/Release "
+					"and send/recv: Gamma::CGNetwork::Connect()/Check() (and "
+					"therefore INetwork::Release(), whose ~CGNetwork calls "
+					"Check(0)) segfault unconditionally on this engine build "
+					"(see comment above and nany/.superpowers/sdd/task-8-report.md). "
+					"pNetwork/pListener intentionally leaked to avoid crashing "
+					"the test binary.";
 }
