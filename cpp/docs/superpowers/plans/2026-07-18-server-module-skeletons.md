@@ -583,7 +583,17 @@ EOF
   - Outbound connects registered in `m_treeServer` so reconnect tick does not spam
   - Module `OnServerConnect` / `OnServerDisConnect` called when ServerID known
 
-- [ ] **Step 1: Implement AddServerConnect / DelServerConnect**
+- [ ] **Step 1: Track connected servers with std::map (reconnect-safe)**
+
+`TGammaRBTree::IsInTree()` is `m_pParent != NULL`, so the **root** node reports not-in-tree and `Remove()` no-ops. Do **not** rely on RBTree alone for reconnect gating.
+
+In `CNetComp.h`, add:
+
+```cpp
+std::map<uint32, CGameConnServer*> m_mapServerConn;
+```
+
+Make `AddServerConnect` / `DelServerConnect` **public**.
 
 In `CNetComp.cpp`:
 
@@ -592,46 +602,71 @@ void CNetComp::AddServerConnect(CGameConnServer* pServerConn) {
     if (!pServerConn) {
         return;
     }
-    if (pServerConn->IsInTree()) {
+    uint32 nServerID = pServerConn->GetConnectID();
+    if (nServerID == 0) {
         return;
     }
-    m_treeServer.Insert(*pServerConn);
-    Log::Info("CNetComp::AddServerConnect serverId={}", pServerConn->GetConnectID());
+    m_mapServerConn[nServerID] = pServerConn;
+    // Best-effort tree insert for any future Find-based callers; ignore if already linked.
+    if (!pServerConn->IsInTree()) {
+        // Root-only quirk: IsInTree false both before insert and after becoming sole root.
+        // Only Insert when Find misses this id.
+        if (!m_treeServer.Find(nServerID)) {
+            m_treeServer.Insert(*pServerConn);
+        }
+    }
+    Log::Info("CNetComp::AddServerConnect serverId={}", nServerID);
 }
 
 void CNetComp::DelServerConnect(CGameConnServer* pServerConn) {
     if (!pServerConn) {
         return;
     }
-    if (!pServerConn->IsInTree()) {
-        return;
+    uint32 nServerID = pServerConn->GetConnectID();
+    m_mapServerConn.erase(nServerID);
+    // Remove from tree when possible (non-root). Root detach is best-effort:
+    if (pServerConn->IsInTree()) {
+        pServerConn->Remove();
+    } else if (m_treeServer.Find(nServerID) == pServerConn) {
+        // Sole root: Clear by extracting — insert a temporary is overkill;
+        // leave orphaned root until process exit; reconnect uses m_mapServerConn only.
+        Log::Info("CNetComp::DelServerConnect root node left in tree serverId={}", nServerID);
     }
-    pServerConn->Remove();
-    Log::Info("CNetComp::DelServerConnect serverId={}", pServerConn->GetConnectID());
+    Log::Info("CNetComp::DelServerConnect serverId={}", nServerID);
 }
 ```
 
-Confirm `IsInTree()` / `Remove()` exist on `CGammaRBTreeNode` (they do in `TGammaRBTree.h`). If `IsInTree` is protected, call `Remove()` only when Find returns the same pointer, or make a thin public wrapper on `CGameConnServer`.
-
-Also stub client helpers if linker requires them (declared in header):
+Also implement client helpers declared in the header:
 
 ```cpp
 void CNetComp::AddClientConnect(CGameConnFromClient* pFromClientConn) {
-    if (!pFromClientConn || pFromClientConn->IsInTree()) {
+    if (!pFromClientConn) {
         return;
     }
     m_treeFromClient.Insert(*pFromClientConn);
 }
 
 void CNetComp::DelClientConnect(CGameConnFromClient* pFromClientConn) {
-    if (!pFromClientConn || !pFromClientConn->IsInTree()) {
+    if (!pFromClientConn) {
         return;
     }
-    pFromClientConn->Remove();
+    if (pFromClientConn->IsInTree()) {
+        pFromClientConn->Remove();
+    }
 }
 ```
 
-(`DelClientConnect` is declared in header — implement it.)
+Update `OnReconnectTick` to gate on `m_mapServerConn`:
+
+```cpp
+if (m_mapServerConn.contains(nServerID)) {
+    continue;
+}
+```
+
+(Use `find != end` if C++17 project on Linux; repo uses C++23 so `contains` is fine.)
+
+After successful `Connect` + `SetServerID`, call `AddServerConnect(pServerConn)`.
 
 - [ ] **Step 2: Fix OnStarted dual listen**
 
