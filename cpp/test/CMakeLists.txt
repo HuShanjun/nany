@@ -3,4 +3,5 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/GammaTest.cmake)
 
 add_subdirectory(GammaCommon)
 add_subdirectory(GammaNetwork)
-# Later tasks append: GammaScript, ...
+add_subdirectory(GammaScript)
+# Later tasks append: ...
