@@ -8,4 +8,4 @@ add_subdirectory(GammaConnects)
 add_subdirectory(GammaDatabase)
 add_subdirectory(GammaMTDbs)
 add_subdirectory(GammaShm)
-# Later tasks append: ...
+add_subdirectory(GameApp)
