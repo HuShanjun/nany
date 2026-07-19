@@ -1,4 +1,5 @@
 #pragma once
+#include "CGamePlayerStore.h"
 #include "Interface/IConsummer.h"
 
 class CModuleGame : public IConsummer {
@@ -13,4 +14,10 @@ public:
     void OnServerConnect(uint16 nServerID) override;
     void OnServerDisConnect(uint16 nServerID) override;
     bool OnServerStop() override;
+
+    bool PlayerEnter(uint64_t nPlayerID, uint32 nGateServerID);
+    void PlayerLeave(uint64_t nPlayerID);
+
+private:
+    CGamePlayerStore m_players;
 };
