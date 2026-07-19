@@ -235,6 +235,26 @@ void CModuleMgr::OnServerDisConnect(uint16 nServerID) {
     }
 }
 
+void CModuleMgr::OnClientConnect(uint32 nClientID) {
+    if (nClientID == 0)
+        return;
+    for (auto it : m_mapDll) {
+        if (it.second->m_pConsummer != nullptr) {
+            it.second->m_pConsummer->OnClientConnect(nClientID);
+        }
+    }
+}
+
+void CModuleMgr::OnClientDisConnect(uint32 nClientID) {
+    if (nClientID == 0)
+        return;
+    for (auto it : m_mapDll) {
+        if (it.second->m_pConsummer != nullptr) {
+            it.second->m_pConsummer->OnClientDisConnect(nClientID);
+        }
+    }
+}
+
 void CModuleMgr::OnModuleConfigChanged() {
     toml::table file_table = toml::parse_file(m_strTomlFile);
     if (!file_table.contains(m_strSession)) {

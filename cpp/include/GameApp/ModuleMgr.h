@@ -49,6 +49,10 @@ public:
 
     void OnServerDisConnect(uint16 nServerID);
 
+    void OnClientConnect(uint32 nClientID);
+
+    void OnClientDisConnect(uint32 nClientID);
+
     int64 GetCurFrame() const { return m_nFrame; }
 
     int64 GetServerTime() const { return m_nStartTime + m_nFrame * FRAME_INTERVAL; }

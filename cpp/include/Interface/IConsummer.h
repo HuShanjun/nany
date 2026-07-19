@@ -35,6 +35,12 @@ public:
     // 服务器断开连接
     virtual void OnServerDisConnect(uint16 nServerID) {}
 
+    // 客户端连接成功
+    virtual void OnClientConnect(uint32 nClientID) {}
+
+    // 客户端断开连接
+    virtual void OnClientDisConnect(uint32 nClientID) {}
+
     // 服务器关闭，如果暂时不允许关闭返回false
     virtual bool OnServerStop() { return true; }
 
