@@ -1,4 +1,5 @@
 #pragma once
+#include "CDBMainJobStore.h"
 #include "Interface/IConsummer.h"
 
 class CModuleDBMain : public IConsummer {
@@ -13,4 +14,10 @@ public:
     void OnServerConnect(uint16 nServerID) override;
     void OnServerDisConnect(uint16 nServerID) override;
     bool OnServerStop() override;
+
+    uint32_t EnqueueQuery(uint32 nFromServerID);
+    bool CompleteQuery(uint32 nJobID);
+
+private:
+    CDBMainJobStore m_jobs;
 };
