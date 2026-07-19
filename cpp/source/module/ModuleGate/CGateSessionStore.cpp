@@ -30,14 +30,11 @@ const SGateClientSession *CGateSessionStore::FindClient(uint32_t nClientID) cons
 }
 
 void CGateSessionStore::AddServer(uint32_t nServerID) {
-    if (nServerID == 0) {
-        return;
-    }
-    m_setServers.insert(nServerID);
+    m_peers.Add(nServerID);
 }
 
 void CGateSessionStore::RemoveServer(uint32_t nServerID) {
-    m_setServers.erase(nServerID);
+    m_peers.Remove(nServerID);
     for (auto &[id, session] : m_mapClients) {
         (void)id;
         if (session.nBoundServerID == nServerID) {
@@ -47,7 +44,7 @@ void CGateSessionStore::RemoveServer(uint32_t nServerID) {
 }
 
 bool CGateSessionStore::HasServer(uint32_t nServerID) const {
-    return m_setServers.find(nServerID) != m_setServers.end();
+    return m_peers.Has(nServerID);
 }
 
 bool CGateSessionStore::BindClientToServer(uint32_t nClientID, uint32_t nServerID) {

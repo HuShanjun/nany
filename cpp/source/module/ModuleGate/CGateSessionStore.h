@@ -1,8 +1,9 @@
 #pragma once
 
+#include "GameApp/CPeerOnlineStore.h"
+
 #include <cstdint>
 #include <map>
-#include <set>
 
 struct SGateClientSession {
     uint32_t nClientID = 0;
@@ -28,5 +29,5 @@ public:
 
 private:
     std::map<uint32_t, SGateClientSession> m_mapClients;
-    std::set<uint32_t> m_setServers;
+    CPeerOnlineStore m_peers;
 };

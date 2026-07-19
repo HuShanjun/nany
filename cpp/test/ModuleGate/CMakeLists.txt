@@ -4,4 +4,5 @@ gamma_add_gtest(test_ModuleGate
 )
 target_include_directories(test_ModuleGate PRIVATE
   ${CMAKE_SOURCE_DIR}/source/module/ModuleGate
+  ${CMAKE_SOURCE_DIR}/include
 )
