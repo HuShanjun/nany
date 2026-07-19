@@ -214,7 +214,12 @@ void CNetComp::AddClientConnect(CGameConnFromClient *pFromClientConn) {
     if (!pFromClientConn) {
         return;
     }
+    uint32 nID = pFromClientConn->GetConnectID();
+    if (m_treeFromClient.Find(nID)) {
+        return;
+    }
     m_treeFromClient.Insert(static_cast<CClientConnectNode &>(*pFromClientConn));
+    Log::Info("CNetComp::AddClientConnect clientId={}", nID);
 }
 
 void CNetComp::DelClientConnect(CGameConnFromClient *pFromClientConn) {

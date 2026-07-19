@@ -78,12 +78,11 @@ public:
 
     void AddServerConnect(CGameConnServer* pServerConn);
     void DelServerConnect(CGameConnServer* pServerConn);
+    void AddClientConnect(CGameConnFromClient* pFromClientConn);
+    void DelClientConnect(CGameConnFromClient* pFromClientConn);
 
 private:
     void OnReconnectTick();
-
-    void AddClientConnect(CGameConnFromClient* pFromClientConn);
-    void DelClientConnect(CGameConnFromClient* pFromClientConn);
 
     void ParserNetTopology();
     SServerInfo *GetServerInfo(uint32 nServerID);
