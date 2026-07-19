@@ -27,15 +27,9 @@ namespace Gamma
 			CGammaListNode*	m_pPreNode;
 			CGammaListNode*	m_pNextNode;
 			friend class TGammaList<CNode>;
-#ifdef _DEBUG
-			int* m_pSize;
-#endif
 
 		public:
 			CGammaListNode() : m_pPreNode(NULL), m_pNextNode(NULL)
-#ifdef _DEBUG
-				,m_pSize(NULL)
-#endif
 			{
 			}
 
@@ -57,10 +51,6 @@ namespace Gamma
 				m_pNextNode->m_pPreNode = m_pPreNode;
 				m_pPreNode = NULL;
 				m_pNextNode = NULL;
-#ifdef _DEBUG
-				if (m_pSize)
-					--(*m_pSize);
-#endif
 			}
 
 			CNode* GetPre() const
@@ -81,10 +71,6 @@ namespace Gamma
 				m_pNextNode = &Node;
 				Node.m_pPreNode->m_pNextNode = this;
 				Node.m_pPreNode = this;
-#ifdef _DEBUG
-				if (m_pSize)
-					++(*m_pSize);
-#endif
 			}
 
 			void InsertAfter( CGammaListNode& Node )
@@ -95,10 +81,6 @@ namespace Gamma
 				m_pPreNode = &Node;
 				Node.m_pNextNode->m_pPreNode = this;
 				Node.m_pNextNode = this;
-#ifdef _DEBUG
-				if (m_pSize)
-					++(*m_pSize);
-#endif
 			}
 		};
 
@@ -127,9 +109,6 @@ namespace Gamma
 		{
 			m_NodeHead.m_pNextNode = &m_NodeTail;
 			m_NodeTail.m_pPreNode = &m_NodeHead;
-#ifdef _DEBUG
-			m_size = 0;
-#endif
 		}
 
 		~TGammaList()
@@ -182,10 +161,6 @@ namespace Gamma
 			Node.m_pNextNode = pNodePos;
 			pNodePos->m_pPreNode->m_pNextNode = &Node;
 			pNodePos->m_pPreNode = &Node;
-#ifdef _DEBUG
-			m_size++;
-			Node.m_pSize = &m_size;
-#endif
 		}
 
 		void InsertAfter( CGammaListNode& Node, CGammaListNode* pNodePos )
@@ -198,10 +173,6 @@ namespace Gamma
 			Node.m_pPreNode = pNodePos;
 			pNodePos->m_pNextNode->m_pPreNode = &Node;
 			pNodePos->m_pNextNode = &Node;
-#ifdef _DEBUG
-			m_size++;
-			Node.m_pSize = &m_size;
-#endif
 		}
 
 		CNode* GetFirst() const
@@ -236,9 +207,6 @@ namespace Gamma
 	private:
 		CGammaListNode	m_NodeHead;
 		CGammaListNode	m_NodeTail;
-#ifdef _DEBUG
-		int m_size;
-#endif
 	};
 
 	template<typename DataType>

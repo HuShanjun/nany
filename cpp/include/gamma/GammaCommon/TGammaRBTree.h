@@ -30,9 +30,6 @@ namespace Gamma
 			int8_t					m_nNodeColor;
 			CGammaRBTreeNode*		m_pLeftChild;
 			CGammaRBTreeNode*		m_pRightChild;
-#ifdef _DEBUG
-			int* m_pSize;
-#endif // _DEBUG
 
 			union 
 			{
@@ -122,9 +119,6 @@ namespace Gamma
 				, m_pParent( NULL )
 				, m_pLeftChild( NULL )
 				, m_pRightChild( NULL )
-#ifdef _DEBUG
-				, m_pSize(NULL)
-#endif
 			{
 			}
 
@@ -328,10 +322,6 @@ namespace Gamma
 					}
 				}
 
-#ifdef _DEBUG
-				if (m_pSize)
-					--(*m_pSize);
-#endif
 				if( !pNode->m_bRootNode )
 					return;
 				pNode->m_nNodeColor = eBlack;
@@ -416,10 +406,6 @@ namespace Gamma
 
 		TGammaRBTree()
 			: m_pRootNode( NULL )
-#ifdef _DEBUG
-			, m_size(0)
-#endif // DEBUG
-
 		{
 		}
 
@@ -447,10 +433,6 @@ namespace Gamma
 			GammaAst( !Node.IsInTree() );
 			Node.m_pLeftChild = NULL;
 			Node.m_pRightChild = NULL;
-#ifdef _DEBUG
-			m_size++;
-			Node.m_pSize = &m_size;
-#endif
 
 			// 插入根节点
 			if( m_pRootNode == NULL )
@@ -745,9 +727,6 @@ namespace Gamma
 
 	private:
 		CGammaRBTreeNode*	m_pRootNode;
-#ifdef _DEBUG
-		int32_t m_size;
-#endif // DEBUG
 
 	};
 

@@ -34,16 +34,10 @@ namespace Gamma
 		{
 			CNode**	m_ppPreNode;
 			CNode*	m_pNextNode;
-#ifdef _DEBUG
-			int* m_pSize;
-#endif
 			friend class TTinyList<CNode>;
 
 		public:
 			CTinyListNode() : m_ppPreNode(NULL), m_pNextNode(NULL)
-#ifdef _DEBUG
-			,m_pSize(NULL)
-#endif
 			{
 			}
 
@@ -65,10 +59,6 @@ namespace Gamma
 					static_cast<CTinyListNode*>( m_pNextNode )->m_ppPreNode = m_ppPreNode;
 				m_ppPreNode = NULL;
 				m_pNextNode = NULL;
-#ifdef _DEBUG
-				if (m_pSize)
-					--(*m_pSize);
-#endif
 			}
 
 			CNode* GetNext() const
@@ -88,10 +78,6 @@ namespace Gamma
 			if( pNode )
 				static_cast<CTinyListNode*>( pNode )->m_ppPreNode = &Node.m_pNextNode;
 			pNode = static_cast<CNode*>( &Node );
-#ifdef _DEBUG
-			m_size++;
-			Node.m_pSize = &m_size;
-#endif
 		}
 
 	public:
@@ -114,9 +100,6 @@ namespace Gamma
 		};
 
 		TTinyList() : m_pNodeHead(NULL)
-#ifdef _DEBUG
-			,m_size(0)
-#endif
 		{
 		}
 
@@ -183,9 +166,6 @@ namespace Gamma
 
 	private:
 		CNode*	m_pNodeHead;
-#ifdef _DEBUG
-		int m_size = 0;
-#endif
 	};
 	
 	template<typename DataType>
